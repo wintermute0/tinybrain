@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: info.bliki.wiki.filter.TemplateParserTest
+-------------------------------------------------------------------------------
+Tests run: 136, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.109 sec

@@ -1,0 +1,484 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.remote</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a></p>
+        <h1>remote</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">remote</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.remote.RemoteActorRefProvider" data-isabs="false">
+      <a id="RemoteActorRefProvider:RemoteActorRefProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteActorRefProvider.html"><span class="name">RemoteActorRefProvider</span></a><span class="result"> extends ActorRefProvider</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Remote ActorRefProvider.</p>
+    </li><li visbl="pub" name="akka.remote.RemoteClientConnected" data-isabs="false">
+      <a id="RemoteClientConnected:RemoteClientConnected"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteClientConnected.html"><span class="name">RemoteClientConnected</span></a><span class="params">(<span name="remote">remote: RemoteTransport</span>, <span name="remoteAddress">remoteAddress: Address</span>)</span><span class="result"> extends RemoteClientLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteClientDisconnected" data-isabs="false">
+      <a id="RemoteClientDisconnected:RemoteClientDisconnected"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteClientDisconnected.html"><span class="name">RemoteClientDisconnected</span></a><span class="params">(<span name="remote">remote: RemoteTransport</span>, <span name="remoteAddress">remoteAddress: Address</span>)</span><span class="result"> extends RemoteClientLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteClientError" data-isabs="false">
+      <a id="RemoteClientError:RemoteClientError"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteClientError.html"><span class="name">RemoteClientError</span></a><span class="params">(<span name="cause">cause: Throwable</span>, <span name="remote">remote: RemoteTransport</span>, <span name="remoteAddress">remoteAddress: Address</span>)</span><span class="result"> extends RemoteClientLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteClientException" data-isabs="false">
+      <a id="RemoteClientException:RemoteClientException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteClientException.html"><span class="name">RemoteClientException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Thrown for example when trying to send a message using a RemoteClient that is either not started or shut down.</p>
+    </li><li visbl="pub" name="akka.remote.RemoteClientLifeCycleEvent" data-isabs="true">
+      <a id="RemoteClientLifeCycleEvent:RemoteClientLifeCycleEvent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteClientLifeCycleEvent.html"><span class="name">RemoteClientLifeCycleEvent</span></a><span class="result"> extends RemoteLifeCycleEvent</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Life-cycle events for RemoteClient.</p>
+    </li><li visbl="pub" name="akka.remote.RemoteClientShutdown" data-isabs="false">
+      <a id="RemoteClientShutdown:RemoteClientShutdown"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteClientShutdown.html"><span class="name">RemoteClientShutdown</span></a><span class="params">(<span name="remote">remote: RemoteTransport</span>, <span name="remoteAddress">remoteAddress: Address</span>)</span><span class="result"> extends RemoteClientLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteClientStarted" data-isabs="false">
+      <a id="RemoteClientStarted:RemoteClientStarted"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteClientStarted.html"><span class="name">RemoteClientStarted</span></a><span class="params">(<span name="remote">remote: RemoteTransport</span>, <span name="remoteAddress">remoteAddress: Address</span>)</span><span class="result"> extends RemoteClientLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteClientWriteFailed" data-isabs="false">
+      <a id="RemoteClientWriteFailed:RemoteClientWriteFailed"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteClientWriteFailed.html"><span class="name">RemoteClientWriteFailed</span></a><span class="params">(<span name="request">request: AnyRef</span>, <span name="cause">cause: Throwable</span>, <span name="remote">remote: RemoteTransport</span>, <span name="remoteAddress">remoteAddress: Address</span>)</span><span class="result"> extends RemoteClientLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteCommunicationException" data-isabs="false">
+      <a id="RemoteCommunicationException:RemoteCommunicationException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteCommunicationException.html"><span class="name">RemoteCommunicationException</span></a><span class="result"> extends RemoteException</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteConnectionException" data-isabs="false">
+      <a id="RemoteConnectionException:RemoteConnectionException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteConnectionException.html"><span class="name">RemoteConnectionException</span></a><span class="result"> extends RemoteException</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteDeployer" data-isabs="false">
+      <a id="RemoteDeployer:RemoteDeployer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteDeployer.html"><span class="name">RemoteDeployer</span></a><span class="result"> extends Deployer</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteException" data-isabs="false">
+      <a id="RemoteException:RemoteException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteException.html"><span class="name">RemoteException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteLifeCycleEvent" data-isabs="true">
+      <a id="RemoteLifeCycleEvent:RemoteLifeCycleEvent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteLifeCycleEvent.html"><span class="name">RemoteLifeCycleEvent</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Remote life-cycle events.</p>
+    </li><li visbl="pub" name="akka.remote.RemoteMarshallingOps" data-isabs="true">
+      <a id="RemoteMarshallingOps:RemoteMarshallingOps"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteMarshallingOps.html"><span class="name">RemoteMarshallingOps</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteMessage" data-isabs="false">
+      <a id="RemoteMessage:RemoteMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteMessage.html"><span class="name">RemoteMessage</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteProtocol" data-isabs="false">
+      <a id="RemoteProtocol:RemoteProtocol"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteProtocol.html"><span class="name">RemoteProtocol</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteScope" data-isabs="false">
+      <a id="RemoteScope:RemoteScope"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteScope.html"><span class="name">RemoteScope</span></a><span class="params">(<span name="node">node: Address</span>)</span><span class="result"> extends Scope with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteServerClientClosed" data-isabs="false">
+      <a id="RemoteServerClientClosed:RemoteServerClientClosed"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteServerClientClosed.html"><span class="name">RemoteServerClientClosed</span></a><span class="params">(<span name="remote">remote: RemoteTransport</span>, <span name="clientAddress">clientAddress: Option[Address]</span>)</span><span class="result"> extends RemoteServerLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteServerClientConnected" data-isabs="false">
+      <a id="RemoteServerClientConnected:RemoteServerClientConnected"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteServerClientConnected.html"><span class="name">RemoteServerClientConnected</span></a><span class="params">(<span name="remote">remote: RemoteTransport</span>, <span name="clientAddress">clientAddress: Option[Address]</span>)</span><span class="result"> extends RemoteServerLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteServerClientDisconnected" data-isabs="false">
+      <a id="RemoteServerClientDisconnected:RemoteServerClientDisconnected"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteServerClientDisconnected.html"><span class="name">RemoteServerClientDisconnected</span></a><span class="params">(<span name="remote">remote: RemoteTransport</span>, <span name="clientAddress">clientAddress: Option[Address]</span>)</span><span class="result"> extends RemoteServerLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteServerError" data-isabs="false">
+      <a id="RemoteServerError:RemoteServerError"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteServerError.html"><span class="name">RemoteServerError</span></a><span class="params">(<span name="cause">cause: Throwable</span>, <span name="remote">remote: RemoteTransport</span>)</span><span class="result"> extends RemoteServerLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteServerLifeCycleEvent" data-isabs="true">
+      <a id="RemoteServerLifeCycleEvent:RemoteServerLifeCycleEvent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteServerLifeCycleEvent.html"><span class="name">RemoteServerLifeCycleEvent</span></a><span class="result"> extends RemoteLifeCycleEvent</span>
+      </span>
+      </h4>
+      <p class="comment cmt"> Life-cycle events for RemoteServer.</p>
+    </li><li visbl="pub" name="akka.remote.RemoteServerShutdown" data-isabs="false">
+      <a id="RemoteServerShutdown:RemoteServerShutdown"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteServerShutdown.html"><span class="name">RemoteServerShutdown</span></a><span class="params">(<span name="remote">remote: RemoteTransport</span>)</span><span class="result"> extends RemoteServerLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteServerStarted" data-isabs="false">
+      <a id="RemoteServerStarted:RemoteServerStarted"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteServerStarted.html"><span class="name">RemoteServerStarted</span></a><span class="params">(<span name="remote">remote: RemoteTransport</span>)</span><span class="result"> extends RemoteServerLifeCycleEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteSettings" data-isabs="false">
+      <a id="RemoteSettings:RemoteSettings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteSettings.html"><span class="name">RemoteSettings</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteTransport" data-isabs="true">
+      <a id="RemoteTransport:RemoteTransport"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteTransport.html"><span class="name">RemoteTransport</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The remote transport is responsible for sending and receiving messages.</p>
+    </li><li visbl="pub" name="akka.remote.RemoteTransportException" data-isabs="false">
+      <a id="RemoteTransportException:RemoteTransportException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteTransportException.html"><span class="name">RemoteTransportException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteDeathWatch" data-isabs="false">
+      <a id="RemoteDeathWatch:RemoteDeathWatch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteDeathWatch.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">RemoteDeathWatch</span></a><span class="result"> extends DeathWatch</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteRef" data-isabs="true">
+      <a id="RemoteRef:RemoteRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteRef.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">RemoteRef</span></a><span class="result"> extends ActorRefScope</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="akka.remote.RemoteProtocol" data-isabs="false">
+      <a id="RemoteProtocol:RemoteProtocol"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteProtocol$.html"><span class="name">RemoteProtocol</span></a><span class="result"> extends </span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.netty" data-isabs="false">
+      <a id="netty:netty"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="netty/package.html"><span class="name">netty</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="akka.remote.MessageSerializer" data-isabs="false">
+      <a id="MessageSerializer:MessageSerializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageSerializer$.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">MessageSerializer</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

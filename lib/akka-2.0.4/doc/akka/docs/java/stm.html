@@ -1,0 +1,183 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Software Transactional Memory (Java) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Java API" href="index.html" />
+    <link rel="next" title="Agents (Java)" href="agents.html" />
+    <link rel="prev" title="Serialization (Java)" href="serialization.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Software Transactional Memory (Java)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="agents.html">Agents (Java)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="serialization.html">Serialization (Java)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="software-transactional-memory-java">
+<span id="stm-java"></span><h1>Software Transactional Memory (Java)</h1>
+<div class="section" id="overview-of-stm">
+<h2>Overview of STM</h2>
+<p>An <a class="reference external" href="http://en.wikipedia.org/wiki/Software_transactional_memory">STM</a> turns the
+Java heap into a transactional data set with begin/commit/rollback
+semantics. Very much like a regular database. It implements the first three
+letters in <a class="reference external" href="http://en.wikipedia.org/wiki/ACID">ACID</a>; ACI:</p>
+<ul class="simple">
+<li>Atomic</li>
+<li>Consistent</li>
+<li>Isolated</li>
+</ul>
+<p>Generally, the STM is not needed very often when working with Akka. Some
+use-cases (that we can think of) are:</p>
+<ul class="simple">
+<li>When you really need composable message flows across many actors updating
+their <strong>internal local</strong> state but need them to do that atomically in one big
+transaction. Might not be often, but when you do need this then you are
+screwed without it.</li>
+<li>When you want to share a datastructure across actors.</li>
+</ul>
+<p>The use of STM in Akka is inspired by the concepts and views in <a class="reference external" href="http://clojure.org/">Clojure</a>'s
+STM. Please take the time to read <a class="reference external" href="http://clojure.org/state">this excellent document</a> about state in
+clojure and view <a class="reference external" href="http://www.infoq.com/presentations/Value-Identity-State-Rich-Hickey">this presentation</a> by Rich Hickey (the genius behind
+Clojure).</p>
+</div>
+<div class="section" id="scala-stm">
+<h2>Scala STM</h2>
+<p>The STM supported in Akka is <a class="reference external" href="http://nbronson.github.com/scala-stm/">ScalaSTM</a> which will be soon included in the
+Scala standard library.</p>
+<p>The STM is based on Transactional References (referred to as Refs). Refs are
+memory cells, holding an (arbitrary) immutable value, that implement CAS
+(Compare-And-Swap) semantics and are managed and enforced by the STM for
+coordinated changes across many Refs.</p>
+</div>
+<div class="section" id="integration-with-actors">
+<h2>Integration with Actors</h2>
+<p>In Akka we've also integrated Actors and STM in <a class="reference internal" href="agents.html#agents-java"><em>Agents (Java)</em></a> and
+<a class="reference internal" href="transactors.html#transactors-java"><em>Transactors (Java)</em></a>.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

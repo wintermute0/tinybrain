@@ -1,0 +1,450 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>IO (Scala) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Scala API" href="index.html" />
+    <link rel="next" title="Testing Actor Systems (Scala)" href="testing.html" />
+    <link rel="prev" title="Transactors (Scala)" href="transactors.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">IO (Scala)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="testing.html">Testing Actor Systems (Scala)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="transactors.html">Transactors (Scala)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="io-scala">
+<span id="id1"></span><h1>IO (Scala)</h1>
+<div class="section" id="introduction">
+<h2>Introduction</h2>
+<p>This documentation is in progress and some sections may be incomplete. More will be coming.</p>
+</div>
+<div class="section" id="components">
+<h2>Components</h2>
+<div class="section" id="bytestring">
+<h3>ByteString</h3>
+<p>A primary goal of Akka's IO module is to only communicate between actors with immutable objects. When dealing with network IO on the jvm <tt class="docutils literal"><span class="pre">Array[Byte]</span></tt> and <tt class="docutils literal"><span class="pre">ByteBuffer</span></tt> are commonly used to represent collections of <tt class="docutils literal"><span class="pre">Byte</span></tt>s, but they are mutable. Scala's collection library also lacks a suitably efficient immutable collection for <tt class="docutils literal"><span class="pre">Byte</span></tt>s. Being able to safely and efficiently move <tt class="docutils literal"><span class="pre">Byte</span></tt>s around is very important for this IO module, so <tt class="docutils literal"><span class="pre">ByteString</span></tt> was developed.</p>
+<p><tt class="docutils literal"><span class="pre">ByteString</span></tt> is a <a class="reference external" href="http://en.wikipedia.org/wiki/Rope_(computer_science)">Rope-like</a> data structure that is immutable and efficient. When 2 <tt class="docutils literal"><span class="pre">ByteString</span></tt>s are concatenated together they are both stored within the resulting <tt class="docutils literal"><span class="pre">ByteString</span></tt> instead of copying both to a new <tt class="docutils literal"><span class="pre">Array</span></tt>. Operations such as <tt class="docutils literal"><span class="pre">drop</span></tt> and <tt class="docutils literal"><span class="pre">take</span></tt> return <tt class="docutils literal"><span class="pre">ByteString</span></tt>s that still reference the original <tt class="docutils literal"><span class="pre">Array</span></tt>, but just change the offset and length that is visible. Great care has also been taken to make sure that the internal <tt class="docutils literal"><span class="pre">Array</span></tt> cannot be modified. Whenever a potentially unsafe <tt class="docutils literal"><span class="pre">Array</span></tt> is used to create a new <tt class="docutils literal"><span class="pre">ByteString</span></tt> a defensive copy is created.</p>
+<p><tt class="docutils literal"><span class="pre">ByteString</span></tt> inherits all methods from <tt class="docutils literal"><span class="pre">IndexedSeq</span></tt>, and it also has some new ones. For more information, look up the <tt class="docutils literal"><span class="pre">akka.util.ByteString</span></tt> class and it's companion object in the ScalaDoc.</p>
+</div>
+<div class="section" id="io-handle">
+<h3>IO.Handle</h3>
+<p><tt class="docutils literal"><span class="pre">IO.Handle</span></tt> is an immutable reference to a Java NIO <tt class="docutils literal"><span class="pre">Channel</span></tt>. Passing mutable <tt class="docutils literal"><span class="pre">Channel</span></tt>s between <tt class="docutils literal"><span class="pre">Actor</span></tt>s could lead to unsafe behavior, so instead subclasses of the <tt class="docutils literal"><span class="pre">IO.Handle</span></tt> trait are used. Currently there are 2 concrete subclasses: <tt class="docutils literal"><span class="pre">IO.SocketHandle</span></tt> (representing a <tt class="docutils literal"><span class="pre">SocketChannel</span></tt>) and <tt class="docutils literal"><span class="pre">IO.ServerHandle</span></tt> (representing a <tt class="docutils literal"><span class="pre">ServerSocketChannel</span></tt>).</p>
+</div>
+<div class="section" id="iomanager">
+<h3>IOManager</h3>
+<p>The <tt class="docutils literal"><span class="pre">IOManager</span></tt> takes care of the low level IO details. Each <tt class="docutils literal"><span class="pre">ActorSystem</span></tt> has it's own <tt class="docutils literal"><span class="pre">IOManager</span></tt>, which can be accessed calling <tt class="docutils literal"><span class="pre">IOManager(system:</span> <span class="pre">ActorSystem)</span></tt>. <tt class="docutils literal"><span class="pre">Actor</span></tt>s communicate with the <tt class="docutils literal"><span class="pre">IOManager</span></tt> with specific messages. The messages sent from an <tt class="docutils literal"><span class="pre">Actor</span></tt> to the <tt class="docutils literal"><span class="pre">IOManager</span></tt> are handled automatically when using certain methods and the messages sent from an <tt class="docutils literal"><span class="pre">IOManager</span></tt> are handled within an <tt class="docutils literal"><span class="pre">Actor</span></tt>'s <tt class="docutils literal"><span class="pre">receive</span></tt> method.</p>
+<p>Connecting to a remote host:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">address</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">InetSocketAddress</span><span class="o">(</span><span class="s">&quot;remotehost&quot;</span><span class="o">,</span> <span class="mi">80</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">socket</span> <span class="k">=</span> <span class="nc">IOManager</span><span class="o">(</span><span class="n">actorSystem</span><span class="o">).</span><span class="n">connect</span><span class="o">(</span><span class="n">address</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">socket</span> <span class="k">=</span> <span class="nc">IOManager</span><span class="o">(</span><span class="n">actorSystem</span><span class="o">).</span><span class="n">connect</span><span class="o">(</span><span class="s">&quot;remotehost&quot;</span><span class="o">,</span> <span class="mi">80</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Creating a server:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">address</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">InetSocketAddress</span><span class="o">(</span><span class="s">&quot;localhost&quot;</span><span class="o">,</span> <span class="mi">80</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">serverSocket</span> <span class="k">=</span> <span class="nc">IOManager</span><span class="o">(</span><span class="n">actorSystem</span><span class="o">).</span><span class="n">listen</span><span class="o">(</span><span class="n">address</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">serverSocket</span> <span class="k">=</span> <span class="nc">IOManager</span><span class="o">(</span><span class="n">actorSystem</span><span class="o">).</span><span class="n">listen</span><span class="o">(</span><span class="s">&quot;localhost&quot;</span><span class="o">,</span> <span class="mi">80</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Receiving messages from the <tt class="docutils literal"><span class="pre">IOManager</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+
+  <span class="k">case</span> <span class="nc">IO</span><span class="o">.</span><span class="nc">Listening</span><span class="o">(</span><span class="n">server</span><span class="o">,</span> <span class="n">address</span><span class="o">)</span> <span class="k">=&gt;</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;The server is listening on socket &quot;</span> <span class="o">+</span> <span class="n">address</span><span class="o">)</span>
+
+  <span class="k">case</span> <span class="nc">IO</span><span class="o">.</span><span class="nc">Connected</span><span class="o">(</span><span class="n">socket</span><span class="o">,</span> <span class="n">address</span><span class="o">)</span> <span class="k">=&gt;</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Successfully connected to &quot;</span> <span class="o">+</span> <span class="n">address</span><span class="o">)</span>
+
+  <span class="k">case</span> <span class="nc">IO</span><span class="o">.</span><span class="nc">NewClient</span><span class="o">(</span><span class="n">server</span><span class="o">)</span> <span class="k">=&gt;</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;New incoming connection on server&quot;</span><span class="o">)</span>
+    <span class="k">val</span> <span class="n">socket</span> <span class="k">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span><span class="o">()</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Writing to new client socket&quot;</span><span class="o">)</span>
+    <span class="n">socket</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">bytes</span><span class="o">)</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Closing socket&quot;</span><span class="o">)</span>
+    <span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+
+  <span class="k">case</span> <span class="nc">IO</span><span class="o">.</span><span class="nc">Read</span><span class="o">(</span><span class="n">socket</span><span class="o">,</span> <span class="n">bytes</span><span class="o">)</span> <span class="k">=&gt;</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Received incoming data from socket&quot;</span><span class="o">)</span>
+
+  <span class="k">case</span> <span class="nc">IO</span><span class="o">.</span><span class="nc">Closed</span><span class="o">(</span><span class="n">socket</span><span class="k">:</span> <span class="kt">IO.SocketHandle</span><span class="o">,</span> <span class="n">cause</span><span class="o">)</span> <span class="k">=&gt;</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Socket has closed, cause: &quot;</span> <span class="o">+</span> <span class="n">cause</span><span class="o">)</span>
+
+  <span class="k">case</span> <span class="nc">IO</span><span class="o">.</span><span class="nc">Closed</span><span class="o">(</span><span class="n">server</span><span class="k">:</span> <span class="kt">IO.ServerHandle</span><span class="o">,</span> <span class="n">cause</span><span class="o">)</span> <span class="k">=&gt;</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Server socket has closed, cause: &quot;</span> <span class="o">+</span> <span class="n">cause</span><span class="o">)</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="io-iteratee">
+<h3>IO.Iteratee</h3>
+<p>Included with Akka's IO module is a basic implementation of <tt class="docutils literal"><span class="pre">Iteratee</span></tt>s. <tt class="docutils literal"><span class="pre">Iteratee</span></tt>s are an effective way of handling a stream of data without needing to wait for all the data to arrive. This is especially useful when dealing with non blocking IO since we will usually receive data in chunks which may not include enough information to process, or it may contain much more data then we currently need.</p>
+<p>This <tt class="docutils literal"><span class="pre">Iteratee</span></tt> implementation is much more basic then what is usually found. There is only support for <tt class="docutils literal"><span class="pre">ByteString</span></tt> input, and enumerators aren't used. The reason for this limited implementation is to reduce the amount of explicit type signatures needed and to keep things simple. It is important to note that Akka's <tt class="docutils literal"><span class="pre">Iteratee</span></tt>s are completely optional, incoming data can be handled in any way, including other <tt class="docutils literal"><span class="pre">Iteratee</span></tt> libraries.</p>
+<p><tt class="docutils literal"><span class="pre">Iteratee</span></tt>s work by processing the data that it is given and returning either the result (with any unused input) or a continuation if more input is needed. They are monadic, so methods like <tt class="docutils literal"><span class="pre">flatMap</span></tt> can be used to pass the result of an <tt class="docutils literal"><span class="pre">Iteratee</span></tt> to another.</p>
+<p>The basic <tt class="docutils literal"><span class="pre">Iteratee</span></tt>s included in the IO module can all be found in the ScalaDoc under <tt class="docutils literal"><span class="pre">akka.actor.IO</span></tt>, and some of them are covered in the example below.</p>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<div class="section" id="http-server">
+<h3>Http Server</h3>
+<p>This example will create a simple high performance HTTP server. We begin with our imports:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor._</span>
+<span class="k">import</span> <span class="nn">akka.util.</span><span class="o">{</span> <span class="nc">ByteString</span><span class="o">,</span> <span class="nc">ByteStringBuilder</span> <span class="o">}</span>
+<span class="k">import</span> <span class="nn">java.net.InetSocketAddress</span>
+</pre></div>
+</div>
+<p>Some commonly used constants:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">object</span> <span class="nc">HttpConstants</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nc">SP</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="nc">HT</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;\t&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="nc">CRLF</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;\r\n&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="nc">COLON</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;:&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="nc">PERCENT</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;%&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="nc">PATH</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="nc">QUERY</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;?&quot;</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>And case classes to hold the resulting request:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">case</span> <span class="k">class</span> <span class="nc">Request</span><span class="o">(</span><span class="n">meth</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">path</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span> <span class="n">query</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span> <span class="n">httpver</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">headers</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Header</span><span class="o">],</span> <span class="n">body</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">ByteString</span><span class="o">])</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Header</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">value</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Now for our first <tt class="docutils literal"><span class="pre">Iteratee</span></tt>. There are 3 main sections of a HTTP request: the request line, the headers, and an optional body. The main request <tt class="docutils literal"><span class="pre">Iteratee</span></tt> handles each section separately:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">object</span> <span class="nc">HttpIteratees</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">HttpConstants._</span>
+
+  <span class="k">def</span> <span class="n">readRequest</span> <span class="k">=</span>
+    <span class="k">for</span> <span class="o">{</span>
+      <span class="n">requestLine</span> <span class="k">←</span> <span class="n">readRequestLine</span>
+      <span class="o">(</span><span class="n">meth</span><span class="o">,</span> <span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="n">query</span><span class="o">),</span> <span class="n">httpver</span><span class="o">)</span> <span class="k">=</span> <span class="n">requestLine</span>
+      <span class="n">headers</span> <span class="k">←</span> <span class="n">readHeaders</span>
+      <span class="n">body</span> <span class="k">←</span> <span class="n">readBody</span><span class="o">(</span><span class="n">headers</span><span class="o">)</span>
+    <span class="o">}</span> <span class="k">yield</span> <span class="nc">Request</span><span class="o">(</span><span class="n">meth</span><span class="o">,</span> <span class="n">path</span><span class="o">,</span> <span class="n">query</span><span class="o">,</span> <span class="n">httpver</span><span class="o">,</span> <span class="n">headers</span><span class="o">,</span> <span class="n">body</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>In the above code <tt class="docutils literal"><span class="pre">readRequest</span></tt> takes the results of 3 different <tt class="docutils literal"><span class="pre">Iteratees</span></tt> (<tt class="docutils literal"><span class="pre">readRequestLine</span></tt>, <tt class="docutils literal"><span class="pre">readHeaders</span></tt>, <tt class="docutils literal"><span class="pre">readBody</span></tt>) and combines them into a single <tt class="docutils literal"><span class="pre">Request</span></tt> object. <tt class="docutils literal"><span class="pre">readRequestLine</span></tt> actually returns a tuple, so we extract it's individual components. <tt class="docutils literal"><span class="pre">readBody</span></tt> depends on values contained within the header section, so we must pass those to the method.</p>
+<p>The request line has 3 parts to it: the HTTP method, the requested URI, and the HTTP version. The parts are separated by a single space, and the entire request line ends with a <tt class="docutils literal"><span class="pre">CRLF</span></tt>.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">def</span> <span class="n">ascii</span><span class="o">(</span><span class="n">bytes</span><span class="k">:</span> <span class="kt">ByteString</span><span class="o">)</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="n">bytes</span><span class="o">.</span><span class="n">decodeString</span><span class="o">(</span><span class="s">&quot;US-ASCII&quot;</span><span class="o">).</span><span class="n">trim</span>
+
+<span class="k">def</span> <span class="n">readRequestLine</span> <span class="k">=</span>
+  <span class="k">for</span> <span class="o">{</span>
+    <span class="n">meth</span> <span class="k">←</span> <span class="nc">IO</span> <span class="n">takeUntil</span> <span class="nc">SP</span>
+    <span class="n">uri</span> <span class="k">←</span> <span class="n">readRequestURI</span>
+    <span class="k">_</span> <span class="k">←</span> <span class="nc">IO</span> <span class="n">takeUntil</span> <span class="nc">SP</span> <span class="c1">// ignore the rest</span>
+    <span class="n">httpver</span> <span class="k">←</span> <span class="nc">IO</span> <span class="n">takeUntil</span> <span class="nc">CRLF</span>
+  <span class="o">}</span> <span class="k">yield</span> <span class="o">(</span><span class="n">ascii</span><span class="o">(</span><span class="n">meth</span><span class="o">),</span> <span class="n">uri</span><span class="o">,</span> <span class="n">ascii</span><span class="o">(</span><span class="n">httpver</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>Reading the request method is simple as it is a single string ending in a space. The simple <tt class="docutils literal"><span class="pre">Iteratee</span></tt> that performs this is <tt class="docutils literal"><span class="pre">IO.takeUntil(delimiter:</span> <span class="pre">ByteString):</span> <span class="pre">Iteratee[ByteString]</span></tt>. It keeps consuming input until the specified delimiter is found. Reading the HTTP version is also a simple string that ends with a <tt class="docutils literal"><span class="pre">CRLF</span></tt>.</p>
+<p>The <tt class="docutils literal"><span class="pre">ascii</span></tt> method is a helper that takes a <tt class="docutils literal"><span class="pre">ByteString</span></tt> and parses it as a <tt class="docutils literal"><span class="pre">US-ASCII</span></tt> <tt class="docutils literal"><span class="pre">String</span></tt>.</p>
+<p>Reading the request URI is a bit more complicated because we want to parse the individual components of the URI instead of just returning a simple string:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">def</span> <span class="n">readRequestURI</span> <span class="k">=</span> <span class="nc">IO</span> <span class="n">peek</span> <span class="mi">1</span> <span class="n">flatMap</span> <span class="o">{</span>
+  <span class="k">case</span> <span class="nc">PATH</span> <span class="k">⇒</span>
+    <span class="k">for</span> <span class="o">{</span>
+      <span class="n">path</span> <span class="k">←</span> <span class="n">readPath</span>
+      <span class="n">query</span> <span class="k">←</span> <span class="n">readQuery</span>
+    <span class="o">}</span> <span class="k">yield</span> <span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="n">query</span><span class="o">)</span>
+  <span class="k">case</span> <span class="k">_</span> <span class="k">⇒</span> <span class="n">sys</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="s">&quot;Not Implemented&quot;</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>For this example we are only interested in handling absolute paths. To detect if we the URI is an absolute path we use <tt class="docutils literal"><span class="pre">IO.peek(length:</span> <span class="pre">Int):</span> <span class="pre">Iteratee[ByteString]</span></tt>, which returns a <tt class="docutils literal"><span class="pre">ByteString</span></tt> of the request length but doesn't actually consume the input. We peek at the next bit of input and see if it matches our <tt class="docutils literal"><span class="pre">PATH</span></tt> constant (defined above as <tt class="docutils literal"><span class="pre">ByteString(&quot;/&quot;)</span></tt>). If it doesn't match we throw an error, but for a more robust solution we would want to handle other valid URIs.</p>
+<p>Next we handle the path itself:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">def</span> <span class="n">readPath</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">step</span><span class="o">(</span><span class="n">segments</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span> <span class="kt">IO.Iteratee</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">IO</span> <span class="n">peek</span> <span class="mi">1</span> <span class="n">flatMap</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">PATH</span> <span class="k">⇒</span> <span class="nc">IO</span> <span class="n">drop</span> <span class="mi">1</span> <span class="n">flatMap</span> <span class="o">(</span><span class="k">_</span> <span class="k">⇒</span> <span class="n">readUriPart</span><span class="o">(</span><span class="n">pathchar</span><span class="o">)</span> <span class="n">flatMap</span> <span class="o">(</span><span class="n">segment</span> <span class="k">⇒</span> <span class="n">step</span><span class="o">(</span><span class="n">segment</span> <span class="o">::</span> <span class="n">segments</span><span class="o">)))</span>
+    <span class="k">case</span> <span class="k">_</span> <span class="k">⇒</span> <span class="n">segments</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="s">&quot;&quot;</span> <span class="o">::</span> <span class="n">rest</span> <span class="k">⇒</span> <span class="nc">IO</span> <span class="nc">Done</span> <span class="n">rest</span><span class="o">.</span><span class="n">reverse</span>
+      <span class="k">case</span> <span class="k">_</span>          <span class="k">⇒</span> <span class="nc">IO</span> <span class="nc">Done</span> <span class="n">segments</span><span class="o">.</span><span class="n">reverse</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="n">step</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">step</span></tt> method is a recursive method that takes a <tt class="docutils literal"><span class="pre">List</span></tt> of the accumulated path segments. It first checks if the remaining input starts with the <tt class="docutils literal"><span class="pre">PATH</span></tt> constant, and if it does, it drops that input, and returns the <tt class="docutils literal"><span class="pre">readUriPart</span></tt> <tt class="docutils literal"><span class="pre">Iteratee</span></tt> which has it's result added to the path segment accumulator and the <tt class="docutils literal"><span class="pre">step</span></tt> method is run again.</p>
+<p>If after reading in a path segment the next input does not start with a path, we reverse the accumulated segments and return it (dropping the last segment if it is blank).</p>
+<p>Following the path we read in the query (if it exists):</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">def</span> <span class="n">readQuery</span><span class="k">:</span> <span class="kt">IO.Iteratee</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">IO</span> <span class="n">peek</span> <span class="mi">1</span> <span class="n">flatMap</span> <span class="o">{</span>
+  <span class="k">case</span> <span class="nc">QUERY</span> <span class="k">⇒</span> <span class="nc">IO</span> <span class="n">drop</span> <span class="mi">1</span> <span class="n">flatMap</span> <span class="o">(</span><span class="k">_</span> <span class="k">⇒</span> <span class="n">readUriPart</span><span class="o">(</span><span class="n">querychar</span><span class="o">)</span> <span class="n">map</span> <span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="n">_</span><span class="o">)))</span>
+  <span class="k">case</span> <span class="k">_</span>     <span class="k">⇒</span> <span class="nc">IO</span> <span class="nc">Done</span> <span class="nc">None</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>It is much simpler then reading the path since we aren't doing any parsing of the query since there is no standard format of the query string.</p>
+<p>Both the path and query used the <tt class="docutils literal"><span class="pre">readUriPart</span></tt> <tt class="docutils literal"><span class="pre">Iteratee</span></tt>, which is next:</p>
+<div class="highlight-scala"><pre>val alpha = Set.empty ++ ('a' to 'z') ++ ('A' to 'Z') map (_.toByte)
+val digit = Set.empty ++ ('0' to '9') map (_.toByte)
+val hexdigit = digit ++ (Set.empty ++ ('a' to 'f') ++ ('A' to 'F') map (_.toByte))
+val subdelim = Set('!', '$', '&amp;', '\'', '(', ')', '*', '+', ',', ';', '=') map (_.toByte)
+val pathchar = alpha ++ digit ++ subdelim ++ (Set(':', '@') map (_.toByte))
+val querychar = pathchar ++ (Set('/', '?') map (_.toByte))
+
+def readUriPart(allowed: Set[Byte]): IO.Iteratee[String] = for {
+  str ← IO takeWhile allowed map ascii
+  pchar ← IO peek 1 map (_ == PERCENT)
+  all ← if (pchar) readPChar flatMap (ch ⇒ readUriPart(allowed) map (str + ch + _)) else IO Done str
+} yield all
+
+def readPChar = IO take 3 map {
+  case Seq('%', rest @ _*) if rest forall hexdigit ⇒
+    java.lang.Integer.parseInt(rest map (_.toChar) mkString, 16).toChar
+}
+</pre>
+</div>
+<p>Here we have several <tt class="docutils literal"><span class="pre">Set</span></tt>s that contain valid characters pulled from the URI spec. The <tt class="docutils literal"><span class="pre">readUriPart</span></tt> method takes a <tt class="docutils literal"><span class="pre">Set</span></tt> of valid characters (already mapped to <tt class="docutils literal"><span class="pre">Byte</span></tt>s) and will continue to match characters until it reaches on that is not part of the <tt class="docutils literal"><span class="pre">Set</span></tt>. If it is a percent encoded character then that is handled as a valid character and processing continues, or else we are done collecting this part of the URI.</p>
+<p>Headers are next:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">def</span> <span class="n">readHeaders</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">step</span><span class="o">(</span><span class="n">found</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Header</span><span class="o">])</span><span class="k">:</span> <span class="kt">IO.Iteratee</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">Header</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="nc">IO</span> <span class="n">peek</span> <span class="mi">2</span> <span class="n">flatMap</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">CRLF</span> <span class="k">⇒</span> <span class="nc">IO</span> <span class="n">takeUntil</span> <span class="nc">CRLF</span> <span class="n">flatMap</span> <span class="o">(</span><span class="k">_</span> <span class="k">⇒</span> <span class="nc">IO</span> <span class="nc">Done</span> <span class="n">found</span><span class="o">)</span>
+      <span class="k">case</span> <span class="k">_</span>    <span class="k">⇒</span> <span class="n">readHeader</span> <span class="n">flatMap</span> <span class="o">(</span><span class="n">header</span> <span class="k">⇒</span> <span class="n">step</span><span class="o">(</span><span class="n">header</span> <span class="o">::</span> <span class="n">found</span><span class="o">))</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="n">step</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">def</span> <span class="n">readHeader</span> <span class="k">=</span>
+  <span class="k">for</span> <span class="o">{</span>
+    <span class="n">name</span> <span class="k">←</span> <span class="nc">IO</span> <span class="n">takeUntil</span> <span class="nc">COLON</span>
+    <span class="n">value</span> <span class="k">←</span> <span class="nc">IO</span> <span class="n">takeUntil</span> <span class="nc">CRLF</span> <span class="n">flatMap</span> <span class="n">readMultiLineValue</span>
+  <span class="o">}</span> <span class="k">yield</span> <span class="nc">Header</span><span class="o">(</span><span class="n">ascii</span><span class="o">(</span><span class="n">name</span><span class="o">),</span> <span class="n">ascii</span><span class="o">(</span><span class="n">value</span><span class="o">))</span>
+
+<span class="k">def</span> <span class="n">readMultiLineValue</span><span class="o">(</span><span class="n">initial</span><span class="k">:</span> <span class="kt">ByteString</span><span class="o">)</span><span class="k">:</span> <span class="kt">IO.Iteratee</span><span class="o">[</span><span class="kt">ByteString</span><span class="o">]</span> <span class="k">=</span> <span class="nc">IO</span> <span class="n">peek</span> <span class="mi">1</span> <span class="n">flatMap</span> <span class="o">{</span>
+  <span class="k">case</span> <span class="nc">SP</span> <span class="k">⇒</span> <span class="nc">IO</span> <span class="n">takeUntil</span> <span class="nc">CRLF</span> <span class="n">flatMap</span> <span class="o">(</span><span class="n">bytes</span> <span class="k">⇒</span> <span class="n">readMultiLineValue</span><span class="o">(</span><span class="n">initial</span> <span class="o">++</span> <span class="n">bytes</span><span class="o">))</span>
+  <span class="k">case</span> <span class="k">_</span>  <span class="k">⇒</span> <span class="nc">IO</span> <span class="nc">Done</span> <span class="n">initial</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>And if applicable, we read in the message body:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">def</span> <span class="n">readBody</span><span class="o">(</span><span class="n">headers</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Header</span><span class="o">])</span> <span class="k">=</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">headers</span><span class="o">.</span><span class="n">exists</span><span class="o">(</span><span class="n">header</span> <span class="k">⇒</span> <span class="n">header</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&quot;Content-Length&quot;</span> <span class="o">||</span> <span class="n">header</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&quot;Transfer-Encoding&quot;</span><span class="o">))</span>
+    <span class="nc">IO</span><span class="o">.</span><span class="n">takeAll</span> <span class="n">map</span> <span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="n">_</span><span class="o">))</span>
+  <span class="k">else</span>
+    <span class="nc">IO</span> <span class="nc">Done</span> <span class="nc">None</span>
+</pre></div>
+</div>
+<p>Finally we get to the actual <tt class="docutils literal"><span class="pre">Actor</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">class</span> <span class="nc">HttpServer</span><span class="o">(</span><span class="n">port</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+
+  <span class="k">val</span> <span class="n">state</span> <span class="k">=</span> <span class="nc">IO</span><span class="o">.</span><span class="nc">IterateeRef</span><span class="o">.</span><span class="nc">Map</span><span class="o">.</span><span class="n">async</span><span class="o">[</span><span class="kt">IO.Handle</span><span class="o">]()(</span><span class="n">context</span><span class="o">.</span><span class="n">dispatcher</span><span class="o">)</span>
+
+  <span class="k">override</span> <span class="k">def</span> <span class="n">preStart</span> <span class="o">{</span>
+    <span class="nc">IOManager</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">)</span> <span class="n">listen</span> <span class="k">new</span> <span class="nc">InetSocketAddress</span><span class="o">(</span><span class="n">port</span><span class="o">)</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+
+    <span class="k">case</span> <span class="nc">IO</span><span class="o">.</span><span class="nc">NewClient</span><span class="o">(</span><span class="n">server</span><span class="o">)</span> <span class="k">⇒</span>
+      <span class="k">val</span> <span class="n">socket</span> <span class="k">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span><span class="o">()</span>
+      <span class="n">state</span><span class="o">(</span><span class="n">socket</span><span class="o">)</span> <span class="n">flatMap</span> <span class="o">(</span><span class="k">_</span> <span class="k">⇒</span> <span class="nc">HttpServer</span><span class="o">.</span><span class="n">processRequest</span><span class="o">(</span><span class="n">socket</span><span class="o">))</span>
+
+    <span class="k">case</span> <span class="nc">IO</span><span class="o">.</span><span class="nc">Read</span><span class="o">(</span><span class="n">socket</span><span class="o">,</span> <span class="n">bytes</span><span class="o">)</span> <span class="k">⇒</span>
+      <span class="n">state</span><span class="o">(</span><span class="n">socket</span><span class="o">)(</span><span class="nc">IO</span> <span class="nc">Chunk</span> <span class="n">bytes</span><span class="o">)</span>
+
+    <span class="k">case</span> <span class="nc">IO</span><span class="o">.</span><span class="nc">Closed</span><span class="o">(</span><span class="n">socket</span><span class="o">,</span> <span class="n">cause</span><span class="o">)</span> <span class="k">⇒</span>
+      <span class="n">state</span><span class="o">(</span><span class="n">socket</span><span class="o">)(</span><span class="nc">IO</span> <span class="nc">EOF</span> <span class="nc">None</span><span class="o">)</span>
+      <span class="n">state</span> <span class="o">-=</span> <span class="n">socket</span>
+
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>And it's companion object:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">object</span> <span class="nc">HttpServer</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">HttpIteratees._</span>
+
+  <span class="k">def</span> <span class="n">processRequest</span><span class="o">(</span><span class="n">socket</span><span class="k">:</span> <span class="kt">IO.SocketHandle</span><span class="o">)</span><span class="k">:</span> <span class="kt">IO.Iteratee</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span>
+    <span class="nc">IO</span> <span class="n">repeat</span> <span class="o">{</span>
+      <span class="k">for</span> <span class="o">{</span>
+        <span class="n">request</span> <span class="k">←</span> <span class="n">readRequest</span>
+      <span class="o">}</span> <span class="k">yield</span> <span class="o">{</span>
+        <span class="k">val</span> <span class="n">rsp</span> <span class="k">=</span> <span class="n">request</span> <span class="k">match</span> <span class="o">{</span>
+          <span class="k">case</span> <span class="nc">Request</span><span class="o">(</span><span class="s">&quot;GET&quot;</span><span class="o">,</span> <span class="s">&quot;ping&quot;</span> <span class="o">::</span> <span class="nc">Nil</span><span class="o">,</span> <span class="n">_</span><span class="o">,</span> <span class="n">_</span><span class="o">,</span> <span class="n">headers</span><span class="o">,</span> <span class="n">_</span><span class="o">)</span> <span class="k">⇒</span>
+            <span class="nc">OKResponse</span><span class="o">(</span><span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;&lt;p&gt;pong&lt;/p&gt;&quot;</span><span class="o">),</span>
+              <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">exists</span> <span class="o">{</span> <span class="k">case</span> <span class="nc">Header</span><span class="o">(</span><span class="n">n</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="k">⇒</span> <span class="n">n</span><span class="o">.</span><span class="n">toLowerCase</span> <span class="o">==</span> <span class="s">&quot;connection&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">v</span><span class="o">.</span><span class="n">toLowerCase</span> <span class="o">==</span> <span class="s">&quot;keep-alive&quot;</span> <span class="o">})</span>
+          <span class="k">case</span> <span class="n">req</span> <span class="k">⇒</span>
+            <span class="nc">OKResponse</span><span class="o">(</span><span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;&lt;p&gt;&quot;</span> <span class="o">+</span> <span class="n">req</span><span class="o">.</span><span class="n">toString</span> <span class="o">+</span> <span class="s">&quot;&lt;/p&gt;&quot;</span><span class="o">),</span>
+              <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">exists</span> <span class="o">{</span> <span class="k">case</span> <span class="nc">Header</span><span class="o">(</span><span class="n">n</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="k">⇒</span> <span class="n">n</span><span class="o">.</span><span class="n">toLowerCase</span> <span class="o">==</span> <span class="s">&quot;connection&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">v</span><span class="o">.</span><span class="n">toLowerCase</span> <span class="o">==</span> <span class="s">&quot;keep-alive&quot;</span> <span class="o">})</span>
+        <span class="o">}</span>
+        <span class="n">socket</span> <span class="n">write</span> <span class="nc">OKResponse</span><span class="o">.</span><span class="n">bytes</span><span class="o">(</span><span class="n">rsp</span><span class="o">).</span><span class="n">compact</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">rsp</span><span class="o">.</span><span class="n">keepAlive</span><span class="o">)</span> <span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>And the OKResponse:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">object</span> <span class="nc">OKResponse</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">HttpConstants.CRLF</span>
+
+  <span class="k">val</span> <span class="n">okStatus</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;HTTP/1.1 200 OK&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">contentType</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;Content-Type: text/html; charset=utf-8&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">cacheControl</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;Cache-Control: no-cache&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">date</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;Date: &quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">server</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;Server: Akka&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">contentLength</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;Content-Length: &quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">connection</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;Connection: &quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">keepAlive</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;Keep-Alive&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">close</span> <span class="k">=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="s">&quot;Close&quot;</span><span class="o">)</span>
+
+  <span class="k">def</span> <span class="n">bytes</span><span class="o">(</span><span class="n">rsp</span><span class="k">:</span> <span class="kt">OKResponse</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">new</span> <span class="nc">ByteStringBuilder</span> <span class="o">++=</span>
+      <span class="n">okStatus</span> <span class="o">++=</span> <span class="nc">CRLF</span> <span class="o">++=</span>
+      <span class="n">contentType</span> <span class="o">++=</span> <span class="nc">CRLF</span> <span class="o">++=</span>
+      <span class="n">cacheControl</span> <span class="o">++=</span> <span class="nc">CRLF</span> <span class="o">++=</span>
+      <span class="n">date</span> <span class="o">++=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="k">new</span> <span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">Date</span><span class="o">().</span><span class="n">toString</span><span class="o">)</span> <span class="o">++=</span> <span class="nc">CRLF</span> <span class="o">++=</span>
+      <span class="n">server</span> <span class="o">++=</span> <span class="nc">CRLF</span> <span class="o">++=</span>
+      <span class="n">contentLength</span> <span class="o">++=</span> <span class="nc">ByteString</span><span class="o">(</span><span class="n">rsp</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">toString</span><span class="o">)</span> <span class="o">++=</span> <span class="nc">CRLF</span> <span class="o">++=</span>
+      <span class="n">connection</span> <span class="o">++=</span> <span class="o">(</span><span class="k">if</span> <span class="o">(</span><span class="n">rsp</span><span class="o">.</span><span class="n">keepAlive</span><span class="o">)</span> <span class="n">keepAlive</span> <span class="k">else</span> <span class="n">close</span><span class="o">)</span> <span class="o">++=</span> <span class="nc">CRLF</span> <span class="o">++=</span> <span class="nc">CRLF</span> <span class="o">++=</span> <span class="n">rsp</span><span class="o">.</span><span class="n">body</span> <span class="n">result</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">OKResponse</span><span class="o">(</span><span class="n">body</span><span class="k">:</span> <span class="kt">ByteString</span><span class="o">,</span> <span class="n">keepAlive</span><span class="k">:</span> <span class="kt">Boolean</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>A <tt class="docutils literal"><span class="pre">main</span></tt> method to start everything up:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">object</span> <span class="nc">Main</span> <span class="k">extends</span> <span class="nc">App</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">port</span> <span class="k">=</span> <span class="nc">Option</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="n">getenv</span><span class="o">(</span><span class="s">&quot;PORT&quot;</span><span class="o">))</span> <span class="n">map</span> <span class="o">(</span><span class="n">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span> <span class="n">getOrElse</span> <span class="mi">8080</span>
+  <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">()</span>
+  <span class="k">val</span> <span class="n">server</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">HttpServer</span><span class="o">(</span><span class="n">port</span><span class="o">)))</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

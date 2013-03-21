@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite failures="0" time="0.016" errors="0" skipped="0" tests="5" name="info.bliki.wiki.filter.WPSemanticLinkTest">
+  <properties>
+    <property name="java.vendor" value="Sun Microsystems Inc."/>
+    <property name="localRepository" value="C:\Dokumente und Einstellungen\Klaus.KLAUS-IBFFO1H0D\.m2\repository"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.management.compiler" value="HotSpot Client Compiler"/>
+    <property name="env.PROMPT" value="$P$G"/>
+    <property name="os.name" value="Windows XP"/>
+    <property name="env.FP_NO_HOST_CHECK" value="NO"/>
+    <property name="sun.boot.class.path" value="C:\Java\jdk1.6.0\jre\lib\resources.jar;C:\Java\jdk1.6.0\jre\lib\rt.jar;C:\Java\jdk1.6.0\jre\lib\sunrsasign.jar;C:\Java\jdk1.6.0\jre\lib\jsse.jar;C:\Java\jdk1.6.0\jre\lib\jce.jar;C:\Java\jdk1.6.0\jre\lib\charsets.jar;C:\Java\jdk1.6.0\jre\classes"/>
+    <property name="env.COMPUTERNAME" value="KLAUS-IBFFO1H0D"/>
+    <property name="env.ALLUSERSPROFILE" value="C:\Dokumente und Einstellungen\All Users.WINDOWS"/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="java.runtime.version" value="1.6.0-b105"/>
+    <property name="env.HOMEPATH" value="\Dokumente und Einstellungen\Klaus.KLAUS-IBFFO1H0D"/>
+    <property name="user.name" value="Klaus"/>
+    <property name="env.QTJAVA" value="C:\Programme\Java\jre1.6.0_03\lib\ext\QTJava.zip"/>
+    <property name="user.language" value="de"/>
+    <property name="sun.boot.library.path" value="C:\Java\jdk1.6.0\jre\bin"/>
+    <property name="classworlds.conf" value="C:\galileo\workspace\.metadata\.plugins\org.maven.ide.eclipse\launches\m2conf5230257675802026733.tmp"/>
+    <property name="java.version" value="1.6.0"/>
+    <property name="env.PROCESSOR_IDENTIFIER" value="x86 Family 15 Model 2 Stepping 9, GenuineIntel"/>
+    <property name="user.timezone" value="Europe/Berlin"/>
+    <property name="env.asl.log" value="Destination=file;OnFirstLog=command,environment,parent"/>
+    <property name="env.CLIENTNAME" value="Console"/>
+    <property name="env.TEMP" value="C:\DOKUME~1\KLAUS~1.KLA\LOKALE~1\Temp"/>
+    <property name="sun.arch.data.model" value="32"/>
+    <property name="java.endorsed.dirs" value="C:\Java\jdk1.6.0\jre\lib\endorsed"/>
+    <property name="sun.cpu.isalist" value=""/>
+    <property name="env.HOMEDRIVE" value="C:"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="50.0"/>
+    <property name="user.country" value="DE"/>
+    <property name="java.home" value="C:\Java\jdk1.6.0\jre"/>
+    <property name="env.APPDATA" value="C:\Dokumente und Einstellungen\Klaus.KLAUS-IBFFO1H0D\Anwendungsdaten"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="env.ComSpec" value="C:\WINDOWS\system32\cmd.exe"/>
+    <property name="env.OS" value="Windows_NT"/>
+    <property name="env.CommonProgramFiles" value="C:\Programme\Gemeinsame Dateien"/>
+    <property name="os.version" value="5.1"/>
+    <property name="path.separator" value=";"/>
+    <property name="java.vm.version" value="1.6.0-b105"/>
+    <property name="user.variant" value=""/>
+    <property name="env.USERPROFILE" value="C:\Dokumente und Einstellungen\Klaus.KLAUS-IBFFO1H0D"/>
+    <property name="env.JAVA_HOME" value="C:\Java\jdk1.6.0\"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="env.TMP" value="C:\DOKUME~1\KLAUS~1.KLA\LOKALE~1\Temp"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="user.home" value="C:\Dokumente und Einstellungen\Klaus.KLAUS-IBFFO1H0D"/>
+    <property name="env.SESSIONNAME" value="Console"/>
+    <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="env.CLASSPATH" value=".;C:\Programme\Java\jre1.6.0_03\lib\ext\QTJava.zip"/>
+    <property name="env.NUMBER_OF_PROCESSORS" value="1"/>
+    <property name="java.library.path" value="C:\Java\jdk1.6.0\bin;.;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Programme/Java/jre6/bin/client;C:/Programme/Java/jre6/bin;C:\IDE\grails-1.0\bin;C:\miktex\miktex25\miktex\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\ATI-CPanel;C:\Programme\QuickTime\QTSystem\;C:\Python25\appengine\"/>
+    <property name="java.vendor.url" value="http://java.sun.com/"/>
+    <property name="java.vm.vendor" value="Sun Microsystems Inc."/>
+    <property name="maven.home" value="EMBEDDED"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="java.class.path" value="/C:/galileo/eclipse/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/plexus-classworlds-1.2-alpha-12.jar"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="env.LOGONSERVER" value="\\KLAUS-IBFFO1H0D"/>
+    <property name="env.windir" value="C:\WINDOWS"/>
+    <property name="java.vm.specification.version" value="1.0"/>
+    <property name="env.PROCESSOR_ARCHITECTURE" value="x86"/>
+    <property name="m2eclipse.workspace.state" value="C:\galileo\workspace\.metadata\.plugins\org.maven.ide.eclipse\workspacestate.properties"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.os.patch.level" value="Service Pack 3"/>
+    <property name="env.ProgramFiles" value="C:\Programme"/>
+    <property name="surefire.test.class.path" value="C:\galileo\workspace\info.bliki.wiki\bliki-core\target\test-classes;C:\galileo\workspace\info.bliki.wiki\bliki-core\target\classes;C:\Dokumente und Einstellungen\Klaus.KLAUS-IBFFO1H0D\.m2\repository\commons-httpclient\commons-httpclient\3.1\commons-httpclient-3.1.jar;C:\Dokumente und Einstellungen\Klaus.KLAUS-IBFFO1H0D\.m2\repository\commons-logging\commons-logging\1.0.4\commons-logging-1.0.4.jar;C:\Dokumente und Einstellungen\Klaus.KLAUS-IBFFO1H0D\.m2\repository\commons-codec\commons-codec\1.2\commons-codec-1.2.jar;C:\Dokumente und Einstellungen\Klaus.KLAUS-IBFFO1H0D\.m2\repository\junit\junit\4.5\junit-4.5.jar;C:\Dokumente und Einstellungen\Klaus.KLAUS-IBFFO1H0D\.m2\repository\org\apache\commons\commons-compress\1.4.1\commons-compress-1.4.1.jar;C:\Dokumente und Einstellungen\Klaus.KLAUS-IBFFO1H0D\.m2\repository\org\tukaani\xz\1.0\xz-1.0.jar;"/>
+    <property name="java.io.tmpdir" value="C:\DOKUME~1\KLAUS~1.KLA\LOKALE~1\Temp\"/>
+    <property name="env.PROCESSOR_REVISION" value="0209"/>
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
+    <property name="env.SystemRoot" value="C:\WINDOWS"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="os.arch" value="x86"/>
+    <property name="java.ext.dirs" value="C:\Java\jdk1.6.0\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext"/>
+    <property name="user.dir" value="C:\galileo\workspace\info.bliki.wiki\bliki-core"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) Client VM"/>
+    <property name="env.PATHEXT" value=".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH"/>
+    <property name="env.Path" value="C:/Programme/Java/jre6/bin/client;C:/Programme/Java/jre6/bin;C:\IDE\grails-1.0\bin;C:\miktex\miktex25\miktex\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\ATI-CPanel;C:\Programme\QuickTime\QTSystem\;C:\Python25\appengine\"/>
+    <property name="basedir" value="C:\galileo\workspace\info.bliki.wiki\bliki-core"/>
+    <property name="maven.mode.standalone" value="true"/>
+    <property name="env.USERNAME" value="Klaus"/>
+    <property name="env.SystemDrive" value="C:"/>
+    <property name="file.encoding" value="Cp1252"/>
+    <property name="env.GRAILS_HOME" value="C:\IDE\grails-1.0"/>
+    <property name="env.USERDOMAIN" value="KLAUS-IBFFO1H0D"/>
+    <property name="java.specification.version" value="1.6"/>
+    <property name="env.PROCESSOR_LEVEL" value="15"/>
+  </properties>
+  <testcase time="0" classname="info.bliki.wiki.filter.WPSemanticLinkTest" name="testLink01"/>
+  <testcase time="0.016" classname="info.bliki.wiki.filter.WPSemanticLinkTest" name="testLink02"/>
+  <testcase time="0" classname="info.bliki.wiki.filter.WPSemanticLinkTest" name="testLink03"/>
+  <testcase time="0" classname="info.bliki.wiki.filter.WPSemanticLinkTest" name="testLink04"/>
+  <testcase time="0" classname="info.bliki.wiki.filter.WPSemanticLinkTest" name="testLink05"/>
+</testsuite>

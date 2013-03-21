@@ -1,0 +1,325 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Scheduler (Java) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Java API" href="index.html" />
+    <link rel="next" title="Futures (Java)" href="futures.html" />
+    <link rel="prev" title="Event Bus (Java)" href="event-bus.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Scheduler (Java)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="futures.html">Futures (Java)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="event-bus.html">Event Bus (Java)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="scheduler-java">
+<span id="id1"></span><h1>Scheduler (Java)</h1>
+<p>Sometimes the need for making things happen in the future arises, and where do you go look then?
+Look no further than <tt class="docutils literal"><span class="pre">ActorSystem</span></tt>! There you find the <tt class="xref py py-meth docutils literal"><span class="pre">scheduler</span></tt> method that returns an instance
+of akka.actor.Scheduler, this instance is unique per ActorSystem and is used internally for scheduling things
+to happen at specific points in time. Please note that the scheduled tasks are executed by the default
+<tt class="docutils literal"><span class="pre">MessageDispatcher</span></tt> of the <tt class="docutils literal"><span class="pre">ActorSystem</span></tt>.</p>
+<p>You can schedule sending of messages to actors and execution of tasks (functions or Runnable).
+You will get a <tt class="docutils literal"><span class="pre">Cancellable</span></tt> back that you can call <tt class="xref py py-meth docutils literal"><span class="pre">cancel</span></tt> on to cancel the execution of the
+scheduled operation.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The default implementation of <tt class="docutils literal"><span class="pre">Scheduler</span></tt> used by Akka is based on the Netty <tt class="docutils literal"><span class="pre">HashedWheelTimer</span></tt>.
+It does not execute tasks at the exact time, but on every tick, it will run everything that is overdue.
+The accuracy of the default Scheduler can be modified by the &quot;ticks-per-wheel&quot; and &quot;tick-duration&quot; configuration
+properties. For more information, see: <a class="reference external" href="http://www.cse.wustl.edu/~cdgill/courses/cs6874/TimingWheels.ppt">HashedWheelTimers</a>.</p>
+</div>
+<div class="section" id="some-examples">
+<h2>Some examples</h2>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.Props</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.util.Duration</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+
+    <span class="c1">//Schedules to send the &quot;foo&quot;-message to the testActor after 50ms</span>
+    <span class="n">system</span><span class="o">.</span><span class="n">scheduler</span><span class="o">().</span><span class="n">scheduleOnce</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="mi">50</span><span class="o">,</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="nc">MILLISECONDS</span><span class="o">),</span> <span class="n">testActor</span><span class="o">,</span> <span class="s">&quot;foo&quot;</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="highlight-scala"><div class="highlight"><pre><span class="c1">//Schedules a Runnable to be executed (send the current time) to the testActor after 50ms</span>
+<span class="n">system</span><span class="o">.</span><span class="n">scheduler</span><span class="o">().</span><span class="n">scheduleOnce</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="mi">50</span><span class="o">,</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="nc">MILLISECONDS</span><span class="o">),</span> <span class="k">new</span> <span class="nc">Runnable</span><span class="o">()</span> <span class="o">{</span>
+  <span class="nd">@Override</span>
+  <span class="n">public</span> <span class="n">void</span> <span class="n">run</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">testActor</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="n">currentTimeMillis</span><span class="o">());</span>
+  <span class="o">}</span>
+<span class="o">});</span>
+</pre></div>
+</div>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.Props</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.util.Duration</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+
+<span class="k">import</span> <span class="nn">akka.actor.UntypedActor</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.actor.UntypedActorFactory</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.actor.Cancellable</span><span class="o">;</span>
+
+    <span class="nc">ActorRef</span> <span class="n">tickActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="nc">Props</span><span class="o">().</span><span class="n">withCreator</span><span class="o">(</span><span class="k">new</span> <span class="nc">UntypedActorFactory</span><span class="o">()</span> <span class="o">{</span>
+      <span class="n">public</span> <span class="nc">UntypedActor</span> <span class="n">create</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nc">UntypedActor</span><span class="o">()</span> <span class="o">{</span>
+          <span class="n">public</span> <span class="n">void</span> <span class="n">onReceive</span><span class="o">(</span><span class="nc">Object</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="n">equals</span><span class="o">(</span><span class="s">&quot;Tick&quot;</span><span class="o">))</span> <span class="o">{</span>
+              <span class="c1">// Do someting</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+              <span class="n">unhandled</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+            <span class="o">}</span>
+          <span class="o">}</span>
+        <span class="o">};</span>
+      <span class="o">}</span>
+    <span class="o">}));</span>
+
+    <span class="c1">//This will schedule to send the Tick-message</span>
+    <span class="c1">//to the tickActor after 0ms repeating every 50ms</span>
+    <span class="nc">Cancellable</span> <span class="n">cancellable</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">scheduler</span><span class="o">().</span><span class="n">schedule</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="nc">Zero</span><span class="o">(),</span> <span class="nc">Duration</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="mi">50</span><span class="o">,</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="nc">MILLISECONDS</span><span class="o">),</span>
+        <span class="n">tickActor</span><span class="o">,</span> <span class="s">&quot;Tick&quot;</span><span class="o">);</span>
+
+    <span class="c1">//This cancels further Ticks to be sent</span>
+    <span class="n">cancellable</span><span class="o">.</span><span class="n">cancel</span><span class="o">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="from-akka-actor-actorsystem">
+<h2>From <tt class="docutils literal"><span class="pre">akka.actor.ActorSystem</span></tt></h2>
+<div class="highlight-scala"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * Light-weight scheduler for running asynchronous tasks after some deadline</span>
+<span class="cm"> * in the future. Not terribly precise but cheap.</span>
+<span class="cm"> */</span>
+<span class="k">def</span> <span class="n">scheduler</span><span class="k">:</span> <span class="kt">Scheduler</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-scheduler-interface">
+<h2>The Scheduler interface</h2>
+<div class="highlight-scala"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * An Akka scheduler service. This one needs one special behavior: if</span>
+<span class="cm"> * Closeable, it MUST execute all outstanding tasks upon .close() in order</span>
+<span class="cm"> * to properly shutdown all dispatchers.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Furthermore, this timer service MUST throw IllegalStateException if it</span>
+<span class="cm"> * cannot schedule a task. Once scheduled, the task MUST be executed. If</span>
+<span class="cm"> * executed upon close(), the task may execute before its timeout.</span>
+<span class="cm"> */</span>
+<span class="k">trait</span> <span class="nc">Scheduler</span> <span class="o">{</span>
+  <span class="cm">/**</span>
+<span class="cm">   * Schedules a message to be sent repeatedly with an initial delay and</span>
+<span class="cm">   * frequency. E.g. if you would like a message to be sent immediately and</span>
+<span class="cm">   * thereafter every 500ms you would set delay=Duration.Zero and</span>
+<span class="cm">   * frequency=Duration(500, TimeUnit.MILLISECONDS)</span>
+<span class="cm">   *</span>
+<span class="cm">   * Java &amp; Scala API</span>
+<span class="cm">   */</span>
+  <span class="k">def</span> <span class="n">schedule</span><span class="o">(</span>
+    <span class="n">initialDelay</span><span class="k">:</span> <span class="kt">Duration</span><span class="o">,</span>
+    <span class="n">frequency</span><span class="k">:</span> <span class="kt">Duration</span><span class="o">,</span>
+    <span class="n">receiver</span><span class="k">:</span> <span class="kt">ActorRef</span><span class="o">,</span>
+    <span class="n">message</span><span class="k">:</span> <span class="kt">Any</span><span class="o">)</span><span class="k">:</span> <span class="kt">Cancellable</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Schedules a function to be run repeatedly with an initial delay and a</span>
+<span class="cm">   * frequency. E.g. if you would like the function to be run after 2 seconds</span>
+<span class="cm">   * and thereafter every 100ms you would set delay = Duration(2, TimeUnit.SECONDS)</span>
+<span class="cm">   * and frequency = Duration(100, TimeUnit.MILLISECONDS)</span>
+<span class="cm">   *</span>
+<span class="cm">   * Scala API</span>
+<span class="cm">   */</span>
+  <span class="k">def</span> <span class="n">schedule</span><span class="o">(</span>
+    <span class="n">initialDelay</span><span class="k">:</span> <span class="kt">Duration</span><span class="o">,</span> <span class="n">frequency</span><span class="k">:</span> <span class="kt">Duration</span><span class="o">)(</span><span class="n">f</span><span class="k">:</span> <span class="k">⇒</span> <span class="kt">Unit</span><span class="o">)</span><span class="k">:</span> <span class="kt">Cancellable</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Schedules a function to be run repeatedly with an initial delay and</span>
+<span class="cm">   * a frequency. E.g. if you would like the function to be run after 2</span>
+<span class="cm">   * seconds and thereafter every 100ms you would set delay = Duration(2,</span>
+<span class="cm">   * TimeUnit.SECONDS) and frequency = Duration(100, TimeUnit.MILLISECONDS)</span>
+<span class="cm">   *</span>
+<span class="cm">   * Java API</span>
+<span class="cm">   */</span>
+  <span class="k">def</span> <span class="n">schedule</span><span class="o">(</span>
+    <span class="n">initialDelay</span><span class="k">:</span> <span class="kt">Duration</span><span class="o">,</span> <span class="n">frequency</span><span class="k">:</span> <span class="kt">Duration</span><span class="o">,</span> <span class="n">runnable</span><span class="k">:</span> <span class="kt">Runnable</span><span class="o">)</span><span class="k">:</span> <span class="kt">Cancellable</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Schedules a Runnable to be run once with a delay, i.e. a time period that</span>
+<span class="cm">   * has to pass before the runnable is executed.</span>
+<span class="cm">   *</span>
+<span class="cm">   * Java &amp; Scala API</span>
+<span class="cm">   */</span>
+  <span class="k">def</span> <span class="n">scheduleOnce</span><span class="o">(</span><span class="n">delay</span><span class="k">:</span> <span class="kt">Duration</span><span class="o">,</span> <span class="n">runnable</span><span class="k">:</span> <span class="kt">Runnable</span><span class="o">)</span><span class="k">:</span> <span class="kt">Cancellable</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Schedules a message to be sent once with a delay, i.e. a time period that has</span>
+<span class="cm">   * to pass before the message is sent.</span>
+<span class="cm">   *</span>
+<span class="cm">   * Java &amp; Scala API</span>
+<span class="cm">   */</span>
+  <span class="k">def</span> <span class="n">scheduleOnce</span><span class="o">(</span><span class="n">delay</span><span class="k">:</span> <span class="kt">Duration</span><span class="o">,</span> <span class="n">receiver</span><span class="k">:</span> <span class="kt">ActorRef</span><span class="o">,</span> <span class="n">message</span><span class="k">:</span> <span class="kt">Any</span><span class="o">)</span><span class="k">:</span> <span class="kt">Cancellable</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Schedules a function to be run once with a delay, i.e. a time period that has</span>
+<span class="cm">   * to pass before the function is run.</span>
+<span class="cm">   *</span>
+<span class="cm">   * Scala API</span>
+<span class="cm">   */</span>
+  <span class="k">def</span> <span class="n">scheduleOnce</span><span class="o">(</span><span class="n">delay</span><span class="k">:</span> <span class="kt">Duration</span><span class="o">)(</span><span class="n">f</span><span class="k">:</span> <span class="k">⇒</span> <span class="kt">Unit</span><span class="o">)</span><span class="k">:</span> <span class="kt">Cancellable</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-cancellable-interface">
+<h2>The Cancellable interface</h2>
+<p>This allows you to <tt class="docutils literal"><span class="pre">cancel</span></tt> something that has been scheduled for execution.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This does not abort the execution of the task, if it had already been started.</p>
+</div>
+<div class="highlight-scala"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * Signifies something that can be cancelled</span>
+<span class="cm"> * There is no strict guarantee that the implementation is thread-safe,</span>
+<span class="cm"> * but it should be good practice to make it so.</span>
+<span class="cm"> */</span>
+<span class="k">trait</span> <span class="nc">Cancellable</span> <span class="o">{</span>
+  <span class="cm">/**</span>
+<span class="cm">   * Cancels this Cancellable</span>
+<span class="cm">   *</span>
+<span class="cm">   * Java &amp; Scala API</span>
+<span class="cm">   */</span>
+  <span class="k">def</span> <span class="n">cancel</span><span class="o">()</span><span class="k">:</span> <span class="kt">Unit</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Returns whether this Cancellable has been cancelled</span>
+<span class="cm">   *</span>
+<span class="cm">   * Java &amp; Scala API</span>
+<span class="cm">   */</span>
+  <span class="k">def</span> <span class="n">isCancelled</span><span class="k">:</span> <span class="kt">Boolean</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

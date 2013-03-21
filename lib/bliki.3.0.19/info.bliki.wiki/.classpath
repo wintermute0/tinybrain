@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="bliki-core/target/classes" path="bliki-core/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="bliki-core/target/classes" path="bliki-core/src/main/resources"/>
+	<classpathentry kind="src" output="bliki-core/target/test-classes" path="bliki-core/src/test/java"/>
+	<classpathentry kind="src" output="bliki-pdf/target/classes" path="bliki-pdf/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="bliki-pdf/target/classes" path="bliki-pdf/src/main/resources"/>
+	<classpathentry kind="src" output="bliki-pdf/target/test-classes" path="bliki-pdf/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="bliki-pdf/target/test-classes" path="bliki-pdf/src/test/resources"/>
+	<classpathentry kind="src" output="bliki-addons/target/classes" path="bliki-addons/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="bliki-addons/target/classes" path="bliki-addons/src/main/resources"/>
+	<classpathentry kind="src" output="bliki-addons/target/test-classes" path="bliki-addons/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="bliki-addons/target/test-classes" path="bliki-addons/src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

@@ -1,0 +1,250 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Akka and the Java Memory Model &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="General" href="index.html" />
+    <link rel="next" title="Message send semantics" href="message-send-semantics.html" />
+    <link rel="prev" title="Location Transparency" href="remoting.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Akka and the Java Memory Model</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="message-send-semantics.html">Message send semantics</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="remoting.html">Location Transparency</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="akka-and-the-java-memory-model">
+<span id="jmm"></span><h1>Akka and the Java Memory Model</h1>
+<p>A major benefit of using the Typesafe Stack, including Scala and Akka, is that it simplifies the process of writing
+concurrent software.  This article discusses how the Typesafe Stack, and Akka in particular, approaches shared memory
+in concurrent applications.</p>
+<div class="section" id="the-java-memory-model">
+<h2>The Java Memory Model</h2>
+<p>Prior to Java 5, the Java Memory Model (JMM) was ill defined. It was possible to get all kinds of strange results when
+shared memory was accessed by multiple threads, such as:</p>
+<ul class="simple">
+<li>a thread not seeing values written by other threads: a visibility problem</li>
+<li>a thread observing 'impossible' behavior of other threads, caused by
+instructions not being executed in the order expected: an instruction
+reordering problem.</li>
+</ul>
+<p>With the implementation of JSR 133 in Java 5, a lot of these issues have been resolved. The JMM is a set of rules based
+on the &quot;happens-before&quot; relation, which constrain when one memory access must happen before another, and conversely,
+when they are allowed to happen out of order. Two examples of these rules are:</p>
+<ul class="simple">
+<li><strong>The monitor lock rule:</strong> a release of a lock happens before every subsequent acquire of the same lock.</li>
+<li><strong>The volatile variable rule:</strong> a write of a volatile variable happens before every subsequent read of the same volatile variable</li>
+</ul>
+<p>Although the JMM can seem complicated, the specification tries to find a balance between ease of use and the ability to
+write performant and scalable concurrent data structures.</p>
+</div>
+<div class="section" id="actors-and-the-java-memory-model">
+<h2>Actors and the Java Memory Model</h2>
+<p>With the Actors implementation in Akka, there are two ways multiple threads can execute actions on shared memory:</p>
+<ul class="simple">
+<li>if a message is sent to an actor (e.g. by another actor). In most cases messages are immutable, but if that message
+is not a properly constructed immutable object, without a &quot;happens before&quot; rule, it would be possible for the receiver
+to see partially initialized data structures and possibly even values out of thin air (longs/doubles).</li>
+<li>if an actor makes changes to its internal state while processing a message, and accesses that state while processing
+another message moments later. It is important to realize that with the actor model you don't get any guarantee that
+the same thread will be executing the same actor for different messages.</li>
+</ul>
+<p>To prevent visibility and reordering problems on actors, Akka guarantees the following two &quot;happens before&quot; rules:</p>
+<ul class="simple">
+<li><strong>The actor send rule:</strong> the send of the message to an actor happens before the receive of that message by the same actor.</li>
+<li><strong>The actor subsequent processing rule:</strong> processing of one message happens before processing of the next message by the same actor.</li>
+</ul>
+<p>Both rules only apply for the same actor instance and are not valid if different actors are used.</p>
+</div>
+<div class="section" id="futures-and-the-java-memory-model">
+<h2>Futures and the Java Memory Model</h2>
+<p>The completion of a Future &quot;happens before&quot; the invocation of any callbacks registered to it are executed.</p>
+<p>We recommend not to close over non-final fields (final in Java and val in Scala), and if you <em>do</em> choose to close over
+non-final fields, they must be marked <em>volatile</em> in order for the current value of the field to be visible to the callback.</p>
+<p>If you close over a reference, you must also ensure that the instance that is referred to is thread safe.
+We highly recommend staying away from objects that use locking, since it can introduce performance problems and in the worst case, deadlocks.
+Such are the perils of synchronized.</p>
+</div>
+<div class="section" id="stm-and-the-java-memory-model">
+<h2>STM and the Java Memory Model</h2>
+<p>Akka's Software Transactional Memory (STM) also provides a &quot;happens before&quot; rule:</p>
+<ul class="simple">
+<li><strong>The transactional reference rule:</strong> a successful write during commit, on an transactional reference, happens before every
+subsequent read of the same transactional reference.</li>
+</ul>
+<p>This rule looks a lot like the 'volatile variable' rule from the JMM. Currently the Akka STM only supports deferred writes,
+so the actual writing to shared memory is deferred until the transaction commits. Writes during the transaction are placed
+in a local buffer (the writeset of the transaction) and are not visible to other transactions. That is why dirty reads are
+not possible.</p>
+<p>How these rules are realized in Akka is an implementation detail and can change over time, and the exact details could
+even depend on the used configuration. But they will build on the other JMM rules like the monitor lock rule or the
+volatile variable rule. This means that you, the Akka user, do not need to worry about adding synchronization to provide
+such a &quot;happens before&quot; relation, because it is the responsibility of Akka. So you have your hands free to deal with your
+business logic, and the Akka framework makes sure that those rules are guaranteed on your behalf.</p>
+</div>
+<div class="section" id="actors-and-shared-mutable-state">
+<span id="jmm-shared-state"></span><h2>Actors and shared mutable state</h2>
+<p>Since Akka runs on the JVM there are still some rules to be followed.</p>
+<ul class="simple">
+<li>Closing over internal Actor state and exposing it to other threads</li>
+</ul>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+ <span class="k">var</span> <span class="n">state</span> <span class="k">=</span> <span class="o">...</span>
+ <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span>
+      <span class="c1">//Wrongs</span>
+
+    <span class="c1">// Very bad, shared mutable state,</span>
+    <span class="c1">// will break your application in weird ways</span>
+      <span class="nc">Future</span> <span class="o">{</span> <span class="n">state</span> <span class="k">=</span> <span class="nc">NewState</span> <span class="o">}</span>
+      <span class="n">anotherActor</span> <span class="o">?</span> <span class="n">message</span> <span class="n">onSuccess</span> <span class="o">{</span> <span class="n">r</span> <span class="k">=&gt;</span> <span class="n">state</span> <span class="k">=</span> <span class="n">r</span> <span class="o">}</span>
+
+    <span class="c1">// Very bad, &quot;sender&quot; changes for every message,</span>
+    <span class="c1">// shared mutable state bug</span>
+      <span class="nc">Future</span> <span class="o">{</span> <span class="n">expensiveCalculation</span><span class="o">(</span><span class="n">sender</span><span class="o">)</span> <span class="o">}</span>
+
+      <span class="c1">//Rights</span>
+
+    <span class="c1">// Completely safe, &quot;self&quot; is OK to close over</span>
+    <span class="c1">// and it&#39;s an ActorRef, which is thread-safe</span>
+      <span class="nc">Future</span> <span class="o">{</span> <span class="n">expensiveCalculation</span><span class="o">()</span> <span class="o">}</span> <span class="n">onComplete</span> <span class="o">{</span> <span class="n">f</span> <span class="k">=&gt;</span> <span class="n">self</span> <span class="o">!</span> <span class="n">f</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">get</span> <span class="o">}</span>
+
+    <span class="c1">// Completely safe, we close over a fixed value</span>
+    <span class="c1">// and it&#39;s an ActorRef, which is thread-safe</span>
+      <span class="k">val</span> <span class="n">currentSender</span> <span class="k">=</span> <span class="n">sender</span>
+      <span class="nc">Future</span> <span class="o">{</span> <span class="n">expensiveCalculation</span><span class="o">(</span><span class="n">currentSender</span><span class="o">)</span> <span class="o">}</span>
+ <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Messages <strong>should</strong> be immutable, this is to avoid the shared mutable state trap.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

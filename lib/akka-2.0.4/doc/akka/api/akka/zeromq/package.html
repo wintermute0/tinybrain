@@ -1,0 +1,944 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.zeromq</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a></p>
+        <h1>zeromq</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zeromq</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A package object with an implicit conversion for the actor system as a convenience
+</p></div></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.zeromq.Affinity" data-isabs="false">
+      <a id="Affinity:Affinity"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Affinity.html"><span class="name">Affinity</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.zeromq.Affinity" class="extype" href="Affinity.html">Affinity</a> option shall set the I/O thread affinity for newly created connections on the specified socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.Backlog" data-isabs="false">
+      <a id="Backlog:Backlog"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Backlog.html"><span class="name">Backlog</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.zeromq.Backlog" class="extype" href="Backlog.html">Backlog</a> option shall set the maximum length of the queue of outstanding peer connections
+for the specified socket; this only applies to connection-oriented transports.</p>
+    </li><li visbl="pub" name="akka.zeromq.Bind" data-isabs="false">
+      <a id="Bind:Bind"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Bind.html"><span class="name">Bind</span></a><span class="params">(<span name="endpoint">endpoint: String</span>)</span><span class="result"> extends SocketConnectOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Start listening with this server socket on the specified address
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Connect" data-isabs="false">
+      <a id="Connect:Connect"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Connect.html"><span class="name">Connect</span></a><span class="params">(<span name="endpoint">endpoint: String</span>)</span><span class="result"> extends SocketConnectOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This socket should be a client socket and connect to the specified endpoint
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Context" data-isabs="false">
+      <a id="Context:Context"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Context.html"><span class="name">Context</span></a><span class="result"> extends SocketMeta</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents an I/O thread pool for ZeroMQ sockets.</p>
+    </li><li visbl="pub" name="akka.zeromq.Deserializer" data-isabs="true">
+      <a id="Deserializer:Deserializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Deserializer.html"><span class="name">Deserializer</span></a><span class="result"> extends SocketOption</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A base trait for message deserializers
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Frame" data-isabs="false">
+      <a id="Frame:Frame"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Frame.html"><span class="name">Frame</span></a><span class="params">(<span name="payload">payload: Seq[Byte]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A single message frame of a zeromq message</p>
+    </li><li visbl="pub" name="akka.zeromq.HighWatermark" data-isabs="false">
+      <a id="HighWatermark:HighWatermark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="HighWatermark.html"><span class="name">HighWatermark</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.zeromq.HighWatermark" class="extype" href="HighWatermark.html">HighWatermark</a> option shall set the high water mark for the specified socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.Identity" data-isabs="false">
+      <a id="Identity:Identity"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Identity.html"><span class="name">Identity</span></a><span class="params">(<span name="value">value: Array[Byte]</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Sets the identity of the specified socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.Linger" data-isabs="false">
+      <a id="Linger:Linger"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Linger.html"><span class="name">Linger</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Configure this socket to have a linger of the specified value</p>
+    </li><li visbl="pub" name="akka.zeromq.Listener" data-isabs="false">
+      <a id="Listener:Listener"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Listener.html"><span class="name">Listener</span></a><span class="params">(<span name="listener">listener: ActorRef</span>)</span><span class="result"> extends SocketMeta with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An option containing the listener for the socket</p>
+    </li><li visbl="pub" name="akka.zeromq.MaxMsgSize" data-isabs="false">
+      <a id="MaxMsgSize:MaxMsgSize"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MaxMsgSize.html"><span class="name">MaxMsgSize</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Limits the size of the inbound message.</p>
+    </li><li visbl="pub" name="akka.zeromq.MulticastHops" data-isabs="false">
+      <a id="MulticastHops:MulticastHops"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MulticastHops.html"><span class="name">MulticastHops</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Sets the time-to-live field in every multicast packet sent from this socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.MulticastLoop" data-isabs="false">
+      <a id="MulticastLoop:MulticastLoop"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MulticastLoop.html"><span class="name">MulticastLoop</span></a><span class="params">(<span name="value">value: Boolean</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Controls whether data sent via multicast transports using the specified socket can also be received by the sending
+host via loop-back.</p>
+    </li><li visbl="pub" name="akka.zeromq.PollDispatcher" data-isabs="false">
+      <a id="PollDispatcher:PollDispatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PollDispatcher.html"><span class="name">PollDispatcher</span></a><span class="params">(<span name="name">name: String</span>)</span><span class="result"> extends SocketMeta with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An option containing the configuration key for the poller loop dispatcher</p>
+    </li><li visbl="pub" name="akka.zeromq.PollTimeoutDuration" data-isabs="false">
+      <a id="PollTimeoutDuration:PollTimeoutDuration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PollTimeoutDuration.html"><span class="name">PollTimeoutDuration</span></a><span class="params">(<span name="duration">duration: Duration</span>)</span><span class="result"> extends SocketMeta with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An option containing the duration a poll cycle should wait for a message before it loops</p>
+    </li><li visbl="pub" name="akka.zeromq.PubSubOption" data-isabs="true">
+      <a id="PubSubOption:PubSubOption"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PubSubOption.html"><span class="name">PubSubOption</span></a><span class="result"> extends SocketOption</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A base trait for pubsub options for the ZeroMQ socket
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Rate" data-isabs="false">
+      <a id="Rate:Rate"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Rate.html"><span class="name">Rate</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Sets the maximum send or receive data rate for multicast transports such as pgm using the specified socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.ReceiveBufferSize" data-isabs="false">
+      <a id="ReceiveBufferSize:ReceiveBufferSize"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReceiveBufferSize.html"><span class="name">ReceiveBufferSize</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.zeromq.ReceiveBufferSize" class="extype" href="ReceiveBufferSize.html">ReceiveBufferSize</a> option shall set the underlying kernel receive buffer size for the socket to
+the specified size in bytes.</p>
+    </li><li visbl="pub" name="akka.zeromq.ReceiveHighWatermark" data-isabs="false">
+      <a id="ReceiveHighWatermark:ReceiveHighWatermark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReceiveHighWatermark.html"><span class="name">ReceiveHighWatermark</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.zeromq.ReceiveHighWatermark" class="extype" href="ReceiveHighWatermark.html">ReceiveHighWatermark</a> option shall set the high water mark for inbound messages on the specified socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.ReconnectIVL" data-isabs="false">
+      <a id="ReconnectIVL:ReconnectIVL"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReconnectIVL.html"><span class="name">ReconnectIVL</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Sets the recovery interval for multicast transports using the specified socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.ReconnectIVLMax" data-isabs="false">
+      <a id="ReconnectIVLMax:ReconnectIVLMax"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReconnectIVLMax.html"><span class="name">ReconnectIVLMax</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.zeromq.ReconnectIVLMax" class="extype" href="ReconnectIVLMax.html">ReconnectIVLMax</a> option shall set the maximum reconnection interval for the specified socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.RecoveryInterval" data-isabs="false">
+      <a id="RecoveryInterval:RecoveryInterval"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RecoveryInterval.html"><span class="name">RecoveryInterval</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Sets the recovery interval for multicast transports using the specified socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.Request" data-isabs="true">
+      <a id="Request:Request"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Request.html"><span class="name">Request</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Marker trait representing request messages for zeromq
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Response" data-isabs="true">
+      <a id="Response:Response"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Response.html"><span class="name">Response</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Base trait for the events raised by a ZeroMQ socket actor
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Send" data-isabs="false">
+      <a id="Send:Send"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Send.html"><span class="name">Send</span></a><span class="params">(<span name="frames">frames: Seq[Frame]</span>)</span><span class="result"> extends Request with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Send a message over the zeromq socket</p>
+    </li><li visbl="pub" name="akka.zeromq.SendBufferSize" data-isabs="false">
+      <a id="SendBufferSize:SendBufferSize"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SendBufferSize.html"><span class="name">SendBufferSize</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.zeromq.SendBufferSize" class="extype" href="SendBufferSize.html">SendBufferSize</a> option shall set the underlying kernel transmit buffer size for the socket to
+the specified size in bytes.</p>
+    </li><li visbl="pub" name="akka.zeromq.SendHighWatermark" data-isabs="false">
+      <a id="SendHighWatermark:SendHighWatermark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SendHighWatermark.html"><span class="name">SendHighWatermark</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.zeromq.SendHighWatermark" class="extype" href="SendHighWatermark.html">SendHighWatermark</a> option shall set the high water mark for outbound messages on the specified socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.SocketConnectOption" data-isabs="true">
+      <a id="SocketConnectOption:SocketConnectOption"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SocketConnectOption.html"><span class="name">SocketConnectOption</span></a><span class="result"> extends SocketOption</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A base trait for connection options for a ZeroMQ socket
+</p>
+    </li><li visbl="pub" name="akka.zeromq.SocketMeta" data-isabs="true">
+      <a id="SocketMeta:SocketMeta"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SocketMeta.html"><span class="name">SocketMeta</span></a><span class="result"> extends SocketOption</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Marker trait representing the base for all meta operations for a socket
+such as the context, listener, socket type and poller dispatcher
+</p>
+    </li><li visbl="pub" name="akka.zeromq.SocketOption" data-isabs="true">
+      <a id="SocketOption:SocketOption"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SocketOption.html"><span class="name">SocketOption</span></a><span class="result"> extends Request</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Marker trait representing the base for all socket options
+</p>
+    </li><li visbl="pub" name="akka.zeromq.SocketOptionQuery" data-isabs="true">
+      <a id="SocketOptionQuery:SocketOptionQuery"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SocketOptionQuery.html"><span class="name">SocketOptionQuery</span></a><span class="result"> extends Request</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A marker trait to group option queries together
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Subscribe" data-isabs="false">
+      <a id="Subscribe:Subscribe"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Subscribe.html"><span class="name">Subscribe</span></a><span class="params">(<span name="payload">payload: Seq[Byte]</span>)</span><span class="result"> extends PubSubOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.zeromq.Subscribe" class="extype" href="Subscribe.html">Subscribe</a> option shall establish a new message filter on a akka.zeromq.SocketType.Pub socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.Swap" data-isabs="false">
+      <a id="Swap:Swap"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Swap.html"><span class="name">Swap</span></a><span class="params">(<span name="value">value: Long</span>)</span><span class="result"> extends SocketOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.zeromq.Swap" class="extype" href="Swap.html">Swap</a> option shall set the disk offload (swap) size for the specified socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.Unsubscribe" data-isabs="false">
+      <a id="Unsubscribe:Unsubscribe"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Unsubscribe.html"><span class="name">Unsubscribe</span></a><span class="params">(<span name="payload">payload: Seq[Byte]</span>)</span><span class="result"> extends PubSubOption with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.zeromq.Unsubscribe" class="extype" href="Unsubscribe.html">Unsubscribe</a> option shall remove an existing message filter
+on a akka.zeromq.SocketType.Sub socket.</p>
+    </li><li visbl="pub" name="akka.zeromq.ZMQMessage" data-isabs="false">
+      <a id="ZMQMessage:ZMQMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ZMQMessage.html"><span class="name">ZMQMessage</span></a><span class="params">(<span name="frames">frames: Seq[Frame]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A message received over the zeromq socket</p>
+    </li><li visbl="pub" name="akka.zeromq.ZMQMessageDeserializer" data-isabs="false">
+      <a id="ZMQMessageDeserializer:ZMQMessageDeserializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ZMQMessageDeserializer.html"><span class="name">ZMQMessageDeserializer</span></a><span class="result"> extends Deserializer</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Deserializes ZeroMQ messages into an immutable sequence of frames
+</p>
+    </li><li visbl="pub" name="akka.zeromq.ZeroMQExtension" data-isabs="false">
+      <a id="ZeroMQExtension:ZeroMQExtension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ZeroMQExtension.html"><span class="name">ZeroMQExtension</span></a><span class="result"> extends Extension</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The extension for the ZeroMQ module
+</p>
+    </li><li visbl="pub" name="akka.zeromq.ZeroMQVersion" data-isabs="false">
+      <a id="ZeroMQVersion:ZeroMQVersion"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ZeroMQVersion.html"><span class="name">ZeroMQVersion</span></a><span class="params">(<span name="major">major: Int</span>, <span name="minor">minor: Int</span>, <span name="patch">patch: Int</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A Model to represent a version of the zeromq library</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="akka.zeromq.Affinity" data-isabs="false">
+      <a id="Affinity:Affinity"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Affinity$.html"><span class="name">Affinity</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the <a name="akka.zeromq.Affinity" class="extype" href="Affinity.html">Affinity</a> value
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Backlog" data-isabs="false">
+      <a id="Backlog:Backlog"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Backlog$.html"><span class="name">Backlog</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the backlog</p>
+    </li><li visbl="pub" name="akka.zeromq.Closed" data-isabs="false">
+      <a id="Closed:Closed"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Closed$.html"><span class="name">Closed</span></a><span class="result"> extends Response with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">When the ZeroMQ socket disconnects it sends this message to a listener
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Connecting" data-isabs="false">
+      <a id="Connecting:Connecting"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Connecting$.html"><span class="name">Connecting</span></a><span class="result"> extends Response with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">When the ZeroMQ socket connects it sends this message to a listener
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Context" data-isabs="false">
+      <a id="Context:Context"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Context$.html"><span class="name">Context</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Companion object for a ZeroMQ I/O thread pool
+</p>
+    </li><li visbl="pub" name="akka.zeromq.FileDescriptor" data-isabs="false">
+      <a id="FileDescriptor:FileDescriptor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="FileDescriptor$.html"><span class="name">FileDescriptor</span></a><span class="result"> extends SocketOptionQuery</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the file descriptor associated with the ZeroMQ socket
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Frame" data-isabs="false">
+      <a id="Frame:Frame"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Frame$.html"><span class="name">Frame</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.zeromq.Identity" data-isabs="false">
+      <a id="Identity:Identity"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Identity$.html"><span class="name">Identity</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the <a name="akka.zeromq.Identity" class="extype" href="Identity.html">Identity</a> value
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Linger" data-isabs="false">
+      <a id="Linger:Linger"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Linger$.html"><span class="name">Linger</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the linger option @see <a name="akka.zeromq.Linger" class="extype" href="Linger.html">Linger</a>
+</p>
+    </li><li visbl="pub" name="akka.zeromq.MaxMsgSize" data-isabs="false">
+      <a id="MaxMsgSize:MaxMsgSize"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MaxMsgSize$.html"><span class="name">MaxMsgSize</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.zeromq.MulticastHops" data-isabs="false">
+      <a id="MulticastHops:MulticastHops"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MulticastHops$.html"><span class="name">MulticastHops</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the <a name="akka.zeromq.MulticastHops" class="extype" href="MulticastHops.html">MulticastHops</a>
+</p>
+    </li><li visbl="pub" name="akka.zeromq.MulticastLoop" data-isabs="false">
+      <a id="MulticastLoop:MulticastLoop"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MulticastLoop$.html"><span class="name">MulticastLoop</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the <a name="akka.zeromq.MulticastLoop" class="extype" href="MulticastLoop.html">MulticastLoop</a>
+</p>
+    </li><li visbl="pub" name="akka.zeromq.package#NoLinger" data-isabs="false">
+      <a id="NoLinger:Linger"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">NoLinger</span><span class="result">: <a name="akka.zeromq.Linger" class="extype" href="Linger.html">Linger</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Set the linger to 0, doesn't block and discards messages that haven't been sent yet.</p><div class="fullcomment"><div class="comment cmt"><p>Set the linger to 0, doesn't block and discards messages that haven't been sent yet.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.zeromq.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.zeromq.Rate" data-isabs="false">
+      <a id="Rate:Rate"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Rate$.html"><span class="name">Rate</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the send or receive rate for the socket
+</p>
+    </li><li visbl="pub" name="akka.zeromq.ReceiveBufferSize" data-isabs="false">
+      <a id="ReceiveBufferSize:ReceiveBufferSize"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ReceiveBufferSize$.html"><span class="name">ReceiveBufferSize</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the <a name="akka.zeromq.ReceiveBufferSize" class="extype" href="ReceiveBufferSize.html">ReceiveBufferSize</a>
+</p>
+    </li><li visbl="pub" name="akka.zeromq.ReceiveHighWatermark" data-isabs="false">
+      <a id="ReceiveHighWatermark:ReceiveHighWatermark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ReceiveHighWatermark$.html"><span class="name">ReceiveHighWatermark</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the ReceiveHighWatermark</p>
+    </li><li visbl="pub" name="akka.zeromq.ReconnectIVL" data-isabs="false">
+      <a id="ReconnectIVL:ReconnectIVL"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ReconnectIVL$.html"><span class="name">ReconnectIVL</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the recover interval @see <a name="akka.zeromq.ReconnectIVL" class="extype" href="ReconnectIVL.html">ReconnectIVL</a>
+</p>
+    </li><li visbl="pub" name="akka.zeromq.ReconnectIVLMax" data-isabs="false">
+      <a id="ReconnectIVLMax:ReconnectIVLMax"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ReconnectIVLMax$.html"><span class="name">ReconnectIVLMax</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the max reconnect IVL</p>
+    </li><li visbl="pub" name="akka.zeromq.RecoveryInterval" data-isabs="false">
+      <a id="RecoveryInterval:RecoveryInterval"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="RecoveryInterval$.html"><span class="name">RecoveryInterval</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the <a name="akka.zeromq.RecoveryInterval" class="extype" href="RecoveryInterval.html">RecoveryInterval</a>
+</p>
+    </li><li visbl="pub" name="akka.zeromq.SendBufferSize" data-isabs="false">
+      <a id="SendBufferSize:SendBufferSize"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SendBufferSize$.html"><span class="name">SendBufferSize</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the <a name="akka.zeromq.SendBufferSize" class="extype" href="SendBufferSize.html">SendBufferSize</a>
+</p>
+    </li><li visbl="pub" name="akka.zeromq.SendHighWatermark" data-isabs="false">
+      <a id="SendHighWatermark:SendHighWatermark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SendHighWatermark$.html"><span class="name">SendHighWatermark</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the SendHWM</p>
+    </li><li visbl="pub" name="akka.zeromq.SocketType" data-isabs="false">
+      <a id="SocketType:SocketType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SocketType$.html"><span class="name">SocketType</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The different socket types you can create with zeromq
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Subscribe" data-isabs="false">
+      <a id="Subscribe:Subscribe"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Subscribe$.html"><span class="name">Subscribe</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.zeromq.package#SubscribeAll" data-isabs="false">
+      <a id="SubscribeAll:Subscribe"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">SubscribeAll</span><span class="result">: <a name="akka.zeromq.Subscribe" class="extype" href="Subscribe.html">Subscribe</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Convenience accessor to subscribe to all events
+</p><div class="fullcomment"><div class="comment cmt"><p>Convenience accessor to subscribe to all events
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.zeromq.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.zeromq.Swap" data-isabs="false">
+      <a id="Swap:Swap"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Swap$.html"><span class="name">Swap</span></a><span class="result"> extends SocketOptionQuery with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gets the <a name="akka.zeromq.Swap" class="extype" href="Swap.html">Swap</a>
+</p>
+    </li><li visbl="pub" name="akka.zeromq.Unsubscribe" data-isabs="false">
+      <a id="Unsubscribe:Unsubscribe"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Unsubscribe$.html"><span class="name">Unsubscribe</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.zeromq.ZMQMessage" data-isabs="false">
+      <a id="ZMQMessage:ZMQMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ZMQMessage$.html"><span class="name">ZMQMessage</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.zeromq.ZeroMQ" data-isabs="false">
+      <a id="ZeroMQ:ZeroMQ"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ZeroMQ$.html"><span class="name">ZeroMQ</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Java API for akka.</p>
+    </li><li visbl="pub" name="akka.zeromq.ZeroMQExtension" data-isabs="false">
+      <a id="ZeroMQExtension:ZeroMQExtension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ZeroMQExtension$.html"><span class="name">ZeroMQExtension</span></a><span class="result"> extends ExtensionId[ZeroMQExtension] with ExtensionIdProvider</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The <a name="akka.actor.ExtensionId" class="extype" href="../actor/ExtensionId.html">ExtensionId</a> and <a name="akka.actor.ExtensionIdProvider" class="extype" href="../actor/ExtensionIdProvider.html">ExtensionIdProvider</a> for the ZeroMQ module
+</p>
+    </li><li visbl="pub" name="akka.zeromq.package#zeromqSystem" data-isabs="false">
+      <a id="zeromqSystem(ActorSystem):ZeroMQExtension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zeromqSystem</span><span class="params">(<span name="system">system: <a name="akka.actor.ActorSystem" class="extype" href="../actor/ActorSystem.html">ActorSystem</a></span>)</span><span class="result">: <a name="akka.zeromq.ZeroMQExtension" class="extype" href="ZeroMQExtension.html">ZeroMQExtension</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a zeromq actor system implicitly</p><div class="fullcomment"><div class="comment cmt"><p>Creates a zeromq actor system implicitly</p></div><dl class="paramcmts block"><dt class="param">system</dt><dd class="cmt"></dd><dt>returns</dt><dd class="cmt"><p>An augmented <a name="akka.actor.ActorSystem" class="extype" href="../actor/ActorSystem.html">ActorSystem</a>
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.zeromq.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

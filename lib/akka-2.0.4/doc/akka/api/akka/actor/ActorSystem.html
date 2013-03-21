@@ -1,0 +1,954 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.actor.ActorSystem</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
+      <div id="definition">
+        <a title="Go to companion" href="ActorSystem$.html"><img src="../../lib/class_to_object_big.png" /></a>
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a>.<a name="akka.actor" class="extype" href="package.html">actor</a></p>
+        <h1><a title="Go to companion" href="ActorSystem$.html">ActorSystem</a></h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ActorSystem</span><span class="result"> extends <a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>An actor system is a hierarchical group of actors which share common
+configuration, e.g. dispatchers, deployments, remote capabilities and
+addresses. It is also the entry point for creating or looking up actors.</p><p>There are several possibilities for creating actors (see <a name="akka.actor.Props" class="extype" href="Props.html">Props</a>
+for details on <code>props</code>):</p><pre>
+<span class="cmt">// Java or Scala</span>
+system.actorOf(props, <span class="lit">"name"</span>)
+system.actorOf(props)
+
+<span class="cmt">// Scala</span>
+system.actorOf(Props[MyActor], <span class="lit">"name"</span>)
+system.actorOf(Props[MyActor])
+system.actorOf(Props(<span class="kw">new</span> MyActor(...)))
+
+<span class="cmt">// Java</span>
+system.actorOf(MyActor.<span class="kw">class</span>);
+system.actorOf(Props(<span class="kw">new</span> Creator&lt;MyActor&gt;() {
+  public MyActor create() { ... }
+});
+system.actorOf(Props(<span class="kw">new</span> Creator&lt;MyActor&gt;() {
+  public MyActor create() { ... }
+}, <span class="lit">"name"</span>);
+</pre><p>Where no name is given explicitly, one will be automatically generated.</p><p><b><i>Important Notice:</i></o>
+
+This class is not meant to be extended by user code. If you want to
+actually roll your own Akka, it will probably be better to look into
+extending [[akka.actor.ExtendedActorSystem]] instead, but beware that you
+are completely on your own in that case!
+</p></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+        </div><div class="toggleContainer block">
+          <span class="toggle">Known Subclasses</span>
+          <div class="subClasses hiddenContent"><a name="akka.actor.ActorSystemImpl" class="extype" href="ActorSystemImpl.html">ActorSystemImpl</a>, <a name="akka.actor.ExtendedActorSystem" class="extype" href="ExtendedActorSystem.html">ExtendedActorSystem</a>, <a name="akka.actor.GlobalActorSystem" class="extype" href="GlobalActorSystem$.html">GlobalActorSystem</a></div>
+        </div></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+            </div>
+        <div id="ancestors">
+              <span class="filtertype">Inherited</span>
+              <ol><li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li></ol>
+              <ol id="linearization"><li name="akka.actor.ActorSystem" class="in"><span>ActorSystem</span></li><li name="akka.actor.ActorRefFactory" class="in"><span>ActorRefFactory</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+            </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div class="members" id="constructors">
+              <h3>Instance Constructors</h3>
+              <ol><li visbl="pub" name="akka.actor.ActorSystem#this" data-isabs="false">
+      <a id="this:ActorSystem"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ActorSystem</span><span class="params">()</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Abstract Value Members</h3>
+              <ol><li visbl="pub" name="akka.actor.ActorSystem#/" data-isabs="true">
+      <a id="/(Iterable[String]):ActorPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $div">/</span><span class="params">(<span name="name">name: Iterable[String]</span>)</span><span class="result">: <a name="akka.actor.ActorPath" class="extype" href="ActorPath.html">ActorPath</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Construct a path below the application guardian to be used with ActorSystem.actorFor.</p>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#/" data-isabs="true">
+      <a id="/(String):ActorPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $div">/</span><span class="params">(<span name="name">name: String</span>)</span><span class="result">: <a name="akka.actor.ActorPath" class="extype" href="ActorPath.html">ActorPath</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Construct a path below the application guardian to be used with ActorSystem.actorFor.</p>
+    </li><li visbl="pub" name="akka.actor.ActorRefFactory#actorOf" data-isabs="true">
+      <a id="actorOf(Props,String):ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorOf</span><span class="params">(<span name="props">props: <a name="akka.actor.Props" class="extype" href="Props.html">Props</a></span>, <span name="name">name: String</span>)</span><span class="result">: <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create new actor as child of this context with the given name, which must
+not be null, empty or start with “$”.</p><div class="fullcomment"><div class="comment cmt"><p>Create new actor as child of this context with the given name, which must
+not be null, empty or start with “$”. If the given name is already in use,
+and <code>InvalidActorNameException</code> is thrown.</p><p>See <a name="akka.actor.Props" class="extype" href="Props.html">Props</a> for details on how to obtain a <code>Props</code> object.</p><p>When invoked on ActorSystem, this method sends a message to the guardian
+actor and blocks waiting for a reply, see <code>akka.actor.creation-timeout</code> in
+the <code>reference.conf</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorRefFactory#actorOf" data-isabs="true">
+      <a id="actorOf(Props):ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorOf</span><span class="params">(<span name="props">props: <a name="akka.actor.Props" class="extype" href="Props.html">Props</a></span>)</span><span class="result">: <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create new actor as child of this context and give it an automatically
+generated name (currently similar to base64-encoded integer count,
+reversed and with “$” prepended, may change in the future).</p><div class="fullcomment"><div class="comment cmt"><p>Create new actor as child of this context and give it an automatically
+generated name (currently similar to base64-encoded integer count,
+reversed and with “$” prepended, may change in the future).</p><p>See <a name="akka.actor.Props" class="extype" href="Props.html">Props</a> for details on how to obtain a <code>Props</code> object.</p><p>When invoked on ActorSystem, this method sends a message to the guardian
+actor and blocks waiting for a reply, see <code>akka.actor.creation-timeout</code> in
+the <code>reference.conf</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#awaitTermination" data-isabs="true">
+      <a id="awaitTermination():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">awaitTermination</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Block current thread until the system has been shutdown.</p><div class="fullcomment"><div class="comment cmt"><p>Block current thread until the system has been shutdown. This will
+block until after all on termination callbacks have been run.
+</p></div></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#awaitTermination" data-isabs="true">
+      <a id="awaitTermination(Duration):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">awaitTermination</span><span class="params">(<span name="timeout">timeout: <a name="akka.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Block current thread until the system has been shutdown, or the specified
+timeout has elapsed.</p><div class="fullcomment"><div class="comment cmt"><p>Block current thread until the system has been shutdown, or the specified
+timeout has elapsed. This will block until after all on termination
+callbacks have been run.
+</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">TimeoutException<p>in case of timeout
+</p></span></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#deadLetters" data-isabs="true">
+      <a id="deadLetters:ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">deadLetters</span><span class="result">: <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Actor reference where messages are re-routed to which were addressed to
+stopped or non-existing actors.</p><div class="fullcomment"><div class="comment cmt"><p>Actor reference where messages are re-routed to which were addressed to
+stopped or non-existing actors. Delivery to this actor is done on a best
+effort basis and hence not strictly guaranteed.
+</p></div></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#dispatcher" data-isabs="true">
+      <a id="dispatcher:MessageDispatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dispatcher</span><span class="result">: <a name="akka.dispatch.MessageDispatcher" class="extype" href="../dispatch/MessageDispatcher.html">MessageDispatcher</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Default dispatcher as configured.</p><div class="fullcomment"><div class="comment cmt"><p>Default dispatcher as configured. This dispatcher is used for all actors
+in the actor system which do not have a different dispatcher configured
+explicitly.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.ActorSystem" class="extype" href="">ActorSystem</a> → <a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#dispatchers" data-isabs="true">
+      <a id="dispatchers:Dispatchers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dispatchers</span><span class="result">: <a name="akka.dispatch.Dispatchers" class="extype" href="../dispatch/Dispatchers.html">Dispatchers</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Helper object for looking up configured dispatchers.</p>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#eventStream" data-isabs="true">
+      <a id="eventStream:EventStream"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eventStream</span><span class="result">: <a name="akka.event.EventStream" class="extype" href="../event/EventStream.html">EventStream</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Main event bus of this actor system, used for example for logging.</p>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#extension" data-isabs="true">
+      <a id="extension[T&lt;:Extension](ExtensionId[T]):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">extension</span><span class="tparams">[<span name="T">T &lt;: <a name="akka.actor.Extension" class="extype" href="Extension.html">Extension</a></span>]</span><span class="params">(<span name="ext">ext: <a name="akka.actor.ExtensionId" class="extype" href="ExtensionId.html">ExtensionId</a>[T]</span>)</span><span class="result">: T</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the payload that is associated with the provided extension
+throws an IllegalStateException if it is not registered.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the payload that is associated with the provided extension
+throws an IllegalStateException if it is not registered.
+This method can potentially block, waiting for the initialization
+of the payload, if is in the process of registration from another Thread of execution
+</p></div></div>
+    </li><li visbl="prt" name="akka.actor.ActorRefFactory#guardian" data-isabs="true">
+      <a id="guardian:InternalActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">guardian</span><span class="result">: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Father of all children created by this interface.</p><div class="fullcomment"><div class="comment cmt"><p>Father of all children created by this interface.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#hasExtension" data-isabs="true">
+      <a id="hasExtension(akka.actor.ExtensionId[_ &lt;: akka.actor.Extension]):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hasExtension</span><span class="params">(<span name="ext">ext: akka.actor.ExtensionId[_ &lt;: akka.actor.Extension]</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns whether the specified extension is already registered, this method can potentially block, waiting for the initialization
+of the payload, if is in the process of registration from another Thread of execution
+</p>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#isTerminated" data-isabs="true">
+      <a id="isTerminated:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isTerminated</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Query the termination status: if it returns true, all callbacks have run
+and the ActorSystem has been fully stopped, i.</p><div class="fullcomment"><div class="comment cmt"><p>Query the termination status: if it returns true, all callbacks have run
+and the ActorSystem has been fully stopped, i.e.
+<code>awaitTermination(0 seconds)</code> would return normally. If this method
+returns <code>false</code>, the status is actually unknown, since it might have
+changed since you queried it.
+</p></div></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#log" data-isabs="true">
+      <a id="log:LoggingAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">log</span><span class="result">: <a name="akka.event.LoggingAdapter" class="extype" href="../event/LoggingAdapter.html">LoggingAdapter</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Convenient logging adapter for logging to the ActorSystem.eventStream.</p>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#logConfiguration" data-isabs="true">
+      <a id="logConfiguration():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">logConfiguration</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Log the configuration.</p>
+    </li><li visbl="prt" name="akka.actor.ActorRefFactory#lookupRoot" data-isabs="true">
+      <a id="lookupRoot:InternalActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lookupRoot</span><span class="result">: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#name" data-isabs="true">
+      <a id="name:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">name</span><span class="result">: String</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The name of this actor system, used to distinguish multiple ones within
+the same JVM &amp; class loader.</p>
+    </li><li visbl="prt" name="akka.actor.ActorRefFactory#provider" data-isabs="true">
+      <a id="provider:ActorRefProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">provider</span><span class="result">: <a name="akka.actor.ActorRefProvider" class="extype" href="ActorRefProvider.html">ActorRefProvider</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#registerExtension" data-isabs="true">
+      <a id="registerExtension[T&lt;:Extension](ExtensionId[T]):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">registerExtension</span><span class="tparams">[<span name="T">T &lt;: <a name="akka.actor.Extension" class="extype" href="Extension.html">Extension</a></span>]</span><span class="params">(<span name="ext">ext: <a name="akka.actor.ExtensionId" class="extype" href="ExtensionId.html">ExtensionId</a>[T]</span>)</span><span class="result">: T</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Registers the provided extension and creates its payload, if this extension isn't already registered
+This method has putIfAbsent-semantics, this method can potentially block, waiting for the initialization
+of the payload, if is in the process of registration from another Thread of execution
+</p>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#registerOnTermination" data-isabs="true">
+      <a id="registerOnTermination(Runnable):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">registerOnTermination</span><span class="params">(<span name="code">code: <span name="java.lang.Runnable" class="extype">Runnable</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Register a block of code (callback) to run after all actors in this actor system have
+been stopped.</p><div class="fullcomment"><div class="comment cmt"><p>Register a block of code (callback) to run after all actors in this actor system have
+been stopped. Multiple code blocks may be registered by calling this method multiple times.
+The callbacks will be run sequentially in reverse order of registration, i.e.
+last registration is run first.
+</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">a<p>RejectedExecutionException if the System has already shut down or if shutdown has been initiated.</p><p>Java API
+</p></span></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#registerOnTermination" data-isabs="true">
+      <a id="registerOnTermination[T](⇒ T):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">registerOnTermination</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="code">code: ⇒ T</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Register a block of code (callback) to run after all actors in this actor system have
+been stopped.</p><div class="fullcomment"><div class="comment cmt"><p>Register a block of code (callback) to run after all actors in this actor system have
+been stopped. Multiple code blocks may be registered by calling this method multiple times.
+The callbacks will be run sequentially in reverse order of registration, i.e.
+last registration is run first.
+</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">a<p>RejectedExecutionException if the System has already shut down or if shutdown has been initiated.</p><p>Scala API
+</p></span></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#scheduler" data-isabs="true">
+      <a id="scheduler:Scheduler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scheduler</span><span class="result">: <a name="akka.actor.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Light-weight scheduler for running asynchronous tasks after some deadline
+in the future.</p><div class="fullcomment"><div class="comment cmt"><p>Light-weight scheduler for running asynchronous tasks after some deadline
+in the future. Not terribly precise but cheap.
+</p></div></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#settings" data-isabs="true">
+      <a id="settings:Settings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">settings</span><span class="result">: <a name="akka.actor.ActorSystem.Settings" class="extype" href="ActorSystem$$Settings.html">Settings</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The core settings extracted from the supplied configuration.</p>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#shutdown" data-isabs="true">
+      <a id="shutdown():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">shutdown</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Stop this actor system.</p><div class="fullcomment"><div class="comment cmt"><p>Stop this actor system. This will stop the guardian actor, which in turn
+will recursively stop all its child actors, then the system guardian
+(below which the logging actors reside) and the execute all registered
+termination handlers (see ActorSystem.registerOnTermination).
+</p></div></div>
+    </li><li visbl="pub" name="akka.actor.ActorRefFactory#stop" data-isabs="true">
+      <a id="stop(ActorRef):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stop</span><span class="params">(<span name="actor">actor: <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Stop the actor pointed to by the given <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a>; this is
+an asynchronous operation, i.</p><div class="fullcomment"><div class="comment cmt"><p>Stop the actor pointed to by the given <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a>; this is
+an asynchronous operation, i.e. involves a message send.
+When invoked on <a name="akka.actor.ActorSystem" class="extype" href="">ActorSystem</a> for a top-level actor, this
+method sends a message to the guardian actor and blocks waiting for a reply,
+see <code>akka.actor.creation-timeout</code> in the <code>reference.conf</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="prt" name="akka.actor.ActorRefFactory#systemImpl" data-isabs="true">
+      <a id="systemImpl:ActorSystemImpl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">systemImpl</span><span class="result">: <a name="akka.actor.ActorSystemImpl" class="extype" href="ActorSystemImpl.html">ActorSystemImpl</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Concrete Value Members</h3>
+              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $hash$hash">##</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorRefFactory#actorFor" data-isabs="false">
+      <a id="actorFor(Iterable[String]):ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorFor</span><span class="params">(<span name="path">path: <span name="java.lang.Iterable" class="extype">Iterable</span>[String]</span>)</span><span class="result">: <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"><i>Java API</i>: Look-up an actor by applying the given path elements, starting from the
+current context, where <code>&quot;..&quot;</code> signifies the parent of an actor.</p><div class="fullcomment"><div class="comment cmt"><p><i>Java API</i>: Look-up an actor by applying the given path elements, starting from the
+current context, where <code>&quot;..&quot;</code> signifies the parent of an actor.</p><p>Example:</p><pre>
+public <span class="kw">class</span> MyActor <span class="kw">extends</span> UntypedActor {
+  public void onReceive(<span class="std">Object</span> msg) throws Exception {
+    ...
+    <span class="kw">final</span> <span class="std">List</span>&lt;<span class="std">String</span>&gt; path = <span class="kw">new</span> ArrayList&lt;<span class="std">String</span>&gt;();
+    path.add(<span class="lit">".."</span>);
+    path.add(<span class="lit">"myBrother"</span>);
+    path.add(<span class="lit">"myNephew"</span>);
+    <span class="kw">final</span> ActorRef target = context().actorFor(path);
+    ...
+}
+}
+</pre><p>For maximum performance use a collection with efficient head &amp; tail operations.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorRefFactory#actorFor" data-isabs="false">
+      <a id="actorFor(Iterable[String]):ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorFor</span><span class="params">(<span name="path">path: Iterable[String]</span>)</span><span class="result">: <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Look-up an actor by applying the given path elements, starting from the
+current context, where <code>&quot;..&quot;</code> signifies the parent of an actor.</p><div class="fullcomment"><div class="comment cmt"><p>Look-up an actor by applying the given path elements, starting from the
+current context, where <code>&quot;..&quot;</code> signifies the parent of an actor.</p><p>Example:</p><pre>
+<span class="kw">class</span> MyActor <span class="kw">extends</span> Actor {
+  <span class="kw">def</span> receive = {
+    <span class="kw">case</span> msg <span class="kw">=&gt;</span>
+      ...
+      <span class="kw">val</span> target = context.actorFor(<span class="std">Seq</span>(<span class="lit">".."</span>, <span class="lit">"myBrother"</span>, <span class="lit">"myNephew"</span>))
+      ...
+}
+}
+</pre><p>For maximum performance use a collection with efficient head &amp; tail operations.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorRefFactory#actorFor" data-isabs="false">
+      <a id="actorFor(String):ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorFor</span><span class="params">(<span name="path">path: String</span>)</span><span class="result">: <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Look-up an actor by path represented as string.</p><div class="fullcomment"><div class="comment cmt"><p>Look-up an actor by path represented as string.</p><p>Absolute URIs like <code>akka://appname/user/actorA</code> are looked up as described
+for look-ups by <code>actorOf(ActorPath)</code>.</p><p>Relative URIs like <code>/service/actorA/childB</code> are looked up relative to the
+root path of the <a name="akka.actor.ActorSystem" class="extype" href="">ActorSystem</a> containing this factory and as
+described for look-ups by <code>actorOf(Iterable[String])</code>.</p><p>Relative URIs like <code>myChild/grandChild</code> or <code>../myBrother</code> are looked up
+relative to the current context as described for look-ups by
+<code>actorOf(Iterable[String])</code>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorRefFactory#actorFor" data-isabs="false">
+      <a id="actorFor(ActorPath):ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorFor</span><span class="params">(<span name="path">path: <a name="akka.actor.ActorPath" class="extype" href="ActorPath.html">ActorPath</a></span>)</span><span class="result">: <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Look-up an actor by path; if it does not exist, returns a reference to
+the dead-letter mailbox of the <a name="akka.actor.ActorSystem" class="extype" href="">ActorSystem</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Look-up an actor by path; if it does not exist, returns a reference to
+the dead-letter mailbox of the <a name="akka.actor.ActorSystem" class="extype" href="">ActorSystem</a>. If the path
+point to an actor which is not local, no attempt is made during this
+call to verify that the actor it represents does exist or is alive; use
+<code>watch(ref)</code> to be notified of the target’s termination, which is also
+signaled if the queried path cannot be resolved.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorRefFactory#actorSelection" data-isabs="false">
+      <a id="actorSelection(String):ActorSelection"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorSelection</span><span class="params">(<span name="path">path: String</span>)</span><span class="result">: <a name="akka.actor.ActorSelection" class="extype" href="ActorSelection.html">ActorSelection</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Construct an <a name="akka.actor.ActorSelection" class="extype" href="ActorSelection.html">ActorSelection</a> from the given path, which is
+parsed for wildcards (these are replaced by regular expressions
+internally).</p><div class="fullcomment"><div class="comment cmt"><p>Construct an <a name="akka.actor.ActorSelection" class="extype" href="ActorSelection.html">ActorSelection</a> from the given path, which is
+parsed for wildcards (these are replaced by regular expressions
+internally). No attempt is made to verify the existence of any part of
+the supplied path, it is recommended to send a message and gather the
+replies in order to resolve the matching set of actors.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#child" data-isabs="false">
+      <a id="child(String):ActorPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">child</span><span class="params">(<span name="child">child: String</span>)</span><span class="result">: <a name="akka.actor.ActorPath" class="extype" href="ActorPath.html">ActorPath</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"><i>Java API</i>: Create a new child actor path.</p>
+    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#descendant" data-isabs="false">
+      <a id="descendant(Iterable[String]):ActorPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">descendant</span><span class="params">(<span name="names">names: <span name="java.lang.Iterable" class="extype">Iterable</span>[String]</span>)</span><span class="result">: <a name="akka.actor.ActorPath" class="extype" href="ActorPath.html">ActorPath</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"><i>Java API</i>: Recursively create a descendant’s path by appending all child names.</p>
+    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
+      <a id="getClass():java.lang.Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#startTime" data-isabs="false">
+      <a id="startTime:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">startTime</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Start-up time in milliseconds since the epoch.</p>
+    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
+      <a id="synchronized[T0](⇒ T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorSystem#uptime" data-isabs="false">
+      <a id="uptime:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">uptime</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Up-time of this actor system in seconds.</p>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div name="akka.actor.ActorRefFactory" class="parent">
+              <h3>Inherited from <a name="akka.actor.ActorRefFactory" class="extype" href="ActorRefFactory.html">ActorRefFactory</a></h3>
+            </div><div name="scala.AnyRef" class="parent">
+              <h3>Inherited from AnyRef</h3>
+            </div><div name="scala.Any" class="parent">
+              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

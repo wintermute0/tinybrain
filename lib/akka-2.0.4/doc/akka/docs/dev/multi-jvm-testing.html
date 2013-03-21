@@ -1,0 +1,477 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Multi-JVM Testing &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Information for Developers" href="index.html" />
+    <link rel="next" title="Developer Guidelines" href="developer-guidelines.html" />
+    <link rel="prev" title="Building Akka" href="building-akka.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Multi-JVM Testing</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="developer-guidelines.html">Developer Guidelines</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="building-akka.html">Building Akka</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="multi-jvm-testing">
+<span id="id1"></span><h1>Multi-JVM Testing</h1>
+<p>Support for running applications (objects with main methods) and
+ScalaTest tests in multiple JVMs.</p>
+<div class="section" id="setup">
+<h2>Setup</h2>
+<p>The multi-JVM testing is an sbt plugin that you can find here:</p>
+<p><a class="reference external" href="http://github.com/typesafehub/sbt-multi-jvm">http://github.com/typesafehub/sbt-multi-jvm</a></p>
+<p>You can add it as a plugin by adding the following to your project/plugins.sbt:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">resolvers</span> <span class="o">+=</span> <span class="nc">Classpaths</span><span class="o">.</span><span class="n">typesafeResolver</span>
+
+<span class="n">addSbtPlugin</span><span class="o">(</span><span class="s">&quot;com.typesafe.sbtmultijvm&quot;</span> <span class="o">%</span> <span class="s">&quot;sbt-multi-jvm&quot;</span> <span class="o">%</span> <span class="s">&quot;0.1.9&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>You can then add multi-JVM testing to <tt class="docutils literal"><span class="pre">project/Build.scala</span></tt> by including the <tt class="docutils literal"><span class="pre">MultiJvm</span></tt>
+settings and config. For example, here is how the akka-remote project adds
+multi-JVM testing:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">sbt._</span>
+<span class="k">import</span> <span class="nn">Keys._</span>
+<span class="k">import</span> <span class="nn">com.typesafe.sbtmultijvm.MultiJvmPlugin</span>
+<span class="k">import</span> <span class="nn">com.typesafe.sbtmultijvm.MultiJvmPlugin.</span><span class="o">{</span> <span class="nc">MultiJvm</span><span class="o">,</span> <span class="n">extraOptions</span> <span class="o">}</span>
+
+<span class="k">object</span> <span class="nc">AkkaBuild</span> <span class="k">extends</span> <span class="nc">Build</span> <span class="o">{</span>
+
+  <span class="k">lazy</span> <span class="k">val</span> <span class="n">remote</span> <span class="k">=</span> <span class="nc">Project</span><span class="o">(</span>
+    <span class="n">id</span> <span class="k">=</span> <span class="s">&quot;akka-remote&quot;</span><span class="o">,</span>
+    <span class="n">base</span> <span class="k">=</span> <span class="n">file</span><span class="o">(</span><span class="s">&quot;akka-remote&quot;</span><span class="o">),</span>
+    <span class="n">settings</span> <span class="k">=</span> <span class="n">defaultSettings</span> <span class="o">++</span> <span class="nc">MultiJvmPlugin</span><span class="o">.</span><span class="n">settings</span> <span class="o">++</span> <span class="nc">Seq</span><span class="o">(</span>
+      <span class="n">extraOptions</span> <span class="n">in</span> <span class="nc">MultiJvm</span> <span class="o">&lt;&lt;=</span> <span class="o">(</span><span class="n">sourceDirectory</span> <span class="n">in</span> <span class="nc">MultiJvm</span><span class="o">)</span> <span class="o">{</span> <span class="n">src</span> <span class="k">=&gt;</span>
+         <span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">src</span> <span class="o">**</span> <span class="o">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot;.conf&quot;</span><span class="o">)).</span><span class="n">get</span><span class="o">.</span><span class="n">headOption</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="s">&quot;-Dconfig.file=&quot;</span> <span class="o">+</span> <span class="n">_</span><span class="o">.</span><span class="n">absolutePath</span><span class="o">).</span><span class="n">toSeq</span>
+      <span class="o">},</span>
+      <span class="n">test</span> <span class="n">in</span> <span class="nc">Test</span> <span class="o">&lt;&lt;=</span> <span class="o">(</span><span class="n">test</span> <span class="n">in</span> <span class="nc">Test</span><span class="o">)</span> <span class="n">dependsOn</span> <span class="o">(</span><span class="n">test</span> <span class="n">in</span> <span class="nc">MultiJvm</span><span class="o">)</span>
+    <span class="o">)</span>
+  <span class="o">)</span> <span class="n">configs</span> <span class="o">(</span><span class="nc">MultiJvm</span><span class="o">)</span>
+
+  <span class="k">lazy</span> <span class="k">val</span> <span class="n">buildSettings</span> <span class="k">=</span> <span class="nc">Defaults</span><span class="o">.</span><span class="n">defaultSettings</span> <span class="o">++</span> <span class="nc">Seq</span><span class="o">(</span>
+    <span class="n">organization</span> <span class="o">:=</span> <span class="s">&quot;com.typesafe.akka&quot;</span><span class="o">,</span>
+    <span class="n">version</span>      <span class="o">:=</span> <span class="s">&quot;2.0.4&quot;</span><span class="o">,</span>
+    <span class="n">scalaVersion</span> <span class="o">:=</span> <span class="s">&quot;2.9.1&quot;</span><span class="o">,</span>
+    <span class="n">crossPaths</span>   <span class="o">:=</span> <span class="kc">false</span>
+  <span class="o">)</span>
+
+  <span class="k">lazy</span> <span class="k">val</span> <span class="n">defaultSettings</span> <span class="k">=</span> <span class="n">buildSettings</span> <span class="o">++</span> <span class="nc">Seq</span><span class="o">(</span>
+    <span class="n">resolvers</span> <span class="o">+=</span> <span class="s">&quot;Typesafe Repo&quot;</span> <span class="n">at</span> <span class="s">&quot;http://repo.typesafe.com/typesafe/releases/&quot;</span>
+  <span class="o">)</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>You can specify JVM options for the forked JVMs:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">jvmOptions</span> <span class="n">in</span> <span class="nc">MultiJvm</span> <span class="o">:=</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">&quot;-Xmx256M&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-tests">
+<h2>Running tests</h2>
+<p>The multi-jvm tasks are similar to the normal tasks: <tt class="docutils literal"><span class="pre">test</span></tt>, <tt class="docutils literal"><span class="pre">test-only</span></tt>,
+and <tt class="docutils literal"><span class="pre">run</span></tt>, but are under the <tt class="docutils literal"><span class="pre">multi-jvm</span></tt> configuration.</p>
+<p>So in Akka, to run all the multi-JVM tests in the akka-remote project use (at
+the sbt prompt):</p>
+<div class="highlight-none"><div class="highlight"><pre>akka-remote/multi-jvm:test
+</pre></div>
+</div>
+<p>Or one can change to the <tt class="docutils literal"><span class="pre">akka-remote</span></tt> project first, and then run the
+tests:</p>
+<div class="highlight-none"><div class="highlight"><pre>project akka-remote
+multi-jvm:test
+</pre></div>
+</div>
+<p>To run individual tests use <tt class="docutils literal"><span class="pre">test-only</span></tt>:</p>
+<div class="highlight-none"><div class="highlight"><pre>multi-jvm:test-only akka.remote.RandomRoutedRemoteActor
+</pre></div>
+</div>
+<p>More than one test name can be listed to run multiple specific
+tests. Tab-completion in sbt makes it easy to complete the test names.</p>
+<p>It's also possible to specify JVM options with <tt class="docutils literal"><span class="pre">test-only</span></tt> by including those
+options after the test names and <tt class="docutils literal"><span class="pre">--</span></tt>. For example:</p>
+<div class="highlight-none"><div class="highlight"><pre>multi-jvm:test-only akka.remote.RandomRoutedRemoteActor -- -Dsome.option=something
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-application-tests">
+<h2>Creating application tests</h2>
+<p>The tests are discovered, and combined, through a naming convention. MultiJvm tests are
+located in <tt class="docutils literal"><span class="pre">src/multi-jvm/scala</span></tt> directory. A test is named with the following pattern:</p>
+<div class="highlight-none"><div class="highlight"><pre>{TestName}MultiJvm{NodeName}
+</pre></div>
+</div>
+<p>That is, each test has <tt class="docutils literal"><span class="pre">MultiJvm</span></tt> in the middle of its name. The part before
+it groups together tests/applications under a single <tt class="docutils literal"><span class="pre">TestName</span></tt> that will run
+together. The part after, the <tt class="docutils literal"><span class="pre">NodeName</span></tt>, is a distinguishing name for each
+forked JVM.</p>
+<p>So to create a 3-node test called <tt class="docutils literal"><span class="pre">Sample</span></tt>, you can create three applications
+like the following:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">package</span> <span class="nn">sample</span>
+
+<span class="k">object</span> <span class="nc">SampleMultiJvmNode1</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="o">{</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Hello from node 1&quot;</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="k">object</span> <span class="nc">SampleMultiJvmNode2</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="o">{</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Hello from node 2&quot;</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="k">object</span> <span class="nc">SampleMultiJvmNode3</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="o">{</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Hello from node 3&quot;</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>When you call <tt class="docutils literal"><span class="pre">multi-jvm:run</span> <span class="pre">sample.Sample</span></tt> at the sbt prompt, three JVMs will be
+spawned, one for each node. It will look like this:</p>
+<div class="highlight-none"><div class="highlight"><pre>&gt; multi-jvm:run sample.Sample
+...
+[info] Starting JVM-Node1 for sample.SampleMultiJvmNode1
+[info] Starting JVM-Node2 for sample.SampleMultiJvmNode2
+[info] Starting JVM-Node3 for sample.SampleMultiJvmNode3
+[JVM-Node1] Hello from node 1
+[JVM-Node2] Hello from node 2
+[JVM-Node3] Hello from node 3
+[success] Total time: ...
+</pre></div>
+</div>
+</div>
+<div class="section" id="naming">
+<h2>Naming</h2>
+<p>You can change what the <tt class="docutils literal"><span class="pre">MultiJvm</span></tt> identifier is. For example, to change it to
+<tt class="docutils literal"><span class="pre">ClusterTest</span></tt> use the <tt class="docutils literal"><span class="pre">multiJvmMarker</span></tt> setting:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">multiJvmMarker</span> <span class="n">in</span> <span class="nc">MultiJvm</span> <span class="o">:=</span> <span class="s">&quot;ClusterTest&quot;</span>
+</pre></div>
+</div>
+<p>Your tests should now be named <tt class="docutils literal"><span class="pre">{TestName}ClusterTest{NodeName}</span></tt>.</p>
+</div>
+<div class="section" id="configuration-of-the-jvm-instances">
+<h2>Configuration of the JVM instances</h2>
+<div class="section" id="setting-jvm-options">
+<h3>Setting JVM options</h3>
+<p>You can define specific JVM options for each of the spawned JVMs. You do that by creating
+a file named after the node in the test with suffix <tt class="docutils literal"><span class="pre">.opts</span></tt> and put them in the same
+directory as the test.</p>
+<p>For example, to feed the JVM options <tt class="docutils literal"><span class="pre">-Dakka.remote.port=9991</span></tt> to the <tt class="docutils literal"><span class="pre">SampleMultiJvmNode1</span></tt>
+let's create three <tt class="docutils literal"><span class="pre">*.opts</span></tt> files and add the options to them.</p>
+<p><tt class="docutils literal"><span class="pre">SampleMultiJvmNode1.opts</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="o">-</span><span class="nc">Dakka</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">port</span><span class="o">=</span><span class="mi">9991</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">SampleMultiJvmNode2.opts</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="o">-</span><span class="nc">Dakka</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">port</span><span class="o">=</span><span class="mi">9992</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">SampleMultiJvmNode3.opts</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="o">-</span><span class="nc">Dakka</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">port</span><span class="o">=</span><span class="mi">9993</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="overriding-configuration-options">
+<h3>Overriding configuration options</h3>
+<p>You can also override the options in the <a class="reference internal" href="../general/configuration.html#configuration"><em>Configuration</em></a> file with different options for each
+spawned JVM. You do that by creating a file named after the node in the test with suffix
+<tt class="docutils literal"><span class="pre">.conf</span></tt> and put them in the same  directory as the test .</p>
+<p>For example, to override the configuration option <tt class="docutils literal"><span class="pre">akka.cluster.name</span></tt> let's create three
+<tt class="docutils literal"><span class="pre">*.conf</span></tt> files and add the option to them.</p>
+<p><tt class="docutils literal"><span class="pre">SampleMultiJvmNode1.conf</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">akka</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">port</span> <span class="k">=</span> <span class="mi">9991</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">SampleMultiJvmNode2.conf</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">akka</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">port</span> <span class="k">=</span> <span class="mi">9992</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">SampleMultiJvmNode3.conf</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">akka</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">port</span> <span class="k">=</span> <span class="mi">9993</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="scalatest">
+<h2>ScalaTest</h2>
+<p>There is also support for creating ScalaTest tests rather than applications. To
+do this use the same naming convention as above, but create ScalaTest suites
+rather than objects with main methods. You need to have ScalaTest on the
+classpath. Here is a similar example to the one above but using ScalaTest:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">package</span> <span class="nn">sample</span>
+
+<span class="k">import</span> <span class="nn">org.scalatest.WordSpec</span>
+<span class="k">import</span> <span class="nn">org.scalatest.matchers.MustMatchers</span>
+
+<span class="k">class</span> <span class="nc">SpecMultiJvmNode1</span> <span class="k">extends</span> <span class="nc">WordSpec</span> <span class="k">with</span> <span class="nc">MustMatchers</span> <span class="o">{</span>
+  <span class="s">&quot;A node&quot;</span> <span class="n">should</span> <span class="o">{</span>
+    <span class="s">&quot;be able to say hello&quot;</span> <span class="n">in</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">message</span> <span class="k">=</span> <span class="s">&quot;Hello from node 1&quot;</span>
+      <span class="n">message</span> <span class="n">must</span> <span class="n">be</span><span class="o">(</span><span class="s">&quot;Hello from node 1&quot;</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="k">class</span> <span class="nc">SpecMultiJvmNode2</span> <span class="k">extends</span> <span class="nc">WordSpec</span> <span class="k">with</span> <span class="nc">MustMatchers</span> <span class="o">{</span>
+  <span class="s">&quot;A node&quot;</span> <span class="n">should</span> <span class="o">{</span>
+    <span class="s">&quot;be able to say hello&quot;</span> <span class="n">in</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">message</span> <span class="k">=</span> <span class="s">&quot;Hello from node 2&quot;</span>
+      <span class="n">message</span> <span class="n">must</span> <span class="n">be</span><span class="o">(</span><span class="s">&quot;Hello from node 2&quot;</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>To run just these tests you would call <tt class="docutils literal"><span class="pre">multi-jvm:test-only</span> <span class="pre">sample.Spec</span></tt> at
+the sbt prompt.</p>
+</div>
+<div class="section" id="barriers">
+<h2>Barriers</h2>
+<p>When running multi-JVM tests it's common to need to coordinate timing across
+nodes. To do this, multi-JVM test framework has the notion of a double-barrier
+(there is both an entry barrier and an exit barrier).
+To wait at the entry use the <tt class="docutils literal"><span class="pre">enter</span></tt> method. To wait at the
+exit use the <tt class="docutils literal"><span class="pre">leave</span></tt> method. It's also possible to pass a block of code which
+will be run between the barriers.</p>
+<p>There are 2 implementations of the barrier: one is used for coordinating JVMs
+running on a single machine and is based on local files, another used in a distributed
+scenario (see below) and is based on apache ZooKeeper. These two cases
+are differentiated with <tt class="docutils literal"><span class="pre">test.hosts</span></tt> property defined. The choice for a proper barrier
+implementation is made in <tt class="docutils literal"><span class="pre">AkkaRemoteSpec</span></tt> which is a base class for all multi-JVM tests.</p>
+<p>When creating a barrier you pass it a name. You can also pass a timeout. The default
+timeout is 60 seconds.</p>
+<p>Here is an example of coordinating the starting of two nodes and then running
+something in coordination:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">package</span> <span class="nn">sample</span>
+
+<span class="k">import</span> <span class="nn">org.scalatest.WordSpec</span>
+<span class="k">import</span> <span class="nn">org.scalatest.matchers.MustMatchers</span>
+<span class="k">import</span> <span class="nn">org.scalatest.BeforeAndAfterAll</span>
+
+<span class="k">import</span> <span class="nn">akka.cluster._</span>
+
+<span class="k">object</span> <span class="nc">SampleMultiJvmSpec</span> <span class="k">extends</span> <span class="nc">AbstractRemoteActorMultiJvmSpec</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nc">NrOfNodes</span> <span class="k">=</span> <span class="mi">2</span>
+  <span class="k">def</span> <span class="n">commonConfig</span> <span class="k">=</span> <span class="nc">ConfigFactory</span><span class="o">.</span><span class="n">parseString</span><span class="o">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">    // Declare your configuration here.</span>
+<span class="s">  &quot;&quot;&quot;</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">class</span> <span class="nc">SampleMultiJvmNode1</span> <span class="k">extends</span> <span class="nc">AkkaRemoteSpec</span><span class="o">(</span><span class="nc">SampleMultiJvmSpec</span><span class="o">.</span><span class="n">nodeConfigs</span><span class="o">(</span><span class="mi">0</span><span class="o">))</span>
+  <span class="k">with</span> <span class="nc">WordSpec</span> <span class="k">with</span> <span class="nc">MustMatchers</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">SampleMultiJvmSpec._</span>
+
+  <span class="s">&quot;A cluster&quot;</span> <span class="n">must</span> <span class="o">{</span>
+
+    <span class="s">&quot;have jvm options&quot;</span> <span class="n">in</span> <span class="o">{</span>
+      <span class="nc">System</span><span class="o">.</span><span class="n">getProperty</span><span class="o">(</span><span class="s">&quot;akka.remote.port&quot;</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">)</span> <span class="n">must</span> <span class="n">be</span><span class="o">(</span><span class="s">&quot;9991&quot;</span><span class="o">)</span>
+      <span class="n">akka</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="nc">Config</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getString</span><span class="o">(</span><span class="s">&quot;test.name&quot;</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">)</span> <span class="n">must</span> <span class="n">be</span><span class="o">(</span><span class="s">&quot;node1&quot;</span><span class="o">)</span>
+    <span class="o">}</span>
+
+    <span class="s">&quot;be able to start all nodes&quot;</span> <span class="n">in</span> <span class="o">{</span>
+      <span class="n">barrier</span><span class="o">(</span><span class="s">&quot;start&quot;</span><span class="o">)</span>
+      <span class="n">println</span><span class="o">(</span><span class="s">&quot;All nodes are started!&quot;</span><span class="o">)</span>
+      <span class="n">barrier</span><span class="o">(</span><span class="s">&quot;end&quot;</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="k">class</span> <span class="nc">SampleMultiJvmNode2</span> <span class="k">extends</span> <span class="nc">AkkaRemoteSpec</span><span class="o">(</span><span class="nc">SampleMultiJvmSpec</span><span class="o">.</span><span class="n">nodeConfigs</span><span class="o">(</span><span class="mi">1</span><span class="o">))</span>
+  <span class="k">with</span> <span class="nc">WordSpec</span> <span class="k">with</span> <span class="nc">MustMatchers</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">SampleMultiJvmSpec._</span>
+
+  <span class="s">&quot;A cluster&quot;</span> <span class="n">must</span> <span class="o">{</span>
+
+    <span class="s">&quot;have jvm options&quot;</span> <span class="n">in</span> <span class="o">{</span>
+      <span class="nc">System</span><span class="o">.</span><span class="n">getProperty</span><span class="o">(</span><span class="s">&quot;akka.remote.port&quot;</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">)</span> <span class="n">must</span> <span class="n">be</span><span class="o">(</span><span class="s">&quot;9992&quot;</span><span class="o">)</span>
+      <span class="n">akka</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="nc">Config</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getString</span><span class="o">(</span><span class="s">&quot;test.name&quot;</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">)</span> <span class="n">must</span> <span class="n">be</span><span class="o">(</span><span class="s">&quot;node2&quot;</span><span class="o">)</span>
+    <span class="o">}</span>
+
+    <span class="s">&quot;be able to start all nodes&quot;</span> <span class="n">in</span> <span class="o">{</span>
+      <span class="n">barrier</span><span class="o">(</span><span class="s">&quot;start&quot;</span><span class="o">)</span>
+      <span class="n">println</span><span class="o">(</span><span class="s">&quot;All nodes are started!&quot;</span><span class="o">)</span>
+      <span class="n">barrier</span><span class="o">(</span><span class="s">&quot;end&quot;</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="networkfailuretest">
+<h2>NetworkFailureTest</h2>
+<p>You can use the <tt class="docutils literal"><span class="pre">NetworkFailureTest</span></tt> trait to test network failure. See the
+<tt class="docutils literal"><span class="pre">RemoteErrorHandlingNetworkTest</span></tt> test. Your tests needs to end with
+<tt class="docutils literal"><span class="pre">NetworkTest</span></tt>. They are disabled by default. To run them you need to enable a
+flag.</p>
+<p>Example:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">project</span> <span class="n">akka</span><span class="o">-</span><span class="n">remote</span>
+<span class="n">set</span> <span class="n">akka</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">network</span> <span class="kc">true</span>
+<span class="n">test</span><span class="o">-</span><span class="n">only</span> <span class="n">akka</span><span class="o">.</span><span class="n">actor</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="nc">RemoteErrorHandlingNetworkTest</span>
+</pre></div>
+</div>
+<p>It uses <tt class="docutils literal"><span class="pre">ipfw</span></tt> for network management. Mac OSX comes with it installed but if
+you are on another platform you might need to install it yourself. Here is a
+port:</p>
+<p><a class="reference external" href="http://info.iet.unipi.it/~luigi/dummynet">http://info.iet.unipi.it/~luigi/dummynet</a></p>
+</div>
+<div class="section" id="running-tests-on-many-machines">
+<h2>Running tests on many machines</h2>
+<p>The same tests that are run on a single machine using sbt-multi-jvm can be run on multiple
+machines using schoir (read the same as <tt class="docutils literal"><span class="pre">esquire</span></tt>) plugin. The plugin is included just like sbt-multi-jvm:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">resolvers</span> <span class="o">+=</span> <span class="nc">Classpaths</span><span class="o">.</span><span class="n">typesafeResolver</span>
+
+<span class="n">addSbtPlugin</span><span class="o">(</span><span class="s">&quot;com.typesafe.schoir&quot;</span> <span class="o">%</span> <span class="s">&quot;schoir&quot;</span> <span class="o">%</span> <span class="s">&quot;0.1.1&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The interaction with the plugin is through <tt class="docutils literal"><span class="pre">schoir:master</span></tt> input task. This input task optionally accepts the
+path to the file with the following properties:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">git</span><span class="o">.</span><span class="n">url</span><span class="o">=</span><span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="k">:</span><span class="kt">akka/akka.git</span>
+<span class="n">external</span><span class="o">.</span><span class="n">addresses</span><span class="o">.</span><span class="k">for</span><span class="o">.</span><span class="n">ssh</span><span class="o">=</span><span class="n">host1</span><span class="k">:</span><span class="kt">port1</span><span class="o">,...,</span><span class="n">hostN</span><span class="k">:</span><span class="kt">portN</span>
+<span class="n">internal</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">names</span><span class="o">=</span><span class="n">host1</span><span class="o">,...,</span><span class="n">hostN</span>
+</pre></div>
+</div>
+<p>Alternative to specifying the property file, one can set respective settings in the build file:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">gitUrl</span> <span class="o">:=</span> <span class="s">&quot;git@github.com:akka/akka.git&quot;</span><span class="o">,</span>
+<span class="n">machinesExt</span> <span class="o">:=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">InetAddress</span><span class="o">(</span><span class="s">&quot;host1&quot;</span><span class="o">,</span> <span class="n">port1</span><span class="o">)),</span>
+<span class="n">machinesInt</span> <span class="o">:=</span> <span class="nc">List</span><span class="o">(</span><span class="s">&quot;host1&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The reason the first property is called <tt class="docutils literal"><span class="pre">git.url</span></tt> is that the plugin sets up a temporary remote branch on git
+to test against the local working copy. After the tests are finished the changes are regained and the branch
+is deleted.</p>
+<p>Each test machine starts a node in zookeeper server ensemble that can be used for synchronization. Since
+the server is started on a fixed port, it's not currently possible to run more than one test session on the
+same machine at the same time.</p>
+<p>The machines that are used for testing (slaves) should have ssh access to the outside world and be able to talk
+to each other with the internal addresses given. On the master machine ssh client is required. Obviosly git
+and sbt should be installed on both master and slave machines.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

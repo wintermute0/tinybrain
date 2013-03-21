@@ -1,0 +1,283 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Release Notes &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Project Information" href="index.html" />
+    <link rel="next" title="Scaladoc API" href="scaladoc.html" />
+    <link rel="prev" title="Migration Guide 1.3.x to 2.0.x" href="migration-guide-1.3.x-2.0.x.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Release Notes</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="scaladoc.html">Scaladoc API</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="migration-guide-1.3.x-2.0.x.html">Migration Guide 1.3.x to 2.0.x</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="release-notes">
+<h1>Release Notes</h1>
+<div class="section" id="release-2-0">
+<h2>Release 2.0</h2>
+<p>We've just released Akka 2.0 – a revolutionary step in programming for concurrency, fault-tolerance and scalability.</p>
+<p>Building on the experiences from the Akka 1 series, we take Akka to the next level— resilience by default, scale up and out by configuration, extensibility by design and with a smaller footprint.</p>
+<p>A lot of effort has gone into this release, and it's not just a version bump, it's truly worthy of the name &quot;Akka 2.0&quot;.
+We'd like to take the opportunity to thank all of the excellent people that have made this release possible,
+to Jonas, to all committers, to all users and to the excellent Scala and Java ecosystems!</p>
+<div class="section" id="highlights-of-akka-2-0">
+<h3>Highlights of Akka 2.0</h3>
+<div class="section" id="stats">
+<h4>Stats</h4>
+<p>700 tickets closed!</p>
+<p><strong>Code changes compared to Akka 1.3.1:</strong></p>
+<ul class="simple">
+<li>1020 files changed</li>
+<li>98683 insertions(+)</li>
+<li>57415 deletions(-)</li>
+</ul>
+<p>Also including 331 pages of reference documentation, and tons of ScalaDoc.</p>
+<p>Use the Akka Migration package to aid in migrating 1.3 code to 2.0.</p>
+</div>
+<div class="section" id="actors">
+<h4>Actors</h4>
+<ul class="simple">
+<li>Distributable by design and asynchronous at the core</li>
+<li><tt class="docutils literal"><span class="pre">ActorSystems</span></tt> lets you run multiple applications in isolation</li>
+<li><tt class="docutils literal"><span class="pre">Props</span></tt> are immutable configuration for Actor instances</li>
+<li><tt class="docutils literal"><span class="pre">ActorPaths</span></tt> makes it dead easy to address Actors</li>
+<li>Enforced parental supervision gives you Error Kernel design for free</li>
+<li><tt class="docutils literal"><span class="pre">DeathWatch</span></tt> makes it possible to observe termination of Actors</li>
+<li><tt class="docutils literal"><span class="pre">Router</span></tt>s unify what was <tt class="docutils literal"><span class="pre">ActorPool</span></tt>s with <tt class="docutils literal"><span class="pre">LoadBalancer</span></tt>s to form a flexible, extensible and transparent entity which quacks like an <tt class="docutils literal"><span class="pre">ActorRef</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">Stash</span></tt>, an API made by Phillip Haller to do conditional receives</li>
+<li>Extensions enable you to augment <tt class="docutils literal"><span class="pre">ActorSystem</span></tt>s</li>
+<li>Scale up and out through configuration</li>
+<li>API unification and simplification</li>
+<li>Excellent performance, up to 20 million msg/second on a single machine, see the <a class="reference external" href="http://letitcrash.com/post/17607272336/scalability-of-fork-join-pool">blog article</a></li>
+<li>Slimmer footprint gives you around 2.7 million Actors per GB of memory</li>
+</ul>
+</div>
+<div class="section" id="dispatchers">
+<h4>Dispatchers</h4>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Dispatcher</span></tt>s are now configured in the configuration file and not the code, for easy tuning of deployed applications</li>
+<li><tt class="docutils literal"><span class="pre">Dispatcher</span></tt> was previously known as ExecutorBasedEventDrivenDispatcher</li>
+<li><tt class="docutils literal"><span class="pre">BalancingDispatcher</span></tt> was previously known as <tt class="docutils literal"><span class="pre">ExecutorBasedEventDrivenWorkStealingDispatcher</span></tt>, is now work-sharing and you can configure which mailbox type should be used</li>
+<li><tt class="docutils literal"><span class="pre">PinnedDispatcher</span></tt> was previously known as <tt class="docutils literal"><span class="pre">ThreadBasedDispatcher</span></tt></li>
+<li>Create your own <tt class="docutils literal"><span class="pre">Dispatcher</span></tt>s or <tt class="docutils literal"><span class="pre">MessageQueues</span></tt> (mailbox backing storage) and hook in through config</li>
+<li>Many different <tt class="docutils literal"><span class="pre">MessageQueue</span></tt>s: <tt class="docutils literal"><span class="pre">Priority</span></tt>, <tt class="docutils literal"><span class="pre">Bounded</span></tt>, <tt class="docutils literal"><span class="pre">Durable</span></tt> (ZooKeeper, Beanstalk, File, Redis, Mongo)</li>
+</ul>
+</div>
+<div class="section" id="remoting">
+<h4>Remoting</h4>
+<ul class="simple">
+<li>Completely transparent in user code</li>
+<li>Pluggable transports, ships with a scalable Netty implementation</li>
+<li>Create actors remotely using configuration or in code</li>
+</ul>
+</div>
+<div class="section" id="typedactors">
+<h4>TypedActors</h4>
+<ul class="simple">
+<li>Completely new implementation built on top of JDK Proxies</li>
+<li>0 external dependencies, so now in akka-actor</li>
+<li>Built as an Akka Extension</li>
+</ul>
+</div>
+<div class="section" id="futures-promises">
+<h4>Futures &amp; Promises</h4>
+<ul class="simple">
+<li>Harmonized API with <a class="reference external" href="http://docs.scala-lang.org/sips/pending/futures-promises.html">SIP-14</a> (big props to the EPFL team: Philipp Haller, Aleksandar Prokopec, Heather Miller and Vojin Jovanovic)</li>
+<li>Smaller footprint</li>
+<li>Completely non-blocking implementation</li>
+</ul>
+</div>
+<div class="section" id="akka-stm">
+<h4>Akka STM</h4>
+<ul class="simple">
+<li>Now uses ScalaSTM</li>
+<li><tt class="docutils literal"><span class="pre">Transactor</span></tt>s</li>
+<li><tt class="docutils literal"><span class="pre">Agent</span></tt>s</li>
+</ul>
+</div>
+<div class="section" id="eventbus">
+<h4>EventBus</h4>
+<ul class="simple">
+<li>A simple and easy to use API for Publish/Subscribe</li>
+</ul>
+</div>
+<div class="section" id="config">
+<h4>Config</h4>
+<ul class="simple">
+<li>Now using <a class="reference external" href="https://github.com/typesafehub/config">HOCON</a>, extremely powerful and easy to use</li>
+<li>Big props to Havoc Pennington</li>
+</ul>
+</div>
+<div class="section" id="serialization">
+<h4>Serialization</h4>
+<ul class="simple">
+<li>Highly pluggable system for serializing objects</li>
+<li>Mappings go into configuration, no need to mix business logic and marshalling</li>
+<li>Built as an Akka Extension</li>
+</ul>
+</div>
+<div class="section" id="patterns">
+<h4>Patterns</h4>
+<ul class="simple">
+<li>&quot;Ask/?&quot; is now a <tt class="docutils literal"><span class="pre">Pattern</span></tt> — for Scala add <tt class="docutils literal"><span class="pre">import</span> <span class="pre">akka.pattern.ask</span></tt>, for Java use <tt class="docutils literal"><span class="pre">akka.pattern.Patterns.ask()</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">gracefulStop</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">pipeTo</span></tt></li>
+</ul>
+</div>
+<div class="section" id="executioncontext">
+<h4>ExecutionContext</h4>
+<ul class="simple">
+<li>One abstraction for asynchronous execution of logic</li>
+</ul>
+</div>
+<div class="section" id="omq">
+<h4>ømq</h4>
+<ul class="simple">
+<li>An API for using Akka with <a class="reference external" href="http://www.zeromq.org/">ømq</a></li>
+<li>Huge thanks to Karim Osman and Ivan Porto Carrero</li>
+<li>Built as an Akka Extension</li>
+</ul>
+<p>Brand new website, still at <a class="reference external" href="http://akka.io">http://akka.io</a>, huge thanks to Heather Miller for her outstanding work</p>
+</div>
+</div>
+<div class="section" id="upcoming-releases">
+<h3>Upcoming Releases</h3>
+<p>Things that will be released within the coming months:</p>
+<ul class="simple">
+<li>Akka Camel 2.0, codename &quot;Alpakka&quot;, with the excellent work of Raymond Roestenburg and Piotr Gabryanczyk</li>
+<li>Akka AMQP 2.0, with the excellent work of John Stanford</li>
+<li>Akka Spring 2.0, with the excellent help of Josh Long</li>
+</ul>
+<p>Akka is released under the Apache V2 license.</p>
+<p><strong>Happy hAkking!</strong></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

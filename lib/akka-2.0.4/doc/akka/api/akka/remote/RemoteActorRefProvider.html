@@ -1,0 +1,783 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.remote.RemoteActorRefProvider</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
+      <div id="definition">
+        <img src="../../lib/class_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a>.<a name="akka.remote" class="extype" href="package.html">remote</a></p>
+        <h1>RemoteActorRefProvider</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">RemoteActorRefProvider</span><span class="result"> extends <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Remote ActorRefProvider. Starts up actor on remote node and creates a RemoteActorRef representing it.
+</p></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+        </div></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+            </div>
+        <div id="ancestors">
+              <span class="filtertype">Inherited</span>
+              <ol><li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li></ol>
+              <ol id="linearization"><li name="akka.remote.RemoteActorRefProvider" class="in"><span>RemoteActorRefProvider</span></li><li name="akka.actor.ActorRefProvider" class="in"><span>ActorRefProvider</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+            </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div class="members" id="constructors">
+              <h3>Instance Constructors</h3>
+              <ol><li visbl="pub" name="akka.remote.RemoteActorRefProvider#this" data-isabs="false">
+      <a id="this:RemoteActorRefProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">RemoteActorRefProvider</span><span class="params">(<span name="systemName">systemName: String</span>, <span name="settings">settings: <a name="akka.actor.ActorSystem.Settings" class="extype" href="../actor/ActorSystem$$Settings.html">Settings</a></span>, <span name="eventStream">eventStream: <a name="akka.event.EventStream" class="extype" href="../event/EventStream.html">EventStream</a></span>, <span name="scheduler">scheduler: <a name="akka.actor.Scheduler" class="extype" href="../actor/Scheduler.html">Scheduler</a></span>, <span name="dynamicAccess">dynamicAccess: <a name="akka.actor.DynamicAccess" class="extype" href="../actor/DynamicAccess.html">DynamicAccess</a></span>)</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $hash$hash">##</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#actorFor" data-isabs="false">
+      <a id="actorFor(InternalActorRef,Iterable[String]):InternalActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorFor</span><span class="params">(<span name="ref">ref: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>, <span name="path">path: Iterable[String]</span>)</span><span class="result">: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create actor reference for the specified child path starting at the
+given starting point.</p><div class="fullcomment"><div class="comment cmt"><p>Create actor reference for the specified child path starting at the
+given starting point. This method always returns an actor which is “logically local”,
+i.e. it cannot be used to obtain a reference to an actor which is not
+physically or logically attached to this actor system.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#actorFor" data-isabs="false">
+      <a id="actorFor(InternalActorRef,String):InternalActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorFor</span><span class="params">(<span name="ref">ref: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>, <span name="path">path: String</span>)</span><span class="result">: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create actor reference for a specified local or remote path, which will
+be parsed using java.</p><div class="fullcomment"><div class="comment cmt"><p>Create actor reference for a specified local or remote path, which will
+be parsed using java.net.URI. If no such actor exists, it will be
+(equivalent to) a dead letter reference. If <code>s</code> is a relative URI, resolve
+it relative to the given ref.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#actorFor" data-isabs="false">
+      <a id="actorFor(ActorPath):InternalActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorFor</span><span class="params">(<span name="path">path: <a name="akka.actor.ActorPath" class="extype" href="../actor/ActorPath.html">ActorPath</a></span>)</span><span class="result">: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create actor reference for a specified local or remote path.</p><div class="fullcomment"><div class="comment cmt"><p>Create actor reference for a specified local or remote path. If no such
+actor exists, it will be (equivalent to) a dead letter reference.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#actorOf" data-isabs="false">
+      <a id="actorOf(ActorSystemImpl,Props,InternalActorRef,ActorPath,Boolean,Option[Deploy],Boolean):InternalActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorOf</span><span class="params">(<span name="system">system: <a name="akka.actor.ActorSystemImpl" class="extype" href="../actor/ActorSystemImpl.html">ActorSystemImpl</a></span>, <span name="props">props: <a name="akka.actor.Props" class="extype" href="../actor/Props.html">Props</a></span>, <span name="supervisor">supervisor: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>, <span name="path">path: <a name="akka.actor.ActorPath" class="extype" href="../actor/ActorPath.html">ActorPath</a></span>, <span name="systemService">systemService: <span name="scala.Boolean" class="extype">Boolean</span></span>, <span name="deploy">deploy: <span name="scala.Option" class="extype">Option</span>[<a name="akka.actor.Deploy" class="extype" href="../actor/Deploy.html">Deploy</a>]</span>, <span name="lookupDeploy">lookupDeploy: <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Actor factory with create-only semantics: will create an actor as
+described by props with the given supervisor and path (may be different
+in case of remote supervision).</p><div class="fullcomment"><div class="comment cmt"><p>Actor factory with create-only semantics: will create an actor as
+described by props with the given supervisor and path (may be different
+in case of remote supervision). If systemService is true, deployment is
+bypassed (local-only). If <code><code>Some(deploy)</code></code> is passed in, it should be
+regarded as taking precedence over the nominally applicable settings,
+but it should be overridable from external configuration; the lookup of
+the latter can be suppressed by setting <code><code>lookupDeploy</code></code> to <code><code>false</code></code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#deadLetters" data-isabs="false">
+      <a id="deadLetters:DeadLetterActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">deadLetters</span><span class="result">: <span name="akka.actor.DeadLetterActorRef" class="extype">DeadLetterActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Dead letter destination for this provider.</p><div class="fullcomment"><div class="comment cmt"><p>Dead letter destination for this provider.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#deathWatch" data-isabs="false">
+      <a id="deathWatch:RemoteDeathWatch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">deathWatch</span><span class="result">: <a name="akka.remote.RemoteDeathWatch" class="extype" href="RemoteDeathWatch.html">RemoteDeathWatch</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Reference to the death watch service.</p><div class="fullcomment"><div class="comment cmt"><p>Reference to the death watch service.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#deployer" data-isabs="false">
+      <a id="deployer:RemoteDeployer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">deployer</span><span class="result">: <a name="akka.remote.RemoteDeployer" class="extype" href="RemoteDeployer.html">RemoteDeployer</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#dispatcher" data-isabs="false">
+      <a id="dispatcher:MessageDispatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dispatcher</span><span class="result">: <a name="akka.dispatch.MessageDispatcher" class="extype" href="../dispatch/MessageDispatcher.html">MessageDispatcher</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#dynamicAccess" data-isabs="false">
+      <a id="dynamicAccess:DynamicAccess"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dynamicAccess</span><span class="result">: <a name="akka.actor.DynamicAccess" class="extype" href="../actor/DynamicAccess.html">DynamicAccess</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#eventStream" data-isabs="false">
+      <a id="eventStream:EventStream"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eventStream</span><span class="result">: <a name="akka.event.EventStream" class="extype" href="../event/EventStream.html">EventStream</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
+      <a id="getClass():java.lang.Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#getExternalAddressFor" data-isabs="false">
+      <a id="getExternalAddressFor(Address):Option[Address]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getExternalAddressFor</span><span class="params">(<span name="addr">addr: <a name="akka.actor.Address" class="extype" href="../actor/Address.html">Address</a></span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="akka.actor.Address" class="extype" href="../actor/Address.html">Address</a>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Obtain the address which is to be used within sender references when
+sending to the given other address or none if the other address cannot be
+reached from this system (i.</p><div class="fullcomment"><div class="comment cmt"><p>Obtain the address which is to be used within sender references when
+sending to the given other address or none if the other address cannot be
+reached from this system (i.e. no means of communication known; no
+attempt is made to verify actual reachability).
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#guardian" data-isabs="false">
+      <a id="guardian:InternalActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">guardian</span><span class="result">: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Reference to the supervisor used for all top-level user actors.</p><div class="fullcomment"><div class="comment cmt"><p>Reference to the supervisor used for all top-level user actors.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#init" data-isabs="false">
+      <a id="init(ActorSystemImpl):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">init</span><span class="params">(<span name="system">system: <a name="akka.actor.ActorSystemImpl" class="extype" href="../actor/ActorSystemImpl.html">ActorSystemImpl</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Initialization of an ActorRefProvider happens in two steps: first
+construction of the object with settings, eventStream, scheduler, etc.</p><div class="fullcomment"><div class="comment cmt"><p>Initialization of an ActorRefProvider happens in two steps: first
+construction of the object with settings, eventStream, scheduler, etc.
+and then—when the ActorSystem is constructed—the second phase during
+which actors may be created (e.g. the guardians).
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#log" data-isabs="false">
+      <a id="log:LoggingAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">log</span><span class="result">: <a name="akka.event.LoggingAdapter" class="extype" href="../event/LoggingAdapter.html">LoggingAdapter</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#registerTempActor" data-isabs="false">
+      <a id="registerTempActor(InternalActorRef,ActorPath):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">registerTempActor</span><span class="params">(<span name="actorRef">actorRef: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>, <span name="path">path: <a name="akka.actor.ActorPath" class="extype" href="../actor/ActorPath.html">ActorPath</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Registers an actorRef at a path returned by tempPath(); do NOT pass in any other path.</p><div class="fullcomment"><div class="comment cmt"><p>Registers an actorRef at a path returned by tempPath(); do NOT pass in any other path.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#remoteDaemon" data-isabs="false">
+      <a id="remoteDaemon:InternalActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">remoteDaemon</span><span class="result">: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#remoteSettings" data-isabs="false">
+      <a id="remoteSettings:RemoteSettings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">remoteSettings</span><span class="result">: <a name="akka.remote.RemoteSettings" class="extype" href="RemoteSettings.html">RemoteSettings</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#rootGuardian" data-isabs="false">
+      <a id="rootGuardian:InternalActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rootGuardian</span><span class="result">: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Reference to the supervisor of guardian and systemGuardian; this is
+exposed so that the ActorSystemImpl can use it as lookupRoot, i.</p><div class="fullcomment"><div class="comment cmt"><p>Reference to the supervisor of guardian and systemGuardian; this is
+exposed so that the ActorSystemImpl can use it as lookupRoot, i.e.
+for anchoring absolute actor look-ups.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#rootPath" data-isabs="false">
+      <a id="rootPath:ActorPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rootPath</span><span class="result">: <a name="akka.actor.ActorPath" class="extype" href="../actor/ActorPath.html">ActorPath</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The root path for all actors within this actor system, including remote
+address if enabled.</p><div class="fullcomment"><div class="comment cmt"><p>The root path for all actors within this actor system, including remote
+address if enabled.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#scheduler" data-isabs="false">
+      <a id="scheduler:Scheduler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scheduler</span><span class="result">: <a name="akka.actor.Scheduler" class="extype" href="../actor/Scheduler.html">Scheduler</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#serialization" data-isabs="false">
+      <a id="serialization:Serialization"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">serialization</span><span class="result">: <a name="akka.serialization.Serialization" class="extype" href="../serialization/Serialization.html">Serialization</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#settings" data-isabs="false">
+      <a id="settings:Settings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">settings</span><span class="result">: <a name="akka.actor.ActorSystem.Settings" class="extype" href="../actor/ActorSystem$$Settings.html">Settings</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
+      <a id="synchronized[T0](⇒ T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#systemGuardian" data-isabs="false">
+      <a id="systemGuardian:InternalActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">systemGuardian</span><span class="result">: <span name="akka.actor.InternalActorRef" class="extype">InternalActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Reference to the supervisor used for all top-level system actors.</p><div class="fullcomment"><div class="comment cmt"><p>Reference to the supervisor used for all top-level system actors.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#systemName" data-isabs="false">
+      <a id="systemName:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">systemName</span><span class="result">: String</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#tempContainer" data-isabs="false">
+      <a id="tempContainer:VirtualPathContainer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tempContainer</span><span class="result">: <span name="akka.actor.VirtualPathContainer" class="extype">VirtualPathContainer</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the actor reference representing the “/temp” path.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the actor reference representing the “/temp” path.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#tempPath" data-isabs="false">
+      <a id="tempPath():ActorPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tempPath</span><span class="params">()</span><span class="result">: <a name="akka.actor.ActorPath" class="extype" href="../actor/ActorPath.html">ActorPath</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Generates and returns a unique actor path below “/temp”.</p><div class="fullcomment"><div class="comment cmt"><p>Generates and returns a unique actor path below “/temp”.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#terminationFuture" data-isabs="false">
+      <a id="terminationFuture:Promise[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">terminationFuture</span><span class="result">: <a name="akka.dispatch.Promise" class="extype" href="../dispatch/Promise.html">Promise</a>[<span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">This Future is completed upon termination of this ActorRefProvider, which
+is usually initiated by stopping the guardian via ActorSystem.</p><div class="fullcomment"><div class="comment cmt"><p>This Future is completed upon termination of this ActorRefProvider, which
+is usually initiated by stopping the guardian via ActorSystem.stop().
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#transport" data-isabs="false">
+      <a id="transport:RemoteTransport"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">transport</span><span class="result">: <a name="akka.remote.RemoteTransport" class="extype" href="RemoteTransport.html">RemoteTransport</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#unregisterTempActor" data-isabs="false">
+      <a id="unregisterTempActor(ActorPath):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unregisterTempActor</span><span class="params">(<span name="path">path: <a name="akka.actor.ActorPath" class="extype" href="../actor/ActorPath.html">ActorPath</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Unregister a temporary actor from the “/temp” path (i.</p><div class="fullcomment"><div class="comment cmt"><p>Unregister a temporary actor from the “/temp” path (i.e. obtained from tempPath()); do NOT pass in any other path.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.remote.RemoteActorRefProvider" class="extype" href="">RemoteActorRefProvider</a> → <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.remote.RemoteActorRefProvider#useActorOnNode" data-isabs="false">
+      <a id="useActorOnNode(ActorPath,Props,Deploy,ActorRef):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">useActorOnNode</span><span class="params">(<span name="path">path: <a name="akka.actor.ActorPath" class="extype" href="../actor/ActorPath.html">ActorPath</a></span>, <span name="props">props: <a name="akka.actor.Props" class="extype" href="../actor/Props.html">Props</a></span>, <span name="deploy">deploy: <a name="akka.actor.Deploy" class="extype" href="../actor/Deploy.html">Deploy</a></span>, <span name="supervisor">supervisor: <a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Using (checking out) actor on a specific node.</p>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div name="akka.actor.ActorRefProvider" class="parent">
+              <h3>Inherited from <a name="akka.actor.ActorRefProvider" class="extype" href="../actor/ActorRefProvider.html">ActorRefProvider</a></h3>
+            </div><div name="scala.AnyRef" class="parent">
+              <h3>Inherited from AnyRef</h3>
+            </div><div name="scala.Any" class="parent">
+              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

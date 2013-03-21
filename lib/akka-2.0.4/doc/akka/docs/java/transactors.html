@@ -1,0 +1,383 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Transactors (Java) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Java API" href="index.html" />
+    <link rel="next" title="Building Finite State Machine Actors (Java)" href="fsm.html" />
+    <link rel="prev" title="Agents (Java)" href="agents.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Transactors (Java)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="fsm.html">Building Finite State Machine Actors (Java)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="agents.html">Agents (Java)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="transactors-java">
+<span id="id1"></span><h1>Transactors (Java)</h1>
+<div class="section" id="why-transactors">
+<h2>Why Transactors?</h2>
+<p>Actors are excellent for solving problems where you have many independent
+processes that can work in isolation and only interact with other Actors through
+message passing. This model fits many problems. But the actor model is
+unfortunately a terrible model for implementing truly shared state. E.g. when
+you need to have consensus and a stable view of state across many
+components. The classic example is the bank account where clients can deposit
+and withdraw, in which each operation needs to be atomic. For detailed
+discussion on the topic see <a class="reference external" href="http://www.slideshare.net/jboner/state-youre-doing-it-wrong-javaone-2009">this JavaOne presentation</a>.</p>
+<p>STM on the other hand is excellent for problems where you need consensus and a
+stable view of the state by providing compositional transactional shared
+state. Some of the really nice traits of STM are that transactions compose, and
+it raises the abstraction level from lock-based concurrency.</p>
+<p>Akka's Transactors combine Actors and STM to provide the best of the Actor model
+(concurrency and asynchronous event-based programming) and STM (compositional
+transactional shared state) by providing transactional, compositional,
+asynchronous, event-based message flows.</p>
+<p>Generally, the STM is not needed very often when working with Akka. Some
+use-cases (that we can think of) are:</p>
+<ul class="simple">
+<li>When you really need composable message flows across many actors updating
+their <strong>internal local</strong> state but need them to do that atomically in one big
+transaction. Might not be often but when you do need this then you are
+screwed without it.</li>
+<li>When you want to share a datastructure across actors.</li>
+</ul>
+</div>
+<div class="section" id="actors-and-stm">
+<h2>Actors and STM</h2>
+<p>You can combine Actors and STM in several ways. An Actor may use STM internally
+so that particular changes are guaranteed to be atomic. Actors may also share
+transactional datastructures as the STM provides safe shared state across
+threads.</p>
+<p>It's also possible to coordinate transactions across Actors or threads so that
+either the transactions in a set all commit successfully or they all fail. This
+is the focus of Transactors and the explicit support for coordinated
+transactions in this section.</p>
+</div>
+<div class="section" id="coordinated-transactions">
+<h2>Coordinated transactions</h2>
+<p>Akka provides an explicit mechanism for coordinating transactions across
+actors. Under the hood it uses a <tt class="docutils literal"><span class="pre">CommitBarrier</span></tt>, similar to a CountDownLatch.</p>
+<p>Here is an example of coordinating two simple counter UntypedActors so that they
+both increment together in coordinated transactions. If one of them was to fail
+to increment, the other would also fail.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">akka.actor.ActorRef</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Increment</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">ActorRef</span> <span class="n">friend</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Increment</span><span class="o">()</span> <span class="o">{}</span>
+
+    <span class="kd">public</span> <span class="nf">Increment</span><span class="o">(</span><span class="n">ActorRef</span> <span class="n">friend</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">friend</span> <span class="o">=</span> <span class="n">friend</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasFriend</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">friend</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">ActorRef</span> <span class="nf">getFriend</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">friend</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">akka.actor.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">akka.transactor.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">scala.concurrent.stm.Ref</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">scala.concurrent.stm.japi.STM</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CoordinatedCounter</span> <span class="kd">extends</span> <span class="n">UntypedActor</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">Ref</span><span class="o">.</span><span class="na">View</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">count</span> <span class="o">=</span> <span class="n">STM</span><span class="o">.</span><span class="na">newRef</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onReceive</span><span class="o">(</span><span class="n">Object</span> <span class="n">incoming</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">incoming</span> <span class="k">instanceof</span> <span class="n">Coordinated</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">Coordinated</span> <span class="n">coordinated</span> <span class="o">=</span> <span class="o">(</span><span class="n">Coordinated</span><span class="o">)</span> <span class="n">incoming</span><span class="o">;</span>
+            <span class="n">Object</span> <span class="n">message</span> <span class="o">=</span> <span class="n">coordinated</span><span class="o">.</span><span class="na">getMessage</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">message</span> <span class="k">instanceof</span> <span class="n">Increment</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">Increment</span> <span class="n">increment</span> <span class="o">=</span> <span class="o">(</span><span class="n">Increment</span><span class="o">)</span> <span class="n">message</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">increment</span><span class="o">.</span><span class="na">hasFriend</span><span class="o">())</span> <span class="o">{</span>
+                    <span class="n">increment</span><span class="o">.</span><span class="na">getFriend</span><span class="o">().</span><span class="na">tell</span><span class="o">(</span><span class="n">coordinated</span><span class="o">.</span><span class="na">coordinate</span><span class="o">(</span><span class="k">new</span> <span class="n">Increment</span><span class="o">()));</span>
+                <span class="o">}</span>
+                <span class="n">coordinated</span><span class="o">.</span><span class="na">atomic</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+                    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                        <span class="n">STM</span><span class="o">.</span><span class="na">increment</span><span class="o">(</span><span class="n">count</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">});</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="s">&quot;GetCount&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">incoming</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">getSender</span><span class="o">().</span><span class="na">tell</span><span class="o">(</span><span class="n">count</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+          <span class="n">unhandled</span><span class="o">(</span><span class="n">incoming</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">akka.actor.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">akka.dispatch.Await</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">akka</span><span class="o">.</span><span class="na">pattern</span><span class="o">.</span><span class="na">Patterns</span><span class="o">.</span><span class="na">ask</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">akka.transactor.Coordinated</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">akka.util.Duration</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">akka.util.Timeout</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">;</span>
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">ActorSystem</span> <span class="n">system</span> <span class="o">=</span> <span class="n">ActorSystem</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">&quot;CoordinatedExample&quot;</span><span class="o">);</span>
+
+<span class="n">ActorRef</span> <span class="n">counter1</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="na">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="n">Props</span><span class="o">(</span><span class="n">CoordinatedCounter</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
+<span class="n">ActorRef</span> <span class="n">counter2</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="na">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="n">Props</span><span class="o">(</span><span class="n">CoordinatedCounter</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
+
+<span class="n">Timeout</span> <span class="n">timeout</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timeout</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="n">SECONDS</span><span class="o">);</span>
+
+<span class="n">counter1</span><span class="o">.</span><span class="na">tell</span><span class="o">(</span><span class="k">new</span> <span class="n">Coordinated</span><span class="o">(</span><span class="k">new</span> <span class="n">Increment</span><span class="o">(</span><span class="n">counter2</span><span class="o">),</span> <span class="n">timeout</span><span class="o">));</span>
+
+<span class="n">Integer</span> <span class="n">count</span> <span class="o">=</span> <span class="o">(</span><span class="n">Integer</span><span class="o">)</span> <span class="n">Await</span><span class="o">.</span><span class="na">result</span><span class="o">(</span><span class="n">ask</span><span class="o">(</span><span class="n">counter1</span><span class="o">,</span> <span class="s">&quot;GetCount&quot;</span><span class="o">,</span> <span class="n">timeout</span><span class="o">),</span> <span class="n">timeout</span><span class="o">.</span><span class="na">duration</span><span class="o">());</span>
+</pre></div>
+</div>
+<p>To start a new coordinated transaction that you will also participate in, create
+a <tt class="docutils literal"><span class="pre">Coordinated</span></tt> object, passing in a <tt class="docutils literal"><span class="pre">Timeout</span></tt>:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Timeout</span> <span class="n">timeout</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timeout</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="n">SECONDS</span><span class="o">);</span>
+<span class="n">Coordinated</span> <span class="n">coordinated</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Coordinated</span><span class="o">(</span><span class="n">timeout</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>To start a coordinated transaction that you won't participate in yourself you
+can create a <tt class="docutils literal"><span class="pre">Coordinated</span></tt> object with a message and send it directly to an
+actor. The recipient of the message will be the first member of the coordination
+set:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">actor</span><span class="o">.</span><span class="na">tell</span><span class="o">(</span><span class="k">new</span> <span class="n">Coordinated</span><span class="o">(</span><span class="k">new</span> <span class="n">Message</span><span class="o">(),</span> <span class="n">timeout</span><span class="o">));</span>
+</pre></div>
+</div>
+<p>To include another actor in the same coordinated transaction that you've created
+or received, use the <tt class="docutils literal"><span class="pre">coordinate</span></tt> method on that object. This will increment
+the number of parties involved by one and create a new <tt class="docutils literal"><span class="pre">Coordinated</span></tt> object to
+be sent.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">actor</span><span class="o">.</span><span class="na">tell</span><span class="o">(</span><span class="n">coordinated</span><span class="o">.</span><span class="na">coordinate</span><span class="o">(</span><span class="k">new</span> <span class="n">Message</span><span class="o">()));</span>
+</pre></div>
+</div>
+<p>To enter the coordinated transaction use the atomic method of the coordinated
+object, passing in a <tt class="docutils literal"><span class="pre">java.lang.Runnable</span></tt>.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">coordinated</span><span class="o">.</span><span class="na">atomic</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// do something in the coordinated transaction ...</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+</pre></div>
+</div>
+<p>The coordinated transaction will wait for the other transactions before
+committing. If any of the coordinated transactions fail then they all fail.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The same actor should not be added to a coordinated transaction more than
+once. The transaction will not be able to complete as an actor only processes
+a single message at a time. When processing the first message the coordinated
+transaction will wait for the commit barrier, which in turn needs the second
+message to be received to proceed.</p>
+</div>
+</div>
+<div class="section" id="untypedtransactor">
+<h2>UntypedTransactor</h2>
+<p>UntypedTransactors are untyped actors that provide a general pattern for
+coordinating transactions, using the explicit coordination described above.</p>
+<p>Here's an example of a simple untyped transactor that will join a coordinated
+transaction:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">akka.transactor.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">scala.concurrent.stm.Ref</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">scala.concurrent.stm.japi.STM</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Counter</span> <span class="kd">extends</span> <span class="n">UntypedTransactor</span> <span class="o">{</span>
+    <span class="n">Ref</span><span class="o">.</span><span class="na">View</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">count</span> <span class="o">=</span> <span class="n">STM</span><span class="o">.</span><span class="na">newRef</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">atomically</span><span class="o">(</span><span class="n">Object</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">message</span> <span class="k">instanceof</span> <span class="n">Increment</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">STM</span><span class="o">.</span><span class="na">increment</span><span class="o">(</span><span class="n">count</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">boolean</span> <span class="n">normally</span><span class="o">(</span><span class="n">Object</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="s">&quot;GetCount&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">message</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">getSender</span><span class="o">().</span><span class="na">tell</span><span class="o">(</span><span class="n">count</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>You could send this Counter transactor a <tt class="docutils literal"><span class="pre">Coordinated(Increment)</span></tt> message. If
+you were to send it just an <tt class="docutils literal"><span class="pre">Increment</span></tt> message it will create its own
+<tt class="docutils literal"><span class="pre">Coordinated</span></tt> (but in this particular case wouldn't be coordinating
+transactions with any other transactors).</p>
+<p>To coordinate with other transactors override the <tt class="docutils literal"><span class="pre">coordinate</span></tt> method. The
+<tt class="docutils literal"><span class="pre">coordinate</span></tt> method maps a message to a set of <tt class="docutils literal"><span class="pre">SendTo</span></tt> objects, pairs of
+<tt class="docutils literal"><span class="pre">ActorRef</span></tt> and a message. You can use the <tt class="docutils literal"><span class="pre">include</span></tt> and <tt class="docutils literal"><span class="pre">sendTo</span></tt> methods
+to easily coordinate with other transactors.</p>
+<p>Here's an example of coordinating an increment, using an untyped transactor,
+similar to the explicitly coordinated example above.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">akka.actor.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">akka.transactor.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">scala.concurrent.stm.Ref</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">scala.concurrent.stm.japi.STM</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FriendlyCounter</span> <span class="kd">extends</span> <span class="n">UntypedTransactor</span> <span class="o">{</span>
+    <span class="n">Ref</span><span class="o">.</span><span class="na">View</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">count</span> <span class="o">=</span> <span class="n">STM</span><span class="o">.</span><span class="na">newRef</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">SendTo</span><span class="o">&gt;</span> <span class="n">coordinate</span><span class="o">(</span><span class="n">Object</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">message</span> <span class="k">instanceof</span> <span class="n">Increment</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">Increment</span> <span class="n">increment</span> <span class="o">=</span> <span class="o">(</span><span class="n">Increment</span><span class="o">)</span> <span class="n">message</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">increment</span><span class="o">.</span><span class="na">hasFriend</span><span class="o">())</span>
+                <span class="k">return</span> <span class="nf">include</span><span class="o">(</span><span class="n">increment</span><span class="o">.</span><span class="na">getFriend</span><span class="o">(),</span> <span class="k">new</span> <span class="n">Increment</span><span class="o">());</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nf">nobody</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">atomically</span><span class="o">(</span><span class="n">Object</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">message</span> <span class="k">instanceof</span> <span class="n">Increment</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">STM</span><span class="o">.</span><span class="na">increment</span><span class="o">(</span><span class="n">count</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">boolean</span> <span class="n">normally</span><span class="o">(</span><span class="n">Object</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="s">&quot;GetCount&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">message</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">getSender</span><span class="o">().</span><span class="na">tell</span><span class="o">(</span><span class="n">count</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>To execute directly before or after the coordinated transaction, override the
+<tt class="docutils literal"><span class="pre">before</span></tt> and <tt class="docutils literal"><span class="pre">after</span></tt> methods. They do not execute within the transaction.</p>
+<p>To completely bypass coordinated transactions override the <tt class="docutils literal"><span class="pre">normally</span></tt>
+method. Any message matched by <tt class="docutils literal"><span class="pre">normally</span></tt> will not be matched by the other
+methods, and will not be involved in coordinated transactions. In this method
+you can implement normal actor behavior, or use the normal STM atomic for local
+transactions.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

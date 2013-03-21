@@ -1,0 +1,287 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Microkernel (Scala) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Scala API" href="index.html" />
+    <link rel="next" title="Java API" href="../java/index.html" />
+    <link rel="prev" title="ZeroMQ (Scala)" href="zeromq.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Microkernel (Scala)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="../java/index.html">Java API</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="zeromq.html">ZeroMQ (Scala)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="microkernel-scala">
+<span id="id1"></span><h1>Microkernel (Scala)</h1>
+<p>The Akka Microkernel is included in the Akka download found at <a class="reference external" href="http://akka.io/downloads">downloads</a>.</p>
+<p>To run an application with the microkernel you need to create a Bootable class
+that handles the startup and shutdown the application. An example is included below.</p>
+<p>Put your application jar in the <tt class="docutils literal"><span class="pre">deploy</span></tt> directory to have it automatically
+loaded.</p>
+<p>To start the kernel use the scripts in the <tt class="docutils literal"><span class="pre">bin</span></tt> directory, passing the boot
+classes for your application.</p>
+<p>There is a simple example of an application setup for running with the
+microkernel included in the akka download. This can be run with the following
+command (on a unix-based system):</p>
+<div class="highlight-none"><div class="highlight"><pre>bin/akka sample.kernel.hello.HelloKernel
+</pre></div>
+</div>
+<p>Use <tt class="docutils literal"><span class="pre">Ctrl-C</span></tt> to interrupt and exit the microkernel.</p>
+<p>On a Windows machine you can also use the bin/akka.bat script.</p>
+<p>The code for the Hello Kernel example (see the <tt class="docutils literal"><span class="pre">HelloKernel</span></tt> class for an example
+of creating a Bootable):</p>
+<div class="highlight-scala"><pre>/**
+ *  Copyright (C) 2009-2012 Typesafe Inc. &lt;http://www.typesafe.com&gt;
+ */
+package sample.kernel.hello
+
+import akka.actor.{ Actor, ActorSystem, Props }
+import akka.kernel.Bootable
+
+case object Start
+
+class HelloActor extends Actor {
+  val worldActor = context.actorOf(Props[WorldActor])
+
+  def receive = {
+    case Start ⇒ worldActor ! "Hello"
+    case message: String ⇒
+      println("Received message '%s'" format message)
+  }
+}
+
+class WorldActor extends Actor {
+  def receive = {
+    case message: String ⇒ sender ! (message.toUpperCase + " world!")
+  }
+}
+
+class HelloKernel extends Bootable {
+  val system = ActorSystem("hellokernel")
+
+  def startup = {
+    system.actorOf(Props[HelloActor]) ! Start
+  }
+
+  def shutdown = {
+    system.shutdown()
+  }
+}
+</pre>
+</div>
+<div class="section" id="distribution-of-microkernel-application">
+<h2>Distribution of microkernel application</h2>
+<p>To make a distribution package of the microkernel and your application the <tt class="docutils literal"><span class="pre">akka-sbt-plugin</span></tt> provides
+<tt class="docutils literal"><span class="pre">AkkaKernelPlugin</span></tt>. It creates the directory structure, with jar files, configuration files and
+start scripts.</p>
+<p>To use the sbt plugin you define it in your <tt class="docutils literal"><span class="pre">project/plugins.sbt</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">resolvers</span> <span class="o">+=</span> <span class="s">&quot;Typesafe Repo&quot;</span> <span class="n">at</span> <span class="s">&quot;http://repo.typesafe.com/typesafe/releases/&quot;</span>
+
+<span class="n">addSbtPlugin</span><span class="o">(</span><span class="s">&quot;com.typesafe.akka&quot;</span> <span class="o">%</span> <span class="s">&quot;akka-sbt-plugin&quot;</span> <span class="o">%</span> <span class="s">&quot;2.0.4&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Then you add it to the settings of your <tt class="docutils literal"><span class="pre">project/Build.scala</span></tt>. It is also important that you add the <tt class="docutils literal"><span class="pre">akka-kernel</span></tt> dependency.
+This is an example of a complete sbt build file:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">sbt._</span>
+<span class="k">import</span> <span class="nn">Keys._</span>
+<span class="k">import</span> <span class="nn">akka.sbt.AkkaKernelPlugin</span>
+<span class="k">import</span> <span class="nn">akka.sbt.AkkaKernelPlugin.</span><span class="o">{</span> <span class="nc">Dist</span><span class="o">,</span> <span class="n">outputDirectory</span><span class="o">,</span> <span class="n">distJvmOptions</span><span class="o">}</span>
+
+<span class="k">object</span> <span class="nc">HelloKernelBuild</span> <span class="k">extends</span> <span class="nc">Build</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nc">Organization</span> <span class="k">=</span> <span class="s">&quot;akka.sample&quot;</span>
+  <span class="k">val</span> <span class="nc">Version</span>      <span class="k">=</span> <span class="s">&quot;2.0.4&quot;</span>
+  <span class="k">val</span> <span class="nc">ScalaVersion</span> <span class="k">=</span> <span class="s">&quot;2.9.1&quot;</span>
+
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nc">HelloKernel</span> <span class="k">=</span> <span class="nc">Project</span><span class="o">(</span>
+    <span class="n">id</span> <span class="k">=</span> <span class="s">&quot;hello-kernel&quot;</span><span class="o">,</span>
+    <span class="n">base</span> <span class="k">=</span> <span class="n">file</span><span class="o">(</span><span class="s">&quot;.&quot;</span><span class="o">),</span>
+    <span class="n">settings</span> <span class="k">=</span> <span class="n">defaultSettings</span> <span class="o">++</span> <span class="nc">AkkaKernelPlugin</span><span class="o">.</span><span class="n">distSettings</span> <span class="o">++</span> <span class="nc">Seq</span><span class="o">(</span>
+      <span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Dependencies</span><span class="o">.</span><span class="n">helloKernel</span><span class="o">,</span>
+      <span class="n">distJvmOptions</span> <span class="n">in</span> <span class="nc">Dist</span> <span class="o">:=</span> <span class="s">&quot;-Xms256M -Xmx1024M&quot;</span><span class="o">,</span>
+      <span class="n">outputDirectory</span> <span class="n">in</span> <span class="nc">Dist</span> <span class="o">:=</span> <span class="n">file</span><span class="o">(</span><span class="s">&quot;target/hello-dist&quot;</span><span class="o">)</span>
+    <span class="o">)</span>
+  <span class="o">)</span>
+
+  <span class="k">lazy</span> <span class="k">val</span> <span class="n">buildSettings</span> <span class="k">=</span> <span class="nc">Defaults</span><span class="o">.</span><span class="n">defaultSettings</span> <span class="o">++</span> <span class="nc">Seq</span><span class="o">(</span>
+    <span class="n">organization</span> <span class="o">:=</span> <span class="nc">Organization</span><span class="o">,</span>
+    <span class="n">version</span>      <span class="o">:=</span> <span class="nc">Version</span><span class="o">,</span>
+    <span class="n">scalaVersion</span> <span class="o">:=</span> <span class="nc">ScalaVersion</span><span class="o">,</span>
+    <span class="n">crossPaths</span>   <span class="o">:=</span> <span class="kc">false</span><span class="o">,</span>
+    <span class="n">organizationName</span> <span class="o">:=</span> <span class="s">&quot;Typesafe Inc.&quot;</span><span class="o">,</span>
+    <span class="n">organizationHomepage</span> <span class="o">:=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">url</span><span class="o">(</span><span class="s">&quot;http://www.typesafe.com&quot;</span><span class="o">))</span>
+  <span class="o">)</span>
+  
+  <span class="k">lazy</span> <span class="k">val</span> <span class="n">defaultSettings</span> <span class="k">=</span> <span class="n">buildSettings</span> <span class="o">++</span> <span class="nc">Seq</span><span class="o">(</span>
+    <span class="n">resolvers</span> <span class="o">+=</span> <span class="s">&quot;Typesafe Repo&quot;</span> <span class="n">at</span> <span class="s">&quot;http://repo.typesafe.com/typesafe/releases/&quot;</span><span class="o">,</span>
+
+    <span class="c1">// compile options</span>
+    <span class="n">scalacOptions</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">&quot;-encoding&quot;</span><span class="o">,</span> <span class="s">&quot;UTF-8&quot;</span><span class="o">,</span> <span class="s">&quot;-deprecation&quot;</span><span class="o">,</span> <span class="s">&quot;-unchecked&quot;</span><span class="o">),</span>
+    <span class="n">javacOptions</span>  <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">&quot;-Xlint:unchecked&quot;</span><span class="o">,</span> <span class="s">&quot;-Xlint:deprecation&quot;</span><span class="o">)</span>
+
+  <span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">object</span> <span class="nc">Dependencies</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">Dependency._</span>
+
+  <span class="k">val</span> <span class="n">helloKernel</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span>
+    <span class="n">akkaKernel</span><span class="o">,</span> <span class="n">akkaSlf4j</span><span class="o">,</span> <span class="n">logback</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">object</span> <span class="nc">Dependency</span> <span class="o">{</span>
+  <span class="c1">// Versions</span>
+  <span class="k">object</span> <span class="nc">V</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="nc">Akka</span>      <span class="k">=</span> <span class="s">&quot;2.0.4&quot;</span>
+  <span class="o">}</span>
+
+  <span class="k">val</span> <span class="n">akkaKernel</span>        <span class="k">=</span> <span class="s">&quot;com.typesafe.akka&quot;</span> <span class="o">%</span> <span class="s">&quot;akka-kernel&quot;</span>        <span class="o">%</span> <span class="n">V</span><span class="o">.</span><span class="nc">Akka</span>
+  <span class="k">val</span> <span class="n">akkaSlf4j</span>         <span class="k">=</span> <span class="s">&quot;com.typesafe.akka&quot;</span> <span class="o">%</span> <span class="s">&quot;akka-slf4j&quot;</span>         <span class="o">%</span> <span class="n">V</span><span class="o">.</span><span class="nc">Akka</span>
+  <span class="k">val</span> <span class="n">logback</span>           <span class="k">=</span> <span class="s">&quot;ch.qos.logback&quot;</span>    <span class="o">%</span> <span class="s">&quot;logback-classic&quot;</span>    <span class="o">%</span> <span class="s">&quot;1.0.0&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Run the plugin with sbt:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="o">&gt;</span> <span class="n">dist</span>
+<span class="o">&gt;</span> <span class="n">dist</span><span class="k">:</span><span class="kt">clean</span>
+</pre></div>
+</div>
+<p>There are several settings that can be defined:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">outputDirectory</span></tt> - destination directory of the package, default <tt class="docutils literal"><span class="pre">target/dist</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">distJvmOptions</span></tt> - JVM parameters to be used in the start script</li>
+<li><tt class="docutils literal"><span class="pre">configSourceDirs</span></tt> - Configuration files are copied from these directories, default <tt class="docutils literal"><span class="pre">src/config</span></tt>, <tt class="docutils literal"><span class="pre">src/main/config</span></tt>, <tt class="docutils literal"><span class="pre">src/main/resources</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">distMainClass</span></tt> - Kernel main class to use in start script</li>
+<li><tt class="docutils literal"><span class="pre">libFilter</span></tt> - Filter of dependency jar files</li>
+<li><tt class="docutils literal"><span class="pre">additionalLibs</span></tt> - Additional dependency jar files</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

@@ -1,0 +1,458 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Diagrams of the Fault Tolerance Sample (Scala) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Fault Tolerance (Scala)" href="fault-tolerance.html" />
+    <link rel="next" title="Dispatchers (Scala)" href="dispatchers.html" />
+    <link rel="prev" title="Fault Tolerance (Scala)" href="fault-tolerance.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Diagrams of the Fault Tolerance Sample (Scala)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="dispatchers.html">Dispatchers (Scala)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="fault-tolerance.html">Fault Tolerance (Scala)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="diagrams-of-the-fault-tolerance-sample-scala">
+<span id="fault-tolerance-sample-scala"></span><h1>Diagrams of the Fault Tolerance Sample (Scala)</h1>
+<img alt="../_images/faulttolerancesample-normal-flow1.png" src="../_images/faulttolerancesample-normal-flow1.png" />
+<p><em>The above diagram illustrates the normal message flow.</em></p>
+<p><strong>Normal flow:</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Step</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>The progress <tt class="docutils literal"><span class="pre">Listener</span></tt> starts the work.</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>The <tt class="docutils literal"><span class="pre">Worker</span></tt> schedules work by sending <tt class="docutils literal"><span class="pre">Do</span></tt> messages periodically to itself</td>
+</tr>
+<tr class="row-even"><td>3, 4, 5</td>
+<td>When receiving <tt class="docutils literal"><span class="pre">Do</span></tt> the <tt class="docutils literal"><span class="pre">Worker</span></tt> tells the <tt class="docutils literal"><span class="pre">CounterService</span></tt>
+to increment the counter, three times. The <tt class="docutils literal"><span class="pre">Increment</span></tt> message is forwarded
+to the <tt class="docutils literal"><span class="pre">Counter</span></tt>, which updates its counter variable and sends current value
+to the <tt class="docutils literal"><span class="pre">Storage</span></tt>.</td>
+</tr>
+<tr class="row-odd"><td>6, 7</td>
+<td>The <tt class="docutils literal"><span class="pre">Worker</span></tt> asks the <tt class="docutils literal"><span class="pre">CounterService</span></tt> of current value of the counter and pipes
+the result back to the <tt class="docutils literal"><span class="pre">Listener</span></tt>.</td>
+</tr>
+</tbody>
+</table>
+<img alt="../_images/faulttolerancesample-failure-flow1.png" src="../_images/faulttolerancesample-failure-flow1.png" />
+<p><em>The above diagram illustrates what happens in case of storage failure.</em></p>
+<p><strong>Failure flow:</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Step</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>The <tt class="docutils literal"><span class="pre">Storage</span></tt> throws <tt class="docutils literal"><span class="pre">StorageException</span></tt>.</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>The <tt class="docutils literal"><span class="pre">CounterService</span></tt> is supervisor of the <tt class="docutils literal"><span class="pre">Storage</span></tt> and restarts the
+<tt class="docutils literal"><span class="pre">Storage</span></tt> when <tt class="docutils literal"><span class="pre">StorageException</span></tt> is thrown.</td>
+</tr>
+<tr class="row-even"><td>3, 4, 5, 6</td>
+<td>The <tt class="docutils literal"><span class="pre">Storage</span></tt> continues to fail and is restarted.</td>
+</tr>
+<tr class="row-odd"><td>7</td>
+<td>After 3 failures and restarts within 5 seconds the <tt class="docutils literal"><span class="pre">Storage</span></tt> is stopped by its
+supervisor, i.e. the <tt class="docutils literal"><span class="pre">CounterService</span></tt>.</td>
+</tr>
+<tr class="row-even"><td>8</td>
+<td>The <tt class="docutils literal"><span class="pre">CounterService</span></tt> is also watching the <tt class="docutils literal"><span class="pre">Storage</span></tt> for termination and
+receives the <tt class="docutils literal"><span class="pre">Terminated</span></tt> message when the <tt class="docutils literal"><span class="pre">Storage</span></tt> has been stopped ...</td>
+</tr>
+<tr class="row-odd"><td>9, 10, 11</td>
+<td>and tells the <tt class="docutils literal"><span class="pre">Counter</span></tt> that there is no <tt class="docutils literal"><span class="pre">Storage</span></tt>.</td>
+</tr>
+<tr class="row-even"><td>12</td>
+<td>The <tt class="docutils literal"><span class="pre">CounterService</span></tt> schedules a <tt class="docutils literal"><span class="pre">Reconnect</span></tt> message to itself.</td>
+</tr>
+<tr class="row-odd"><td>13, 14</td>
+<td>When it receives the <tt class="docutils literal"><span class="pre">Reconnect</span></tt> message it creates a new <tt class="docutils literal"><span class="pre">Storage</span></tt> ...</td>
+</tr>
+<tr class="row-even"><td>15, 16</td>
+<td>and tells the the <tt class="docutils literal"><span class="pre">Counter</span></tt> to use the new <tt class="docutils literal"><span class="pre">Storage</span></tt></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="full-source-code-of-the-fault-tolerance-sample-scala">
+<h1>Full Source Code of the Fault Tolerance Sample (Scala)</h1>
+<div class="highlight-scala"><div class="highlight"><pre><span class="c1">// imports ...</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Runs the sample</span>
+<span class="cm"> */</span>
+<span class="k">object</span> <span class="nc">FaultHandlingDocSample</span> <span class="k">extends</span> <span class="nc">App</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">Worker._</span>
+
+  <span class="k">val</span> <span class="n">config</span> <span class="k">=</span> <span class="nc">ConfigFactory</span><span class="o">.</span><span class="n">parseString</span><span class="o">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">    akka.loglevel = DEBUG</span>
+<span class="s">    akka.actor.debug {</span>
+<span class="s">      receive = on</span>
+<span class="s">      lifecycle = on</span>
+<span class="s">    }</span>
+<span class="s">    &quot;&quot;&quot;</span><span class="o">)</span>
+
+  <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">&quot;FaultToleranceSample&quot;</span><span class="o">,</span> <span class="n">config</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">worker</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">Worker</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;worker&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">listener</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">Listener</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;listener&quot;</span><span class="o">)</span>
+  <span class="c1">// start the work and listen on progress</span>
+  <span class="c1">// note that the listener is used as sender of the tell,</span>
+  <span class="c1">// i.e. it will receive replies from the worker</span>
+  <span class="n">worker</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="nc">Start</span><span class="o">,</span> <span class="n">sender</span> <span class="k">=</span> <span class="n">listener</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Listens on progress from the worker and shuts down the system when enough</span>
+<span class="cm"> * work has been done.</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">Listener</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="k">with</span> <span class="nc">ActorLogging</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">Worker._</span>
+  <span class="c1">// If we don&#39;t get any progress within 15 seconds then the service is unavailable</span>
+  <span class="n">context</span><span class="o">.</span><span class="n">setReceiveTimeout</span><span class="o">(</span><span class="mi">15</span> <span class="n">seconds</span><span class="o">)</span>
+
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Progress</span><span class="o">(</span><span class="n">percent</span><span class="o">)</span> <span class="k">⇒</span>
+      <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">&quot;Current progress: {} %&quot;</span><span class="o">,</span> <span class="n">percent</span><span class="o">)</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">percent</span> <span class="o">&gt;=</span> <span class="mf">100.0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">&quot;That&#39;s all, shutting down&quot;</span><span class="o">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">shutdown</span><span class="o">()</span>
+      <span class="o">}</span>
+
+    <span class="k">case</span> <span class="nc">ReceiveTimeout</span> <span class="k">⇒</span>
+      <span class="c1">// No progress within 15 seconds, ServiceUnavailable</span>
+      <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="s">&quot;Shutting down due to unavailable service&quot;</span><span class="o">)</span>
+      <span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">shutdown</span><span class="o">()</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// messages ...</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Worker performs some work when it receives the `Start` message.</span>
+<span class="cm"> * It will continuously notify the sender of the `Start` message</span>
+<span class="cm"> * of current ``Progress``. The `Worker` supervise the `CounterService`.</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">Worker</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="k">with</span> <span class="nc">ActorLogging</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">Worker._</span>
+  <span class="k">import</span> <span class="nn">CounterService._</span>
+  <span class="k">implicit</span> <span class="k">val</span> <span class="n">askTimeout</span> <span class="k">=</span> <span class="nc">Timeout</span><span class="o">(</span><span class="mi">5</span> <span class="n">seconds</span><span class="o">)</span>
+
+  <span class="c1">// Stop the CounterService child if it throws ServiceUnavailable</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="n">supervisorStrategy</span> <span class="k">=</span> <span class="nc">OneForOneStrategy</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">_:</span> <span class="nc">CounterService</span><span class="o">.</span><span class="nc">ServiceUnavailable</span> <span class="k">⇒</span> <span class="nc">Stop</span>
+  <span class="o">}</span>
+
+  <span class="c1">// The sender of the initial Start message will continuously be notified about progress</span>
+  <span class="k">var</span> <span class="n">progressListener</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">ActorRef</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
+  <span class="k">val</span> <span class="n">counterService</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">CounterService</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;counter&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">totalCount</span> <span class="k">=</span> <span class="mi">51</span>
+
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="nc">LoggingReceive</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Start</span> <span class="k">if</span> <span class="n">progressListener</span><span class="o">.</span><span class="n">isEmpty</span> <span class="k">⇒</span>
+      <span class="n">progressListener</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">sender</span><span class="o">)</span>
+      <span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">schedule</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="nc">Zero</span><span class="o">,</span> <span class="mi">1</span> <span class="n">second</span><span class="o">,</span> <span class="n">self</span><span class="o">,</span> <span class="nc">Do</span><span class="o">)</span>
+
+    <span class="k">case</span> <span class="nc">Do</span> <span class="k">⇒</span>
+      <span class="n">counterService</span> <span class="o">!</span> <span class="nc">Increment</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+      <span class="n">counterService</span> <span class="o">!</span> <span class="nc">Increment</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+      <span class="n">counterService</span> <span class="o">!</span> <span class="nc">Increment</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+
+      <span class="c1">// Send current progress to the initial sender</span>
+      <span class="n">counterService</span> <span class="o">?</span> <span class="nc">GetCurrentCount</span> <span class="n">map</span> <span class="o">{</span>
+        <span class="k">case</span> <span class="nc">CurrentCount</span><span class="o">(</span><span class="n">_</span><span class="o">,</span> <span class="n">count</span><span class="o">)</span> <span class="k">⇒</span> <span class="nc">Progress</span><span class="o">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="n">count</span> <span class="o">/</span> <span class="n">totalCount</span><span class="o">)</span>
+      <span class="o">}</span> <span class="n">pipeTo</span> <span class="n">progressListener</span><span class="o">.</span><span class="n">get</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// messages ...</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Adds the value received in `Increment` message to a persistent</span>
+<span class="cm"> * counter. Replies with `CurrentCount` when it is asked for `CurrentCount`.</span>
+<span class="cm"> * `CounterService` supervise `Storage` and `Counter`.</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">CounterService</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">CounterService._</span>
+  <span class="k">import</span> <span class="nn">Counter._</span>
+  <span class="k">import</span> <span class="nn">Storage._</span>
+
+  <span class="c1">// Restart the storage child when StorageException is thrown.</span>
+  <span class="c1">// After 3 restarts within 5 seconds it will be stopped.</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="n">supervisorStrategy</span> <span class="k">=</span> <span class="nc">OneForOneStrategy</span><span class="o">(</span><span class="n">maxNrOfRetries</span> <span class="k">=</span> <span class="mi">3</span><span class="o">,</span> <span class="n">withinTimeRange</span> <span class="k">=</span> <span class="mi">5</span> <span class="n">seconds</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">_:</span> <span class="nc">Storage</span><span class="o">.</span><span class="nc">StorageException</span> <span class="k">⇒</span> <span class="nc">Restart</span>
+  <span class="o">}</span>
+
+  <span class="k">val</span> <span class="n">key</span> <span class="k">=</span> <span class="n">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">name</span>
+  <span class="k">var</span> <span class="n">storage</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">ActorRef</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
+  <span class="k">var</span> <span class="n">counter</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">ActorRef</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
+  <span class="k">var</span> <span class="n">backlog</span> <span class="k">=</span> <span class="nc">IndexedSeq</span><span class="o">.</span><span class="n">empty</span><span class="o">[(</span><span class="kt">ActorRef</span>, <span class="kt">Any</span><span class="o">)]</span>
+  <span class="k">val</span> <span class="nc">MaxBacklog</span> <span class="k">=</span> <span class="mi">10000</span>
+
+  <span class="k">override</span> <span class="k">def</span> <span class="n">preStart</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">initStorage</span><span class="o">()</span>
+  <span class="o">}</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * The child storage is restarted in case of failure, but after 3 restarts,</span>
+<span class="cm">   * and still failing it will be stopped. Better to back-off than continuously</span>
+<span class="cm">   * failing. When it has been stopped we will schedule a Reconnect after a delay.</span>
+<span class="cm">   * Watch the child so we receive Terminated message when it has been terminated.</span>
+<span class="cm">   */</span>
+  <span class="k">def</span> <span class="n">initStorage</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">storage</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">watch</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">Storage</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;storage&quot;</span><span class="o">)))</span>
+    <span class="c1">// Tell the counter, if any, to use the new storage</span>
+    <span class="n">counter</span> <span class="n">foreach</span> <span class="o">{</span> <span class="k">_</span> <span class="o">!</span> <span class="nc">UseStorage</span><span class="o">(</span><span class="n">storage</span><span class="o">)</span> <span class="o">}</span>
+    <span class="c1">// We need the initial value to be able to operate</span>
+    <span class="n">storage</span><span class="o">.</span><span class="n">get</span> <span class="o">!</span> <span class="nc">Get</span><span class="o">(</span><span class="n">key</span><span class="o">)</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="nc">LoggingReceive</span> <span class="o">{</span>
+
+    <span class="k">case</span> <span class="nc">Entry</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">key</span> <span class="o">&amp;&amp;</span> <span class="n">counter</span> <span class="o">==</span> <span class="nc">None</span> <span class="k">⇒</span>
+      <span class="c1">// Reply from Storage of the initial value, now we can create the Counter</span>
+      <span class="k">val</span> <span class="n">c</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Counter</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">v</span><span class="o">)))</span>
+      <span class="n">counter</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">c</span><span class="o">)</span>
+      <span class="c1">// Tell the counter to use current storage</span>
+      <span class="n">c</span> <span class="o">!</span> <span class="nc">UseStorage</span><span class="o">(</span><span class="n">storage</span><span class="o">)</span>
+      <span class="c1">// and send the buffered backlog to the counter</span>
+      <span class="k">for</span> <span class="o">((</span><span class="n">replyTo</span><span class="o">,</span> <span class="n">msg</span><span class="o">)</span> <span class="k">←</span> <span class="n">backlog</span><span class="o">)</span> <span class="n">c</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="n">sender</span> <span class="k">=</span> <span class="n">replyTo</span><span class="o">)</span>
+      <span class="n">backlog</span> <span class="k">=</span> <span class="nc">IndexedSeq</span><span class="o">.</span><span class="n">empty</span>
+
+    <span class="k">case</span> <span class="n">msg</span> <span class="k">@</span> <span class="nc">Increment</span><span class="o">(</span><span class="n">n</span><span class="o">)</span>    <span class="k">⇒</span> <span class="n">forwardOrPlaceInBacklog</span><span class="o">(</span><span class="n">msg</span><span class="o">)</span>
+
+    <span class="k">case</span> <span class="n">msg</span> <span class="k">@</span> <span class="nc">GetCurrentCount</span> <span class="k">⇒</span> <span class="n">forwardOrPlaceInBacklog</span><span class="o">(</span><span class="n">msg</span><span class="o">)</span>
+
+    <span class="k">case</span> <span class="nc">Terminated</span><span class="o">(</span><span class="n">actorRef</span><span class="o">)</span> <span class="k">if</span> <span class="nc">Some</span><span class="o">(</span><span class="n">actorRef</span><span class="o">)</span> <span class="o">==</span> <span class="n">storage</span> <span class="k">⇒</span>
+      <span class="c1">// After 3 restarts the storage child is stopped.</span>
+      <span class="c1">// We receive Terminated because we watch the child, see initStorage.</span>
+      <span class="n">storage</span> <span class="k">=</span> <span class="nc">None</span>
+      <span class="c1">// Tell the counter that there is no storage for the moment</span>
+      <span class="n">counter</span> <span class="n">foreach</span> <span class="o">{</span> <span class="k">_</span> <span class="o">!</span> <span class="nc">UseStorage</span><span class="o">(</span><span class="nc">None</span><span class="o">)</span> <span class="o">}</span>
+      <span class="c1">// Try to re-establish storage after while</span>
+      <span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">scheduleOnce</span><span class="o">(</span><span class="mi">10</span> <span class="n">seconds</span><span class="o">,</span> <span class="n">self</span><span class="o">,</span> <span class="nc">Reconnect</span><span class="o">)</span>
+
+    <span class="k">case</span> <span class="nc">Reconnect</span> <span class="k">⇒</span>
+      <span class="c1">// Re-establish storage after the scheduled delay</span>
+      <span class="n">initStorage</span><span class="o">()</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">forwardOrPlaceInBacklog</span><span class="o">(</span><span class="n">msg</span><span class="k">:</span> <span class="kt">Any</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// We need the initial value from storage before we can start delegate to the counter.</span>
+    <span class="c1">// Before that we place the messages in a backlog, to be sent to the counter when</span>
+    <span class="c1">// it is initialized.</span>
+    <span class="n">counter</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="k">⇒</span> <span class="n">c</span> <span class="n">forward</span> <span class="n">msg</span>
+      <span class="k">case</span> <span class="nc">None</span> <span class="k">⇒</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">backlog</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;=</span> <span class="nc">MaxBacklog</span><span class="o">)</span>
+          <span class="k">throw</span> <span class="k">new</span> <span class="nc">ServiceUnavailable</span><span class="o">(</span><span class="s">&quot;CounterService not available, lack of initial value&quot;</span><span class="o">)</span>
+        <span class="n">backlog</span> <span class="k">=</span> <span class="n">backlog</span> <span class="o">:+</span> <span class="o">(</span><span class="n">sender</span><span class="o">,</span> <span class="n">msg</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="c1">// messages ...</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The in memory count variable that will send current</span>
+<span class="cm"> * value to the `Storage`, if there is any storage</span>
+<span class="cm"> * available at the moment.</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">Counter</span><span class="o">(</span><span class="n">key</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">initialValue</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">Counter._</span>
+  <span class="k">import</span> <span class="nn">CounterService._</span>
+  <span class="k">import</span> <span class="nn">Storage._</span>
+
+  <span class="k">var</span> <span class="n">count</span> <span class="k">=</span> <span class="n">initialValue</span>
+  <span class="k">var</span> <span class="n">storage</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">ActorRef</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
+
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="nc">LoggingReceive</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">UseStorage</span><span class="o">(</span><span class="n">s</span><span class="o">)</span> <span class="k">⇒</span>
+      <span class="n">storage</span> <span class="k">=</span> <span class="n">s</span>
+      <span class="n">storeCount</span><span class="o">()</span>
+
+    <span class="k">case</span> <span class="nc">Increment</span><span class="o">(</span><span class="n">n</span><span class="o">)</span> <span class="k">⇒</span>
+      <span class="n">count</span> <span class="o">+=</span> <span class="n">n</span>
+      <span class="n">storeCount</span><span class="o">()</span>
+
+    <span class="k">case</span> <span class="nc">GetCurrentCount</span> <span class="k">⇒</span>
+      <span class="n">sender</span> <span class="o">!</span> <span class="nc">CurrentCount</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">count</span><span class="o">)</span>
+
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">storeCount</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// Delegate dangerous work, to protect our valuable state.</span>
+    <span class="c1">// We can continue without storage.</span>
+    <span class="n">storage</span> <span class="n">foreach</span> <span class="o">{</span> <span class="k">_</span> <span class="o">!</span> <span class="nc">Store</span><span class="o">(</span><span class="nc">Entry</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">count</span><span class="o">))</span> <span class="o">}</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="c1">// messages ...</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Saves key/value pairs to persistent storage when receiving `Store` message.</span>
+<span class="cm"> * Replies with current value when receiving `Get` message.</span>
+<span class="cm"> * Will throw StorageException if the underlying data store is out of order.</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">Storage</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">Storage._</span>
+
+  <span class="k">val</span> <span class="n">db</span> <span class="k">=</span> <span class="nc">DummyDB</span>
+
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="nc">LoggingReceive</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Store</span><span class="o">(</span><span class="nc">Entry</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">count</span><span class="o">))</span> <span class="k">⇒</span> <span class="n">db</span><span class="o">.</span><span class="n">save</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">count</span><span class="o">)</span>
+    <span class="k">case</span> <span class="nc">Get</span><span class="o">(</span><span class="n">key</span><span class="o">)</span>                 <span class="k">⇒</span> <span class="n">sender</span> <span class="o">!</span> <span class="nc">Entry</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">db</span><span class="o">.</span><span class="n">load</span><span class="o">(</span><span class="n">key</span><span class="o">).</span><span class="n">getOrElse</span><span class="o">(</span><span class="mi">0L</span><span class="o">))</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// dummydb ...</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

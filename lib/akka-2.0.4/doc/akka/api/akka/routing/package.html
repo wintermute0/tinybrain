@@ -1,0 +1,627 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.routing</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a></p>
+        <h1>routing</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">routing</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.routing.Broadcast" data-isabs="false">
+      <a id="Broadcast:Broadcast"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Broadcast.html"><span class="name">Broadcast</span></a><span class="params">(<span name="message">message: Any</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Used to broadcast a message to all connections in a router; only the
+contained message will be forwarded, i.</p>
+    </li><li visbl="pub" name="akka.routing.BroadcastLike" data-isabs="true">
+      <a id="BroadcastLike:BroadcastLike"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BroadcastLike.html"><span class="name">BroadcastLike</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.BroadcastRouter" data-isabs="false">
+      <a id="BroadcastRouter:BroadcastRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BroadcastRouter.html"><span class="name">BroadcastRouter</span></a><span class="params">(<span name="nrOfInstances">nrOfInstances: Int</span>, <span name="routees">routees: Iterable[String]</span>, <span name="resizer">resizer: Option[Resizer]</span>, <span name="routerDispatcher">routerDispatcher: String</span>, <span name="supervisorStrategy">supervisorStrategy: SupervisorStrategy</span>)</span><span class="result"> extends RouterConfig with BroadcastLike with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A Router that uses broadcasts a message to all its connections.</p>
+    </li><li visbl="pub" name="akka.routing.ConnectionManager" data-isabs="true">
+      <a id="ConnectionManager:ConnectionManager"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ConnectionManager.html"><span class="name">ConnectionManager</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Manages connections (ActorRefs) for a router.</p>
+    </li><li visbl="pub" name="akka.routing.ConsistentHash" data-isabs="false">
+      <a id="ConsistentHash:ConsistentHash[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ConsistentHash.html"><span class="name">ConsistentHash</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Consistent Hashing node ring abstraction.</p>
+    </li><li visbl="pub" name="akka.routing.CurrentRoutees" data-isabs="true">
+      <a id="CurrentRoutees:CurrentRoutees"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CurrentRoutees.html"><span class="name">CurrentRoutees</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Sending this message to a router will make it send back its currently used routees.</p>
+    </li><li visbl="pub" name="akka.routing.CustomRoute" data-isabs="true">
+      <a id="CustomRoute:CustomRoute"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="CustomRoute.html"><span class="name">CustomRoute</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.CustomRouterConfig" data-isabs="true">
+      <a id="CustomRouterConfig:CustomRouterConfig"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CustomRouterConfig.html"><span class="name">CustomRouterConfig</span></a><span class="result"> extends RouterConfig</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Java API for a custom router factory.</p>
+    </li><li visbl="pub" name="akka.routing.Deafen" data-isabs="false">
+      <a id="Deafen:Deafen"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Deafen.html"><span class="name">Deafen</span></a><span class="params">(<span name="listener">listener: ActorRef</span>)</span><span class="result"> extends ListenerMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.DefaultResizer" data-isabs="false">
+      <a id="DefaultResizer:DefaultResizer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DefaultResizer.html"><span class="name">DefaultResizer</span></a><span class="params">(<span name="lowerBound">lowerBound: Int</span>, <span name="upperBound">upperBound: Int</span>, <span name="pressureThreshold">pressureThreshold: Int</span>, <span name="rampupRate">rampupRate: Double</span>, <span name="backoffThreshold">backoffThreshold: Double</span>, <span name="backoffRate">backoffRate: Double</span>, <span name="stopDelay">stopDelay: Duration</span>, <span name="messagesPerResize">messagesPerResize: Int</span>)</span><span class="result"> extends Resizer with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.Destination" data-isabs="false">
+      <a id="Destination:Destination"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Destination.html"><span class="name">Destination</span></a><span class="params">(<span name="sender">sender: ActorRef</span>, <span name="recipient">recipient: ActorRef</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">For every message sent to a router, its route determines a set of destinations,
+where for each recipient a different sender may be specified; typically the
+sender should match the sender of the original request, but e.</p>
+    </li><li visbl="pub" name="akka.routing.FromConfig" data-isabs="false">
+      <a id="FromConfig:FromConfig"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FromConfig.html"><span class="name">FromConfig</span></a><span class="result"> extends RouterConfig with Product with Serializable with Equals</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Java API: Router configuration which has no default, i.</p>
+    </li><li visbl="pub" name="akka.routing.Listen" data-isabs="false">
+      <a id="Listen:Listen"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Listen.html"><span class="name">Listen</span></a><span class="params">(<span name="listener">listener: ActorRef</span>)</span><span class="result"> extends ListenerMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.ListenerMessage" data-isabs="true">
+      <a id="ListenerMessage:ListenerMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ListenerMessage.html"><span class="name">ListenerMessage</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.Listeners" data-isabs="true">
+      <a id="Listeners:Listeners"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Listeners.html"><span class="name">Listeners</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Listeners is a generic trait to implement listening capability on an Actor.</p>
+    </li><li visbl="pub" name="akka.routing.MurmurHash" data-isabs="false">
+      <a id="MurmurHash:MurmurHash[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MurmurHash.html"><span class="name">MurmurHash</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends (T) ⇒ Unit</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A class designed to generate well-distributed non-cryptographic
+ hashes.</p>
+    </li><li visbl="pub" name="akka.routing.NoRouter" data-isabs="true">
+      <a id="NoRouter:NoRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NoRouter.html"><span class="name">NoRouter</span></a><span class="result"> extends RouterConfig</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Routing configuration that indicates no routing; this is also the default
+value which hence overrides the merge strategy in order to accept values
+from lower-precedence sources.</p>
+    </li><li visbl="pub" name="akka.routing.RandomLike" data-isabs="true">
+      <a id="RandomLike:RandomLike"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RandomLike.html"><span class="name">RandomLike</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.RandomRouter" data-isabs="false">
+      <a id="RandomRouter:RandomRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RandomRouter.html"><span class="name">RandomRouter</span></a><span class="params">(<span name="nrOfInstances">nrOfInstances: Int</span>, <span name="routees">routees: Iterable[String]</span>, <span name="resizer">resizer: Option[Resizer]</span>, <span name="routerDispatcher">routerDispatcher: String</span>, <span name="supervisorStrategy">supervisorStrategy: SupervisorStrategy</span>)</span><span class="result"> extends RouterConfig with RandomLike with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A Router that randomly selects one of the target connections to send a message to.</p>
+    </li><li visbl="pub" name="akka.routing.RemoteRouteeProvider" data-isabs="false">
+      <a id="RemoteRouteeProvider:RemoteRouteeProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteRouteeProvider.html"><span class="name">RemoteRouteeProvider</span></a><span class="result"> extends RouteeProvider</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Factory and registry for routees of the router.</p>
+    </li><li visbl="pub" name="akka.routing.RemoteRouterConfig" data-isabs="false">
+      <a id="RemoteRouterConfig:RemoteRouterConfig"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RemoteRouterConfig.html"><span class="name">RemoteRouterConfig</span></a><span class="params">(<span name="local">local: RouterConfig</span>, <span name="nodes">nodes: Iterable[Address]</span>)</span><span class="result"> extends RouterConfig with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt"><a name="akka.routing.RouterConfig" class="extype" href="RouterConfig.html">RouterConfig</a> implementation for remote deployment on defined
+target nodes.</p>
+    </li><li visbl="pub" name="akka.routing.Resizer" data-isabs="true">
+      <a id="Resizer:Resizer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Resizer.html"><span class="name">Resizer</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Routers with dynamically resizable number of routees is implemented by providing a Resizer
+implementation in <a name="akka.routing.RouterConfig" class="extype" href="RouterConfig.html">RouterConfig</a>.</p>
+    </li><li visbl="pub" name="akka.routing.RoundRobinLike" data-isabs="true">
+      <a id="RoundRobinLike:RoundRobinLike"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RoundRobinLike.html"><span class="name">RoundRobinLike</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.RoundRobinRouter" data-isabs="false">
+      <a id="RoundRobinRouter:RoundRobinRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RoundRobinRouter.html"><span class="name">RoundRobinRouter</span></a><span class="params">(<span name="nrOfInstances">nrOfInstances: Int</span>, <span name="routees">routees: Iterable[String]</span>, <span name="resizer">resizer: Option[Resizer]</span>, <span name="routerDispatcher">routerDispatcher: String</span>, <span name="supervisorStrategy">supervisorStrategy: SupervisorStrategy</span>)</span><span class="result"> extends RouterConfig with RoundRobinLike with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A Router that uses round-robin to select a connection.</p>
+    </li><li visbl="pub" name="akka.routing.package#Route" data-isabs="false">
+      <a id="Route:Route"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Route</span><span class="result"> = <span name="scala.PartialFunction" class="extype">PartialFunction</span>[(<a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a>, <span name="scala.Any" class="extype">Any</span>), Iterable[<a name="akka.routing.Destination" class="extype" href="Destination.html">Destination</a>]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.routing.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.RouteeProvider" data-isabs="false">
+      <a id="RouteeProvider:RouteeProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RouteeProvider.html"><span class="name">RouteeProvider</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Factory and registry for routees of the router.</p>
+    </li><li visbl="pub" name="akka.routing.Router" data-isabs="true">
+      <a id="Router:Router"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Router.html"><span class="name">Router</span></a><span class="result"> extends Actor</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Base trait for <code>Router</code> actors.</p>
+    </li><li visbl="pub" name="akka.routing.RouterConfig" data-isabs="true">
+      <a id="RouterConfig:RouterConfig"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RouterConfig.html"><span class="name">RouterConfig</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This trait represents a router factory: it produces the actual router actor
+and creates the routing table (a function which determines the recipients
+for each message which is to be dispatched).</p>
+    </li><li visbl="pub" name="akka.routing.RouterRoutees" data-isabs="false">
+      <a id="RouterRoutees:RouterRoutees"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RouterRoutees.html"><span class="name">RouterRoutees</span></a><span class="params">(<span name="routees">routees: Iterable[ActorRef]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Message used to carry information about what routees the router is currently using.</p>
+    </li><li visbl="pub" name="akka.routing.ScatterGatherFirstCompletedLike" data-isabs="true">
+      <a id="ScatterGatherFirstCompletedLike:ScatterGatherFirstCompletedLike"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ScatterGatherFirstCompletedLike.html"><span class="name">ScatterGatherFirstCompletedLike</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.ScatterGatherFirstCompletedRouter" data-isabs="false">
+      <a id="ScatterGatherFirstCompletedRouter:ScatterGatherFirstCompletedRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ScatterGatherFirstCompletedRouter.html"><span class="name">ScatterGatherFirstCompletedRouter</span></a><span class="params">(<span name="nrOfInstances">nrOfInstances: Int</span>, <span name="routees">routees: Iterable[String]</span>, <span name="within">within: Duration</span>, <span name="resizer">resizer: Option[Resizer]</span>, <span name="routerDispatcher">routerDispatcher: String</span>, <span name="supervisorStrategy">supervisorStrategy: SupervisorStrategy</span>)</span><span class="result"> extends RouterConfig with ScatterGatherFirstCompletedLike with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Simple router that broadcasts the message to all routees, and replies with the first response.</p>
+    </li><li visbl="pub" name="akka.routing.SmallestMailboxLike" data-isabs="true">
+      <a id="SmallestMailboxLike:SmallestMailboxLike"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SmallestMailboxLike.html"><span class="name">SmallestMailboxLike</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.SmallestMailboxRouter" data-isabs="false">
+      <a id="SmallestMailboxRouter:SmallestMailboxRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SmallestMailboxRouter.html"><span class="name">SmallestMailboxRouter</span></a><span class="params">(<span name="nrOfInstances">nrOfInstances: Int</span>, <span name="routees">routees: Iterable[String]</span>, <span name="resizer">resizer: Option[Resizer]</span>, <span name="routerDispatcher">routerDispatcher: String</span>, <span name="supervisorStrategy">supervisorStrategy: SupervisorStrategy</span>)</span><span class="result"> extends RouterConfig with SmallestMailboxLike with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A Router that tries to send to the non-suspended routee with fewest messages in mailbox.</p>
+    </li><li visbl="pub" name="akka.routing.VersionedIterable" data-isabs="true">
+      <a id="VersionedIterable:VersionedIterable[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="VersionedIterable.html"><span class="name">VersionedIterable</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An Iterable that also contains a version.</p>
+    </li><li visbl="pub" name="akka.routing.WithListeners" data-isabs="false">
+      <a id="WithListeners:WithListeners"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="WithListeners.html"><span class="name">WithListeners</span></a><span class="params">(<span name="f">f: (ActorRef) ⇒ Unit</span>)</span><span class="result"> extends ListenerMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="akka.routing.BroadcastRouter" data-isabs="false">
+      <a id="BroadcastRouter:BroadcastRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BroadcastRouter$.html"><span class="name">BroadcastRouter</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.CurrentRoutees" data-isabs="false">
+      <a id="CurrentRoutees:CurrentRoutees"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CurrentRoutees$.html"><span class="name">CurrentRoutees</span></a><span class="result"> extends CurrentRoutees with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.DefaultResizer" data-isabs="false">
+      <a id="DefaultResizer:DefaultResizer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DefaultResizer$.html"><span class="name">DefaultResizer</span></a><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.FromConfig" data-isabs="false">
+      <a id="FromConfig:FromConfig"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="FromConfig$.html"><span class="name">FromConfig</span></a><span class="result"> extends FromConfig with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Router configuration which has no default, i.</p>
+    </li><li visbl="pub" name="akka.routing.MurmurHash" data-isabs="false">
+      <a id="MurmurHash:MurmurHash"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MurmurHash$.html"><span class="name">MurmurHash</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An object designed to generate well-distributed non-cryptographic
+ hashes.</p>
+    </li><li visbl="pub" name="akka.routing.NoRouter" data-isabs="false">
+      <a id="NoRouter:NoRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="NoRouter$.html"><span class="name">NoRouter</span></a><span class="result"> extends NoRouter with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.RandomRouter" data-isabs="false">
+      <a id="RandomRouter:RandomRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="RandomRouter$.html"><span class="name">RandomRouter</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.RoundRobinRouter" data-isabs="false">
+      <a id="RoundRobinRouter:RoundRobinRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="RoundRobinRouter$.html"><span class="name">RoundRobinRouter</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.ScatterGatherFirstCompletedRouter" data-isabs="false">
+      <a id="ScatterGatherFirstCompletedRouter:ScatterGatherFirstCompletedRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ScatterGatherFirstCompletedRouter$.html"><span class="name">ScatterGatherFirstCompletedRouter</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.SmallestMailboxRouter" data-isabs="false">
+      <a id="SmallestMailboxRouter:SmallestMailboxRouter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SmallestMailboxRouter$.html"><span class="name">SmallestMailboxRouter</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

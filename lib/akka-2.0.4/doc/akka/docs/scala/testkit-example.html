@@ -1,0 +1,284 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>TestKit Example (Scala) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Testing Actor Systems (Scala)" href="testing.html" />
+    <link rel="next" title="Akka Extensions (Scala)" href="extending-akka.html" />
+    <link rel="prev" title="Testing Actor Systems (Scala)" href="testing.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">TestKit Example (Scala)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="extending-akka.html">Akka Extensions (Scala)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="testing.html">Testing Actor Systems (Scala)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="testkit-example-scala">
+<span id="testkit-example"></span><h1>TestKit Example (Scala)</h1>
+<p>Ray Roestenburg's example code from <a class="reference external" href="http://roestenburg.agilesquad.com/2011/02/unit-testing-akka-actors-with-testkit_12.html">his blog</a> adapted to work with Akka 1.1.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">package</span> <span class="nn">unit.akka</span>
+
+<span class="k">import</span> <span class="nn">org.scalatest.matchers.ShouldMatchers</span>
+<span class="k">import</span> <span class="nn">org.scalatest.</span><span class="o">{</span><span class="nc">WordSpec</span><span class="o">,</span> <span class="nc">BeforeAndAfterAll</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">akka.actor.Actor._</span>
+<span class="k">import</span> <span class="nn">akka.util.duration._</span>
+<span class="k">import</span> <span class="nn">akka.testkit.TestKit</span>
+<span class="k">import</span> <span class="nn">java.util.concurrent.TimeUnit</span>
+<span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span><span class="nc">ActorRef</span><span class="o">,</span> <span class="nc">Actor</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">util.Random</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * a Test to show some TestKit examples</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">TestKitUsageSpec</span> <span class="k">extends</span> <span class="nc">WordSpec</span> <span class="k">with</span> <span class="nc">BeforeAndAfterAll</span> <span class="k">with</span> <span class="nc">ShouldMatchers</span> <span class="k">with</span> <span class="nc">TestKit</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">()</span>
+  <span class="k">import</span> <span class="nn">system._</span>
+  <span class="k">val</span> <span class="n">echoRef</span> <span class="k">=</span> <span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">EchoActor</span><span class="o">))</span>
+  <span class="k">val</span> <span class="n">forwardRef</span> <span class="k">=</span> <span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">ForwardingActor</span><span class="o">(</span><span class="n">testActor</span><span class="o">)))</span>
+  <span class="k">val</span> <span class="n">filterRef</span> <span class="k">=</span> <span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">FilteringActor</span><span class="o">(</span><span class="n">testActor</span><span class="o">)))</span>
+  <span class="k">val</span> <span class="n">randomHead</span> <span class="k">=</span> <span class="nc">Random</span><span class="o">.</span><span class="n">nextInt</span><span class="o">(</span><span class="mi">6</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">randomTail</span> <span class="k">=</span> <span class="nc">Random</span><span class="o">.</span><span class="n">nextInt</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">headList</span> <span class="k">=</span> <span class="nc">List</span><span class="o">().</span><span class="n">padTo</span><span class="o">(</span><span class="n">randomHead</span><span class="o">,</span> <span class="s">&quot;0&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">tailList</span> <span class="k">=</span> <span class="nc">List</span><span class="o">().</span><span class="n">padTo</span><span class="o">(</span><span class="n">randomTail</span><span class="o">,</span> <span class="s">&quot;1&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">seqRef</span> <span class="k">=</span> <span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">SequencingActor</span><span class="o">(</span><span class="n">testActor</span><span class="o">,</span> <span class="n">headList</span><span class="o">,</span> <span class="n">tailList</span><span class="o">)))</span>
+
+  <span class="k">override</span> <span class="k">protected</span> <span class="k">def</span> <span class="n">afterAll</span><span class="o">()</span><span class="k">:</span> <span class="kt">scala.Unit</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">stopTestActor</span>
+    <span class="n">echoRef</span><span class="o">.</span><span class="n">stop</span><span class="o">()</span>
+    <span class="n">forwardRef</span><span class="o">.</span><span class="n">stop</span><span class="o">()</span>
+    <span class="n">filterRef</span><span class="o">.</span><span class="n">stop</span><span class="o">()</span>
+    <span class="n">seqRef</span><span class="o">.</span><span class="n">stop</span><span class="o">()</span>
+  <span class="o">}</span>
+
+  <span class="s">&quot;An EchoActor&quot;</span> <span class="n">should</span> <span class="o">{</span>
+    <span class="s">&quot;Respond with the same message it receives&quot;</span> <span class="n">in</span> <span class="o">{</span>
+      <span class="n">within</span><span class="o">(</span><span class="mi">100</span> <span class="n">millis</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">echoRef</span> <span class="o">!</span> <span class="s">&quot;test&quot;</span>
+        <span class="n">expectMsg</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">)</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="s">&quot;A ForwardingActor&quot;</span> <span class="n">should</span> <span class="o">{</span>
+    <span class="s">&quot;Forward a message it receives&quot;</span> <span class="n">in</span> <span class="o">{</span>
+      <span class="n">within</span><span class="o">(</span><span class="mi">100</span> <span class="n">millis</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">forwardRef</span> <span class="o">!</span> <span class="s">&quot;test&quot;</span>
+        <span class="n">expectMsg</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">)</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="s">&quot;A FilteringActor&quot;</span> <span class="n">should</span> <span class="o">{</span>
+    <span class="s">&quot;Filter all messages, except expected messagetypes it receives&quot;</span> <span class="n">in</span> <span class="o">{</span>
+      <span class="k">var</span> <span class="n">messages</span> <span class="k">=</span> <span class="nc">List</span><span class="o">[</span><span class="kt">String</span><span class="o">]()</span>
+      <span class="n">within</span><span class="o">(</span><span class="mi">100</span> <span class="n">millis</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">filterRef</span> <span class="o">!</span> <span class="s">&quot;test&quot;</span>
+        <span class="n">expectMsg</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">)</span>
+        <span class="n">filterRef</span> <span class="o">!</span> <span class="mi">1</span>
+        <span class="n">expectNoMsg</span>
+        <span class="n">filterRef</span> <span class="o">!</span> <span class="s">&quot;some&quot;</span>
+        <span class="n">filterRef</span> <span class="o">!</span> <span class="s">&quot;more&quot;</span>
+        <span class="n">filterRef</span> <span class="o">!</span> <span class="mi">1</span>
+        <span class="n">filterRef</span> <span class="o">!</span> <span class="s">&quot;text&quot;</span>
+        <span class="n">filterRef</span> <span class="o">!</span> <span class="mi">1</span>
+
+        <span class="n">receiveWhile</span><span class="o">(</span><span class="mi">500</span> <span class="n">millis</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">case</span> <span class="n">msg</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="n">messages</span> <span class="k">=</span> <span class="n">msg</span> <span class="o">::</span> <span class="n">messages</span>
+        <span class="o">}</span>
+      <span class="o">}</span>
+      <span class="n">messages</span><span class="o">.</span><span class="n">length</span> <span class="n">should</span> <span class="n">be</span><span class="o">(</span><span class="mi">3</span><span class="o">)</span>
+      <span class="n">messages</span><span class="o">.</span><span class="n">reverse</span> <span class="n">should</span> <span class="n">be</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="s">&quot;some&quot;</span><span class="o">,</span> <span class="s">&quot;more&quot;</span><span class="o">,</span> <span class="s">&quot;text&quot;</span><span class="o">))</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="s">&quot;A SequencingActor&quot;</span> <span class="n">should</span> <span class="o">{</span>
+    <span class="s">&quot;receive an interesting message at some point &quot;</span> <span class="n">in</span> <span class="o">{</span>
+      <span class="n">within</span><span class="o">(</span><span class="mi">100</span> <span class="n">millis</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">seqRef</span> <span class="o">!</span> <span class="s">&quot;something&quot;</span>
+        <span class="n">ignoreMsg</span> <span class="o">{</span>
+          <span class="k">case</span> <span class="n">msg</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="n">msg</span> <span class="o">!=</span> <span class="s">&quot;something&quot;</span>
+        <span class="o">}</span>
+        <span class="n">expectMsg</span><span class="o">(</span><span class="s">&quot;something&quot;</span><span class="o">)</span>
+        <span class="n">ignoreMsg</span> <span class="o">{</span>
+          <span class="k">case</span> <span class="n">msg</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="n">msg</span> <span class="o">==</span> <span class="s">&quot;1&quot;</span>
+        <span class="o">}</span>
+        <span class="n">expectNoMsg</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * An Actor that echoes everything you send to it</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">EchoActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">msg</span> <span class="k">=&gt;</span> <span class="o">{</span>
+      <span class="n">self</span><span class="o">.</span><span class="n">reply</span><span class="o">(</span><span class="n">msg</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * An Actor that forwards every message to a next Actor</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">ForwardingActor</span><span class="o">(</span><span class="n">next</span><span class="k">:</span> <span class="kt">ActorRef</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">msg</span> <span class="k">=&gt;</span> <span class="o">{</span>
+      <span class="n">next</span> <span class="o">!</span> <span class="n">msg</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * An Actor that only forwards certain messages to a next Actor</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">FilteringActor</span><span class="o">(</span><span class="n">next</span><span class="k">:</span> <span class="kt">ActorRef</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">msg</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="o">{</span>
+      <span class="n">next</span> <span class="o">!</span> <span class="n">msg</span>
+    <span class="o">}</span>
+    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">None</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * An actor that sends a sequence of messages with a random head list, an interesting value and a random tail list</span>
+<span class="cm"> * The idea is that you would like to test that the interesting value is received and that you cant be bothered with the rest</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">SequencingActor</span><span class="o">(</span><span class="n">next</span><span class="k">:</span> <span class="kt">ActorRef</span><span class="o">,</span> <span class="n">head</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span> <span class="n">tail</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">msg</span> <span class="k">=&gt;</span> <span class="o">{</span>
+      <span class="n">head</span> <span class="n">map</span> <span class="o">(</span><span class="n">next</span> <span class="o">!</span> <span class="n">_</span><span class="o">)</span>
+      <span class="n">next</span> <span class="o">!</span> <span class="n">msg</span>
+      <span class="n">tail</span> <span class="n">map</span> <span class="o">(</span><span class="n">next</span> <span class="o">!</span> <span class="n">_</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

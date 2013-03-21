@@ -1,0 +1,1196 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuration &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="General" href="index.html" />
+    <link rel="next" title="Common utilities" href="../common/index.html" />
+    <link rel="prev" title="Message send semantics" href="message-send-semantics.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Configuration</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="../common/index.html">Common utilities</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="message-send-semantics.html">Message send semantics</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="configuration">
+<span id="id1"></span><h1>Configuration</h1>
+<p>Akka uses the <a class="reference external" href="https://github.com/typesafehub/config">Typesafe Config Library</a>, which might also be a good choice
+for the configuration of your own application or library built with or without
+Akka. This library is implemented in Java with no external dependencies; you
+should have a look at its documentation (in particular about <a class="reference external" href="http://typesafehub.github.com/config/latest/api/com/typesafe/config/ConfigFactory.html">ConfigFactory</a>),
+which is only summarized in the following.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">If you use Akka from the Scala REPL from the 2.9.x series,
+and you do not provide your own ClassLoader to the ActorSystem,
+start the REPL with &quot;-Yrepl-sync&quot; to work around a deficiency in
+the REPLs provided Context ClassLoader.</p>
+</div>
+<div class="section" id="where-configuration-is-read-from">
+<h2>Where configuration is read from</h2>
+<p>All configuration for Akka is held within instances of <tt class="xref py py-class docutils literal"><span class="pre">ActorSystem</span></tt>, or
+put differently, as viewed from the outside, <tt class="xref py py-class docutils literal"><span class="pre">ActorSystem</span></tt> is the only
+consumer of configuration information. While constructing an actor system, you
+can either pass in a <tt class="xref py py-class docutils literal"><span class="pre">Config</span></tt> object or not, where the second case is
+equivalent to passing <tt class="docutils literal"><span class="pre">ConfigFactory.load()</span></tt> (with the right class loader).
+This means roughly that the default is to parse all <tt class="docutils literal"><span class="pre">application.conf</span></tt>,
+<tt class="docutils literal"><span class="pre">application.json</span></tt> and <tt class="docutils literal"><span class="pre">application.properties</span></tt> found at the root of the
+class path—please refer to the aforementioned documentation for details. The
+actor system then merges in all <tt class="docutils literal"><span class="pre">reference.conf</span></tt> resources found at the root
+of the class path to form the fallback configuration, i.e. it internally uses</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">appConfig</span><span class="o">.</span><span class="n">withFallback</span><span class="o">(</span><span class="nc">ConfigFactory</span><span class="o">.</span><span class="n">defaultReference</span><span class="o">(</span><span class="n">classLoader</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>The philosophy is that code never contains default values, but instead relies
+upon their presence in the <tt class="docutils literal"><span class="pre">reference.conf</span></tt> supplied with the library in
+question.</p>
+<p>Highest precedence is given to overrides given as system properties, see <a class="reference external" href="https://github.com/typesafehub/config/blob/master/HOCON.md">the
+HOCON specification</a> (near the
+bottom). Also noteworthy is that the application configuration—which defaults
+to <tt class="docutils literal"><span class="pre">application</span></tt>—may be overridden using the <tt class="docutils literal"><span class="pre">config.resource</span></tt> property
+(there are more, please refer to the <a class="reference external" href="https://github.com/typesafehub/config/blob/master/README.md">Config docs</a>).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you are writing an Akka application, keep you configuration in
+<tt class="docutils literal"><span class="pre">application.conf</span></tt> at the root of the class path. If you are writing an
+Akka-based library, keep its configuration in <tt class="docutils literal"><span class="pre">reference.conf</span></tt> at the root
+of the JAR file.</p>
+</div>
+</div>
+<div class="section" id="when-using-jarjar-onejar-assembly-or-any-jar-bundler">
+<h2>When using JarJar, OneJar, Assembly or any jar-bundler</h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Akka's configuration approach relies heavily on the notion of every
+module/jar having its own reference.conf file, all of these will be
+discovered by the configuration and loaded. Unfortunately this also means
+that if you put merge multiple jars into the same jar, you need to merge all the
+reference.confs as well. Otherwise all defaults will be lost and Akka will not function.</p>
+</div>
+</div>
+<div class="section" id="how-to-structure-your-configuration">
+<h2>How to structure your configuration</h2>
+<p>Given that <tt class="docutils literal"><span class="pre">ConfigFactory.load()</span></tt> merges all resources with matching name
+from the whole class path, it is easiest to utilize that functionality and
+differenciate actor systems within the hierarchy of the configuration:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">myapp1</span> <span class="o">{</span>
+  <span class="n">akka</span><span class="o">.</span><span class="n">loglevel</span> <span class="k">=</span> <span class="nc">WARNING</span>
+  <span class="n">my</span><span class="o">.</span><span class="n">own</span><span class="o">.</span><span class="n">setting</span> <span class="k">=</span> <span class="mi">43</span>
+<span class="o">}</span>
+<span class="n">myapp2</span> <span class="o">{</span>
+  <span class="n">akka</span><span class="o">.</span><span class="n">loglevel</span> <span class="k">=</span> <span class="nc">ERROR</span>
+  <span class="n">app2</span><span class="o">.</span><span class="n">setting</span> <span class="k">=</span> <span class="s">&quot;appname&quot;</span>
+<span class="o">}</span>
+<span class="n">my</span><span class="o">.</span><span class="n">own</span><span class="o">.</span><span class="n">setting</span> <span class="k">=</span> <span class="mi">42</span>
+<span class="n">my</span><span class="o">.</span><span class="n">other</span><span class="o">.</span><span class="n">setting</span> <span class="k">=</span> <span class="s">&quot;hello&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">config</span> <span class="k">=</span> <span class="nc">ConfigFactory</span><span class="o">.</span><span class="n">load</span><span class="o">()</span>
+<span class="k">val</span> <span class="n">app1</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">&quot;MyApp1&quot;</span><span class="o">,</span> <span class="n">config</span><span class="o">.</span><span class="n">getConfig</span><span class="o">(</span><span class="s">&quot;myapp1&quot;</span><span class="o">).</span><span class="n">withFallback</span><span class="o">(</span><span class="n">config</span><span class="o">))</span>
+<span class="k">val</span> <span class="n">app2</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">&quot;MyApp2&quot;</span><span class="o">,</span> <span class="n">config</span><span class="o">.</span><span class="n">getConfig</span><span class="o">(</span><span class="s">&quot;myapp2&quot;</span><span class="o">).</span><span class="n">withOnlyPath</span><span class="o">(</span><span class="s">&quot;akka&quot;</span><span class="o">).</span><span class="n">withFallback</span><span class="o">(</span><span class="n">config</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>These two samples demonstrate different variations of the “lift-a-subtree”
+trick: in the first case, the configuration accessible from within the actor
+system is this</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span><span class="o">.</span><span class="n">loglevel</span> <span class="o">=</span> <span class="no">WARNING</span>
+<span class="n">my</span><span class="o">.</span><span class="n">own</span><span class="o">.</span><span class="n">setting</span> <span class="o">=</span> <span class="mi">43</span>
+<span class="n">my</span><span class="o">.</span><span class="n">other</span><span class="o">.</span><span class="n">setting</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span><span class="sr"></span>
+<span class="sr">// plus myapp1 and myapp2 subtrees</span>
+</pre></div>
+</div>
+<p>while in the second one, only the “akka” subtree is lifted, with the following
+result:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">akka</span><span class="o">.</span><span class="n">loglevel</span> <span class="k">=</span> <span class="nc">ERROR</span>
+<span class="n">my</span><span class="o">.</span><span class="n">own</span><span class="o">.</span><span class="n">setting</span> <span class="k">=</span> <span class="mi">42</span>
+<span class="n">my</span><span class="o">.</span><span class="n">other</span><span class="o">.</span><span class="n">setting</span> <span class="k">=</span> <span class="s">&quot;hello&quot;</span>
+<span class="c1">// plus myapp1 and myapp2 subtrees</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The configuration library is really powerful, explaining all features exceeds
+the scope affordable here. In particular not covered are how to include other
+configuration files within other files (see a small example at <a class="reference internal" href="#including-files">Including
+files</a>) and copying parts of the configuration tree by way of path
+substitutions.</p>
+</div>
+<p>You may also specify and parse the configuration programmatically in other ways when instantiating
+the <tt class="docutils literal"><span class="pre">ActorSystem</span></tt>.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.ActorSystem</span>
+<span class="k">import</span> <span class="nn">com.typesafe.config.ConfigFactory</span>
+    <span class="k">val</span> <span class="n">customConf</span> <span class="k">=</span> <span class="nc">ConfigFactory</span><span class="o">.</span><span class="n">parseString</span><span class="o">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">      akka.actor.deployment {</span>
+<span class="s">        /my-service {</span>
+<span class="s">          router = round-robin</span>
+<span class="s">          nr-of-instances = 3</span>
+<span class="s">        }</span>
+<span class="s">      }</span>
+<span class="s">      &quot;&quot;&quot;</span><span class="o">)</span>
+    <span class="c1">// ConfigFactory.load sandwiches customConfig between default reference</span>
+    <span class="c1">// config and default overrides, and then resolves it.</span>
+    <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">&quot;MySystem&quot;</span><span class="o">,</span> <span class="nc">ConfigFactory</span><span class="o">.</span><span class="n">load</span><span class="o">(</span><span class="n">customConf</span><span class="o">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="listing-of-the-reference-configuration">
+<h2>Listing of the Reference Configuration</h2>
+<p>Each Akka module has a reference configuration file with the default values.</p>
+<div class="section" id="akka-actor">
+<h3>akka-actor</h3>
+<div class="highlight-none"><div class="highlight"><pre>####################################
+# Akka Actor Reference Config File #
+####################################
+
+# This is the reference config file that contains all the default settings.
+# Make your edits/overrides in your application.conf.
+
+akka {
+  # Akka version, checked against the runtime version of Akka.
+  version = &quot;2.0.4&quot;
+
+  # Home directory of Akka, modules in the deploy directory will be loaded
+  home = &quot;&quot;
+
+  # Event handlers to register at boot time (Logging$DefaultLogger logs to STDOUT)
+  event-handlers = [&quot;akka.event.Logging$DefaultLogger&quot;]
+
+  # Event handlers are created and registered synchronously during ActorSystem
+  # start-up, and since they are actors, this timeout is used to bound the
+  # waiting time
+  event-handler-startup-timeout = 5s
+
+  # Log level used by the configured loggers (see &quot;event-handlers&quot;) as soon
+  # as they have been started; before that, see &quot;stdout-loglevel&quot;
+  # Options: ERROR, WARNING, INFO, DEBUG
+  loglevel = &quot;INFO&quot;
+
+  # Log level for the very basic logger activated during AkkaApplication startup
+  # Options: ERROR, WARNING, INFO, DEBUG
+  stdout-loglevel = &quot;WARNING&quot;
+
+  # Log the complete configuration at INFO level when the actor system is started.
+  # This is useful when you are uncertain of what configuration is used.
+  log-config-on-start = off
+
+  # List FQCN of extensions which shall be loaded at actor system startup.
+  # Should be on the format: &#39;extensions = [&quot;foo&quot;, &quot;bar&quot;]&#39; etc.
+  # See the Akka Documentation for more info about Extensions
+  extensions = []
+
+  # Toggles whether the threads created by this ActorSystem should be daemons or not
+  daemonic = off
+
+  # JVM shutdown, System.exit(-1), in case of a fatal error, such as OutOfMemoryError
+  jvm-exit-on-fatal-error = on
+
+  actor {
+
+    provider = &quot;akka.actor.LocalActorRefProvider&quot;
+
+    # Timeout for ActorSystem.actorOf
+    creation-timeout = 20s
+
+    # frequency with which stopping actors are prodded in case they had to be
+    # removed from their parents
+    reaper-interval = 5s
+
+    # Serializes and deserializes (non-primitive) messages to ensure immutability,
+    # this is only intended for testing.
+    serialize-messages = off
+
+    # Serializes and deserializes creators (in Props) to ensure that they can be sent over the network,
+    # this is only intended for testing.
+    serialize-creators = off
+
+    typed {
+      # Default timeout for typed actor methods with non-void return type
+      timeout = 5s
+    }
+
+    deployment {
+
+      # deployment id pattern - on the format: /parent/child etc.
+      default {
+
+        # routing (load-balance) scheme to use
+        #     available: &quot;from-code&quot;, &quot;round-robin&quot;, &quot;random&quot;, &quot;smallest-mailbox&quot;, &quot;scatter-gather&quot;, &quot;broadcast&quot;
+        #     or:        Fully qualified class name of the router class.
+        #                The router class must extend akka.routing.CustomRouterConfig and and have constructor
+        #                with com.typesafe.config.Config parameter.
+        #     default is &quot;from-code&quot;;
+        # Whether or not an actor is transformed to a Router is decided in code only (Props.withRouter).
+        # The type of router can be overridden in the configuration; specifying &quot;from-code&quot; means
+        # that the values specified in the code shall be used.
+        # In case of routing, the actors to be routed to can be specified
+        # in several ways:
+        # - nr-of-instances: will create that many children
+        # - routees.paths: will look the paths up using actorFor and route to
+        #   them, i.e. will not create children
+        # - resizer: dynamically resizable number of routees as specified in resizer below
+        router = &quot;from-code&quot;
+
+        # number of children to create in case of a non-direct router; this setting
+        # is ignored if routees.paths is given
+        nr-of-instances = 1
+
+        # within is the timeout used for routers containing future calls
+        within = 5 seconds
+
+        routees {
+          # Alternatively to giving nr-of-instances you can specify the full
+          # paths of those actors which should be routed to. This setting takes
+          # precedence over nr-of-instances
+          paths = []
+        }
+
+        # Routers with dynamically resizable number of routees; this feature is enabled
+        # by including (parts of) this section in the deployment
+        resizer {
+
+          # The fewest number of routees the router should ever have.
+          lower-bound = 1
+
+          # The most number of routees the router should ever have.
+          # Must be greater than or equal to lower-bound.
+          upper-bound = 10
+
+          # Threshold to evaluate if routee is considered to be busy (under pressure).
+          # Implementation depends on this value (default is 1).
+          # 0:   number of routees currently processing a message.
+          # 1:   number of routees currently processing a message has
+          #      some messages in mailbox.
+          # &gt; 1: number of routees with at least the configured pressure-threshold
+          #      messages in their mailbox. Note that estimating mailbox size of
+          #      default UnboundedMailbox is O(N) operation.
+          pressure-threshold = 1
+
+          # Percentage to increase capacity whenever all routees are busy.
+          # For example, 0.2 would increase 20% (rounded up), i.e. if current
+          # capacity is 6 it will request an increase of 2 more routees.
+          rampup-rate = 0.2
+
+          # Minimum fraction of busy routees before backing off.
+          # For example, if this is 0.3, then we&#39;ll remove some routees only when
+          # less than 30% of routees are busy, i.e. if current capacity is 10 and
+          # 3 are busy then the capacity is unchanged, but if 2 or less are busy
+          # the capacity is decreased.
+          # Use 0.0 or negative to avoid removal of routees.
+          backoff-threshold = 0.3
+
+          # Fraction of routees to be removed when the resizer reaches the
+          # backoffThreshold.
+          # For example, 0.1 would decrease 10% (rounded up), i.e. if current
+          # capacity is 9 it will request an decrease of 1 routee.
+          backoff-rate = 0.1
+
+          # When the resizer reduce the capacity the abandoned routee actors are stopped
+          # with PoisonPill after this delay. The reason for the delay is to give concurrent
+          # messages a chance to be placed in mailbox before sending PoisonPill.
+          # Use 0s to skip delay.
+          stop-delay = 1s
+
+          # Number of messages between resize operation.
+          # Use 1 to resize before each message.
+          messages-per-resize = 10
+        }
+      }
+    }
+
+    default-dispatcher {
+      # Must be one of the following
+      # Dispatcher, (BalancingDispatcher, only valid when all actors using it are of
+      # the same type), PinnedDispatcher, or a FQCN to a class inheriting
+      # MessageDispatcherConfigurator with a constructor with
+      # com.typesafe.config.Config parameter and akka.dispatch.DispatcherPrerequisites
+      # parameters.
+      # PinnedDispatcher must be used toghether with executor=thread-pool-executor.
+      type = &quot;Dispatcher&quot;
+
+      # Which kind of ExecutorService to use for this dispatcher
+      # Valid options:
+      #               &quot;fork-join-executor&quot; requires a &quot;fork-join-executor&quot; section
+      #               &quot;thread-pool-executor&quot; requires a &quot;thread-pool-executor&quot; section
+      #               or
+      #               A FQCN of a class extending ExecutorServiceConfigurator
+      executor = &quot;fork-join-executor&quot;
+
+      # This will be used if you have set &quot;executor = &quot;fork-join-executor&quot;&quot;
+      fork-join-executor {
+        # Min number of threads to cap factor-based parallelism number to
+        parallelism-min = 8
+
+        # Parallelism (threads) ... ceil(available processors * factor)
+        parallelism-factor = 3.0
+
+        # Max number of threads to cap factor-based parallelism number to
+        parallelism-max = 64
+      }
+
+      # This will be used if you have set &quot;executor = &quot;thread-pool-executor&quot;&quot;
+      thread-pool-executor {
+        # Keep alive time for threads
+        keep-alive-time = 60s
+
+        # Min number of threads to cap factor-based core number to
+        core-pool-size-min = 8
+
+        # No of core threads ... ceil(available processors * factor)
+        core-pool-size-factor = 3.0
+
+        # Max number of threads to cap factor-based number to
+        core-pool-size-max = 64
+
+        # Hint: max-pool-size is only used for bounded task queues
+        # minimum number of threads to cap factor-based max number to
+        max-pool-size-min = 8
+
+        # Max no of threads ... ceil(available processors * factor)
+        max-pool-size-factor  = 3.0
+
+        # Max number of threads to cap factor-based max number to
+        max-pool-size-max = 64
+
+        # Specifies the bounded capacity of the task queue (&lt; 1 == unbounded)
+        task-queue-size = -1
+
+        # Specifies which type of task queue will be used, can be &quot;array&quot; or
+        # &quot;linked&quot; (default)
+        task-queue-type = &quot;linked&quot;
+
+        # Allow core threads to time out
+        allow-core-timeout = on
+      }
+
+      # How long time the dispatcher will wait for new actors until it shuts down
+      shutdown-timeout = 1s
+
+      # Throughput defines the number of messages that are processed in a batch
+      # before the thread is returned to the pool. Set to 1 for as fair as possible.
+      throughput = 5
+
+      # Throughput deadline for Dispatcher, set to 0 or negative for no deadline
+      throughput-deadline-time = 0ms
+
+      # If negative (or zero) then an unbounded mailbox is used (default)
+      # If positive then a bounded mailbox is used and the capacity is set using the
+      # property
+      # NOTE: setting a mailbox to &#39;blocking&#39; can be a bit dangerous, could lead to
+      # deadlock, use with care
+      # The following mailbox-push-timeout-time is only used for type=Dispatcher and
+      # only if mailbox-capacity &gt; 0
+      mailbox-capacity = -1
+
+      # Specifies the timeout to add a new message to a mailbox that is full -
+      # negative number means infinite timeout. It is only used for type=Dispatcher
+      # and only if mailbox-capacity &gt; 0
+      mailbox-push-timeout-time = 10s
+
+      # FQCN of the MailboxType, if not specified the default bounded or unbounded
+      # mailbox is used. The Class of the FQCN must have a constructor with
+      # (akka.actor.ActorSystem.Settings, com.typesafe.config.Config) parameters.
+      mailbox-type = &quot;&quot;
+
+      # For BalancingDispatcher: If the balancing dispatcher should attempt to
+      # schedule idle actors using the same dispatcher when a message comes in,
+      # and the dispatchers ExecutorService is not fully busy already.
+      attempt-teamwork = on
+
+      # For Actor with Stash: The default capacity of the stash.
+      # If negative (or zero) then an unbounded stash is used (default)
+      # If positive then a bounded stash is used and the capacity is set using the
+      # property
+      stash-capacity = -1
+    }
+
+    debug {
+      # enable function of Actor.loggable(), which is to log any received message at
+      # DEBUG level, see the “Testing Actor Systems” section of the Akka Documentation
+      # at http://akka.io/docs
+      receive = off
+
+      # enable DEBUG logging of all AutoReceiveMessages (Kill, PoisonPill and the like)
+      autoreceive = off
+
+      # enable DEBUG logging of actor lifecycle changes
+      lifecycle = off
+
+      # enable DEBUG logging of all LoggingFSMs for events, transitions and timers
+      fsm = off
+
+      # enable DEBUG logging of subscription changes on the eventStream
+      event-stream = off
+    }
+
+    # Entries for pluggable serializers and their bindings.
+    serializers {
+      java = &quot;akka.serialization.JavaSerializer&quot;
+    }
+
+    # Class to Serializer binding. You only need to specify the name of an interface
+    # or abstract base class of the messages. In case of ambiguity it is using the
+    # most specific configured class, or giving a warning and choosing the “first” one.
+    #
+    # To disable one of the default serializers, assign its class to &quot;none&quot;, like
+    # &quot;java.io.Serializable&quot; = none
+    serialization-bindings {
+      &quot;java.io.Serializable&quot; = java
+    }
+  }
+
+  # Used to set the behavior of the scheduler.
+  # Changing the default values may change the system behavior drastically so make sure
+  # you know what you&#39;re doing! See the Scheduler section of the Akka documentation for more details.
+  scheduler {
+    # The HashedWheelTimer (HWT) implementation from Netty is used as the default scheduler
+    # in the system.
+    # HWT does not execute the scheduled tasks on exact time.
+    # It will, on every tick, check if there are any tasks behind the schedule and execute them.
+    # You can increase or decrease the accuracy of the execution timing by specifying smaller
+    # or larger tick duration.
+    # If you are scheduling a lot of tasks you should consider increasing the ticks per wheel.
+    # For more information see: http://www.jboss.org/netty/
+    tick-duration = 100ms
+    ticks-per-wheel = 512
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="akka-remote">
+<h3>akka-remote</h3>
+<div class="highlight-none"><div class="highlight"><pre>#####################################
+# Akka Remote Reference Config File #
+#####################################
+
+# This is the reference config file that contains all the default settings.
+# Make your edits/overrides in your application.conf.
+
+# comments about akka.actor settings left out where they are already in akka-
+# actor.jar, because otherwise they would be repeated in config rendering.
+
+akka {
+
+  actor {
+
+    serializers {
+      proto = &quot;akka.serialization.ProtobufSerializer&quot;
+    }
+
+
+    serialization-bindings {
+      # Since com.google.protobuf.Message does not extend Serializable but GeneratedMessage
+      # does, need to use the more specific one here in order to avoid ambiguity
+      &quot;com.google.protobuf.GeneratedMessage&quot; = proto
+    }
+
+    deployment {
+
+      default {
+
+        # if this is set to a valid remote address, the named actor will be deployed
+        # at that node e.g. &quot;akka://sys@host:port&quot;
+        remote = &quot;&quot;
+
+        target {
+
+          # A list of hostnames and ports for instantiating the children of a
+          # non-direct router
+          #   The format should be on &quot;akka://sys@host:port&quot;, where:
+          #    - sys is the remote actor system name
+          #    - hostname can be either hostname or IP address the remote actor
+          #      should connect to
+          #    - port should be the port for the remote server on the other node
+          # The number of actor instances to be spawned is still taken from the
+          # nr-of-instances setting as for local routers; the instances will be
+          # distributed round-robin among the given nodes.
+          nodes = []
+
+        }
+      }
+    }
+  }
+
+  remote {
+
+    # Which implementation of akka.remote.RemoteTransport to use
+    # default is a TCP-based remote transport based on Netty
+    transport = &quot;akka.remote.netty.NettyRemoteTransport&quot;
+
+    # Enable untrusted mode for full security of server managed actors, allows
+    # untrusted clients to connect.
+    untrusted-mode = off
+
+    # Timeout for ACK of cluster operations, like checking actor out etc.
+    remote-daemon-ack-timeout = 30s
+
+    # If this is &quot;on&quot;, Akka will log all inbound messages at DEBUG level, if off then they are not logged
+    log-received-messages = off
+
+    # If this is &quot;on&quot;, Akka will log all outbound messages at DEBUG level, if off then they are not logged
+    log-sent-messages = off
+
+    # If this is &quot;on&quot;, Akka will log all RemoteLifeCycleEvents at the level defined for each, if off then they are not logged
+    log-remote-lifecycle-events = off
+
+    # Each property is annotated with (I) or (O) or (I&amp;O), where I stands for “inbound” and O for “outbound” connections.
+    # The NettyRemoteTransport always starts the server role to allow inbound connections, and it starts
+    # active client connections whenever sending to a destination which is not yet connected; if configured
+    # it reuses inbound connections for replies, which is called a passive client connection (i.e. from server
+    # to client).
+    netty {
+
+      # (O) In case of increased latency / overflow how long should we wait (blocking the sender)
+      # until we deem the send to be cancelled?
+      # 0 means &quot;never backoff&quot;, any positive number will indicate time to block at most.
+      backoff-timeout = 0ms
+
+      # (I&amp;O) Generate your own with &#39;$AKKA_HOME/scripts/generate_config_with_secure_cookie.sh&#39;
+      # or using &#39;akka.util.Crypt.generateSecureCookie&#39;
+      secure-cookie = &quot;&quot;
+
+      # (I) Should the remote server require that its peers share the same secure-cookie
+      # (defined in the &#39;remote&#39; section)?
+      require-cookie = off
+
+      # (I) Reuse inbound connections for outbound messages
+      use-passive-connections = on
+
+      # (I) The hostname or ip to bind the remoting to,
+      # InetAddress.getLocalHost.getHostAddress is used if empty
+      hostname = &quot;&quot;
+
+      # (I) The default remote server port clients should connect to.
+      # Default is 2552 (AKKA), use 0 if you want a random available port
+      # This port needs to be unique for each actor system on the same machine.
+      port = 2552
+
+      # (O) The address of a local network interface (IP Address) to bind to when creating
+      # outbound connections. Set to &quot;&quot; or &quot;auto&quot; for automatic selection of local address.
+      outbound-local-address = &quot;auto&quot;
+
+      # (I&amp;O) Increase this if you want to be able to send messages with large payloads
+      message-frame-size = 1 MiB
+
+      # (O) Timeout duration
+      connection-timeout = 120s
+
+      # (I) Sets the size of the connection backlog
+      backlog = 4096
+
+      # (I) Length in akka.time-unit how long core threads will be kept alive if idling
+      execution-pool-keepalive = 60s
+
+      # (I) Size of the core pool of the remote execution unit
+      execution-pool-size = 4
+
+      # (I) Maximum channel size, 0 for off
+      max-channel-memory-size = 0b
+
+      # (I) Maximum total size of all channels, 0 for off
+      max-total-memory-size = 0b
+
+      # (O) Time between reconnect attempts for active clients
+      reconnect-delay = 5s
+
+      # (O) Read inactivity period (lowest resolution is seconds)
+      # after which active client connection is shutdown;
+      # will be re-established in case of new communication requests.
+      # A value of 0 will turn this feature off
+      read-timeout = 0s
+
+      # (O) Write inactivity period (lowest resolution is seconds)
+      # after which a heartbeat is sent across the wire.
+      # A value of 0 will turn this feature off
+      write-timeout = 10s
+
+      # (O) Inactivity period of both reads and writes (lowest resolution is seconds)
+      # after which active client connection is shutdown;
+      # will be re-established in case of new communication requests
+      # A value of 0 will turn this feature off
+      all-timeout = 0s
+
+      # (O) Maximum time window that a client should try to reconnect for
+      reconnection-time-window = 600s
+
+      # (I&amp;O) Used to configure the number of I/O worker threads on server sockets
+      server-socket-worker-pool {
+        # Min number of threads to cap factor-based number to
+        pool-size-min = 2
+
+        # The pool size factor is used to determine thread pool size
+        # using the following formula: ceil(available processors * factor).
+        # Resulting size is then bounded by the pool-size-min and
+        # pool-size-max values.
+        pool-size-factor = 2.0
+
+        # Max number of threads to cap factor-based number to
+        pool-size-max = 128
+      }
+
+      # (I&amp;O) Used to configure the number of I/O worker threads on client sockets
+      client-socket-worker-pool {
+        # Min number of threads to cap factor-based number to
+        pool-size-min = 2
+
+        # The pool size factor is used to determine thread pool size
+        # using the following formula: ceil(available processors * factor).
+        # Resulting size is then bounded by the pool-size-min and
+        # pool-size-max values.
+        pool-size-factor = 2.0
+
+        # Max number of threads to cap factor-based number to
+        pool-size-max = 128
+      }
+    }
+
+    # The dispatcher used for the system actor &quot;network-event-sender&quot;
+    network-event-sender-dispatcher {
+      executor = thread-pool-executor
+      type = PinnedDispatcher
+    }
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="akka-testkit">
+<h3>akka-testkit</h3>
+<div class="highlight-none"><div class="highlight"><pre>######################################
+# Akka Testkit Reference Config File #
+######################################
+
+# This is the reference config file that contains all the default settings.
+# Make your edits/overrides in your application.conf.
+
+akka {
+  test {
+    # factor by which to scale timeouts during tests, e.g. to account for shared
+    # build system load
+    timefactor =  1.0
+
+    # duration of EventFilter.intercept waits after the block is finished until
+    # all required messages are received
+    filter-leeway = 3s
+
+    # duration to wait in expectMsg and friends outside of within() block by default
+    single-expect-default = 3s
+
+    # The timeout that is added as an implicit by DefaultTimeout trait
+    default-timeout = 5s
+
+    calling-thread-dispatcher {
+      type = akka.testkit.CallingThreadDispatcherConfigurator
+    }
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="akka-transactor">
+<h3>akka-transactor</h3>
+<div class="highlight-none"><div class="highlight"><pre>#########################################
+# Akka Transactor Reference Config File #
+#########################################
+
+# This is the reference config file that contains all the default settings.
+# Make your edits/overrides in your application.conf.
+
+akka {
+  transactor {
+    # The timeout used for coordinated transactions across actors
+    coordinated-timeout = 5s
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="akka-agent">
+<h3>akka-agent</h3>
+<div class="highlight-none"><div class="highlight"><pre>####################################
+# Akka Agent Reference Config File #
+####################################
+
+# This is the reference config file that contains all the default settings.
+# Make your edits/overrides in your application.conf.
+
+akka {
+  agent {
+
+    # The dispatcher used for agent-send-off actor
+    send-off-dispatcher {
+      executor = thread-pool-executor
+      type = PinnedDispatcher
+    }
+
+    # The dispatcher used for agent-alter-off actor
+    alter-off-dispatcher {
+      executor = thread-pool-executor
+      type = PinnedDispatcher
+    }
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="akka-zeromq">
+<h3>akka-zeromq</h3>
+<div class="highlight-none"><div class="highlight"><pre>#####################################
+# Akka ZeroMQ Reference Config File #
+#####################################
+
+# This is the reference config file that contains all the default settings.
+# Make your edits/overrides in your application.conf.
+
+akka {
+
+  zeromq {
+
+    # The default timeout for a poll on the actual zeromq socket.
+    poll-timeout = 100ms
+
+    # Timeout for creating a new socket
+    new-socket-timeout = 5s
+
+    socket-dispatcher {
+      # A zeromq socket needs to be pinned to the thread that created it.
+      # Changing this value results in weird errors and race conditions within zeromq
+      executor = thread-pool-executor
+      type = &quot;PinnedDispatcher&quot;
+    }
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="akka-beanstalk-mailbox">
+<h3>akka-beanstalk-mailbox</h3>
+<div class="highlight-none"><div class="highlight"><pre>##################################################
+# Akka Beanstalk Mailboxes Reference Config File #
+##################################################
+
+# This is the reference config file that contains all the default settings.
+# Make your edits/overrides in your application.conf.
+#
+# for more information see &lt;https://github.com/kr/beanstalkd/blob/v1.3/doc/protocol.txt&gt;
+
+akka {
+  actor {
+    mailbox {
+      beanstalk {
+        # hostname to connect to
+        hostname = &quot;127.0.0.1&quot;
+        
+        # port to connect to
+        port = 11300
+        
+        # wait period in case of a connection failure before reconnect
+        reconnect-window = 5s
+        
+        # integer number of seconds to wait before putting the job in
+        # the ready queue. The job will be in the &quot;delayed&quot; state during this time.
+        message-submit-delay = 0s
+        
+        # time to run -- is an integer number of seconds to allow a worker
+        # to run this job. This time is counted from the moment a worker reserves
+        # this job. If the worker does not delete, release, or bury the job within
+        # &lt;ttr&gt; seconds, the job will time out and the server will release the job.
+        message-time-to-live = 120s
+      }
+    }
+  }
+
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="akka-file-mailbox">
+<h3>akka-file-mailbox</h3>
+<div class="highlight-none"><div class="highlight"><pre>#############################################
+# Akka File Mailboxes Reference Config File #
+#############################################
+
+# This is the reference config file that contains all the default settings.
+# Make your edits/overrides in your application.conf.
+#
+# For more information see &lt;https://github.com/robey/kestrel/&gt;
+
+akka {
+  actor {
+    mailbox {
+      file-based {
+        # directory below which this queue resides
+        directory-path = &quot;./_mb&quot;
+        
+        # attempting to add an item after the queue reaches this size (in items) will fail.
+        max-items = 2147483647
+        
+        # attempting to add an item after the queue reaches this size (in bytes) will fail.
+        max-size = 2147483647 bytes
+        
+        # attempting to add an item larger than this size (in bytes) will fail.
+        max-item-size = 2147483647 bytes
+        
+        # maximum expiration time for this queue (seconds).
+        max-age = 0s
+        
+        # maximum journal size before the journal should be rotated.
+        max-journal-size = 16 MiB
+        
+        # maximum size of a queue before it drops into read-behind mode.
+        max-memory-size = 128 MiB
+        
+        # maximum overflow (multiplier) of a journal file before we re-create it.
+        max-journal-overflow = 10
+        
+        # absolute maximum size of a journal file until we rebuild it, no matter what.
+        max-journal-size-absolute = 9223372036854775807 bytes
+        
+        # whether to drop older items (instead of newer) when the queue is full
+        discard-old-when-full = on  
+        
+        # whether to keep a journal file at all
+        keep-journal = on  
+        
+        # whether to sync the journal after each transaction
+        sync-journal = off  
+      }
+    }
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="akka-mongo-mailbox">
+<h3>akka-mongo-mailbox</h3>
+<div class="highlight-none"><div class="highlight"><pre>################################################
+# Akka MongoDB Mailboxes Reference Config File #
+################################################
+
+# This is the reference config file that contains all the default settings.
+# Make your edits/overrides in your application.conf.
+
+akka {
+  actor {
+    mailbox {
+      mongodb {
+
+        # Any specified collection name will be used as a prefix for
+        # collections that use durable mongo mailboxes.
+        # Follow Mongo URI Spec - http://www.mongodb.org/display/DOCS/Connections
+        uri = &quot;mongodb://localhost/akka.mailbox&quot;
+
+        # Configurable timeouts for certain ops
+        timeout {
+          # time to wait for a read to succeed before timing out the future
+          read = 3000ms
+          # time to wait for a write to succeed before timing out the future
+          write = 3000ms
+        }
+      }
+    }
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="akka-redis-mailbox">
+<h3>akka-redis-mailbox</h3>
+<div class="highlight-none"><div class="highlight"><pre>##############################################
+# Akka Redis Mailboxes Reference Config File #
+##############################################
+
+# This is the reference config file that contains all the default settings.
+# Make your edits/overrides in your application.conf.
+#
+# for more information see &lt;http://redis.io/&gt;
+
+akka {
+  actor {
+    mailbox {
+      redis {
+        # hostname of where the redis queue resides
+        hostname = &quot;127.0.0.1&quot;
+        
+        # port at which the redis queue resides
+        port = 6379
+      }
+    }
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="akka-zookeeper-mailbox">
+<h3>akka-zookeeper-mailbox</h3>
+<div class="highlight-none"><div class="highlight"><pre>##################################################
+# Akka ZooKepper Mailboxes Reference Config File #
+##################################################
+
+# This is the reference config file that contains all the default settings.
+# Make your edits/overrides in your application.conf.
+#
+# For more information see &lt;http://wiki.apache.org/hadoop/ZooKeeper&gt;
+
+akka {
+  actor {
+    mailbox {
+      zookeeper {
+        # host and port to connect to ZooKeeper
+        server-addresses = &quot;127.0.0.1:2181&quot;
+        
+        # timeout after which an unreachable client is considered dead and its session is closed
+        session-timeout = 60s
+        
+        # maximum wait period while connecting to ZooKeeper service
+        connection-timeout = 60s
+      }
+    }
+  }
+}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="custom-application-conf">
+<h2>Custom application.conf</h2>
+<p>A custom <tt class="docutils literal"><span class="pre">application.conf</span></tt> might look like this:</p>
+<div class="highlight-scala"><pre># In this file you can override any option defined in the reference files.
+# Copy in parts of the reference files and modify as you please.
+
+akka {
+
+  # Event handlers to register at boot time (Logging$DefaultLogger logs to STDOUT)
+  event-handlers = ["akka.event.slf4j.Slf4jEventHandler"]
+
+  # Log level used by the configured loggers (see "event-handlers") as soon
+  # as they have been started; before that, see "stdout-loglevel"
+  # Options: ERROR, WARNING, INFO, DEBUG
+  loglevel = DEBUG
+
+  # Log level for the very basic logger activated during AkkaApplication startup
+  # Options: ERROR, WARNING, INFO, DEBUG
+  stdout-loglevel = DEBUG
+
+  actor {
+    default-dispatcher {
+      # Throughput for default Dispatcher, set to 1 for as fair as possible
+      throughput = 10
+    }
+  }
+
+  remote {
+    server {
+      # The port clients should connect to. Default is 2552 (AKKA)
+      port = 2562
+    }
+  }
+}</pre>
+</div>
+</div>
+<div class="section" id="including-files">
+<h2>Including files</h2>
+<p>Sometimes it can be useful to include another configuration file, for example if you have one <tt class="docutils literal"><span class="pre">application.conf</span></tt> with all
+environment independent settings and then override some settings for specific environments.</p>
+<p>Specifying system property with <tt class="docutils literal"><span class="pre">-Dconfig.resource=/dev.conf</span></tt> will load the <tt class="docutils literal"><span class="pre">dev.conf</span></tt> file, which includes the <tt class="docutils literal"><span class="pre">application.conf</span></tt></p>
+<p>dev.conf:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">include</span> <span class="s">&quot;application&quot;</span>
+
+<span class="n">akka</span> <span class="o">{</span>
+  <span class="n">loglevel</span> <span class="k">=</span> <span class="s">&quot;DEBUG&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>More advanced include and substitution mechanisms are explained in the <a class="reference external" href="https://github.com/typesafehub/config/blob/master/HOCON.md">HOCON</a>
+specification.</p>
+</div>
+<div class="section" id="logging-of-configuration">
+<span id="dakka-log-config-on-start"></span><h2>Logging of Configuration</h2>
+<p>If the system or config property <tt class="docutils literal"><span class="pre">akka.log-config-on-start</span></tt> is set to <tt class="docutils literal"><span class="pre">on</span></tt>, then the
+complete configuration at INFO level when the actor system is started. This is useful
+when you are uncertain of what configuration is used.</p>
+<p>If in doubt, you can also easily and nicely inspect configuration objects
+before or after using them to construct an actor system:</p>
+<div class="highlight-scala"><pre>Welcome to Scala version 2.9.1.final (Java HotSpot(TM) 64-Bit Server VM, Java 1.6.0_27).
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala&gt; import com.typesafe.config._
+import com.typesafe.config._
+
+scala&gt; ConfigFactory.parseString("a.b=12")
+res0: com.typesafe.config.Config = Config(SimpleConfigObject({"a" : {"b" : 12}}))
+
+scala&gt; res0.root.render
+res1: java.lang.String =
+{
+    # String: 1
+    "a" : {
+        # String: 1
+        "b" : 12
+    }
+}</pre>
+</div>
+<p>The comments preceding every item give detailed information about the origin of
+the setting (file &amp; line number) plus possible comments which were present,
+e.g. in the reference configuration. The settings as merged with the reference
+and parsed by the actor system can be displayed like this:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kd">final</span> <span class="n">ActorSystem</span> <span class="n">system</span> <span class="o">=</span> <span class="n">ActorSystem</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+<span class="n">println</span><span class="o">(</span><span class="n">system</span><span class="o">.</span><span class="na">settings</span><span class="o">());</span>
+<span class="c1">// this is a shortcut for system.settings().config().root().render()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="a-word-about-classloaders">
+<h2>A Word About ClassLoaders</h2>
+<p>In several places of the configuration file it is possible to specify the
+fully-qualified class name of something to be instantiated by Akka. This is
+done using Java reflection, which in turn uses a <tt class="xref py py-class docutils literal"><span class="pre">ClassLoader</span></tt>. Getting
+the right one in challenging environments like application containers or OSGi
+bundles is not always trivial, the current approach of Akka is that each
+<tt class="xref py py-class docutils literal"><span class="pre">ActorSystem</span></tt> implementation stores the current thread’s context class
+loader (if available, otherwise just its own loader as in
+<tt class="docutils literal"><span class="pre">this.getClass.getClassLoader</span></tt>) and uses that for all reflective accesses.
+This implies that putting Akka on the boot class path will yield
+<tt class="xref py py-class docutils literal"><span class="pre">NullPointerException</span></tt> from strange places: this is simply not
+supported.</p>
+</div>
+<div class="section" id="application-specific-settings">
+<h2>Application specific settings</h2>
+<p>The configuration can also be used for application specific settings.
+A good practice is to place those settings in an Extension, as described in:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Scala API: <a class="reference internal" href="../scala/extending-akka.html#extending-akka-scala-settings"><em>Application specific settings</em></a></li>
+<li>Java API: <a class="reference internal" href="../java/extending-akka.html#extending-akka-java-settings"><em>Application specific settings</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

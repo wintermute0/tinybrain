@@ -1,0 +1,204 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples of use-cases for Akka &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Introduction" href="index.html" />
+    <link rel="next" title="General" href="../general/index.html" />
+    <link rel="prev" title="Use-case and Deployment Scenarios" href="deployment-scenarios.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Examples of use-cases for Akka</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="../general/index.html">General</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="deployment-scenarios.html">Use-case and Deployment Scenarios</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="examples-of-use-cases-for-akka">
+<span id="use-cases"></span><h1>Examples of use-cases for Akka</h1>
+<p>We see Akka being adopted by many large organizations in a big range of industries
+all from investment and merchant banking, retail and social media, simulation,
+gaming and betting, automobile and traffic systems, health care, data analytics
+and much more. Any system that have the need for high-throughput and low latency
+is a good candidate for using Akka.</p>
+<p>There is a great discussion on use-cases for Akka with some good write-ups by production
+users <a class="reference external" href="http://stackoverflow.com/questions/4493001/good-use-case-for-akka/4494512#4494512">here</a></p>
+<div class="section" id="here-are-some-of-the-areas-where-akka-is-being-deployed-into-production">
+<h2>Here are some of the areas where Akka is being deployed into production</h2>
+<div class="section" id="transaction-processing-online-gaming-finance-banking-trading-statistics-betting-social-media-telecom">
+<h3>Transaction processing (Online Gaming, Finance/Banking, Trading, Statistics, Betting, Social Media, Telecom)</h3>
+<blockquote>
+<div>Scale up, scale out, fault-tolerance / HA</div></blockquote>
+</div>
+<div class="section" id="service-backend-any-industry-any-app">
+<h3>Service backend (any industry, any app)</h3>
+<blockquote>
+<div>Service REST, SOAP, Cometd, WebSockets etc
+Act as message hub / integration layer
+Scale up, scale out, fault-tolerance / HA</div></blockquote>
+</div>
+<div class="section" id="concurrency-parallelism-any-app">
+<h3>Concurrency/parallelism (any app)</h3>
+<blockquote>
+<div>Correct
+Simple to work with and understand
+Just add the jars to your existing JVM project (use Scala, Java, Groovy or JRuby)</div></blockquote>
+</div>
+<div class="section" id="simulation">
+<h3>Simulation</h3>
+<blockquote>
+<div>Master/Worker, Compute Grid, MapReduce etc.</div></blockquote>
+</div>
+<div class="section" id="batch-processing-any-industry">
+<h3>Batch processing (any industry)</h3>
+<blockquote>
+<div>Camel integration to hook up with batch data sources
+Actors divide and conquer the batch workloads</div></blockquote>
+</div>
+<div class="section" id="communications-hub-telecom-web-media-mobile-media">
+<h3>Communications Hub (Telecom, Web media, Mobile media)</h3>
+<blockquote>
+<div>Scale up, scale out, fault-tolerance / HA</div></blockquote>
+</div>
+<div class="section" id="gaming-and-betting-mom-online-gaming-betting">
+<h3>Gaming and Betting (MOM, online gaming, betting)</h3>
+<blockquote>
+<div>Scale up, scale out, fault-tolerance / HA</div></blockquote>
+</div>
+<div class="section" id="business-intelligence-data-mining-general-purpose-crunching">
+<h3>Business Intelligence/Data Mining/general purpose crunching</h3>
+<blockquote>
+<div>Scale up, scale out, fault-tolerance / HA</div></blockquote>
+</div>
+<div class="section" id="complex-event-stream-processing">
+<h3>Complex Event Stream Processing</h3>
+<blockquote>
+<div>Scale up, scale out, fault-tolerance / HA</div></blockquote>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

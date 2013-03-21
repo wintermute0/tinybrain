@@ -1,0 +1,444 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Logging (Scala) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Scala API" href="index.html" />
+    <link rel="next" title="Event Bus (Scala)" href="event-bus.html" />
+    <link rel="prev" title="Typed Actors (Scala)" href="typed-actors.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Logging (Scala)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="event-bus.html">Event Bus (Scala)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="typed-actors.html">Typed Actors (Scala)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="logging-scala">
+<span id="id1"></span><h1>Logging (Scala)</h1>
+<div class="section" id="how-to-log">
+<h2>How to Log</h2>
+<p>Create a <tt class="docutils literal"><span class="pre">LoggingAdapter</span></tt> and use the <tt class="docutils literal"><span class="pre">error</span></tt>, <tt class="docutils literal"><span class="pre">warning</span></tt>, <tt class="docutils literal"><span class="pre">info</span></tt>, or <tt class="docutils literal"><span class="pre">debug</span></tt> methods,
+as illustrated in this example:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.event.Logging</span>
+
+<span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">,</span> <span class="k">this</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="n">preStart</span><span class="o">()</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="s">&quot;Starting&quot;</span><span class="o">)</span>
+  <span class="o">}</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="n">preRestart</span><span class="o">(</span><span class="n">reason</span><span class="k">:</span> <span class="kt">Throwable</span><span class="o">,</span> <span class="n">message</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Any</span><span class="o">])</span> <span class="o">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="n">reason</span><span class="o">,</span> <span class="s">&quot;Restarting due to [{}] when processing [{}]&quot;</span><span class="o">,</span>
+      <span class="n">reason</span><span class="o">.</span><span class="n">getMessage</span><span class="o">,</span> <span class="n">message</span><span class="o">.</span><span class="n">getOrElse</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">))</span>
+  <span class="o">}</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="s">&quot;test&quot;</span> <span class="k">⇒</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">&quot;Received test&quot;</span><span class="o">)</span>
+    <span class="k">case</span> <span class="n">x</span>      <span class="k">⇒</span> <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="o">(</span><span class="s">&quot;Received unknown message: {}&quot;</span><span class="o">,</span> <span class="n">x</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>For convenience you can mixin the <tt class="docutils literal"><span class="pre">log</span></tt> member into actors, instead of defining it as above.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="k">with</span> <span class="n">akka</span><span class="o">.</span><span class="n">actor</span><span class="o">.</span><span class="nc">ActorLogging</span> <span class="o">{</span>
+  <span class="o">...</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The second parameter to the <tt class="docutils literal"><span class="pre">Logging</span></tt> is the source of this logging channel.
+The source object is translated to a String according to the following rules:</p>
+<blockquote>
+<div><ul class="simple">
+<li>if it is an Actor or ActorRef, its path is used</li>
+<li>in case of a String it is used as is</li>
+<li>in case of a class an approximation of its simpleName</li>
+<li>and in all other cases a compile error occurs unless and implicit
+<tt class="xref py py-class docutils literal"><span class="pre">LogSource[T]</span></tt> is in scope for the type in question.</li>
+</ul>
+</div></blockquote>
+<p>The log message may contain argument placeholders <tt class="docutils literal"><span class="pre">{}</span></tt>, which will be
+substituted if the log level is enabled. Giving more arguments as there are
+placeholders results in a warning being appended to the log statement (i.e. on
+the same line with the same severity). You may pass a Java array as the only
+substitution argument to have its elements be treated individually:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">args</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">(</span><span class="s">&quot;The&quot;</span><span class="o">,</span> <span class="s">&quot;brown&quot;</span><span class="o">,</span> <span class="s">&quot;fox&quot;</span><span class="o">,</span> <span class="s">&quot;jumps&quot;</span><span class="o">,</span> <span class="mi">42</span><span class="o">)</span>
+<span class="n">system</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="s">&quot;five parameters: {}, {}, {}, {}, {}&quot;</span><span class="o">,</span> <span class="n">args</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The Java <tt class="xref py py-class docutils literal"><span class="pre">Class</span></tt> of the log source is also included in the generated
+<tt class="xref py py-class docutils literal"><span class="pre">LogEvent</span></tt>. In case of a simple string this is replaced with a “marker”
+class <tt class="xref py py-class docutils literal"><span class="pre">akka.event.DummyClassForStringSources</span></tt> in order to allow special
+treatment of this case, e.g. in the SLF4J event listener which will then use
+the string instead of the class’ name for looking up the logger instance to
+use.</p>
+<div class="section" id="auxiliary-logging-options">
+<h3>Auxiliary logging options</h3>
+<p>Akka has a couple of configuration options for very low level debugging, that makes most sense in
+for developers and not for operations.</p>
+<p>You almost definitely need to have logging set to DEBUG to use any of the options below:</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span> <span class="p">{</span>
+  <span class="n">loglevel</span> <span class="o">=</span> <span class="no">DEBUG</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This config option is very good if you want to know what config settings are loaded by Akka:</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span> <span class="p">{</span>
+  <span class="c1"># Log the complete configuration at INFO level when the actor system is started.</span>
+  <span class="c1"># This is useful when you are uncertain of what configuration is used.</span>
+  <span class="n">log</span><span class="o">-</span><span class="n">config</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">start</span> <span class="o">=</span> <span class="n">on</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you want very detailed logging of all user-level messages that are processed
+by Actors that use akka.event.LoggingReceive:</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span> <span class="p">{</span>
+  <span class="n">actor</span> <span class="p">{</span>
+    <span class="n">debug</span> <span class="p">{</span>
+      <span class="c1"># enable function of LoggingReceive, which is to log any received message at</span>
+      <span class="c1"># DEBUG level</span>
+      <span class="n">receive</span> <span class="o">=</span> <span class="n">on</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you want very detailed logging of all automatically received messages that are processed
+by Actors:</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span> <span class="p">{</span>
+  <span class="n">actor</span> <span class="p">{</span>
+    <span class="n">debug</span> <span class="p">{</span>
+      <span class="c1"># enable DEBUG logging of all AutoReceiveMessages (Kill, PoisonPill and the like)</span>
+      <span class="n">autoreceive</span> <span class="o">=</span> <span class="n">on</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you want very detailed logging of all lifecycle changes of Actors (restarts, deaths etc):</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span> <span class="p">{</span>
+  <span class="n">actor</span> <span class="p">{</span>
+    <span class="n">debug</span> <span class="p">{</span>
+      <span class="c1"># enable DEBUG logging of actor lifecycle changes</span>
+      <span class="n">lifecycle</span> <span class="o">=</span> <span class="n">on</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you want very detailed logging of all events, transitions and timers of FSM Actors that extend LoggingFSM:</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span> <span class="p">{</span>
+  <span class="n">actor</span> <span class="p">{</span>
+    <span class="n">debug</span> <span class="p">{</span>
+      <span class="c1"># enable DEBUG logging of all LoggingFSMs for events, transitions and timers</span>
+      <span class="n">fsm</span> <span class="o">=</span> <span class="n">on</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you want to monitor subscriptions (subscribe/unsubscribe) on the ActorSystem.eventStream:</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span> <span class="p">{</span>
+  <span class="n">actor</span> <span class="p">{</span>
+    <span class="n">debug</span> <span class="p">{</span>
+      <span class="c1"># enable DEBUG logging of subscription changes on the eventStream</span>
+      <span class="n">event</span><span class="o">-</span><span class="n">stream</span> <span class="o">=</span> <span class="n">on</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="auxiliary-remote-logging-options">
+<h3>Auxiliary remote logging options</h3>
+<p>If you want to see all messages that are sent through remoting at DEBUG log level:
+(This is logged as they are sent by the transport layer, not by the Actor)</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span> <span class="p">{</span>
+  <span class="n">remote</span> <span class="p">{</span>
+    <span class="c1"># If this is &quot;on&quot;, Akka will log all outbound messages at DEBUG level, if off then they are not logged</span>
+    <span class="n">log</span><span class="o">-</span><span class="n">sent</span><span class="o">-</span><span class="n">messages</span> <span class="o">=</span> <span class="n">on</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you want to see all messages that are received through remoting at DEBUG log level:
+(This is logged as they are received by the transport layer, not by any Actor)</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span> <span class="p">{</span>
+  <span class="n">remote</span> <span class="p">{</span>
+    <span class="c1"># If this is &quot;on&quot;, Akka will log all inbound messages at DEBUG level, if off then they are not logged</span>
+    <span class="n">log</span><span class="o">-</span><span class="n">received</span><span class="o">-</span><span class="n">messages</span> <span class="o">=</span> <span class="n">on</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Also see the logging options for TestKit: <a class="reference internal" href="testing.html#actor-logging"><em>Tracing Actor Invocations</em></a>.</p>
+</div>
+<div class="section" id="translating-log-source-to-string-and-class">
+<h3>Translating Log Source to String and Class</h3>
+<p>The rules for translating the source object to the source string and class
+which are inserted into the <tt class="xref py py-class docutils literal"><span class="pre">LogEvent</span></tt> during runtime are implemented
+using implicit parameters and thus fully customizable: simply create your own
+instance of <tt class="xref py py-class docutils literal"><span class="pre">LogSource[T]</span></tt> and have it in scope when creating the
+logger.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.event.LogSource</span>
+<span class="k">import</span> <span class="nn">akka.actor.ActorSystem</span>
+
+<span class="k">object</span> <span class="nc">MyType</span> <span class="o">{</span>
+  <span class="k">implicit</span> <span class="k">val</span> <span class="n">logSource</span><span class="k">:</span> <span class="kt">LogSource</span><span class="o">[</span><span class="kt">AnyRef</span><span class="o">]</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">LogSource</span><span class="o">[</span><span class="kt">AnyRef</span><span class="o">]</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">genString</span><span class="o">(</span><span class="n">o</span><span class="k">:</span> <span class="kt">AnyRef</span><span class="o">)</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">getClass</span><span class="o">.</span><span class="n">getName</span>
+    <span class="k">override</span> <span class="k">def</span> <span class="n">getClazz</span><span class="o">(</span><span class="n">o</span><span class="k">:</span> <span class="kt">AnyRef</span><span class="o">)</span><span class="k">:</span> <span class="kt">Class</span><span class="o">[</span><span class="k">_</span><span class="o">]</span> <span class="k">=</span> <span class="n">o</span><span class="o">.</span><span class="n">getClass</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="k">class</span> <span class="nc">MyType</span><span class="o">(</span><span class="n">system</span><span class="k">:</span> <span class="kt">ActorSystem</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">MyType._</span>
+  <span class="k">import</span> <span class="nn">akka.event.Logging</span>
+
+  <span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">system</span><span class="o">,</span> <span class="k">this</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>This example creates a log source which mimics traditional usage of Java
+loggers, which are based upon the originating object’s class name as log
+category. The override of <tt class="xref py py-meth docutils literal"><span class="pre">getClazz</span></tt> is only included for demonstration
+purposes as it contains exactly the default behavior.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>You may also create the string representation up front and pass that in as
+the log source, but be aware that then the <tt class="xref py py-class docutils literal"><span class="pre">Class[_]</span></tt> which will be
+put in the <tt class="xref py py-class docutils literal"><span class="pre">LogEvent</span></tt> is
+<tt class="xref py py-class docutils literal"><span class="pre">akka.event.DummyClassForStringSources</span></tt>.</p>
+<p class="last">The SLF4J event listener treats this case specially (using the actual string
+to look up the logger instance to use instead of the class’ name), and you
+might want to do this also in case you implement your own logging adapter.</p>
+</div>
+</div>
+</div>
+<div class="section" id="event-handler">
+<h2>Event Handler</h2>
+<p>Logging is performed asynchronously through an event bus. You can configure
+which event handlers that should subscribe to the logging events. That is done
+using the <tt class="docutils literal"><span class="pre">event-handlers</span></tt> element in the <a class="reference internal" href="../general/configuration.html#configuration"><em>Configuration</em></a>.  Here you can
+also define the log level.</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span> <span class="p">{</span>
+  <span class="c1"># Event handlers to register at boot time (Logging$DefaultLogger logs to STDOUT)</span>
+  <span class="n">event</span><span class="o">-</span><span class="n">handlers</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;akka.event.Logging$DefaultLogger&quot;</span><span class="o">]</span>
+  <span class="c1"># Options: ERROR, WARNING, INFO, DEBUG</span>
+  <span class="n">loglevel</span> <span class="o">=</span> <span class="s2">&quot;DEBUG&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The default one logs to STDOUT and is registered by default. It is not intended
+to be used for production. There is also an <a class="reference internal" href="#slf4j-scala"><em>SLF4J</em></a>
+event handler available in the 'akka-slf4j' module.</p>
+<p>Example of creating a listener:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.event.Logging.InitializeLogger</span>
+<span class="k">import</span> <span class="nn">akka.event.Logging.LoggerInitialized</span>
+<span class="k">import</span> <span class="nn">akka.event.Logging.Error</span>
+<span class="k">import</span> <span class="nn">akka.event.Logging.Warning</span>
+<span class="k">import</span> <span class="nn">akka.event.Logging.Info</span>
+<span class="k">import</span> <span class="nn">akka.event.Logging.Debug</span>
+
+<span class="k">class</span> <span class="nc">MyEventListener</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">InitializeLogger</span><span class="o">(</span><span class="n">_</span><span class="o">)</span>                        <span class="k">⇒</span> <span class="n">sender</span> <span class="o">!</span> <span class="nc">LoggerInitialized</span>
+    <span class="k">case</span> <span class="nc">Error</span><span class="o">(</span><span class="n">cause</span><span class="o">,</span> <span class="n">logSource</span><span class="o">,</span> <span class="n">logClass</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">⇒</span> <span class="c1">// ...</span>
+    <span class="k">case</span> <span class="nc">Warning</span><span class="o">(</span><span class="n">logSource</span><span class="o">,</span> <span class="n">logClass</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>      <span class="k">⇒</span> <span class="c1">// ...</span>
+    <span class="k">case</span> <span class="nc">Info</span><span class="o">(</span><span class="n">logSource</span><span class="o">,</span> <span class="n">logClass</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>         <span class="k">⇒</span> <span class="c1">// ...</span>
+    <span class="k">case</span> <span class="nc">Debug</span><span class="o">(</span><span class="n">logSource</span><span class="o">,</span> <span class="n">logClass</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>        <span class="k">⇒</span> <span class="c1">// ...</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="slf4j">
+<span id="slf4j-scala"></span><h2>SLF4J</h2>
+<p>Akka provides an event handler for <a class="reference external" href="http://www.slf4j.org/">SL4FJ</a>. This module is available in the 'akka-slf4j.jar'.
+It has one single dependency; the slf4j-api jar. In runtime you also need a SLF4J backend, we recommend <a class="reference external" href="http://logback.qos.ch/">Logback</a>:</p>
+<blockquote>
+<div><div class="highlight-scala"><div class="highlight"><pre><span class="k">lazy</span> <span class="k">val</span> <span class="n">logback</span> <span class="k">=</span> <span class="s">&quot;ch.qos.logback&quot;</span> <span class="o">%</span> <span class="s">&quot;logback-classic&quot;</span> <span class="o">%</span> <span class="s">&quot;1.0.0&quot;</span> <span class="o">%</span> <span class="s">&quot;runtime&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>You need to enable the Slf4jEventHandler in the 'event-handlers' element in
+the <a class="reference internal" href="../general/configuration.html#configuration"><em>Configuration</em></a>. Here you can also define the log level of the event bus.
+More fine grained log levels can be defined in the configuration of the SLF4J backend
+(e.g. logback.xml).</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">akka</span> <span class="p">{</span>
+  <span class="n">event</span><span class="o">-</span><span class="n">handlers</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;akka.event.slf4j.Slf4jEventHandler&quot;</span><span class="o">]</span>
+  <span class="n">loglevel</span> <span class="o">=</span> <span class="s2">&quot;DEBUG&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The SLF4J logger selected for each log event is chosen based on the
+<tt class="xref py py-class docutils literal"><span class="pre">Class[_]</span></tt> of the log source specified when creating the
+<tt class="xref py py-class docutils literal"><span class="pre">LoggingAdapter</span></tt>, unless that was given directly as a string in which
+case that string is used (i.e. <tt class="docutils literal"><span class="pre">LoggerFactory.getLogger(c:</span> <span class="pre">Class[_])</span></tt> is used in
+the first case and <tt class="docutils literal"><span class="pre">LoggerFactory.getLogger(s:</span> <span class="pre">String)</span></tt> in the second).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Beware that the the actor system’s name is appended to a <tt class="xref py py-class docutils literal"><span class="pre">String</span></tt> log
+source if the LoggingAdapter was created giving an <tt class="xref py py-class docutils literal"><span class="pre">ActorSystem</span></tt> to
+the factory. If this is not intended, give a <tt class="xref py py-class docutils literal"><span class="pre">LoggingBus</span></tt> instead as
+shown below:</p>
+</div>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">,</span> <span class="s">&quot;my.nice.string&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="section" id="logging-thread-and-akka-source-in-mdc">
+<h3>Logging Thread and Akka Source in MDC</h3>
+<p>Since the logging is done asynchronously the thread in which the logging was performed is captured in
+Mapped Diagnostic Context (MDC) with attribute name <tt class="docutils literal"><span class="pre">sourceThread</span></tt>.
+With Logback the thread name is available with <tt class="docutils literal"><span class="pre">%X{sourceThread}</span></tt> specifier within the pattern layout configuration:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">appender</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;STDOUT&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;ch.qos.logback.core.ConsoleAppender&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">encoder</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">pattern</span><span class="o">&gt;%</span><span class="n">date</span><span class="o">{</span><span class="nc">ISO8601</span><span class="o">}</span> <span class="o">%-</span><span class="mi">5</span><span class="n">level</span> <span class="o">%</span><span class="n">logger</span><span class="o">{</span><span class="mi">36</span><span class="o">}</span> <span class="o">%</span><span class="n">X</span><span class="o">{</span><span class="n">sourceThread</span><span class="o">}</span> <span class="o">-</span> <span class="o">%</span><span class="n">msg</span><span class="o">%</span><span class="n">n</span><span class="o">&lt;/</span><span class="n">pattern</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">encoder</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">appender</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It will probably be a good idea to use the <tt class="docutils literal"><span class="pre">sourceThread</span></tt> MDC value also in
+non-Akka parts of the application in order to have this property consistently
+available in the logs.</p>
+</div>
+<p>Another helpful facility is that Akka captures the actor’s address when
+instantiating a logger within it, meaning that the full instance identification
+is available for associating log messages e.g. with members of a router. This
+information is available in the MDC with attribute name <tt class="docutils literal"><span class="pre">akkaSource</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">appender</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;STDOUT&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;ch.qos.logback.core.ConsoleAppender&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">encoder</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">pattern</span><span class="o">&gt;%</span><span class="n">date</span><span class="o">{</span><span class="nc">ISO8601</span><span class="o">}</span> <span class="o">%-</span><span class="mi">5</span><span class="n">level</span> <span class="o">%</span><span class="n">logger</span><span class="o">{</span><span class="mi">36</span><span class="o">}</span> <span class="o">%</span><span class="n">X</span><span class="o">{</span><span class="n">akkaSource</span><span class="o">}</span> <span class="o">-</span> <span class="o">%</span><span class="n">msg</span><span class="o">%</span><span class="n">n</span><span class="o">&lt;/</span><span class="n">pattern</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">encoder</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">appender</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>For more details on what this attribute contains—also for non-actors—please see
+<a class="reference internal" href="#how-to-log">How to Log</a>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

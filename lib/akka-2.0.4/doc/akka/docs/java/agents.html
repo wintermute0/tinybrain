@@ -1,0 +1,240 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Agents (Java) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Java API" href="index.html" />
+    <link rel="next" title="Transactors (Java)" href="transactors.html" />
+    <link rel="prev" title="Software Transactional Memory (Java)" href="stm.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Agents (Java)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="transactors.html">Transactors (Java)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="stm.html">Software Transactional Memory (Java)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="agents-java">
+<span id="id1"></span><h1>Agents (Java)</h1>
+<p>Agents in Akka are inspired by <a class="reference external" href="http://clojure.org/agents">agents in Clojure</a>.</p>
+<p>Agents provide asynchronous change of individual locations. Agents are bound to
+a single storage location for their lifetime, and only allow mutation of that
+location (to a new state) to occur as a result of an action. Update actions are
+functions that are asynchronously applied to the Agent's state and whose return
+value becomes the Agent's new state. The state of an Agent should be immutable.</p>
+<p>While updates to Agents are asynchronous, the state of an Agent is always
+immediately available for reading by any thread (using <tt class="docutils literal"><span class="pre">get</span></tt>) without any
+messages.</p>
+<p>Agents are reactive. The update actions of all Agents get interleaved amongst
+threads in a thread pool. At any point in time, at most one <tt class="docutils literal"><span class="pre">send</span></tt> action for
+each Agent is being executed. Actions dispatched to an agent from another thread
+will occur in the order they were sent, potentially interleaved with actions
+dispatched to the same agent from other sources.</p>
+<p>If an Agent is used within an enclosing transaction, then it will participate in
+that transaction. Agents are integrated with the STM - any dispatches made in
+a transaction are held until that transaction commits, and are discarded if it
+is retried or aborted.</p>
+<div class="section" id="creating-and-stopping-agents">
+<h2>Creating and stopping Agents</h2>
+<p>Agents are created by invoking <tt class="docutils literal"><span class="pre">new</span> <span class="pre">Agent(value,</span> <span class="pre">system)</span></tt> passing in the
+Agent's initial value and a reference to the <tt class="docutils literal"><span class="pre">ActorSystem</span></tt> for your
+application. An <tt class="docutils literal"><span class="pre">ActorSystem</span></tt> is required to create the underlying Actors. See
+<a class="reference internal" href="../general/actor-systems.html#actor-systems"><em>Actor Systems</em></a> for more information about actor systems.</p>
+<p>Here is an example of creating an Agent:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">akka.actor.ActorSystem</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">akka.agent.Agent</span><span class="o">;</span>
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">ActorSystem</span> <span class="n">system</span> <span class="o">=</span> <span class="n">ActorSystem</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">&quot;app&quot;</span><span class="o">);</span>
+
+<span class="n">Agent</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">agent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Agent</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;(</span><span class="mi">5</span><span class="o">,</span> <span class="n">system</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>An Agent will be running until you invoke <tt class="docutils literal"><span class="pre">close</span></tt> on it. Then it will be
+eligible for garbage collection (unless you hold on to it in some way).</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">agent</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="updating-agents">
+<h2>Updating Agents</h2>
+<p>You update an Agent by sending a function that transforms the current value or
+by sending just a new value. The Agent will apply the new value or function
+atomically and asynchronously. The update is done in a fire-forget manner and
+you are only guaranteed that it will be applied. There is no guarantee of when
+the update will be applied but dispatches to an Agent from a single thread will
+occur in order. You apply a value or a function by invoking the <tt class="docutils literal"><span class="pre">send</span></tt>
+function.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">akka.japi.Function</span><span class="o">;</span>
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span class="c1">// send a value</span>
+<span class="n">agent</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="mi">7</span><span class="o">);</span>
+
+<span class="c1">// send a function</span>
+<span class="n">agent</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="k">new</span> <span class="n">Function</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;()</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">apply</span><span class="o">(</span><span class="n">Integer</span> <span class="n">i</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">});</span>
+</pre></div>
+</div>
+<p>You can also dispatch a function to update the internal state but on its own
+thread. This does not use the reactive thread pool and can be used for
+long-running or blocking operations. You do this with the <tt class="docutils literal"><span class="pre">sendOff</span></tt>
+method. Dispatches using either <tt class="docutils literal"><span class="pre">sendOff</span></tt> or <tt class="docutils literal"><span class="pre">send</span></tt> will still be executed
+in order.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="c1">// sendOff a function</span>
+<span class="n">agent</span><span class="o">.</span><span class="na">sendOff</span><span class="o">(</span><span class="n">longRunningOrBlockingFunction</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="reading-an-agent-s-value">
+<h2>Reading an Agent's value</h2>
+<p>Agents can be dereferenced (you can get an Agent's value) by calling the get
+method:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Integer</span> <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</pre></div>
+</div>
+<p>Reading an Agent's current value does not involve any message passing and
+happens immediately. So while updates to an Agent are asynchronous, reading the
+state of an Agent is synchronous.</p>
+</div>
+<div class="section" id="awaiting-an-agent-s-value">
+<h2>Awaiting an Agent's value</h2>
+<p>It is also possible to read the value after all currently queued sends have
+completed. You can do this with <tt class="docutils literal"><span class="pre">await</span></tt>:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">akka.util.Timeout</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">;</span>
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Integer</span> <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="na">await</span><span class="o">(</span><span class="k">new</span> <span class="n">Timeout</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="n">SECONDS</span><span class="o">));</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

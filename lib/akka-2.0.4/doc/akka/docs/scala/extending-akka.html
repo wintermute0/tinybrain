@@ -1,0 +1,274 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Akka Extensions (Scala) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Scala API" href="index.html" />
+    <link rel="next" title="ZeroMQ (Scala)" href="zeromq.html" />
+    <link rel="prev" title="TestKit Example (Scala)" href="testkit-example.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Akka Extensions (Scala)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="zeromq.html">ZeroMQ (Scala)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="testkit-example.html">TestKit Example (Scala)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="akka-extensions-scala">
+<span id="extending-akka-scala"></span><h1>Akka Extensions (Scala)</h1>
+<p>If you want to add features to Akka, there is a very elegant, but powerful mechanism for doing so.
+It's called Akka Extensions and is comprised of 2 basic components: an <tt class="docutils literal"><span class="pre">Extension</span></tt> and an <tt class="docutils literal"><span class="pre">ExtensionId</span></tt>.</p>
+<p>Extensions will only be loaded once per <tt class="docutils literal"><span class="pre">ActorSystem</span></tt>, which will be managed by Akka.
+You can choose to have your Extension loaded on-demand or at <tt class="docutils literal"><span class="pre">ActorSystem</span></tt> creation time through the Akka configuration.
+Details on how to make that happens are below, in the &quot;Loading from Configuration&quot; section.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Since an extension is a way to hook into Akka itself, the implementor of the extension needs to
+ensure the thread safety of his/her extension.</p>
+</div>
+<div class="section" id="building-an-extension">
+<h2>Building an Extension</h2>
+<p>So let's create a sample extension that just lets us count the number of times something has happened.</p>
+<p>First, we define what our <tt class="docutils literal"><span class="pre">Extension</span></tt> should do:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.Extension</span>
+
+<span class="k">class</span> <span class="nc">CountExtensionImpl</span> <span class="k">extends</span> <span class="nc">Extension</span> <span class="o">{</span>
+  <span class="c1">//Since this Extension is a shared instance</span>
+  <span class="c1">// per ActorSystem we need to be threadsafe</span>
+  <span class="k">private</span> <span class="k">val</span> <span class="n">counter</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AtomicLong</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+
+  <span class="c1">//This is the operation this Extension provides</span>
+  <span class="k">def</span> <span class="n">increment</span><span class="o">()</span> <span class="k">=</span> <span class="n">counter</span><span class="o">.</span><span class="n">incrementAndGet</span><span class="o">()</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Then we need to create an <tt class="docutils literal"><span class="pre">ExtensionId</span></tt> for our extension so we can grab ahold of it.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.ExtensionId</span>
+<span class="k">import</span> <span class="nn">akka.actor.ExtensionIdProvider</span>
+<span class="k">import</span> <span class="nn">akka.actor.ExtendedActorSystem</span>
+
+<span class="k">object</span> <span class="nc">CountExtension</span>
+  <span class="k">extends</span> <span class="nc">ExtensionId</span><span class="o">[</span><span class="kt">CountExtensionImpl</span><span class="o">]</span>
+  <span class="k">with</span> <span class="nc">ExtensionIdProvider</span> <span class="o">{</span>
+  <span class="c1">//The lookup method is required by ExtensionIdProvider,</span>
+  <span class="c1">// so we return ourselves here, this allows us</span>
+  <span class="c1">// to configure our extension to be loaded when</span>
+  <span class="c1">// the ActorSystem starts up</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="n">lookup</span> <span class="k">=</span> <span class="nc">CountExtension</span>
+
+  <span class="c1">//This method will be called by Akka</span>
+  <span class="c1">// to instantiate our Extension</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="n">createExtension</span><span class="o">(</span><span class="n">system</span><span class="k">:</span> <span class="kt">ExtendedActorSystem</span><span class="o">)</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">CountExtensionImpl</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Wicked! Now all we need to do is to actually use it:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">CountExtension</span><span class="o">(</span><span class="n">system</span><span class="o">).</span><span class="n">increment</span>
+</pre></div>
+</div>
+<p>Or from inside of an Akka Actor:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">someMessage</span> <span class="k">⇒</span>
+      <span class="nc">CountExtension</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">).</span><span class="n">increment</span><span class="o">()</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>You can also hide extension behind traits:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">trait</span> <span class="nc">Counting</span> <span class="o">{</span> <span class="n">self</span><span class="k">:</span> <span class="kt">Actor</span> <span class="k">⇒</span>
+  <span class="kt">def</span> <span class="kt">increment</span><span class="o">()</span> <span class="o">=</span> <span class="nc">CountExtension</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">).</span><span class="n">increment</span><span class="o">()</span>
+<span class="o">}</span>
+<span class="k">class</span> <span class="nc">MyCounterActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="k">with</span> <span class="nc">Counting</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">someMessage</span> <span class="k">⇒</span> <span class="n">increment</span><span class="o">()</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>That's all there is to it!</p>
+</div>
+<div class="section" id="loading-from-configuration">
+<h2>Loading from Configuration</h2>
+<p>To be able to load extensions from your Akka configuration you must add FQCNs of implementations of either <tt class="docutils literal"><span class="pre">ExtensionId</span></tt> or <tt class="docutils literal"><span class="pre">ExtensionIdProvider</span></tt>
+in the <tt class="docutils literal"><span class="pre">akka.extensions</span></tt> section of the config you provide to your <tt class="docutils literal"><span class="pre">ActorSystem</span></tt>.</p>
+<div class="highlight-scala"><pre>akka {
+  extensions = ["akka.docs.extension.CountExtension$"]
+}
+</pre>
+</div>
+<p>Note that in this case <tt class="docutils literal"><span class="pre">CountExtension</span></tt> is an object and therefore the class name ends with <tt class="docutils literal"><span class="pre">$</span></tt>.</p>
+</div>
+<div class="section" id="applicability">
+<h2>Applicability</h2>
+<p>The sky is the limit!
+By the way, did you know that Akka's <tt class="docutils literal"><span class="pre">Typed</span> <span class="pre">Actors</span></tt>, <tt class="docutils literal"><span class="pre">Serialization</span></tt> and other features are implemented as Akka Extensions?</p>
+<div class="section" id="application-specific-settings">
+<span id="extending-akka-scala-settings"></span><h3>Application specific settings</h3>
+<p>The <a class="reference internal" href="../general/configuration.html#configuration"><em>Configuration</em></a> can be used for application specific settings. A good practice is to place those settings in an Extension.</p>
+<p>Sample configuration:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">myapp</span> <span class="o">{</span>
+  <span class="n">db</span> <span class="o">{</span>
+    <span class="n">uri</span> <span class="k">=</span> <span class="s">&quot;mongodb://example1.com:27017,example2.com:27017&quot;</span>
+  <span class="o">}</span>
+  <span class="n">circuit</span><span class="o">-</span><span class="n">breaker</span> <span class="o">{</span>
+    <span class="n">timeout</span> <span class="k">=</span> <span class="mi">30</span> <span class="n">seconds</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">Extension</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.Extension</span>
+<span class="k">import</span> <span class="nn">akka.actor.ExtensionId</span>
+<span class="k">import</span> <span class="nn">akka.actor.ExtensionIdProvider</span>
+<span class="k">import</span> <span class="nn">akka.actor.ExtendedActorSystem</span>
+<span class="k">import</span> <span class="nn">akka.util.Duration</span>
+<span class="k">import</span> <span class="nn">com.typesafe.config.Config</span>
+<span class="k">import</span> <span class="nn">java.util.concurrent.TimeUnit</span>
+
+<span class="k">class</span> <span class="nc">SettingsImpl</span><span class="o">(</span><span class="n">config</span><span class="k">:</span> <span class="kt">Config</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Extension</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nc">DbUri</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getString</span><span class="o">(</span><span class="s">&quot;myapp.db.uri&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="nc">CircuitBreakerTimeout</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="nc">Duration</span><span class="o">(</span><span class="n">config</span><span class="o">.</span><span class="n">getMilliseconds</span><span class="o">(</span><span class="s">&quot;myapp.circuit-breaker.timeout&quot;</span><span class="o">),</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="nc">MILLISECONDS</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="k">object</span> <span class="nc">Settings</span> <span class="k">extends</span> <span class="nc">ExtensionId</span><span class="o">[</span><span class="kt">SettingsImpl</span><span class="o">]</span> <span class="k">with</span> <span class="nc">ExtensionIdProvider</span> <span class="o">{</span>
+
+  <span class="k">override</span> <span class="k">def</span> <span class="n">lookup</span> <span class="k">=</span> <span class="nc">Settings</span>
+
+  <span class="k">override</span> <span class="k">def</span> <span class="n">createExtension</span><span class="o">(</span><span class="n">system</span><span class="k">:</span> <span class="kt">ExtendedActorSystem</span><span class="o">)</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SettingsImpl</span><span class="o">(</span><span class="n">system</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Use it:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">settings</span> <span class="k">=</span> <span class="nc">Settings</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">connection</span> <span class="k">=</span> <span class="n">connect</span><span class="o">(</span><span class="n">settings</span><span class="o">.</span><span class="nc">DbUri</span><span class="o">,</span> <span class="n">settings</span><span class="o">.</span><span class="nc">CircuitBreakerTimeout</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

@@ -1,0 +1,317 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Scala API &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="next" title="Actors (Scala)" href="actors.html" />
+    <link rel="prev" title="Duration" href="../common/duration.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Scala API</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="actors.html">Actors (Scala)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="../common/duration.html">Duration</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="scala-api">
+<span id="id1"></span><h1>Scala API</h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#creating-actors">Creating Actors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#actor-api">Actor API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#identifying-actors">Identifying Actors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#messages-and-immutability">Messages and immutability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#send-messages">Send messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#receive-messages">Receive messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#reply-to-messages">Reply to messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#initial-receive-timeout">Initial receive timeout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#stopping-actors">Stopping actors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#become-unbecome">Become/Unbecome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#killing-an-actor">Killing an Actor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#actors-and-exceptions">Actors and exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#extending-actors-using-partialfunction-chaining">Extending Actors using PartialFunction chaining</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="typed-actors.html">Typed Actors (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#when-to-use-typed-actors">When to use Typed Actors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#the-tools-of-the-trade">The tools of the trade</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#creating-typed-actors">Creating Typed Actors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#method-dispatch-semantics">Method dispatch semantics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#messages-and-immutability">Messages and immutability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#stopping-typed-actors">Stopping Typed Actors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#typed-actor-hierarchies">Typed Actor Hierarchies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#supervisor-strategy">Supervisor Strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#lifecycle-callbacks">Lifecycle callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#receive-arbitrary-messages">Receive arbitrary messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#proxying">Proxying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#lookup-remoting">Lookup &amp; Remoting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typed-actors.html#supercharging">Supercharging</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="logging.html#how-to-log">How to Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logging.html#event-handler">Event Handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logging.html#slf4j">SLF4J</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="event-bus.html">Event Bus (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="event-bus.html#classifiers">Classifiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="event-bus.html#event-stream">Event Stream</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.html">Scheduler (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.html#some-examples">Some examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.html#from-akka-actor-actorsystem">From <tt class="docutils literal"><span class="pre">akka.actor.ActorSystem</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.html#the-scheduler-interface">The Scheduler interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.html#the-cancellable-interface">The Cancellable interface</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="futures.html">Futures (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="futures.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="futures.html#execution-contexts">Execution Contexts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="futures.html#use-with-actors">Use With Actors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="futures.html#use-directly">Use Directly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="futures.html#functional-futures">Functional Futures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="futures.html#callbacks">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="futures.html#define-ordering">Define Ordering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="futures.html#auxiliary-methods">Auxiliary Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="futures.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dataflow.html">Dataflow Concurrency (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dataflow.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataflow.html#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataflow.html#dataflow-variables">Dataflow Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataflow.html#dataflow-delimiter">Dataflow Delimiter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataflow.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fault-tolerance.html#fault-handling-in-practice">Fault Handling in Practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fault-tolerance.html#creating-a-supervisor-strategy">Creating a Supervisor Strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fault-tolerance.html#default-supervisor-strategy">Default Supervisor Strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fault-tolerance.html#test-application">Test Application</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dispatchers.html">Dispatchers (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dispatchers.html#default-dispatcher">Default dispatcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatchers.html#setting-the-dispatcher-for-an-actor">Setting the dispatcher for an Actor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatchers.html#types-of-dispatchers">Types of dispatchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatchers.html#mailboxes">Mailboxes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="routing.html">Routing (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="routing.html#routers-in-action">Routers In Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing.html#how-routing-is-designed-within-akka">How Routing is Designed within Akka</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing.html#routers-vs-supervision">Routers vs. Supervision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing.html#router-usage">Router usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing.html#broadcast-messages">Broadcast Messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing.html#dynamically-resizable-routers">Dynamically Resizable Routers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing.html#custom-router">Custom Router</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing.html#configuring-dispatchers">Configuring Dispatchers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="remoting.html">Remoting (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="remoting.html#preparing-your-actorsystem-for-remoting">Preparing your ActorSystem for Remoting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remoting.html#types-of-remote-interaction">Types of Remote Interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remoting.html#looking-up-remote-actors">Looking up Remote Actors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remoting.html#creating-actors-remotely">Creating Actors Remotely</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remoting.html#serialization">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remoting.html#routers-with-remote-destinations">Routers with Remote Destinations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remoting.html#description-of-the-remoting-sample">Description of the Remoting Sample</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="serialization.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialization.html#customization">Customization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialization.html#a-word-about-java-serialization">A Word About Java Serialization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fsm.html">FSM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fsm.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fsm.html#a-simple-example">A Simple Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fsm.html#reference">Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fsm.html#testing-and-debugging-finite-state-machines">Testing and Debugging Finite State Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fsm.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stm.html">Software Transactional Memory (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="stm.html#overview-of-stm">Overview of STM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stm.html#scala-stm">Scala STM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stm.html#persistent-datastructures">Persistent Datastructures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stm.html#integration-with-actors">Integration with Actors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="agents.html">Agents (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="agents.html#creating-and-stopping-agents">Creating and stopping Agents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agents.html#updating-agents">Updating Agents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agents.html#reading-an-agent-s-value">Reading an Agent's value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agents.html#awaiting-an-agent-s-value">Awaiting an Agent's value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agents.html#transactional-agents">Transactional Agents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agents.html#monadic-usage">Monadic usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transactors.html">Transactors (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="transactors.html#why-transactors">Why Transactors?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactors.html#actors-and-stm">Actors and STM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactors.html#coordinated-transactions">Coordinated transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactors.html#transactor">Transactor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">IO (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="io.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="io.html#components">Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="io.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing Actor Systems (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testkit-example.html">TestKit Example (Scala)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#unit-testing-with-testactorref">Unit Testing with <tt class="docutils literal"><span class="pre">TestActorRef</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#integration-testing-with-testkit">Integration Testing with <tt class="docutils literal"><span class="pre">TestKit</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#callingthreaddispatcher">CallingThreadDispatcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#tracing-actor-invocations">Tracing Actor Invocations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="extending-akka.html">Akka Extensions (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="extending-akka.html#building-an-extension">Building an Extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending-akka.html#loading-from-configuration">Loading from Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending-akka.html#applicability">Applicability</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="zeromq.html">ZeroMQ (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="zeromq.html#connection">Connection</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="microkernel.html">Microkernel (Scala)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="microkernel.html#distribution-of-microkernel-application">Distribution of microkernel application</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

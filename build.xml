@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<project name="Word Embedding Trainer" basedir=".">
+	<property name="dist.dir" value="dist" />
+	<property name="compile.destdir" value="${dist.dir}/build" />
+
+	<path id="compile.classpath">
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="compile">
+		<mkdir dir="${compile.destdir}" />
+		<javac destdir="${compile.destdir}" includeantruntime="true" encoding="utf8" debug="true" debuglevel="lines,vars,source">
+			<classpath refid="compile.classpath" />
+
+			<src path="ann" />
+			<src path="commons_ml" />
+			<src path="distributed_computer" />
+			<src path="wiki_analyzer" />
+			<src path="word_embedding_trainer" />
+			<src path="softmax_loglikelyhood_multi_probability_classification" />
+
+			<include name="**/src/main/**/*.java" />
+			<exclude name="**/src/tests/**/*.java" />
+		</javac>
+	</target>
+
+	<target name="dist" depends="compile">
+		<manifestclasspath property="jar.classpath" jarfile="word_embedding_trainer.jar">
+			<classpath refid="compile.classpath" />
+		</manifestclasspath>
+		<jar destfile="${dist.dir}/word_embedding_trainer.jar">
+			<fileset dir="${compile.destdir}" />
+			<fileset dir="word_embedding_trainer/dist" />
+			<manifest>
+				<!-- <attribute name="Main-Class" value="yatan.deeplearning.wordembedding.WordEmbeddingTrainer" /> -->
+				<attribute name="Class-Path" value="${jar.classpath}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="deploy" depends="dist">
+		<ftp server="10.3.7.38" port="21" userid="ericwu" account="ericwu" password="topcoder" remotedir="word_embedding" verbose="true">
+			<fileset file="${dist.dir}/word_embedding_trainer.jar" />
+		</ftp>
+	</target>
+
+	<target name="clean">
+		<delete dir="${dist.dir}" />
+	</target>
+
+</project>

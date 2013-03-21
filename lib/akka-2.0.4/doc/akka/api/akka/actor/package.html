@@ -1,0 +1,1579 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.actor</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a></p>
+        <h1>actor</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actor</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.actor.AbstractExtensionId" data-isabs="true">
+      <a id="AbstractExtensionId:AbstractExtensionId[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AbstractExtensionId.html"><span class="name">AbstractExtensionId</span></a><span class="tparams">[<span name="T">T &lt;: Extension</span>]</span><span class="result"> extends ExtensionId[T]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Java API for ExtensionId
+</p>
+    </li><li visbl="pub" name="akka.actor.Actor" data-isabs="true">
+      <a id="Actor:Actor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Actor.html"><span class="name">Actor</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Actor base trait that should be extended by or mixed to create an Actor with the semantics of the 'Actor Model':
+<a href="http://en.wikipedia.org/wiki/Actor_model">http://en.</a href="http://en.wikipedia.org/wiki/Actor_model"></p>
+    </li><li visbl="pub" name="akka.actor.ActorContext" data-isabs="true">
+      <a id="ActorContext:ActorContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorContext.html"><span class="name">ActorContext</span></a><span class="result"> extends ActorRefFactory</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The actor context - the view of the actor cell from the actor.</p>
+    </li><li visbl="pub" name="akka.actor.ActorInitializationException" data-isabs="false">
+      <a id="ActorInitializationException:ActorInitializationException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorInitializationException.html"><span class="name">ActorInitializationException</span></a><span class="params">(<span name="actor">actor: ActorRef</span>, <span name="message">message: String</span>, <span name="cause">cause: Throwable</span>)</span><span class="result"> extends AkkaException with NoStackTrace with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ActorInterruptedException" data-isabs="false">
+      <a id="ActorInterruptedException:ActorInterruptedException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorInterruptedException.html"><span class="name">ActorInterruptedException</span></a><span class="params">(<span name="cause">cause: Throwable</span>)</span><span class="result"> extends AkkaException with NoStackTrace with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ActorKilledException" data-isabs="false">
+      <a id="ActorKilledException:ActorKilledException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorKilledException.html"><span class="name">ActorKilledException</span></a><span class="result"> extends AkkaException with NoStackTrace</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ActorLogging" data-isabs="true">
+      <a id="ActorLogging:ActorLogging"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorLogging.html"><span class="name">ActorLogging</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ActorPath" data-isabs="true">
+      <a id="ActorPath:ActorPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorPath.html"><span class="name">ActorPath</span></a><span class="result"> extends Comparable[ActorPath] with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Actor path is a unique path to an actor that shows the creation path
+up through the actor tree to the root actor.</p>
+    </li><li visbl="pub" name="akka.actor.ActorRef" data-isabs="true">
+      <a id="ActorRef:ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorRef.html"><span class="name">ActorRef</span></a><span class="result"> extends Comparable[ActorRef] with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Immutable and serializable handle to an actor, which may or may not reside
+on the local host or inside the same <a name="akka.actor.ActorSystem" class="extype" href="ActorSystem.html">ActorSystem</a>.</p>
+    </li><li visbl="pub" name="akka.actor.ActorRefFactory" data-isabs="true">
+      <a id="ActorRefFactory:ActorRefFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorRefFactory.html"><span class="name">ActorRefFactory</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Interface implemented by ActorSystem and AkkaContext, the only two places
+from which you can get fresh actors.</p>
+    </li><li visbl="pub" name="akka.actor.ActorRefProvider" data-isabs="true">
+      <a id="ActorRefProvider:ActorRefProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorRefProvider.html"><span class="name">ActorRefProvider</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Interface for all ActorRef providers to implement.</p>
+    </li><li visbl="pub" name="akka.actor.ActorRefProviderException" data-isabs="false">
+      <a id="ActorRefProviderException:ActorRefProviderException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorRefProviderException.html"><span class="name">ActorRefProviderException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ActorSelection" data-isabs="true">
+      <a id="ActorSelection:ActorSelection"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorSelection.html"><span class="name">ActorSelection</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ActorSystem" data-isabs="true">
+      <a id="ActorSystem:ActorSystem"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorSystem.html"><span class="name">ActorSystem</span></a><span class="result"> extends ActorRefFactory</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An actor system is a hierarchical group of actors which share common
+configuration, e.</p>
+    </li><li visbl="pub" name="akka.actor.Actors" data-isabs="false">
+      <a id="Actors:Actors"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Actors.html"><span class="name">Actors</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.Address" data-isabs="false">
+      <a id="Address:Address"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Address.html"><span class="name">Address</span></a><span class="params">(<span name="protocol">protocol: String</span>, <span name="system">system: String</span>, <span name="host">host: Option[String]</span>, <span name="port">port: Option[Int]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The address specifies the physical location under which an Actor can be
+reached.</p>
+    </li><li visbl="pub" name="akka.actor.AllForOneStrategy" data-isabs="false">
+      <a id="AllForOneStrategy:AllForOneStrategy"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="AllForOneStrategy.html"><span class="name">AllForOneStrategy</span></a><span class="params">(<span name="maxNrOfRetries">maxNrOfRetries: Int</span>, <span name="withinTimeRange">withinTimeRange: Duration</span>, <span name="decider">decider: Decider</span>)</span><span class="result"> extends SupervisorStrategy with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Applies the fault handling <code>Directive</code> (Resume, Restart, Stop) specified in the <code>Decider</code>
+to all children when one fails, as opposed to <a name="akka.actor.OneForOneStrategy" class="extype" href="OneForOneStrategy.html">OneForOneStrategy</a> that applies
+it only to the child actor that failed.</p>
+    </li><li visbl="pub" name="akka.actor.Cancellable" data-isabs="true">
+      <a id="Cancellable:Cancellable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Cancellable.html"><span class="name">Cancellable</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Signifies something that can be cancelled
+There is no strict guarantee that the implementation is thread-safe,
+but it should be good practice to make it so.</p>
+    </li><li visbl="pub" name="akka.actor.ChildActorPath" data-isabs="false">
+      <a id="ChildActorPath:ChildActorPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ChildActorPath.html"><span class="name">ChildActorPath</span></a><span class="result"> extends ActorPath</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ChildRestartStats" data-isabs="false">
+      <a id="ChildRestartStats:ChildRestartStats"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ChildRestartStats.html"><span class="name">ChildRestartStats</span></a><span class="params">(<span name="child">child: ActorRef</span>, <span name="maxNrOfRetriesCount">maxNrOfRetriesCount: Int</span>, <span name="restartTimeWindowStartNanos">restartTimeWindowStartNanos: Long</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ContextualTypedActorFactory" data-isabs="false">
+      <a id="ContextualTypedActorFactory:ContextualTypedActorFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ContextualTypedActorFactory.html"><span class="name">ContextualTypedActorFactory</span></a><span class="params">(<span name="typedActor">typedActor: TypedActorExtension</span>, <span name="actorFactory">actorFactory: ActorContext</span>)</span><span class="result"> extends TypedActorFactory with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.DeadLetter" data-isabs="false">
+      <a id="DeadLetter:DeadLetter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DeadLetter.html"><span class="name">DeadLetter</span></a><span class="params">(<span name="message">message: Any</span>, <span name="sender">sender: ActorRef</span>, <span name="recipient">recipient: ActorRef</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.DeathPactException" data-isabs="false">
+      <a id="DeathPactException:DeathPactException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DeathPactException.html"><span class="name">DeathPactException</span></a><span class="params">(<span name="dead">dead: ActorRef</span>)</span><span class="result"> extends AkkaException with NoStackTrace with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.DefaultScheduler" data-isabs="false">
+      <a id="DefaultScheduler:DefaultScheduler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DefaultScheduler.html"><span class="name">DefaultScheduler</span></a><span class="result"> extends Scheduler with Closeable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Scheduled tasks (Runnable and functions) are executed with the supplied dispatcher.</p>
+    </li><li visbl="pub" name="akka.actor.Deploy" data-isabs="false">
+      <a id="Deploy:Deploy"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Deploy.html"><span class="name">Deploy</span></a><span class="params">(<span name="path">path: String</span>, <span name="config">config: Config</span>, <span name="routerConfig">routerConfig: RouterConfig</span>, <span name="scope">scope: Scope</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This class represents deployment configuration for a given actor path.</p>
+    </li><li visbl="pub" name="akka.actor.Deployer" data-isabs="false">
+      <a id="Deployer:Deployer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Deployer.html"><span class="name">Deployer</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Deployer maps actor paths to actor deployments.</p>
+    </li><li visbl="pub" name="akka.actor.DynamicAccess" data-isabs="true">
+      <a id="DynamicAccess:DynamicAccess"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DynamicAccess.html"><span class="name">DynamicAccess</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The DynamicAccess implementation is the class which is used for
+loading all configurable parts of an actor system (the
+<a name="akka.actor.ReflectiveDynamicAccess" class="extype" href="ReflectiveDynamicAccess.html">ReflectiveDynamicAccess</a> is the default implementation).</p>
+    </li><li visbl="pub" name="akka.actor.ExtendedActorSystem" data-isabs="true">
+      <a id="ExtendedActorSystem:ExtendedActorSystem"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ExtendedActorSystem.html"><span class="name">ExtendedActorSystem</span></a><span class="result"> extends ActorSystem</span>
+      </span>
+      </h4>
+      <p class="comment cmt">More powerful interface to the actor system’s implementation which is presented to extensions (see <a name="akka.actor.Extension" class="extype" href="Extension.html">Extension</a>).</p>
+    </li><li visbl="pub" name="akka.actor.Extension" data-isabs="true">
+      <a id="Extension:Extension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Extension.html"><span class="name">Extension</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The basic ActorSystem covers all that is needed for locally running actors,
+using futures and so on.</p>
+    </li><li visbl="pub" name="akka.actor.ExtensionId" data-isabs="true">
+      <a id="ExtensionId:ExtensionId[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ExtensionId.html"><span class="name">ExtensionId</span></a><span class="tparams">[<span name="T">T &lt;: Extension</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Identifies an Extension
+Lookup of Extensions is done by object identity, so the Id must be the same wherever it's used,
+otherwise you'll get the same extension loaded multiple times.</p>
+    </li><li visbl="pub" name="akka.actor.ExtensionIdProvider" data-isabs="true">
+      <a id="ExtensionIdProvider:ExtensionIdProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ExtensionIdProvider.html"><span class="name">ExtensionIdProvider</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">To be able to load an ExtensionId from the configuration,
+a class that implements ExtensionIdProvider must be specified.</p>
+    </li><li visbl="pub" name="akka.actor.ExtensionKey" data-isabs="true">
+      <a id="ExtensionKey:ExtensionKey[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ExtensionKey.html"><span class="name">ExtensionKey</span></a><span class="tparams">[<span name="T">T &lt;: Extension</span>]</span><span class="result"> extends ExtensionId[T] with ExtensionIdProvider</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This is a one-stop-shop if all you want is an extension which is
+constructed with the ExtendedActorSystem as its only constructor argument:</p>
+    </li><li visbl="pub" name="akka.actor.FSM" data-isabs="true">
+      <a id="FSM:FSM[S, D]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="FSM.html"><span class="name">FSM</span></a><span class="tparams">[<span name="S">S</span>, <span name="D">D</span>]</span><span class="result"> extends Listeners</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Finite State Machine actor trait.</p>
+    </li><li visbl="pub" name="akka.actor.IOManager" data-isabs="false">
+      <a id="IOManager:IOManager"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="IOManager.html"><span class="name">IOManager</span></a><span class="result"> extends Extension</span>
+      </span>
+      </h4>
+      <p class="comment cmt">IOManager contains a reference to the <a name="akka.actor.IOManagerActor" class="extype" href="IOManagerActor.html">IOManagerActor</a> for
+an <a name="akka.actor.ActorSystem" class="extype" href="ActorSystem.html">ActorSystem</a>.</p>
+    </li><li visbl="pub" name="akka.actor.IOManagerActor" data-isabs="false">
+      <a id="IOManagerActor:IOManagerActor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="IOManagerActor.html"><span class="name">IOManagerActor</span></a><span class="result"> extends Actor</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An <a name="akka.actor.Actor" class="extype" href="Actor.html">Actor</a> that performs IO using a Java NIO Selector.</p>
+    </li><li visbl="pub" name="akka.actor.IllegalActorStateException" data-isabs="false">
+      <a id="IllegalActorStateException:IllegalActorStateException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="IllegalActorStateException.html"><span class="name">IllegalActorStateException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.InvalidActorNameException" data-isabs="false">
+      <a id="InvalidActorNameException:InvalidActorNameException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="InvalidActorNameException.html"><span class="name">InvalidActorNameException</span></a><span class="params">(<span name="message">message: String</span>)</span><span class="result"> extends AkkaException with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.InvalidMessageException" data-isabs="false">
+      <a id="InvalidMessageException:InvalidMessageException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="InvalidMessageException.html"><span class="name">InvalidMessageException</span></a><span class="result"> extends AkkaException with NoStackTrace</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.Kill" data-isabs="true">
+      <a id="Kill:Kill"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Kill.html"><span class="name">Kill</span></a><span class="result"> extends AutoReceivedMessage with PossiblyHarmful</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.LocalActorRefProvider" data-isabs="false">
+      <a id="LocalActorRefProvider:LocalActorRefProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="LocalActorRefProvider.html"><span class="name">LocalActorRefProvider</span></a><span class="result"> extends ActorRefProvider</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Local ActorRef provider.</p>
+    </li><li visbl="pub" name="akka.actor.LocalDeathWatch" data-isabs="false">
+      <a id="LocalDeathWatch:LocalDeathWatch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="LocalDeathWatch.html"><span class="name">LocalDeathWatch</span></a><span class="result"> extends DeathWatch with ActorClassification</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.LocalScope" data-isabs="true">
+      <a id="LocalScope:LocalScope"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="LocalScope.html"><span class="name">LocalScope</span></a><span class="result"> extends Scope</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.LoggingFSM" data-isabs="true">
+      <a id="LoggingFSM:LoggingFSM[S, D]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="LoggingFSM.html"><span class="name">LoggingFSM</span></a><span class="tparams">[<span name="S">S</span>, <span name="D">D</span>]</span><span class="result"> extends FSM[S, D]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Stackable trait for FSM which adds a rolling event log.</p>
+    </li><li visbl="pub" name="akka.actor.NoScopeGiven" data-isabs="true">
+      <a id="NoScopeGiven:NoScopeGiven"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NoScopeGiven.html"><span class="name">NoScopeGiven</span></a><span class="result"> extends Scope</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This is the default value and as such allows overrides.</p>
+    </li><li visbl="pub" name="akka.actor.NoSerializationVerificationNeeded" data-isabs="true">
+      <a id="NoSerializationVerificationNeeded:NoSerializationVerificationNeeded"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="NoSerializationVerificationNeeded.html"><span class="name">NoSerializationVerificationNeeded</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Marker trait to signal that this class should not be verified for serializability.</p>
+    </li><li visbl="pub" name="akka.actor.OldRemoteSupport" data-isabs="false">
+      <a id="OldRemoteSupport:OldRemoteSupport"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OldRemoteSupport.html"><span class="name">OldRemoteSupport</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.OneForOneStrategy" data-isabs="false">
+      <a id="OneForOneStrategy:OneForOneStrategy"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="OneForOneStrategy.html"><span class="name">OneForOneStrategy</span></a><span class="params">(<span name="maxNrOfRetries">maxNrOfRetries: Int</span>, <span name="withinTimeRange">withinTimeRange: Duration</span>, <span name="decider">decider: Decider</span>)</span><span class="result"> extends SupervisorStrategy with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Applies the fault handling <code>Directive</code> (Resume, Restart, Stop) specified in the <code>Decider</code>
+to the child actor that failed, as opposed to <a name="akka.actor.AllForOneStrategy" class="extype" href="AllForOneStrategy.html">AllForOneStrategy</a> that applies
+it to all children.</p>
+    </li><li visbl="pub" name="akka.actor.PoisonPill" data-isabs="true">
+      <a id="PoisonPill:PoisonPill"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PoisonPill.html"><span class="name">PoisonPill</span></a><span class="result"> extends AutoReceivedMessage with PossiblyHarmful</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.PossiblyHarmful" data-isabs="true">
+      <a id="PossiblyHarmful:PossiblyHarmful"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PossiblyHarmful.html"><span class="name">PossiblyHarmful</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Marker trait to indicate that a message might be potentially harmful,
+this is used to block messages coming in over remoting.</p>
+    </li><li visbl="pub" name="akka.actor.Props" data-isabs="false">
+      <a id="Props:Props"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Props.html"><span class="name">Props</span></a><span class="params">(<span name="creator">creator: () ⇒ Actor</span>, <span name="dispatcher">dispatcher: String</span>, <span name="routerConfig">routerConfig: RouterConfig</span>, <span name="deploy">deploy: Deploy</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Props is a ActorRef configuration object, that is thread safe and fully sharable.</p>
+    </li><li visbl="pub" name="akka.actor.ReceiveTimeout" data-isabs="true">
+      <a id="ReceiveTimeout:ReceiveTimeout"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReceiveTimeout.html"><span class="name">ReceiveTimeout</span></a><span class="result"> extends PossiblyHarmful</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ReflectiveDynamicAccess" data-isabs="false">
+      <a id="ReflectiveDynamicAccess:ReflectiveDynamicAccess"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReflectiveDynamicAccess.html"><span class="name">ReflectiveDynamicAccess</span></a><span class="result"> extends DynamicAccess</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This is the default <a name="akka.actor.DynamicAccess" class="extype" href="DynamicAccess.html">DynamicAccess</a> implementation used by <a name="akka.actor.ActorSystemImpl" class="extype" href="ActorSystemImpl.html">ActorSystemImpl</a>
+unless overridden.</p>
+    </li><li visbl="pub" name="akka.actor.RootActorPath" data-isabs="false">
+      <a id="RootActorPath:RootActorPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RootActorPath.html"><span class="name">RootActorPath</span></a><span class="params">(<span name="address">address: Address</span>, <span name="name">name: String</span>)</span><span class="result"> extends ActorPath with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Root of the hierarchy of ActorPaths.</p>
+    </li><li visbl="pub" name="akka.actor.ScalaActorRef" data-isabs="true">
+      <a id="ScalaActorRef:ScalaActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ScalaActorRef.html"><span class="name">ScalaActorRef</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This trait represents the Scala Actor API
+There are implicit conversions in .</p>
+    </li><li visbl="pub" name="akka.actor.ScalaActorSelection" data-isabs="true">
+      <a id="ScalaActorSelection:ScalaActorSelection"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ScalaActorSelection.html"><span class="name">ScalaActorSelection</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.Scheduler" data-isabs="true">
+      <a id="Scheduler:Scheduler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Scheduler.html"><span class="name">Scheduler</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An Akka scheduler service.</p>
+    </li><li visbl="pub" name="akka.actor.Scope" data-isabs="true">
+      <a id="Scope:Scope"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Scope.html"><span class="name">Scope</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The scope of a <a name="akka.actor.Deploy" class="extype" href="Deploy.html">Deploy</a> serves two purposes: as a marker for
+pattern matching the “scope” (i.</p>
+    </li><li visbl="pub" name="akka.actor.Stash" data-isabs="true">
+      <a id="Stash:Stash"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Stash.html"><span class="name">Stash</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt"> The <code>Stash</code> trait enables an actor to temporarily stash away messages that can not or
+ should not be handled using the actor's current behavior.</p>
+    </li><li visbl="pub" name="akka.actor.StashOverflowException" data-isabs="false">
+      <a id="StashOverflowException:StashOverflowException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StashOverflowException.html"><span class="name">StashOverflowException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.SupervisorStrategy" data-isabs="true">
+      <a id="SupervisorStrategy:SupervisorStrategy"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SupervisorStrategy.html"><span class="name">SupervisorStrategy</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.SupervisorStrategyLowPriorityImplicits" data-isabs="true">
+      <a id="SupervisorStrategyLowPriorityImplicits:SupervisorStrategyLowPriorityImplicits"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SupervisorStrategyLowPriorityImplicits.html"><span class="name">SupervisorStrategyLowPriorityImplicits</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.Terminated" data-isabs="false">
+      <a id="Terminated:Terminated"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Terminated.html"><span class="name">Terminated</span></a><span class="params">(<span name="actor">actor: ActorRef</span>)</span><span class="result"> extends PossiblyHarmful with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.TypedActorExtension" data-isabs="false">
+      <a id="TypedActorExtension:TypedActorExtension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedActorExtension.html"><span class="name">TypedActorExtension</span></a><span class="result"> extends TypedActorFactory with Extension</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.TypedActorFactory" data-isabs="true">
+      <a id="TypedActorFactory:TypedActorFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedActorFactory.html"><span class="name">TypedActorFactory</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.TypedProps" data-isabs="false">
+      <a id="TypedProps:TypedProps[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedProps.html"><span class="name">TypedProps</span></a><span class="tparams">[<span name="T">T &lt;: AnyRef</span>]</span><span class="params">(<span name="interfaces">interfaces: Seq[Class[_]]</span>, <span name="creator">creator: () ⇒ T</span>, <span name="dispatcher">dispatcher: String</span>, <span name="deploy">deploy: Deploy</span>, <span name="timeout">timeout: Option[Timeout]</span>, <span name="loader">loader: Option[ClassLoader]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">TypedProps is a TypedActor configuration object, that is thread safe and fully sharable.</p>
+    </li><li visbl="pub" name="akka.actor.UnhandledMessage" data-isabs="false">
+      <a id="UnhandledMessage:UnhandledMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="UnhandledMessage.html"><span class="name">UnhandledMessage</span></a><span class="params">(<span name="message">message: Any</span>, <span name="sender">sender: ActorRef</span>, <span name="recipient">recipient: ActorRef</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This message is published to the EventStream whenever an Actor receives a message it doesn't understand
+</p>
+    </li><li visbl="pub" name="akka.actor.UntypedActor" data-isabs="true">
+      <a id="UntypedActor:UntypedActor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="UntypedActor.html"><span class="name">UntypedActor</span></a><span class="result"> extends Actor</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Actor base trait that should be extended by or mixed to create an Actor with the semantics of the 'Actor Model':
+<a href="http://en.wikipedia.org/wiki/Actor_model">http://en.</a href="http://en.wikipedia.org/wiki/Actor_model"></p>
+    </li><li visbl="pub" name="akka.actor.UntypedActorContext" data-isabs="true">
+      <a id="UntypedActorContext:UntypedActorContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="UntypedActorContext.html"><span class="name">UntypedActorContext</span></a><span class="result"> extends ActorContext</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.UntypedActorFactory" data-isabs="true">
+      <a id="UntypedActorFactory:UntypedActorFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="UntypedActorFactory.html"><span class="name">UntypedActorFactory</span></a><span class="result"> extends Creator[Actor] with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Factory closure for an UntypedActor, to be used with 'Actors.</p>
+    </li><li visbl="pub" name="akka.actor.UntypedActorWithStash" data-isabs="true">
+      <a id="UntypedActorWithStash:UntypedActorWithStash"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="UntypedActorWithStash.html"><span class="name">UntypedActorWithStash</span></a><span class="result"> extends UntypedActor with Stash</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Actor base class that should be extended to create an actor with a stash.</p>
+    </li><li visbl="pub" name="akka.actor.package#Uuid" data-isabs="false">
+      <a id="Uuid:Uuid"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Uuid</span><span class="result"> = <a name="com.eaio.uuid.UUID" class="extype" href="../../com/eaio/uuid/UUID.html">UUID</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.WriteBuffer" data-isabs="false">
+      <a id="WriteBuffer:WriteBuffer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="WriteBuffer.html"><span class="name">WriteBuffer</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ActorRefScope" data-isabs="true">
+      <a id="ActorRefScope:ActorRefScope"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorRefScope.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">ActorRefScope</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">All ActorRefs have a scope which describes where they live.</p>
+    </li><li visbl="pub" name="akka.actor.ActorSystemImpl" data-isabs="false">
+      <a id="ActorSystemImpl:ActorSystemImpl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorSystemImpl.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">ActorSystemImpl</span></a><span class="result"> extends ExtendedActorSystem</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.ActorTimeoutException" data-isabs="false">
+      <a id="ActorTimeoutException:ActorTimeoutException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorTimeoutException.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will be superceded by akka.pattern.AskTimeoutException">ActorTimeoutException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will be superceded by akka.pattern.AskTimeoutException</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.AutoReceivedMessage" data-isabs="true">
+      <a id="AutoReceivedMessage:AutoReceivedMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AutoReceivedMessage.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">AutoReceivedMessage</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Marker trait to show which Messages are automatically handled by Akka
+</p>
+    </li><li visbl="pub" name="akka.actor.DefaultCancellable" data-isabs="false">
+      <a id="DefaultCancellable:DefaultCancellable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DefaultCancellable.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">DefaultCancellable</span></a><span class="result"> extends Cancellable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.Failed" data-isabs="false">
+      <a id="Failed:Failed"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Failed.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">Failed</span></a><span class="params">(<span name="cause">cause: Throwable</span>)</span><span class="result"> extends AutoReceivedMessage with PossiblyHarmful with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.LocalRef" data-isabs="true">
+      <a id="LocalRef:LocalRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="LocalRef.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">LocalRef</span></a><span class="result"> extends ActorRefScope</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.OldActor" data-isabs="true">
+      <a id="OldActor:OldActor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OldActor.html"><span class="name deprecated" title="Deprecated: (Since version 2.0) use Actor">OldActor</span></a><span class="result"> extends Actor</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0)</i> use Actor</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.SelectChildName" data-isabs="false">
+      <a id="SelectChildName:SelectChildName"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SelectChildName.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">SelectChildName</span></a><span class="params">(<span name="name">name: String</span>, <span name="next">next: Any</span>)</span><span class="result"> extends SelectionPath with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.SelectChildPattern" data-isabs="false">
+      <a id="SelectChildPattern:SelectChildPattern"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SelectChildPattern.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">SelectChildPattern</span></a><span class="params">(<span name="pattern">pattern: Pattern</span>, <span name="next">next: Any</span>)</span><span class="result"> extends SelectionPath with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.SelectParent" data-isabs="false">
+      <a id="SelectParent:SelectParent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SelectParent.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">SelectParent</span></a><span class="params">(<span name="next">next: Any</span>)</span><span class="result"> extends SelectionPath with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.SelectionPath" data-isabs="true">
+      <a id="SelectionPath:SelectionPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SelectionPath.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">SelectionPath</span></a><span class="result"> extends AutoReceivedMessage</span>
+      </span>
+      </h4>
+      <p class="comment cmt">ActorRefFactory.</p>
+    </li><li visbl="pub" name="akka.actor.SerializedActorRef" data-isabs="false">
+      <a id="SerializedActorRef:SerializedActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SerializedActorRef.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">SerializedActorRef</span></a><span class="params">(<span name="path">path: String</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Memento pattern for serializing ActorRefs transparently
+</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="akka.actor.Actor" data-isabs="false">
+      <a id="Actor:Actor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Actor$.html"><span class="name">Actor</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ActorPath" data-isabs="false">
+      <a id="ActorPath:ActorPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorPath$.html"><span class="name">ActorPath</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ActorPathExtractor" data-isabs="false">
+      <a id="ActorPathExtractor:ActorPathExtractor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorPathExtractor$.html"><span class="name">ActorPathExtractor</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ActorSelection" data-isabs="false">
+      <a id="ActorSelection:ActorSelection"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorSelection$.html"><span class="name">ActorSelection</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.ActorSystem" data-isabs="false">
+      <a id="ActorSystem:ActorSystem"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorSystem$.html"><span class="name">ActorSystem</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.Actors" data-isabs="false">
+      <a id="Actors:Actors"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Actors$.html"><span class="name">Actors</span></a><span class="result"> extends </span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.Address" data-isabs="false">
+      <a id="Address:Address"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Address$.html"><span class="name">Address</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.AddressFromURIString" data-isabs="false">
+      <a id="AddressFromURIString:AddressFromURIString"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AddressFromURIString$.html"><span class="name">AddressFromURIString</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This object serves as extractor for Scala and as address parser for Java.</p>
+    </li><li visbl="pub" name="akka.actor.FSM" data-isabs="false">
+      <a id="FSM:FSM"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="FSM$.html"><span class="name">FSM</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.IO" data-isabs="false">
+      <a id="IO:IO"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="IO$.html"><span class="name">IO</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">IO messages and iteratees.</p>
+    </li><li visbl="pub" name="akka.actor.IOManager" data-isabs="false">
+      <a id="IOManager:IOManager"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="IOManager$.html"><span class="name">IOManager</span></a><span class="result"> extends ExtensionId[IOManager] with ExtensionIdProvider</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.Kill" data-isabs="false">
+      <a id="Kill:Kill"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Kill$.html"><span class="name">Kill</span></a><span class="result"> extends Kill with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.LocalScope" data-isabs="false">
+      <a id="LocalScope:LocalScope"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="LocalScope$.html"><span class="name">LocalScope</span></a><span class="result"> extends LocalScope with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.NoScopeGiven" data-isabs="false">
+      <a id="NoScopeGiven:NoScopeGiven"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="NoScopeGiven$.html"><span class="name">NoScopeGiven</span></a><span class="result"> extends NoScopeGiven with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.PoisonPill" data-isabs="false">
+      <a id="PoisonPill:PoisonPill"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PoisonPill$.html"><span class="name">PoisonPill</span></a><span class="result"> extends PoisonPill with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.Props" data-isabs="false">
+      <a id="Props:Props"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Props$.html"><span class="name">Props</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Factory for Props instances.</p>
+    </li><li visbl="pub" name="akka.actor.ReceiveTimeout" data-isabs="false">
+      <a id="ReceiveTimeout:ReceiveTimeout"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ReceiveTimeout$.html"><span class="name">ReceiveTimeout</span></a><span class="result"> extends ReceiveTimeout with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.RelativeActorPath" data-isabs="false">
+      <a id="RelativeActorPath:RelativeActorPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="RelativeActorPath$.html"><span class="name">RelativeActorPath</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.SerializedActorRef" data-isabs="false">
+      <a id="SerializedActorRef:SerializedActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SerializedActorRef$.html"><span class="name">SerializedActorRef</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.Status" data-isabs="false">
+      <a id="Status:Status"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Status$.html"><span class="name">Status</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Classes for passing status back to the sender.</p>
+    </li><li visbl="pub" name="akka.actor.SupervisorStrategy" data-isabs="false">
+      <a id="SupervisorStrategy:SupervisorStrategy"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SupervisorStrategy$.html"><span class="name">SupervisorStrategy</span></a><span class="result"> extends SupervisorStrategyLowPriorityImplicits</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.TypedActor" data-isabs="false">
+      <a id="TypedActor:TypedActor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedActor$.html"><span class="name">TypedActor</span></a><span class="result"> extends ExtensionId[TypedActorExtension] with ExtensionIdProvider</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.TypedProps" data-isabs="false">
+      <a id="TypedProps:TypedProps"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedProps$.html"><span class="name">TypedProps</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">TypedProps is a TypedActor configuration object, that is thread safe and fully sharable.</p>
+    </li><li visbl="pub" name="akka.actor.package#actorRef2Scala" data-isabs="false">
+      <a id="actorRef2Scala(ActorRef):ScalaActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actorRef2Scala</span><span class="params">(<span name="ref">ref: <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a></span>)</span><span class="result">: <a name="akka.actor.ScalaActorRef" class="extype" href="ScalaActorRef.html">ScalaActorRef</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.mailbox" data-isabs="false">
+      <a id="mailbox:mailbox"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="mailbox/package.html"><span class="name">mailbox</span></a>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.package#newUuid" data-isabs="false">
+      <a id="newUuid():Uuid"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">newUuid</span><span class="params">()</span><span class="result">: Uuid</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.package#scala2ActorRef" data-isabs="false">
+      <a id="scala2ActorRef(ScalaActorRef):ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scala2ActorRef</span><span class="params">(<span name="ref">ref: <a name="akka.actor.ScalaActorRef" class="extype" href="ScalaActorRef.html">ScalaActorRef</a></span>)</span><span class="result">: <a name="akka.actor.ActorRef" class="extype" href="ActorRef.html">ActorRef</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.package#simpleName" data-isabs="false">
+      <a id="simpleName(Class[_]):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">simpleName</span><span class="params">(<span name="clazz">clazz: Class[_]</span>)</span><span class="result">: String</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.package#simpleName" data-isabs="false">
+      <a id="simpleName(AnyRef):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">simpleName</span><span class="params">(<span name="obj">obj: AnyRef</span>)</span><span class="result">: String</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.package#uuidFrom" data-isabs="false">
+      <a id="uuidFrom(String):Uuid"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">uuidFrom</span><span class="params">(<span name="uuid">uuid: String</span>)</span><span class="result">: Uuid</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.package#uuidFrom" data-isabs="false">
+      <a id="uuidFrom(Long,Long):Uuid"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">uuidFrom</span><span class="params">(<span name="time">time: <span name="scala.Long" class="extype">Long</span></span>, <span name="clockSeqAndNode">clockSeqAndNode: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: Uuid</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="akka.actor.GlobalActorSystem" data-isabs="false">
+      <a id="GlobalActorSystem:GlobalActorSystem"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="GlobalActorSystem$.html"><span class="name deprecated" title="Deprecated: (Since version 2.0) use ActorSystem instead">GlobalActorSystem</span></a><span class="result"> extends ActorSystemImpl</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0)</i> use ActorSystem instead</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.OldActor" data-isabs="false">
+      <a id="OldActor:OldActor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="OldActor$.html"><span class="name deprecated" title="Deprecated: (Since version 2.0) use ActorRefFactory (ActorSystem or ActorContext) to create actors">OldActor</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Migration replacement for <code>object akka.actor.Actor</code>.</p>
+    </li><li visbl="pub" name="akka.actor.OldConfigurationLoader" data-isabs="false">
+      <a id="OldConfigurationLoader:OldConfigurationLoader"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="OldConfigurationLoader$.html"><span class="name deprecated" title="Deprecated: (Since version 2.0) use default config location or write your own configuration loader">OldConfigurationLoader</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Loads configuration (akka.</p>
+    </li><li visbl="pub" name="akka.actor.OldScheduler" data-isabs="false">
+      <a id="OldScheduler:OldScheduler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="OldScheduler$.html"><span class="name deprecated" title="Deprecated: (Since version 2.0) use ActorSystem.scheduler instead">OldScheduler</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Migration replacement for <code>object akka.actor.Scheduler</code>.</p>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

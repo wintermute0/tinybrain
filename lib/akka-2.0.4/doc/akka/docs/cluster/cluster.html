@@ -1,0 +1,708 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Cluster Specification &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Cluster" href="index.html" />
+    <link rel="next" title="Modules" href="../modules/index.html" />
+    <link rel="prev" title="Cluster" href="index.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Cluster Specification</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="../modules/index.html">Modules</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="index.html">Cluster</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="cluster-specification">
+<span id="cluster"></span><h1>Cluster Specification</h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><em>This document describes the new clustering coming in Akka 2.1 (not 2.0)</em></p>
+</div>
+<div class="section" id="intro">
+<h2>Intro</h2>
+<p>Akka Cluster provides a fault-tolerant, elastic, decentralized peer-to-peer
+cluster with no single point of failure (SPOF) or single point of bottleneck
+(SPOB). It implements a Dynamo-style system using gossip protocols, automatic
+failure detection, automatic partitioning, handoff, and cluster rebalancing. But
+with some differences due to the fact that it is not just managing passive data,
+but actors - active, sometimes stateful, components that also have requirements
+on message ordering, the number of active instances in the cluster, etc.</p>
+</div>
+<div class="section" id="terms">
+<h2>Terms</h2>
+<p>These terms are used throughout the documentation.</p>
+<dl class="docutils">
+<dt><strong>node</strong></dt>
+<dd>A logical member of a cluster. There could be multiple nodes on a physical
+machine. Defined by a <cite>hostname:port</cite> tuple.</dd>
+<dt><strong>cluster</strong></dt>
+<dd>A set of nodes. Contains distributed Akka applications.</dd>
+<dt><strong>partition</strong></dt>
+<dd>An actor or subtree of actors in the Akka application that is distributed
+within the cluster.</dd>
+<dt><strong>partition point</strong></dt>
+<dd>The actor at the head of a partition. The point around which a partition is
+formed.</dd>
+<dt><strong>partition path</strong></dt>
+<dd>Also referred to as the actor address. Has the format <cite>actor1/actor2/actor3</cite></dd>
+<dt><strong>instance count</strong></dt>
+<dd>The number of instances of a partition in the cluster. Also referred to as the
+<tt class="docutils literal"><span class="pre">N-value</span></tt> of the partition.</dd>
+<dt><strong>instance node</strong></dt>
+<dd>A node that an actor instance is assigned to.</dd>
+<dt><strong>partition table</strong></dt>
+<dd>A mapping from partition path to a set of instance nodes (where the nodes are
+referred to by the ordinal position given the nodes in sorted order).</dd>
+</dl>
+</div>
+<div class="section" id="membership">
+<h2>Membership</h2>
+<p>A cluster is made up of a set of member nodes. The identifier for each node is a
+<cite>hostname:port</cite> pair. An Akka application is distributed over a cluster with
+each node hosting some part of the application. Cluster membership and
+partitioning of the application are decoupled. A node could be a member of a
+cluster without hosting any actors.</p>
+<div class="section" id="gossip">
+<h3>Gossip</h3>
+<p>The cluster membership used in Akka is based on Amazon's <a class="reference external" href="http://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf">Dynamo</a> system and
+particularly the approach taken in Basho's' <a class="reference external" href="http://basho.com/technology/architecture/">Riak</a> distributed database.
+Cluster membership is communicated using a <a class="reference external" href="http://en.wikipedia.org/wiki/Gossip_protocol">Gossip Protocol</a>, where the current
+state of the cluster is gossiped randomly through the cluster. Joining a cluster
+is initiated by specifying a set of <tt class="docutils literal"><span class="pre">seed</span></tt> nodes with which to begin
+gossiping.</p>
+<div class="section" id="vector-clocks">
+<h4>Vector Clocks</h4>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/Vector_clock">Vector clocks</a> are an algorithm for generating a partial ordering of events in
+a distributed system and detecting causality violations.</p>
+<p>We use vector clocks to to reconcile and merge differences in cluster state
+during gossiping. A vector clock is a set of (node, counter) pairs. Each update
+to the cluster state has an accompanying update to the vector clock.</p>
+<p>One problem with vector clocks is that their history can over time be very long,
+which will both make comparisons take longer time as well as take up unnecessary
+memory. To solve that problem we do pruning of the vector clocks according to
+the <a class="reference external" href="http://wiki.basho.com/Vector-Clocks.html#Vector-Clock-Pruning">pruning algorithm</a> in Riak.</p>
+</div>
+<div class="section" id="gossip-convergence">
+<h4>Gossip convergence</h4>
+<p>Information about the cluster converges at certain points of time. This is when
+all nodes have seen the same cluster state. Convergence is recognised by passing
+a map from node to current state version during gossip. This information is
+referred to as the gossip overview. When all versions in the overview are equal
+there is convergence. Gossip convergence cannot occur while any nodes are
+unreachable, either the nodes become reachable again, or the nodes need to be
+moved into the <tt class="docutils literal"><span class="pre">down</span></tt> or <tt class="docutils literal"><span class="pre">removed</span></tt> states (see section on <a class="reference internal" href="#member-states">Member states</a>
+below).</p>
+</div>
+<div class="section" id="failure-detector">
+<h4>Failure Detector</h4>
+<p>The failure detector is responsible for trying to detect if a node is
+unreachable from the rest of the cluster. For this we are using an
+implementation of <a class="reference external" href="http://ddg.jaist.ac.jp/pub/HDY+04.pdf">The Phi Accrual Failure Detector</a> by Hayashibara et al.</p>
+<p>An accrual failure detector decouple monitoring and interpretation. That makes
+them applicable to a wider area of scenarios and more adequate to build generic
+failure detection services. The idea is that it is keeping a history of failure
+statistics, calculated from heartbeats received from the gossip protocol, and is
+trying to do educated guesses by taking multiple factors, and how they
+accumulate over time, into account in order to come up with a better guess if a
+specific node is up or down. Rather than just answering &quot;yes&quot; or &quot;no&quot; to the
+question &quot;is the node down?&quot; it returns a <tt class="docutils literal"><span class="pre">phi</span></tt> value representing the
+likelihood that the node is down.</p>
+<p>The <tt class="docutils literal"><span class="pre">threshold</span></tt> that is the basis for the calculation is configurable by the
+user. A low <tt class="docutils literal"><span class="pre">threshold</span></tt> is prone to generate many wrong suspicions but ensures
+a quick detection in the event of a real crash. Conversely, a high <tt class="docutils literal"><span class="pre">threshold</span></tt>
+generates fewer mistakes but needs more time to detect actual crashes. The
+default <tt class="docutils literal"><span class="pre">threshold</span></tt> is 8 and is appropriate for most situations. However in
+cloud environments, such as Amazon EC2, the value could be increased to 12 in
+order to account for network issues that sometimes occur on such platforms.</p>
+</div>
+<div class="section" id="leader">
+<h4>Leader</h4>
+<p>After gossip convergence a leader for the cluster can be determined. There is no
+leader election process, the leader can always be recognised deterministically
+by any node whenever there is gossip convergence. The leader is simply the first
+node in sorted order that is able to take the leadership role, where the only
+allowed member states for a leader are <tt class="docutils literal"><span class="pre">up</span></tt> or <tt class="docutils literal"><span class="pre">leaving</span></tt> (see below for more
+information about member states).</p>
+<p>The role of the leader is to shift members in and out of the cluster, changing
+<tt class="docutils literal"><span class="pre">joining</span></tt> members to the <tt class="docutils literal"><span class="pre">up</span></tt> state or <tt class="docutils literal"><span class="pre">exiting</span></tt> members to the
+<tt class="docutils literal"><span class="pre">removed</span></tt> state, and to schedule rebalancing across the cluster. Currently
+leader actions are only triggered by receiving a new cluster state with gossip
+convergence but it may also be possible for the user to explicitly rebalance the
+cluster by specifying migrations, or to rebalance the cluster automatically
+based on metrics from member nodes. Metrics may be spread using the gossip
+protocol or possibly more efficiently using a <em>random chord</em> method, where the
+leader contacts several random nodes around the cluster ring and each contacted
+node gathers information from their immediate neighbours, giving a random
+sampling of load information.</p>
+<p>The leader also has the power, if configured so, to &quot;auto-down&quot; a node that
+according to the Failure Detector is considered unreachable. This means setting
+the unreachable node status to <tt class="docutils literal"><span class="pre">down</span></tt> automatically.</p>
+</div>
+<div class="section" id="id2">
+<h4>Gossip protocol</h4>
+<p>A variation of <em>push-pull gossip</em> is used to reduce the amount of gossip
+information sent around the cluster. In push-pull gossip a digest is sent
+representing current versions but not actual values; the recipient of the gossip
+can then send back any values for which it has newer versions and also request
+values for which it has outdated versions. Akka uses a single shared state with
+a vector clock for versioning, so the variant of push-pull gossip used in Akka
+makes use of the gossip overview (containing the current state versions for all
+nodes) to only push the actual state as needed. This also allows any node to
+easily determine which other nodes have newer or older information, not just the
+nodes involved in a gossip exchange.</p>
+<p>Periodically, the default is every 1 second, each node chooses another random
+node to initiate a round of gossip with. The choice of node is random but can
+also include extra gossiping for unreachable nodes, seed nodes, and nodes with
+either newer or older state versions.</p>
+<p>The gossip overview contains the current state version for all nodes and also a
+list of unreachable nodes. Whenever a node receives a gossip overview it updates
+the <a class="reference internal" href="#failure-detector">Failure Detector</a> with the liveness information.</p>
+<p>The nodes defined as <tt class="docutils literal"><span class="pre">seed</span></tt> nodes are just regular member nodes whose only
+&quot;special role&quot; is to function as contact points in the cluster and to help
+breaking logical partitions as seen in the gossip algorithm defined below.</p>
+<p>During each round of gossip exchange the following process is used:</p>
+<ol class="arabic simple">
+<li>Gossip to random live node (if any)</li>
+<li>Gossip to random unreachable node with certain probability depending on the
+number of unreachable and live nodes</li>
+<li>If the node gossiped to at (1) was not a <tt class="docutils literal"><span class="pre">seed</span></tt> node, or the number of live
+nodes is less than number of seeds, gossip to random <tt class="docutils literal"><span class="pre">seed</span></tt> node with
+certain probability depending on number of unreachable, seed, and live nodes.</li>
+<li>Gossip to random node with newer or older state information, based on the
+current gossip overview, with some probability (?)</li>
+</ol>
+<p>The gossiper only sends the gossip overview to the chosen node. The recipient of
+the gossip can use the gossip overview to determine whether:</p>
+<ol class="arabic simple">
+<li>it has a newer version of the gossip state, in which case it sends that back
+to the gossiper, or</li>
+<li>it has an outdated version of the state, in which case the recipient requests
+the current state from the gossiper</li>
+</ol>
+<p>If the recipient and the gossip have the same version then the gossip state is
+not sent or requested.</p>
+<p>The main structures used in gossiping are the gossip overview and the gossip
+state:</p>
+<div class="highlight-scala"><div class="highlight"><pre> <span class="nc">GossipOverview</span> <span class="o">{</span>
+   <span class="n">versions</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">Node</span>, <span class="kt">VectorClock</span><span class="o">],</span>
+   <span class="n">unreachable</span><span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Node</span><span class="o">]</span>
+ <span class="o">}</span>
+
+<span class="nc">GossipState</span> <span class="o">{</span>
+   <span class="n">version</span><span class="k">:</span> <span class="kt">VectorClock</span><span class="o">,</span>
+   <span class="n">members</span><span class="k">:</span> <span class="kt">SortedSet</span><span class="o">[</span><span class="kt">Member</span><span class="o">],</span>
+   <span class="n">partitions</span><span class="k">:</span> <span class="kt">Tree</span><span class="o">[</span><span class="kt">PartitionPath</span>, <span class="kt">Node</span><span class="o">],</span>
+   <span class="n">pending</span><span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">PartitionChange</span><span class="o">],</span>
+   <span class="n">meta</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">]]]</span>
+ <span class="o">}</span>
+</pre></div>
+</div>
+<p>Some of the other structures used are:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">Node</span> <span class="k">=</span> <span class="nc">InetSocketAddress</span>
+
+<span class="nc">Member</span> <span class="o">{</span>
+  <span class="n">node</span><span class="k">:</span> <span class="kt">Node</span><span class="o">,</span>
+  <span class="n">state</span><span class="k">:</span> <span class="kt">MemberState</span>
+<span class="o">}</span>
+
+<span class="nc">MemberState</span> <span class="k">=</span> <span class="nc">Joining</span> <span class="o">|</span> <span class="nc">Up</span> <span class="o">|</span> <span class="nc">Leaving</span> <span class="o">|</span> <span class="nc">Exiting</span> <span class="o">|</span> <span class="nc">Down</span> <span class="o">|</span> <span class="nc">Removed</span>
+
+<span class="nc">PartitionChange</span> <span class="o">{</span>
+  <span class="n">from</span><span class="k">:</span> <span class="kt">Node</span><span class="o">,</span>
+  <span class="n">to</span><span class="k">:</span> <span class="kt">Node</span><span class="o">,</span>
+  <span class="n">path</span><span class="k">:</span> <span class="kt">PartitionPath</span><span class="o">,</span>
+  <span class="n">status</span><span class="k">:</span> <span class="kt">PartitionChangeStatus</span>
+<span class="o">}</span>
+
+<span class="nc">PartitionChangeStatus</span> <span class="k">=</span> <span class="nc">Awaiting</span> <span class="o">|</span> <span class="nc">Complete</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="membership-lifecycle">
+<h3>Membership lifecycle</h3>
+<p>A node begins in the <tt class="docutils literal"><span class="pre">joining</span></tt> state. Once all nodes have seen that the new
+node is joining (through gossip convergence) the leader will set the member
+state to <tt class="docutils literal"><span class="pre">up</span></tt> and can start assigning partitions to the new node.</p>
+<p>If a node is leaving the cluster in a safe, expected manner then it switches to
+the <tt class="docutils literal"><span class="pre">leaving</span></tt> state. The leader will reassign partitions across the cluster
+(it is possible for a leaving node to itself be the leader). When all partition
+handoff has completed then the node will change to the <tt class="docutils literal"><span class="pre">exiting</span></tt> state. Once
+all nodes have seen the exiting state (convergence) the leader will remove the
+node from the cluster, marking it as <tt class="docutils literal"><span class="pre">removed</span></tt>.</p>
+<p>A node can also be removed forcefully by moving it directly to the <tt class="docutils literal"><span class="pre">removed</span></tt>
+state using the <tt class="docutils literal"><span class="pre">remove</span></tt> action. The cluster will rebalance based on the new
+cluster membership.</p>
+<p>If a node is unreachable then gossip convergence is not possible and therefore
+any leader actions are also not possible (for instance, allowing a node to
+become a part of the cluster, or changing actor distribution). To be able to
+move forward the state of the unreachable nodes must be changed. If the
+unreachable node is experiencing only transient difficulties then it can be
+explicitly marked as <tt class="docutils literal"><span class="pre">down</span></tt> using the <tt class="docutils literal"><span class="pre">down</span></tt> user action. When this node
+comes back up and begins gossiping it will automatically go through the joining
+process again. If the unreachable node will be permanently down then it can be
+removed from the cluster directly with the <tt class="docutils literal"><span class="pre">remove</span></tt> user action. The cluster
+can also <em>auto-down</em> a node using the accrual failure detector.</p>
+<p>This means that nodes can join and leave the cluster at any point in time,
+e.g. provide cluster elasticity.</p>
+<div class="section" id="state-diagram-for-the-member-states">
+<h4>State diagram for the member states</h4>
+<img alt="../_images/member-states.png" src="../_images/member-states.png" />
+</div>
+<div class="section" id="member-states">
+<h4>Member states</h4>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>joining</strong></dt>
+<dd><p class="first last">transient state when joining a cluster</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>up</strong></dt>
+<dd><p class="first last">normal operating state</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>leaving</strong> / <strong>exiting</strong></dt>
+<dd><p class="first last">states during graceful removal</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>removed</strong></dt>
+<dd><p class="first last">tombstone state (no longer a member)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>down</strong></dt>
+<dd><p class="first last">marked as down/offline/unreachable</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="user-actions">
+<h4>User actions</h4>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>join</strong></dt>
+<dd><p class="first last">join a single node to a cluster - can be explicit or automatic on
+startup if a list of seed nodes have been specified in the configuration</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>leave</strong></dt>
+<dd><p class="first last">tell a node to leave the cluster gracefully</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>down</strong></dt>
+<dd><p class="first last">mark a node as temporarily down</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>remove</strong></dt>
+<dd><p class="first last">remove a node from the cluster immediately</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="leader-actions">
+<h4>Leader actions</h4>
+<p>The leader has the following duties:</p>
+<ul class="simple">
+<li>shifting members in and out of the cluster<ul>
+<li>joining -&gt; up</li>
+<li>exiting -&gt; removed</li>
+</ul>
+</li>
+<li>partition distribution<ul>
+<li>scheduling handoffs (pending changes)</li>
+<li>setting the partition table (partition path -&gt; base node)</li>
+<li>Automatic rebalancing based on runtime metrics in the system (such as CPU,
+RAM, Garbage Collection, mailbox depth etc.)</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="partitioning">
+<h2>Partitioning</h2>
+<p>Each partition (an actor or actor subtree) in the actor system is assigned to a
+set of nodes in the cluster. The actor at the head of the partition is referred
+to as the partition point. The mapping from partition path (actor address of the
+format &quot;a/b/c&quot;) to instance nodes is stored in the partition table and is
+maintained as part of the cluster state through the gossip protocol. The
+partition table is only updated by the leader node. Currently the only possible
+partition points are <em>routed</em> actors.</p>
+<p>Routed actors can have an instance count greater than one. The instance count is
+also referred to as the <tt class="docutils literal"><span class="pre">N-value</span></tt>. If the <tt class="docutils literal"><span class="pre">N-value</span></tt> is greater than one then
+a set of instance nodes will be given in the partition table.</p>
+<p>Note that in the first implementation there may be a restriction such that only
+top-level partitions are possible (the highest possible partition points are
+used and sub-partitioning is not allowed). Still to be explored in more detail.</p>
+<p>The cluster leader determines the current instance count for a partition based
+on two axes: fault-tolerance and scaling.</p>
+<p>Fault-tolerance determines a minimum number of instances for a routed actor
+(allowing N-1 nodes to crash while still maintaining at least one running actor
+instance). The user can specify a function from current number of nodes to the
+number of acceptable node failures: n: Int =&gt; f: Int where f &lt; n.</p>
+<p>Scaling reflects the number of instances needed to maintain good throughput and
+is influenced by metrics from the system, particularly a history of mailbox
+size, CPU load, and GC percentages. It may also be possible to accept scaling
+hints from the user that indicate expected load.</p>
+<p>The balancing of partitions can be determined in a very simple way in the first
+implementation, where the overlap of partitions is minimized. Partitions are
+spread over the cluster ring in a circular fashion, with each instance node in
+the first available space. For example, given a cluster with ten nodes and three
+partitions, A, B, and C, having N-values of 4, 3, and 5; partition A would have
+instances on nodes 1-4; partition B would have instances on nodes 5-7; partition
+C would have instances on nodes 8-10 and 1-2. The only overlap is on nodes 1 and
+2.</p>
+<p>The distribution of partitions is not limited, however, to having instances on
+adjacent nodes in the sorted ring order. Each instance can be assigned to any
+node and the more advanced load balancing algorithms will make use of this. The
+partition table contains a mapping from path to instance nodes. The partitioning
+for the above example would be:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">A</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span> <span class="o">}</span>
+<span class="n">B</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">6</span><span class="o">,</span> <span class="mi">7</span> <span class="o">}</span>
+<span class="n">C</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">9</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span> <span class="o">}</span>
+</pre></div>
+</div>
+<p>If 5 new nodes join the cluster and in sorted order these nodes appear after the
+current nodes 2, 4, 5, 7, and 8, then the partition table could be updated to
+the following, with all instances on the same physical nodes as before:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">A</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span> <span class="o">}</span>
+<span class="n">B</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">9</span><span class="o">,</span> <span class="mi">10</span> <span class="o">}</span>
+<span class="n">C</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="mi">12</span><span class="o">,</span> <span class="mi">14</span><span class="o">,</span> <span class="mi">15</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span> <span class="o">}</span>
+</pre></div>
+</div>
+<p>When rebalancing is required the leader will schedule handoffs, gossiping a set
+of pending changes, and when each change is complete the leader will update the
+partition table.</p>
+<div class="section" id="handoff">
+<h3>Handoff</h3>
+<p>Handoff for an actor-based system is different than for a data-based system. The
+most important point is that message ordering (from a given node to a given
+actor instance) may need to be maintained. If an actor is a singleton actor
+(only one instance possible throughout the cluster) then the cluster may also
+need to assure that there is only one such actor active at any one time. Both of
+these situations can be handled by forwarding and buffering messages during
+transitions.</p>
+<p>A <em>graceful handoff</em> (one where the previous host node is up and running during
+the handoff), given a previous host node <tt class="docutils literal"><span class="pre">N1</span></tt>, a new host node <tt class="docutils literal"><span class="pre">N2</span></tt>, and an
+actor partition <tt class="docutils literal"><span class="pre">A</span></tt> to be migrated from <tt class="docutils literal"><span class="pre">N1</span></tt> to <tt class="docutils literal"><span class="pre">N2</span></tt>, has this general
+structure:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>the leader sets a pending change for <tt class="docutils literal"><span class="pre">N1</span></tt> to handoff <tt class="docutils literal"><span class="pre">A</span></tt> to <tt class="docutils literal"><span class="pre">N2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">N1</span></tt> notices the pending change and sends an initialization message to <tt class="docutils literal"><span class="pre">N2</span></tt></li>
+<li>in response <tt class="docutils literal"><span class="pre">N2</span></tt> creates <tt class="docutils literal"><span class="pre">A</span></tt> and sends back a ready message</li>
+<li>after receiving the ready message <tt class="docutils literal"><span class="pre">N1</span></tt> marks the change as
+complete and shuts down <tt class="docutils literal"><span class="pre">A</span></tt></li>
+<li>the leader sees the migration is complete and updates the partition table</li>
+<li>all nodes eventually see the new partitioning and use <tt class="docutils literal"><span class="pre">N2</span></tt></li>
+</ol>
+</div></blockquote>
+<div class="section" id="transitions">
+<h4>Transitions</h4>
+<p>There are transition times in the handoff process where different approaches can
+be used to give different guarantees.</p>
+<div class="section" id="migration-transition">
+<h5>Migration transition</h5>
+<p>The first transition starts when <tt class="docutils literal"><span class="pre">N1</span></tt> initiates the moving of <tt class="docutils literal"><span class="pre">A</span></tt> and ends
+when <tt class="docutils literal"><span class="pre">N1</span></tt> receives the ready message, and is referred to as the <em>migration
+transition</em>.</p>
+<p>The first question is; during the migration transition, should:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">N1</span></tt> continue to process messages for <tt class="docutils literal"><span class="pre">A</span></tt>?</li>
+<li>Or is it important that no messages for <tt class="docutils literal"><span class="pre">A</span></tt> are processed on
+<tt class="docutils literal"><span class="pre">N1</span></tt> once migration begins?</li>
+</ul>
+<p>If it is okay for the previous host node <tt class="docutils literal"><span class="pre">N1</span></tt> to process messages during
+migration then there is nothing that needs to be done at this point.</p>
+<p>If no messages are to be processed on the previous host node during migration
+then there are two possibilities: the messages are forwarded to the new host and
+buffered until the actor is ready, or the messages are simply dropped by
+terminating the actor and allowing the normal dead letter process to be used.</p>
+</div>
+<div class="section" id="update-transition">
+<h5>Update transition</h5>
+<p>The second transition begins when the migration is marked as complete and ends
+when all nodes have the updated partition table (when all nodes will use <tt class="docutils literal"><span class="pre">N2</span></tt>
+as the host for <tt class="docutils literal"><span class="pre">A</span></tt>, i.e. we have convergence) and is referred to as the
+<em>update transition</em>.</p>
+<p>Once the update transition begins <tt class="docutils literal"><span class="pre">N1</span></tt> can forward any messages it receives
+for <tt class="docutils literal"><span class="pre">A</span></tt> to the new host <tt class="docutils literal"><span class="pre">N2</span></tt>. The question is whether or not message
+ordering needs to be preserved. If messages sent to the previous host node
+<tt class="docutils literal"><span class="pre">N1</span></tt> are being forwarded, then it is possible that a message sent to <tt class="docutils literal"><span class="pre">N1</span></tt>
+could be forwarded after a direct message to the new host <tt class="docutils literal"><span class="pre">N2</span></tt>, breaking
+message ordering from a client to actor <tt class="docutils literal"><span class="pre">A</span></tt>.</p>
+<p>In this situation <tt class="docutils literal"><span class="pre">N2</span></tt> can keep a buffer for messages per sending node. Each
+buffer is flushed and removed when an acknowledgement (<tt class="docutils literal"><span class="pre">ack</span></tt>) message has been
+received. When each node in the cluster sees the partition update it first sends
+an <tt class="docutils literal"><span class="pre">ack</span></tt> message to the previous host node <tt class="docutils literal"><span class="pre">N1</span></tt> before beginning to use
+<tt class="docutils literal"><span class="pre">N2</span></tt> as the new host for <tt class="docutils literal"><span class="pre">A</span></tt>. Any messages sent from the client node
+directly to <tt class="docutils literal"><span class="pre">N2</span></tt> will be buffered. <tt class="docutils literal"><span class="pre">N1</span></tt> can count down the number of acks to
+determine when no more forwarding is needed. The <tt class="docutils literal"><span class="pre">ack</span></tt> message from any node
+will always follow any other messages sent to <tt class="docutils literal"><span class="pre">N1</span></tt>. When <tt class="docutils literal"><span class="pre">N1</span></tt> receives the
+<tt class="docutils literal"><span class="pre">ack</span></tt> message it also forwards it to <tt class="docutils literal"><span class="pre">N2</span></tt> and again this <tt class="docutils literal"><span class="pre">ack</span></tt> message
+will follow any other messages already forwarded for <tt class="docutils literal"><span class="pre">A</span></tt>. When <tt class="docutils literal"><span class="pre">N2</span></tt> receives
+an <tt class="docutils literal"><span class="pre">ack</span></tt> message, the buffer for the sending node can be flushed and removed.
+Any subsequent messages from this sending node can be queued normally. Once all
+nodes in the cluster have acknowledged the partition change and <tt class="docutils literal"><span class="pre">N2</span></tt> has
+cleared all buffers, the handoff is complete and message ordering has been
+preserved. In practice the buffers should remain small as it is only those
+messages sent directly to <tt class="docutils literal"><span class="pre">N2</span></tt> before the acknowledgement has been forwarded
+that will be buffered.</p>
+</div>
+</div>
+<div class="section" id="graceful-handoff">
+<h4>Graceful handoff</h4>
+<p>A more complete process for graceful handoff would be:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>the leader sets a pending change for <tt class="docutils literal"><span class="pre">N1</span></tt> to handoff <tt class="docutils literal"><span class="pre">A</span></tt> to <tt class="docutils literal"><span class="pre">N2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">N1</span></tt> notices the pending change and sends an initialization message to
+<tt class="docutils literal"><span class="pre">N2</span></tt>. Options:<ol class="loweralpha">
+<li>keep <tt class="docutils literal"><span class="pre">A</span></tt> on <tt class="docutils literal"><span class="pre">N1</span></tt> active and continuing processing messages as normal</li>
+<li><tt class="docutils literal"><span class="pre">N1</span></tt> forwards all messages for <tt class="docutils literal"><span class="pre">A</span></tt> to <tt class="docutils literal"><span class="pre">N2</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">N1</span></tt> drops all messages for <tt class="docutils literal"><span class="pre">A</span></tt> (terminate <tt class="docutils literal"><span class="pre">A</span></tt> with messages
+becoming dead letters)</li>
+</ol>
+</li>
+<li>in response <tt class="docutils literal"><span class="pre">N2</span></tt> creates <tt class="docutils literal"><span class="pre">A</span></tt> and sends back a ready message. Options:<ol class="loweralpha">
+<li><tt class="docutils literal"><span class="pre">N2</span></tt> simply processes messages for <tt class="docutils literal"><span class="pre">A</span></tt> as normal</li>
+<li><tt class="docutils literal"><span class="pre">N2</span></tt> creates a buffer per sending node for <tt class="docutils literal"><span class="pre">A</span></tt>. Each buffer is
+opened (flushed and removed) when an acknowledgement for the sending
+node has been received (via <tt class="docutils literal"><span class="pre">N1</span></tt>)</li>
+</ol>
+</li>
+<li>after receiving the ready message <tt class="docutils literal"><span class="pre">N1</span></tt> marks the change as complete. Options:<ol class="loweralpha">
+<li><tt class="docutils literal"><span class="pre">N1</span></tt> forwards all messages for <tt class="docutils literal"><span class="pre">A</span></tt> to <tt class="docutils literal"><span class="pre">N2</span></tt> during the update transition</li>
+<li><tt class="docutils literal"><span class="pre">N1</span></tt> drops all messages for <tt class="docutils literal"><span class="pre">A</span></tt> (terminate <tt class="docutils literal"><span class="pre">A</span></tt> with messages
+becoming dead letters)</li>
+</ol>
+</li>
+<li>the leader sees the migration is complete and updates the partition table</li>
+<li>all nodes eventually see the new partitioning and use <tt class="docutils literal"><span class="pre">N2</span></tt><ol class="lowerroman">
+<li>each node sends an acknowledgement message to <tt class="docutils literal"><span class="pre">N1</span></tt></li>
+<li>when <tt class="docutils literal"><span class="pre">N1</span></tt> receives the acknowledgement it can count down the pending
+acknowledgements and remove forwarding when complete</li>
+<li>when <tt class="docutils literal"><span class="pre">N2</span></tt> receives the acknowledgement it can open the buffer for the
+sending node (if buffers are used)</li>
+</ol>
+</li>
+</ol>
+</div></blockquote>
+<p>The default approach is to take options 2a, 3a, and 4a - allowing <tt class="docutils literal"><span class="pre">A</span></tt> on
+<tt class="docutils literal"><span class="pre">N1</span></tt> to continue processing messages during migration and then forwarding any
+messages during the update transition. This assumes stateless actors that do not
+have a dependency on message ordering from any given source.</p>
+<ul class="simple">
+<li>If an actor has a distributed durable mailbox then nothing needs to be done,
+other than migrating the actor.</li>
+<li>If message ordering needs to be maintained during the update transition then
+option 3b can be used, creating buffers per sending node.</li>
+<li>If the actors are robust to message send failures then the dropping messages
+approach can be used (with no forwarding or buffering needed).</li>
+<li>If an actor is a singleton (only one instance possible throughout the cluster)
+and state is transferred during the migration initialization, then options 2b
+and 3b would be required.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="stateful-actor-replication">
+<h2>Stateful Actor Replication</h2>
+<p>Support for stateful singleton actors will come in future releases of Akka, and
+is scheduled for Akka 2.2. Having a Dynamo base for the clustering already we
+should use the same infrastructure to provide stateful actor clustering and
+datastore as well. The stateful actor clustering should be layered on top of the
+distributed datastore. See the next section for a rough outline on how the
+distributed datastore could be implemented.</p>
+<div class="section" id="implementing-a-dynamo-style-distributed-database-on-top-of-akka-cluster">
+<h3>Implementing a Dynamo-style distributed database on top of Akka Cluster</h3>
+<p>The missing pieces to implement a full Dynamo-style eventually consistent data
+storage on top of the Akka Cluster as described in this document are:</p>
+<ul>
+<li><p class="first">Configuration of <tt class="docutils literal"><span class="pre">READ</span></tt> and <tt class="docutils literal"><span class="pre">WRITE</span></tt> consistency levels according to the
+<tt class="docutils literal"><span class="pre">N/R/W</span></tt> numbers defined in the Dynamo paper.</p>
+<blockquote>
+<div><ul class="simple">
+<li>R = read replica count</li>
+<li>W = write replica count</li>
+<li>N = replication factor</li>
+<li>Q = QUORUM = N / 2 + 1</li>
+<li>W + R &gt; N = full consistency</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Define a versioned data message wrapper:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">Versioned</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">hash</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">version</span><span class="k">:</span> <span class="kt">VectorClock</span><span class="o">,</span> <span class="n">data</span><span class="k">:</span> <span class="kt">T</span><span class="o">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Define a single system data broker actor on each node that uses a <tt class="docutils literal"><span class="pre">Consistent</span>
+<span class="pre">Hashing</span> <span class="pre">Router</span></tt> and that have instances on all other nodes in the node ring.</p>
+</li>
+<li><p class="first">For <tt class="docutils literal"><span class="pre">WRITE</span></tt>:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Wrap data in a <tt class="docutils literal"><span class="pre">Versioned</span> <span class="pre">Message</span></tt></li>
+<li>Send a <tt class="docutils literal"><span class="pre">Versioned</span> <span class="pre">Message</span></tt> with the data is sent to a number of nodes
+matching the <tt class="docutils literal"><span class="pre">W-value</span></tt>.</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">For <tt class="docutils literal"><span class="pre">READ</span></tt>:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Read in the <tt class="docutils literal"><span class="pre">Versioned</span> <span class="pre">Message</span></tt> with the data from as many replicas as
+you need for the consistency level required by the <tt class="docutils literal"><span class="pre">R-value</span></tt>.</li>
+<li>Do comparison on the versions (using <a class="reference external" href="http://en.wikipedia.org/wiki/Vector_clock">Vector Clocks</a>)</li>
+<li>If the versions differ then do <a class="reference external" href="http://wiki.apache.org/cassandra/ReadRepair">Read Repair</a> to update the inconsistent
+nodes.</li>
+<li>Return the latest versioned data.</li>
+</ol>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

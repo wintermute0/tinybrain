@@ -1,0 +1,421 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Typed Actors (Scala) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Scala API" href="index.html" />
+    <link rel="next" title="Logging (Scala)" href="logging.html" />
+    <link rel="prev" title="Actors (Scala)" href="actors.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Typed Actors (Scala)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="logging.html">Logging (Scala)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="actors.html">Actors (Scala)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="typed-actors-scala">
+<h1>Typed Actors (Scala)</h1>
+<p>Akka Typed Actors is an implementation of the <a class="reference external" href="http://en.wikipedia.org/wiki/Active_object">Active Objects</a> pattern.
+Essentially turning method invocations into asynchronous dispatch instead of synchronous that has been the default way since Smalltalk came out.</p>
+<p>Typed Actors consist of 2 &quot;parts&quot;, a public interface and an implementation, and if you've done any work in &quot;enterprise&quot; Java, this will be very familiar to you. As with normal Actors you have an external API (the public interface instance) that will delegate methodcalls asynchronously to
+a private instance of the implementation.</p>
+<p>The advantage of Typed Actors vs. Actors is that with TypedActors you have a static contract, and don't need to define your own messages, the downside is that it places some limitations on what you can do and what you can't, i.e. you can't use become/unbecome.</p>
+<p>Typed Actors are implemented using <a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/reflect/Proxy.html">JDK Proxies</a> which provide a pretty easy-worked API to intercept method calls.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Just as with regular Akka Actors, Typed Actors process one call at a time.</p>
+</div>
+<div class="section" id="when-to-use-typed-actors">
+<h2>When to use Typed Actors</h2>
+<p>Typed actors are nice for bridging between actor systems (the “inside”) and
+non-actor code (the “outside”), because they allow you to write normal
+OO-looking code on the outside. Think of them like doors: their practicality
+lies in interfacing between private sphere and the public, but you don’t want
+that many doors inside your house, do you? For a longer discussion see <a class="reference external" href="http://letitcrash.com/post/19074284309/when-to-use-typedactors">this
+blog post</a>.</p>
+<p>A bit more background: TypedActors can very easily be abused as RPC, and that
+is an abstraction which is <a class="reference external" href="http://labs.oracle.com/techrep/1994/abstract-29.html">well-known</a> to be leaky. Hence
+TypedActors are not what we think of first when we talk about making highly
+scalable concurrent software easier to write correctly. They have their niche,
+use them sparingly.</p>
+</div>
+<div class="section" id="the-tools-of-the-trade">
+<h2>The tools of the trade</h2>
+<p>Before we create our first Typed Actor we should first go through the tools that we have at our disposal,
+it's located in <tt class="docutils literal"><span class="pre">akka.actor.TypedActor</span></tt>.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.TypedActor</span>
+
+<span class="c1">//Returns the Typed Actor Extension</span>
+<span class="k">val</span> <span class="n">extension</span> <span class="k">=</span> <span class="nc">TypedActor</span><span class="o">(</span><span class="n">system</span><span class="o">)</span> <span class="c1">//system is an instance of ActorSystem</span>
+
+<span class="c1">//Returns whether the reference is a Typed Actor Proxy or not</span>
+<span class="nc">TypedActor</span><span class="o">(</span><span class="n">system</span><span class="o">).</span><span class="n">isTypedActor</span><span class="o">(</span><span class="n">someReference</span><span class="o">)</span>
+
+<span class="c1">//Returns the backing Akka Actor behind an external Typed Actor Proxy</span>
+<span class="nc">TypedActor</span><span class="o">(</span><span class="n">system</span><span class="o">).</span><span class="n">getActorRefFor</span><span class="o">(</span><span class="n">someReference</span><span class="o">)</span>
+
+<span class="c1">//Returns the current ActorContext,</span>
+<span class="c1">// method only valid within methods of a TypedActor implementation</span>
+<span class="k">val</span> <span class="n">c</span><span class="k">:</span> <span class="kt">ActorContext</span> <span class="o">=</span> <span class="nc">TypedActor</span><span class="o">.</span><span class="n">context</span>
+
+<span class="c1">//Returns the external proxy of the current Typed Actor,</span>
+<span class="c1">// method only valid within methods of a TypedActor implementation</span>
+<span class="k">val</span> <span class="n">s</span><span class="k">:</span> <span class="kt">Squarer</span> <span class="o">=</span> <span class="nc">TypedActor</span><span class="o">.</span><span class="n">self</span><span class="o">[</span><span class="kt">Squarer</span><span class="o">]</span>
+
+<span class="c1">//Returns a contextual instance of the Typed Actor Extension</span>
+<span class="c1">//this means that if you create other Typed Actors with this,</span>
+<span class="c1">//they will become children to the current Typed Actor.</span>
+<span class="nc">TypedActor</span><span class="o">(</span><span class="nc">TypedActor</span><span class="o">.</span><span class="n">context</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Same as not exposing <tt class="docutils literal"><span class="pre">this</span></tt> of an Akka Actor, it's important not to expose <tt class="docutils literal"><span class="pre">this</span></tt> of a Typed Actor,
+instead you should pass the external proxy reference, which is obtained from within your Typed Actor as
+<tt class="docutils literal"><span class="pre">TypedActor.self</span></tt>, this is your external identity, as the <tt class="docutils literal"><span class="pre">ActorRef</span></tt> is the external identity of
+an Akka Actor.</p>
+</div>
+</div>
+<div class="section" id="creating-typed-actors">
+<h2>Creating Typed Actors</h2>
+<p>To create a Typed Actor you need to have one or more interfaces, and one implementation.</p>
+<p>Our example interface:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.dispatch.</span><span class="o">{</span> <span class="nc">Promise</span><span class="o">,</span> <span class="nc">Future</span><span class="o">,</span> <span class="nc">Await</span> <span class="o">}</span>
+<span class="k">import</span> <span class="nn">akka.util.duration._</span>
+<span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">ActorContext</span><span class="o">,</span> <span class="nc">TypedActor</span><span class="o">,</span> <span class="nc">TypedProps</span> <span class="o">}</span>
+
+<span class="k">trait</span> <span class="nc">Squarer</span> <span class="o">{</span>
+  <span class="c1">// typed actor iface methods ...</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Our example implementation of that interface:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.dispatch.</span><span class="o">{</span> <span class="nc">Promise</span><span class="o">,</span> <span class="nc">Future</span><span class="o">,</span> <span class="nc">Await</span> <span class="o">}</span>
+<span class="k">import</span> <span class="nn">akka.util.duration._</span>
+<span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">ActorContext</span><span class="o">,</span> <span class="nc">TypedActor</span><span class="o">,</span> <span class="nc">TypedProps</span> <span class="o">}</span>
+
+<span class="k">class</span> <span class="nc">SquarerImpl</span><span class="o">(</span><span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Squarer</span> <span class="o">{</span>
+
+  <span class="k">def</span> <span class="k">this</span><span class="o">()</span> <span class="k">=</span> <span class="k">this</span><span class="o">(</span><span class="s">&quot;default&quot;</span><span class="o">)</span>
+  <span class="c1">// typed actor impl methods ...</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The most trivial way of creating a Typed Actor instance
+of our Squarer:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">mySquarer</span><span class="k">:</span> <span class="kt">Squarer</span> <span class="o">=</span>
+  <span class="nc">TypedActor</span><span class="o">(</span><span class="n">system</span><span class="o">).</span><span class="n">typedActorOf</span><span class="o">(</span><span class="nc">TypedProps</span><span class="o">[</span><span class="kt">SquarerImpl</span><span class="o">]())</span>
+</pre></div>
+</div>
+<p>First type is the type of the proxy, the second type is the type of the implementation.
+If you need to call a specific constructor you do it like this:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">otherSquarer</span><span class="k">:</span> <span class="kt">Squarer</span> <span class="o">=</span>
+  <span class="nc">TypedActor</span><span class="o">(</span><span class="n">system</span><span class="o">).</span><span class="n">typedActorOf</span><span class="o">(</span><span class="nc">TypedProps</span><span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">Squarer</span><span class="o">],</span> <span class="k">new</span> <span class="nc">SquarerImpl</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">)),</span> <span class="s">&quot;name&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Since you supply a Props, you can specify which dispatcher to use, what the default timeout should be used and more.
+Now, our Squarer doesn't have any methods, so we'd better add those.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.dispatch.</span><span class="o">{</span> <span class="nc">Promise</span><span class="o">,</span> <span class="nc">Future</span><span class="o">,</span> <span class="nc">Await</span> <span class="o">}</span>
+<span class="k">import</span> <span class="nn">akka.util.duration._</span>
+<span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">ActorContext</span><span class="o">,</span> <span class="nc">TypedActor</span><span class="o">,</span> <span class="nc">TypedProps</span> <span class="o">}</span>
+
+<span class="k">trait</span> <span class="nc">Squarer</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">squareDontCare</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="kt">//fire-forget</span>
+
+  <span class="k">def</span> <span class="n">square</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="c1">//non-blocking send-request-reply</span>
+
+  <span class="k">def</span> <span class="n">squareNowPlease</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="c1">//blocking send-request-reply</span>
+
+  <span class="k">def</span> <span class="n">squareNow</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="kt">//blocking</span> <span class="kt">send-request-reply</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Alright, now we've got some methods we can call, but we need to implement those in SquarerImpl.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.dispatch.</span><span class="o">{</span> <span class="nc">Promise</span><span class="o">,</span> <span class="nc">Future</span><span class="o">,</span> <span class="nc">Await</span> <span class="o">}</span>
+<span class="k">import</span> <span class="nn">akka.util.duration._</span>
+<span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">ActorContext</span><span class="o">,</span> <span class="nc">TypedActor</span><span class="o">,</span> <span class="nc">TypedProps</span> <span class="o">}</span>
+
+<span class="k">class</span> <span class="nc">SquarerImpl</span><span class="o">(</span><span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Squarer</span> <span class="o">{</span>
+
+  <span class="k">def</span> <span class="k">this</span><span class="o">()</span> <span class="k">=</span> <span class="k">this</span><span class="o">(</span><span class="s">&quot;default&quot;</span><span class="o">)</span>
+  <span class="k">import</span> <span class="nn">TypedActor.dispatcher</span> <span class="c1">//So we can create Promises</span>
+
+  <span class="k">def</span> <span class="n">squareDontCare</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span> <span class="c1">//Nobody cares :(</span>
+
+  <span class="k">def</span> <span class="n">square</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Promise</span> <span class="n">successful</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span>
+
+  <span class="k">def</span> <span class="n">squareNowPlease</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">i</span><span class="o">)</span>
+
+  <span class="k">def</span> <span class="n">squareNow</span><span class="o">(</span><span class="n">i</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Excellent, now we have an interface and an implementation of that interface,
+and we know how to create a Typed Actor from that, so let's look at calling these methods.</p>
+</div>
+<div class="section" id="method-dispatch-semantics">
+<h2>Method dispatch semantics</h2>
+<p>Methods returning:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Unit</span></tt> will be dispatched with <tt class="docutils literal"><span class="pre">fire-and-forget</span></tt> semantics, exactly like <tt class="docutils literal"><span class="pre">ActorRef.tell</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">akka.dispatch.Future[_]</span></tt> will use <tt class="docutils literal"><span class="pre">send-request-reply</span></tt> semantics, exactly like <tt class="docutils literal"><span class="pre">ActorRef.ask</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">scala.Option[_]</span></tt> or <tt class="docutils literal"><span class="pre">akka.japi.Option&lt;?&gt;</span></tt> will use <tt class="docutils literal"><span class="pre">send-request-reply</span></tt> semantics, but <em>will</em> block to wait for an answer,
+and return None if no answer was produced within the timout, or scala.Some/akka.japi.Some containing the result otherwise.
+Any exception that was thrown during this call will be rethrown.</li>
+<li>Any other type of value will use <tt class="docutils literal"><span class="pre">send-request-reply</span></tt> semantics, but <em>will</em> block to wait for an answer,
+throwing <tt class="docutils literal"><span class="pre">java.util.concurrent.TimeoutException</span></tt> if there was a timeout or rethrow any exception that was thrown during this call.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="messages-and-immutability">
+<h2>Messages and immutability</h2>
+<p>While Akka cannot enforce that the parameters to the methods of your Typed Actors are immutable,
+we <em>strongly</em> recommend that parameters passed are immutable.</p>
+<div class="section" id="one-way-message-send">
+<h3>One-way message send</h3>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">mySquarer</span><span class="o">.</span><span class="n">squareDontCare</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>As simple as that! The method will be executed on another thread; asynchronously.</p>
+</div>
+<div class="section" id="request-reply-message-send">
+<h3>Request-reply message send</h3>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">oSquare</span> <span class="k">=</span> <span class="n">mySquarer</span><span class="o">.</span><span class="n">squareNowPlease</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span> <span class="c1">//Option[Int]</span>
+</pre></div>
+</div>
+<p>This will block for as long as the timeout that was set in the Props of the Typed Actor,
+if needed. It will return <tt class="docutils literal"><span class="pre">None</span></tt> if a timeout occurs.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">iSquare</span> <span class="k">=</span> <span class="n">mySquarer</span><span class="o">.</span><span class="n">squareNow</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span> <span class="c1">//Int</span>
+</pre></div>
+</div>
+<p>This will block for as long as the timeout that was set in the Props of the Typed Actor,
+if needed. It will throw a <tt class="docutils literal"><span class="pre">java.util.concurrent.TimeoutException</span></tt> if a timeout occurs.</p>
+</div>
+<div class="section" id="request-reply-with-future-message-send">
+<h3>Request-reply-with-future message send</h3>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">fSquare</span> <span class="k">=</span> <span class="n">mySquarer</span><span class="o">.</span><span class="n">square</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span> <span class="c1">//A Future[Int]</span>
+</pre></div>
+</div>
+<p>This call is asynchronous, and the Future returned can be used for asynchronous composition.</p>
+</div>
+</div>
+<div class="section" id="stopping-typed-actors">
+<h2>Stopping Typed Actors</h2>
+<p>Since Akkas Typed Actors are backed by Akka Actors they must be stopped when they aren't needed anymore.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">TypedActor</span><span class="o">(</span><span class="n">system</span><span class="o">).</span><span class="n">stop</span><span class="o">(</span><span class="n">mySquarer</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>This asynchronously stops the Typed Actor associated with the specified proxy ASAP.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">TypedActor</span><span class="o">(</span><span class="n">system</span><span class="o">).</span><span class="n">poisonPill</span><span class="o">(</span><span class="n">otherSquarer</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>This asynchronously stops the Typed Actor associated with the specified proxy
+after it's done with all calls that were made prior to this call.</p>
+</div>
+<div class="section" id="typed-actor-hierarchies">
+<h2>Typed Actor Hierarchies</h2>
+<p>Since you can obtain a contextual Typed Actor Extension by passing in an <tt class="docutils literal"><span class="pre">ActorContext</span></tt>
+you can create child Typed Actors by invoking <tt class="docutils literal"><span class="pre">typedActorOf(..)</span></tt> on that.</p>
+<p>This also works for creating child Typed Actors in regular Akka Actors.</p>
+</div>
+<div class="section" id="supervisor-strategy">
+<h2>Supervisor Strategy</h2>
+<p>By having your Typed Actor implementation class implement <tt class="docutils literal"><span class="pre">TypedActor.Supervisor</span></tt>
+you can define the strategy to use for supervising child actors, as described in
+<a class="reference internal" href="../general/supervision.html#supervision"><em>Supervision and Monitoring</em></a> and <a class="reference internal" href="fault-tolerance.html#fault-tolerance-scala"><em>Fault Tolerance (Scala)</em></a>.</p>
+</div>
+<div class="section" id="lifecycle-callbacks">
+<h2>Lifecycle callbacks</h2>
+<p>By having your Typed Actor implementation class implement any and all of the following:</p>
+<blockquote>
+<div><blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">TypedActor.PreStart</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TypedActor.PostStop</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TypedActor.PreRestart</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TypedActor.PostRestart</span></tt></li>
+</ul>
+</div></blockquote>
+<p>You can hook into the lifecycle of your Typed Actor.</p>
+</div></blockquote>
+</div>
+<div class="section" id="receive-arbitrary-messages">
+<h2>Receive arbitrary messages</h2>
+<p>If your implementation class of your TypedActor extends <tt class="docutils literal"><span class="pre">akka.actor.TypedActor.Receiver</span></tt>,
+all messages that are not <tt class="docutils literal"><span class="pre">MethodCall``s</span> <span class="pre">will</span> <span class="pre">be</span> <span class="pre">passed</span> <span class="pre">into</span> <span class="pre">the</span> <span class="pre">``onReceive</span></tt>-method.</p>
+<p>This allows you to react to DeathWatch <tt class="docutils literal"><span class="pre">Terminated</span></tt>-messages and other types of messages,
+e.g. when interfacing with untyped actors.</p>
+</div>
+<div class="section" id="proxying">
+<h2>Proxying</h2>
+<p>You can use the <tt class="docutils literal"><span class="pre">typedActorOf</span></tt> that takes a TypedProps and an ActorRef to proxy the given ActorRef as a TypedActor.
+This is usable if you want to communicate remotely with TypedActors on other machines, just look them up with <tt class="docutils literal"><span class="pre">actorFor</span></tt> and pass the <tt class="docutils literal"><span class="pre">ActorRef</span></tt> to <tt class="docutils literal"><span class="pre">typedActorOf</span></tt>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The ActorRef needs to accept <tt class="docutils literal"><span class="pre">MethodCall</span></tt> messages.</p>
+</div>
+</div>
+<div class="section" id="lookup-remoting">
+<h2>Lookup &amp; Remoting</h2>
+<p>Since <tt class="docutils literal"><span class="pre">TypedActors</span></tt> are backed by <tt class="docutils literal"><span class="pre">Akka</span> <span class="pre">Actors</span></tt>, you can use <tt class="docutils literal"><span class="pre">actorFor</span></tt> together with <tt class="docutils literal"><span class="pre">typedActorOf</span></tt> to proxy <tt class="docutils literal"><span class="pre">ActorRefs</span></tt> potentially residing on remote nodes.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">typedActor</span><span class="k">:</span> <span class="kt">Foo</span> <span class="kt">with</span> <span class="kt">Bar</span> <span class="o">=</span>
+  <span class="nc">TypedActor</span><span class="o">(</span><span class="n">system</span><span class="o">).</span>
+    <span class="n">typedActorOf</span><span class="o">(</span>
+      <span class="nc">TypedProps</span><span class="o">[</span><span class="kt">FooBar</span><span class="o">],</span>
+      <span class="n">system</span><span class="o">.</span><span class="n">actorFor</span><span class="o">(</span><span class="s">&quot;akka://SomeSystem@somehost:2552/user/some/foobar&quot;</span><span class="o">))</span>
+<span class="c1">//Use &quot;typedActor&quot; as a FooBar</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="supercharging">
+<h2>Supercharging</h2>
+<p>Here's an example on how you can use traits to mix in behavior in your Typed Actors.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">trait</span> <span class="nc">Foo</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">doFoo</span><span class="o">(</span><span class="n">times</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;doFoo(&quot;</span> <span class="o">+</span> <span class="n">times</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">trait</span> <span class="nc">Bar</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">TypedActor.dispatcher</span> <span class="c1">//So we have an implicit dispatcher for our Promise</span>
+  <span class="k">def</span> <span class="n">doBar</span><span class="o">(</span><span class="n">str</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Promise</span> <span class="n">successful</span> <span class="n">str</span><span class="o">.</span><span class="n">toUpperCase</span>
+<span class="o">}</span>
+
+<span class="k">class</span> <span class="nc">FooBar</span> <span class="k">extends</span> <span class="nc">Foo</span> <span class="k">with</span> <span class="nc">Bar</span>
+</pre></div>
+</div>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">awesomeFooBar</span><span class="k">:</span> <span class="kt">Foo</span> <span class="kt">with</span> <span class="kt">Bar</span> <span class="o">=</span> <span class="nc">TypedActor</span><span class="o">(</span><span class="n">system</span><span class="o">).</span><span class="n">typedActorOf</span><span class="o">(</span><span class="nc">TypedProps</span><span class="o">[</span><span class="kt">FooBar</span><span class="o">]())</span>
+
+<span class="n">awesomeFooBar</span><span class="o">.</span><span class="n">doFoo</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">f</span> <span class="k">=</span> <span class="n">awesomeFooBar</span><span class="o">.</span><span class="n">doBar</span><span class="o">(</span><span class="s">&quot;yes&quot;</span><span class="o">)</span>
+
+<span class="nc">TypedActor</span><span class="o">(</span><span class="n">system</span><span class="o">).</span><span class="n">poisonPill</span><span class="o">(</span><span class="n">awesomeFooBar</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

@@ -1,0 +1,560 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.testkit</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a></p>
+        <h1>testkit</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">testkit</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.testkit.CallingThreadDispatcher" data-isabs="false">
+      <a id="CallingThreadDispatcher:CallingThreadDispatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallingThreadDispatcher.html"><span class="name">CallingThreadDispatcher</span></a><span class="result"> extends MessageDispatcher</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Dispatcher which runs invocations on the current thread only.</p>
+    </li><li visbl="pub" name="akka.testkit.CallingThreadDispatcherConfigurator" data-isabs="false">
+      <a id="CallingThreadDispatcherConfigurator:CallingThreadDispatcherConfigurator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallingThreadDispatcherConfigurator.html"><span class="name">CallingThreadDispatcherConfigurator</span></a><span class="result"> extends MessageDispatcherConfigurator</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.CallingThreadMailbox" data-isabs="false">
+      <a id="CallingThreadMailbox:CallingThreadMailbox"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallingThreadMailbox.html"><span class="name">CallingThreadMailbox</span></a><span class="result"> extends Mailbox with DefaultSystemMessageQueue</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.CustomEventFilter" data-isabs="false">
+      <a id="CustomEventFilter:CustomEventFilter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CustomEventFilter.html"><span class="name">CustomEventFilter</span></a><span class="params">(<span name="test">test: PartialFunction[LogEvent, Boolean]</span>, <span name="occurrences">occurrences: Int</span>)</span><span class="result"> extends EventFilter with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Custom event filter when the others do not fit the bill.</p>
+    </li><li visbl="pub" name="akka.testkit.DebugFilter" data-isabs="false">
+      <a id="DebugFilter:DebugFilter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DebugFilter.html"><span class="name">DebugFilter</span></a><span class="params">(<span name="source">source: Option[String]</span>, <span name="message">message: Either[String, Regex]</span>, <span name="complete">complete: Boolean</span>, <span name="occurrences">occurrences: Int</span>)</span><span class="result"> extends EventFilter with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Filter which matches Debug events, if they satisfy the given criteria:</p>
+    </li><li visbl="pub" name="akka.testkit.DefaultTimeout" data-isabs="true">
+      <a id="DefaultTimeout:DefaultTimeout"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DefaultTimeout.html"><span class="name">DefaultTimeout</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.ErrorFilter" data-isabs="false">
+      <a id="ErrorFilter:ErrorFilter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ErrorFilter.html"><span class="name">ErrorFilter</span></a><span class="params">(<span name="throwable">throwable: Class[_]</span>, <span name="source">source: Option[String]</span>, <span name="message">message: Either[String, Regex]</span>, <span name="complete">complete: Boolean</span>, <span name="occurrences">occurrences: Int</span>)</span><span class="result"> extends EventFilter with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Filter which matches Error events, if they satisfy the given criteria:</p>
+    </li><li visbl="pub" name="akka.testkit.EventFilter" data-isabs="true">
+      <a id="EventFilter:EventFilter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="EventFilter.html"><span class="name">EventFilter</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Facilities for selectively filtering out expected events from logging so
+that you can keep your test run’s console output clean and do not miss real
+error messages.</p>
+    </li><li visbl="pub" name="akka.testkit.ImplicitSender" data-isabs="true">
+      <a id="ImplicitSender:ImplicitSender"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ImplicitSender.html"><span class="name">ImplicitSender</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.InfoFilter" data-isabs="false">
+      <a id="InfoFilter:InfoFilter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="InfoFilter.html"><span class="name">InfoFilter</span></a><span class="params">(<span name="source">source: Option[String]</span>, <span name="message">message: Either[String, Regex]</span>, <span name="complete">complete: Boolean</span>, <span name="occurrences">occurrences: Int</span>)</span><span class="result"> extends EventFilter with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Filter which matches Info events, if they satisfy the given criteria:</p>
+    </li><li visbl="pub" name="akka.testkit.NestingQueue" data-isabs="false">
+      <a id="NestingQueue:NestingQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NestingQueue.html"><span class="name">NestingQueue</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.TestActor" data-isabs="false">
+      <a id="TestActor:TestActor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TestActor.html"><span class="name">TestActor</span></a><span class="result"> extends Actor</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.TestActorRef" data-isabs="false">
+      <a id="TestActorRef:TestActorRef[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TestActorRef.html"><span class="name">TestActorRef</span></a><span class="tparams">[<span name="T">T &lt;: Actor</span>]</span><span class="result"> extends LocalActorRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This special ActorRef is exclusively for use during unit testing in a single-threaded environment.</p>
+    </li><li visbl="pub" name="akka.testkit.TestBarrier" data-isabs="false">
+      <a id="TestBarrier:TestBarrier"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TestBarrier.html"><span class="name">TestBarrier</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.TestBarrierTimeoutException" data-isabs="false">
+      <a id="TestBarrierTimeoutException:TestBarrierTimeoutException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TestBarrierTimeoutException.html"><span class="name">TestBarrierTimeoutException</span></a><span class="result"> extends RuntimeException</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.package.TestDuration" data-isabs="false">
+      <a id="TestDuration:TestDuration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="package$$TestDuration.html"><span class="name">TestDuration</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Wrapper for implicit conversion to add dilated function to Duration.</p>
+    </li><li visbl="pub" name="akka.testkit.TestEvent" data-isabs="true">
+      <a id="TestEvent:TestEvent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TestEvent.html"><span class="name">TestEvent</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Implementation helpers of the EventFilter facilities: send <code>Mute</code>
+to the TestEventListener to install a filter, and <code>UnMute</code> to
+deinstall it.</p>
+    </li><li visbl="pub" name="akka.testkit.TestEventListener" data-isabs="false">
+      <a id="TestEventListener:TestEventListener"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TestEventListener.html"><span class="name">TestEventListener</span></a><span class="result"> extends DefaultLogger</span>
+      </span>
+      </h4>
+      <p class="comment cmt">EventListener for running tests, which allows selectively filtering out
+expected messages.</p>
+    </li><li visbl="pub" name="akka.testkit.TestFSMRef" data-isabs="false">
+      <a id="TestFSMRef:TestFSMRef[S, D, T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TestFSMRef.html"><span class="name">TestFSMRef</span></a><span class="tparams">[<span name="S">S</span>, <span name="D">D</span>, <span name="T">T &lt;: Actor</span>]</span><span class="result"> extends TestActorRef[Nothing]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This is a specialised form of the TestActorRef with support for querying and
+setting the state of a FSM.</p>
+    </li><li visbl="pub" name="akka.testkit.TestKit" data-isabs="false">
+      <a id="TestKit:TestKit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TestKit.html"><span class="name">TestKit</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Test kit for testing actors.</p>
+    </li><li visbl="pub" name="akka.testkit.TestKitSettings" data-isabs="false">
+      <a id="TestKitSettings:TestKitSettings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TestKitSettings.html"><span class="name">TestKitSettings</span></a><span class="result"> extends Extension</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.TestLatch" data-isabs="false">
+      <a id="TestLatch:TestLatch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TestLatch.html"><span class="name">TestLatch</span></a><span class="result"> extends Awaitable[Unit]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.TestProbe" data-isabs="false">
+      <a id="TestProbe:TestProbe"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TestProbe.html"><span class="name">TestProbe</span></a><span class="result"> extends TestKit</span>
+      </span>
+      </h4>
+      <p class="comment cmt">TestKit-based probe which allows sending, reception and reply.</p>
+    </li><li visbl="pub" name="akka.testkit.WarningFilter" data-isabs="false">
+      <a id="WarningFilter:WarningFilter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="WarningFilter.html"><span class="name">WarningFilter</span></a><span class="params">(<span name="source">source: Option[String]</span>, <span name="message">message: Either[String, Regex]</span>, <span name="complete">complete: Boolean</span>, <span name="occurrences">occurrences: Int</span>)</span><span class="result"> extends EventFilter with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Filter which matches Warning events, if they satisfy the given criteria:</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="akka.testkit.CallingThreadDispatcher" data-isabs="false">
+      <a id="CallingThreadDispatcher:CallingThreadDispatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CallingThreadDispatcher$.html"><span class="name">CallingThreadDispatcher</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.EventFilter" data-isabs="false">
+      <a id="EventFilter:EventFilter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="EventFilter$.html"><span class="name">EventFilter</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Facilities for selectively filtering out expected events from logging so
+that you can keep your test run’s console output clean and do not miss real
+error messages.</p>
+    </li><li visbl="pub" name="akka.testkit.TestActor" data-isabs="false">
+      <a id="TestActor:TestActor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TestActor$.html"><span class="name">TestActor</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.TestActorRef" data-isabs="false">
+      <a id="TestActorRef:TestActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TestActorRef$.html"><span class="name">TestActorRef</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.TestBarrier" data-isabs="false">
+      <a id="TestBarrier:TestBarrier"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TestBarrier$.html"><span class="name">TestBarrier</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A cyclic barrier wrapper for use in testing.</p>
+    </li><li visbl="pub" name="akka.testkit.TestEvent" data-isabs="false">
+      <a id="TestEvent:TestEvent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TestEvent$.html"><span class="name">TestEvent</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Implementation helpers of the EventFilter facilities: send <code>Mute</code>
+to the TestEventFilter to install a filter, and <code>UnMute</code> to
+deinstall it.</p>
+    </li><li visbl="pub" name="akka.testkit.TestFSMRef" data-isabs="false">
+      <a id="TestFSMRef:TestFSMRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TestFSMRef$.html"><span class="name">TestFSMRef</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.TestKit" data-isabs="false">
+      <a id="TestKit:TestKit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TestKit$.html"><span class="name">TestKit</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.TestKitExtension" data-isabs="false">
+      <a id="TestKitExtension:TestKitExtension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TestKitExtension$.html"><span class="name">TestKitExtension</span></a><span class="result"> extends ExtensionId[TestKitSettings]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.TestLatch" data-isabs="false">
+      <a id="TestLatch:TestLatch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TestLatch$.html"><span class="name">TestLatch</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A count down latch wrapper for use in testing.</p>
+    </li><li visbl="pub" name="akka.testkit.TestProbe" data-isabs="false">
+      <a id="TestProbe:TestProbe"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TestProbe$.html"><span class="name">TestProbe</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.testkit.package#duration2TestDuration" data-isabs="false">
+      <a id="duration2TestDuration(Duration):TestDuration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">duration2TestDuration</span><span class="params">(<span name="duration">duration: <a name="akka.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>)</span><span class="result">: <a name="akka.testkit.package.TestDuration" class="extype" href="package$$TestDuration.html">TestDuration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Scala API.</p><div class="fullcomment"><div class="comment cmt"><p>Scala API. Scale timeouts (durations) during tests with the configured
+'akka.test.timefactor'.
+Implicit conversion to add dilated function to Duration.
+import akka.util.duration._
+import akka.testkit._
+10.milliseconds.dilated</p><p>Corresponding Java API is available in TestKit.dilated
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.testkit.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.testkit.package#filterEvents" data-isabs="false">
+      <a id="filterEvents[T](EventFilter*)(⇒ T)(ActorSystem):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">filterEvents</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="eventFilters">eventFilters: <a name="akka.testkit.EventFilter" class="extype" href="EventFilter.html">EventFilter</a>*</span>)</span><span class="params">(<span name="block">block: ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <a name="akka.actor.ActorSystem" class="extype" href="../actor/ActorSystem.html">ActorSystem</a></span>)</span><span class="result">: T</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.testkit.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.testkit.package#filterEvents" data-isabs="false">
+      <a id="filterEvents[T](Iterable[EventFilter])(⇒ T)(ActorSystem):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">filterEvents</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="eventFilters">eventFilters: Iterable[<a name="akka.testkit.EventFilter" class="extype" href="EventFilter.html">EventFilter</a>]</span>)</span><span class="params">(<span name="block">block: ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <a name="akka.actor.ActorSystem" class="extype" href="../actor/ActorSystem.html">ActorSystem</a></span>)</span><span class="result">: T</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.testkit.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.testkit.package#filterException" data-isabs="false">
+      <a id="filterException[T&lt;:Throwable](⇒ Unit)(ActorSystem,Manifest[T]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">filterException</span><span class="tparams">[<span name="T">T &lt;: Throwable</span>]</span><span class="params">(<span name="block">block: ⇒ <span name="scala.Unit" class="extype">Unit</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <a name="akka.actor.ActorSystem" class="extype" href="../actor/ActorSystem.html">ActorSystem</a></span>, <span name="m">m: Manifest[T]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.testkit.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

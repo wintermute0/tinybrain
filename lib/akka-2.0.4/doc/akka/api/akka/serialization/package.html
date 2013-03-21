@@ -1,0 +1,294 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.serialization</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a></p>
+        <h1>serialization</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">serialization</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.serialization.JSerializer" data-isabs="true">
+      <a id="JSerializer:JSerializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="JSerializer.html"><span class="name">JSerializer</span></a><span class="result"> extends Serializer</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Java API for creating a Serializer: make sure to include a constructor which
+takes exactly one argument of type <a name="akka.actor.ExtendedActorSystem" class="extype" href="../actor/ExtendedActorSystem.html">ExtendedActorSystem</a>, because
+that is the preferred constructor which will be invoked when reflectively instantiating
+the JSerializer (also possible with empty constructor).</p>
+    </li><li visbl="pub" name="akka.serialization.JavaSerializer" data-isabs="false">
+      <a id="JavaSerializer:JavaSerializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="JavaSerializer.html"><span class="name">JavaSerializer</span></a><span class="result"> extends Serializer</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This Serializer uses standard Java Serialization
+</p>
+    </li><li visbl="pub" name="akka.serialization.package#JsValue" data-isabs="false">
+      <a id="JsValue:JsValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">JsValue</span><span class="result"> = <span name="dispatch.json.JsValue" class="extype">JsValue</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.serialization.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.serialization.NoSerializerFoundException" data-isabs="false">
+      <a id="NoSerializerFoundException:NoSerializerFoundException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NoSerializerFoundException.html"><span class="name">NoSerializerFoundException</span></a><span class="params">(<span name="m">m: String</span>)</span><span class="result"> extends AkkaException with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.serialization.NullSerializer" data-isabs="false">
+      <a id="NullSerializer:NullSerializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NullSerializer.html"><span class="name">NullSerializer</span></a><span class="result"> extends Serializer</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This is a special Serializer that Serializes and deserializes nulls only
+</p>
+    </li><li visbl="pub" name="akka.serialization.ProtobufSerializer" data-isabs="false">
+      <a id="ProtobufSerializer:ProtobufSerializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ProtobufSerializer.html"><span class="name">ProtobufSerializer</span></a><span class="result"> extends Serializer</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This Serializer serializes <code>com.google.protobuf.Message</code>s
+</p>
+    </li><li visbl="pub" name="akka.serialization.Serialization" data-isabs="false">
+      <a id="Serialization:Serialization"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Serialization.html"><span class="name">Serialization</span></a><span class="result"> extends Extension</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Serialization module.</p>
+    </li><li visbl="pub" name="akka.serialization.Serializer" data-isabs="true">
+      <a id="Serializer:Serializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Serializer.html"><span class="name">Serializer</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A Serializer represents a bimap between an object and an array of bytes representing that object.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="akka.serialization.package#DefaultProtocol" data-isabs="false">
+      <a id="DefaultProtocol:sjson.json.DefaultProtocol.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">DefaultProtocol</span><span class="result">: sjson.json.DefaultProtocol.type</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.serialization.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.serialization.JavaSerializer" data-isabs="false">
+      <a id="JavaSerializer:JavaSerializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JavaSerializer$.html"><span class="name">JavaSerializer</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.serialization.package#Js" data-isabs="false">
+      <a id="Js:dispatch.json.Js.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Js</span><span class="result">: dispatch.json.Js.type</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.serialization.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.serialization.package#JsValue" data-isabs="false">
+      <a id="JsValue:dispatch.json.JsValue.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">JsValue</span><span class="result">: dispatch.json.JsValue.type</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.serialization.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.serialization.package#JsonSerialization" data-isabs="false">
+      <a id="JsonSerialization:sjson.json.JsonSerialization.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">JsonSerialization</span><span class="result">: sjson.json.JsonSerialization.type</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.serialization.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.serialization.NullSerializer" data-isabs="false">
+      <a id="NullSerializer:NullSerializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="NullSerializer$.html"><span class="name">NullSerializer</span></a><span class="result"> extends NullSerializer</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.serialization.Serialization" data-isabs="false">
+      <a id="Serialization:Serialization"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Serialization$.html"><span class="name">Serialization</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.serialization.SerializationExtension" data-isabs="false">
+      <a id="SerializationExtension:SerializationExtension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SerializationExtension$.html"><span class="name">SerializationExtension</span></a><span class="result"> extends ExtensionId[Serialization] with ExtensionIdProvider</span>
+      </span>
+      </h4>
+      <p class="comment cmt">SerializationExtension is an Akka Extension to interact with the Serialization
+that is built into Akka
+</p>
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="akka.serialization.Compression" data-isabs="false">
+      <a id="Compression:Compression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Compression$.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.1) will be removed to sanitize dependencies, use Voldemort directly">Compression</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.1)</i> will be removed to sanitize dependencies, use Voldemort directly</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

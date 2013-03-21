@@ -1,0 +1,254 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Documentation Guidelines &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Information for Developers" href="index.html" />
+    <link rel="next" title="Team" href="team.html" />
+    <link rel="prev" title="Developer Guidelines" href="developer-guidelines.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Documentation Guidelines</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="team.html">Team</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="developer-guidelines.html">Developer Guidelines</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="documentation-guidelines">
+<span id="documentation"></span><h1>Documentation Guidelines</h1>
+<p>The Akka documentation uses <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> as its markup language and is
+built using <a class="reference external" href="http://sphinx.pocoo.org">Sphinx</a>.</p>
+<div class="section" id="id1">
+<h2>Sphinx</h2>
+<p>More to come...</p>
+</div>
+<div class="section" id="id2">
+<h2>reStructuredText</h2>
+<p>More to come...</p>
+<div class="section" id="sections">
+<h3>Sections</h3>
+<p>Section headings are very flexible in reST. We use the following convention in
+the Akka documentation:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">#</span></tt> (over and under) for module headings</li>
+<li><tt class="docutils literal"><span class="pre">=</span></tt> for sections</li>
+<li><tt class="docutils literal"><span class="pre">-</span></tt> for subsections</li>
+<li><tt class="docutils literal"><span class="pre">^</span></tt> for subsubsections</li>
+<li><tt class="docutils literal"><span class="pre">~</span></tt> for subsubsubsections</li>
+</ul>
+</div>
+<div class="section" id="cross-referencing">
+<h3>Cross-referencing</h3>
+<p>Sections that may be cross-referenced across the documentation should be marked
+with a reference. To mark a section use <tt class="docutils literal"><span class="pre">..</span> <span class="pre">_ref-name:</span></tt> before the section
+heading. The section can then be linked with <tt class="docutils literal"><span class="pre">:ref:`ref-name`</span></tt>. These are
+unique references across the entire documentation.</p>
+<p>For example:</p>
+<div class="highlight-rest"><div class="highlight"><pre><span class="cp">.. _akka-module:</span>
+
+<span class="gh">#############</span>
+<span class="gh"> Akka Module</span>
+<span class="gh">#############</span>
+
+This is the module documentation.
+
+<span class="cp">.. _akka-section:</span>
+
+<span class="gh">Akka Section</span>
+<span class="gh">============</span>
+
+<span class="gh">Akka Subsection</span>
+<span class="gh">---------------</span>
+
+Here is a reference to &quot;akka section&quot;: <span class="na">:ref:</span><span class="nv">`akka-section`</span> which will have the
+name &quot;Akka Section&quot;.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="build-the-documentation">
+<h2>Build the documentation</h2>
+<p>First install <a class="reference external" href="http://sphinx.pocoo.org">Sphinx</a>. See below.</p>
+<div class="section" id="building">
+<h3>Building</h3>
+<div class="highlight-rest"><div class="highlight"><pre>cd akka-docs
+
+make html
+open _build/html/index.html
+
+make pdf
+open _build/latex/Akka.pdf
+</pre></div>
+</div>
+</div>
+<div class="section" id="installing-sphinx-on-os-x">
+<h3>Installing Sphinx on OS X</h3>
+<p>Install <a class="reference external" href="https://github.com/mxcl/homebrew">Homebrew</a></p>
+<p>Install Python and pip:</p>
+<div class="highlight-rest"><div class="highlight"><pre>brew install python
+/usr/local/share/python/easy_install pip
+</pre></div>
+</div>
+<p>Add the Homebrew Python path to your $PATH:</p>
+<div class="highlight-rest"><div class="highlight"><pre>/usr/local/Cellar/python/2.7.1/bin
+</pre></div>
+</div>
+<p>More information in case of trouble:
+<a class="reference external" href="https://github.com/mxcl/homebrew/wiki/Homebrew-and-Python">https://github.com/mxcl/homebrew/wiki/Homebrew-and-Python</a></p>
+<p>Install sphinx:</p>
+<div class="highlight-rest"><div class="highlight"><pre>pip install sphinx
+</pre></div>
+</div>
+<p>Add sphinx_build to your $PATH:</p>
+<div class="highlight-rest"><div class="highlight"><pre>/usr/local/share/python
+</pre></div>
+</div>
+<p>Install BasicTeX package from:
+<a class="reference external" href="http://www.tug.org/mactex/morepackages.html">http://www.tug.org/mactex/morepackages.html</a></p>
+<p>Add texlive bin to $PATH:</p>
+<div class="highlight-rest"><div class="highlight"><pre>/usr/local/texlive/2010basic/bin/universal-darwin
+</pre></div>
+</div>
+<p>Add missing tex packages:</p>
+<div class="highlight-rest"><div class="highlight"><pre>sudo tlmgr update --self
+sudo tlmgr install titlesec
+sudo tlmgr install framed
+sudo tlmgr install threeparttable
+sudo tlmgr install wrapfig
+sudo tlmgr install helvetic
+sudo tlmgr install courier
+</pre></div>
+</div>
+<p>Link the akka pygments style:</p>
+<div class="highlight-rest"><div class="highlight"><pre>cd /usr/local/Cellar/python/2.7.1/lib/python2.7/site-packages/pygments/styles
+ln -s /path/to/akka/akka-docs/themes/akka/pygments/akka.py akka.py
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

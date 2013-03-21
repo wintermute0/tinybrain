@@ -1,0 +1,970 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.dispatch.Promise</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
+      <div id="definition">
+        <a title="Go to companion" href="Promise$.html"><img src="../../lib/trait_to_object_big.png" /></a>
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a>.<a name="akka.dispatch" class="extype" href="package.html">dispatch</a></p>
+        <h1><a title="Go to companion" href="Promise$.html">Promise</a></h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Promise</span><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[T]</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Essentially this is the Promise (or write-side) of a Future (read-side).
+</p></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[T], <a name="akka.dispatch.Await.Awaitable" class="extype" href="Await$$Awaitable.html">Awaitable</a>[T], AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+        </div><div class="toggleContainer block">
+          <span class="toggle">Known Subclasses</span>
+          <div class="subClasses hiddenContent"><a name="akka.dispatch.DefaultPromise" class="extype" href="DefaultPromise.html">DefaultPromise</a>, <a name="akka.dispatch.KeptPromise" class="extype" href="KeptPromise.html">KeptPromise</a></div>
+        </div></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+            </div>
+        <div id="ancestors">
+              <span class="filtertype">Inherited</span>
+              <ol><li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li></ol>
+              <ol id="linearization"><li name="akka.dispatch.Promise" class="in"><span>Promise</span></li><li name="akka.dispatch.Future" class="in"><span>Future</span></li><li name="akka.dispatch.Await.Awaitable" class="in"><span>Awaitable</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+            </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.dispatch.Future.FutureWithFilter" data-isabs="false">
+      <a id="FutureWithFilter:FutureWithFilter[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Future$FutureWithFilter.html"><span class="name">FutureWithFilter</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Abstract Value Members</h3>
+              <ol><li visbl="prt" name="akka.dispatch.Future#executor" data-isabs="true">
+      <a id="executor:ExecutionContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">executor</span><span class="result">: <a name="akka.dispatch.ExecutionContext" class="extype" href="ExecutionContext.html">ExecutionContext</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#isCompleted" data-isabs="true">
+      <a id="isCompleted:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isCompleted</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Tests whether this Future has been completed.</p><div class="fullcomment"><div class="comment cmt"><p>Tests whether this Future has been completed.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#onComplete" data-isabs="true">
+      <a id="onComplete[U]((Either[Throwable, T]) ⇒ U):Promise.this.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">onComplete</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="func">func: (<span name="scala.Either" class="extype">Either</span>[Throwable, T]) ⇒ U</span>)</span><span class="result">: Promise.this.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">When this Future is completed, apply the provided function to the
+Future.</p><div class="fullcomment"><div class="comment cmt"><p>When this Future is completed, apply the provided function to the
+Future. If the Future has already been completed, this will apply
+immediately. Multiple
+callbacks may be registered; there is no guarantee that they will be
+executed in a particular order.</p><p>   Note: the callback function may (and probably will) run in another thread,
+   and therefore should not refer to any unsynchronized state. In
+   particular, if using this method from an actor, do not access
+   the state of the actor from the callback function.
+   <a name="akka.dispatch.Promise" class="extype" href="">Promise</a>.<code>completeWith</code>,
+   <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="../pattern/PipeToSupport$PipeableFuture.html">PipeableFuture</a>.<code>pipeTo</code>,
+   and <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>.<code>fallbackTo</code> are some methods to consider
+   using when possible, to avoid concurrent callbacks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Await.Awaitable#ready" data-isabs="true">
+      <a id="ready(Duration)(CanAwait):Promise.this.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ready</span><span class="params">(<span name="atMost">atMost: <a name="akka.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a name="akka.dispatch.Await.CanAwait" class="extype" href="Await$$CanAwait.html">CanAwait</a></span>)</span><span class="result">: Promise.this.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Should throw java.util.concurrent.TimeoutException if times out
+This method should not be called directly.</p><div class="fullcomment"><div class="comment cmt"><p>Should throw java.util.concurrent.TimeoutException if times out
+This method should not be called directly.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Await.Awaitable" class="extype" href="Await$$Awaitable.html">Awaitable</a></dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[TimeoutException]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Await.Awaitable#result" data-isabs="true">
+      <a id="result(Duration)(CanAwait):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">result</span><span class="params">(<span name="atMost">atMost: <a name="akka.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a name="akka.dispatch.Await.CanAwait" class="extype" href="Await$$CanAwait.html">CanAwait</a></span>)</span><span class="result">: T</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Throws exceptions if cannot produce a T within the specified time
+This method should not be called directly.</p><div class="fullcomment"><div class="comment cmt"><p>Throws exceptions if cannot produce a T within the specified time
+This method should not be called directly.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Await.Awaitable" class="extype" href="Await$$Awaitable.html">Awaitable</a></dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[Exception]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Promise#tryComplete" data-isabs="true">
+      <a id="tryComplete(Either[Throwable, T]):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tryComplete</span><span class="params">(<span name="value">value: <span name="scala.Either" class="extype">Either</span>[Throwable, T]</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Completes this Promise with the specified result, if not already completed.</p><div class="fullcomment"><div class="comment cmt"><p>Completes this Promise with the specified result, if not already completed.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>whether this call completed the Promise
+</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#value" data-isabs="true">
+      <a id="value:Option[Either[Throwable, T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">value</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<span name="scala.Either" class="extype">Either</span>[Throwable, T]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The contained value of this Future.</p><div class="fullcomment"><div class="comment cmt"><p>The contained value of this Future. Before this Future is completed
+the value will be None. After completion the value will be Some(Right(t))
+if it contains a valid result, or Some(Left(error)) if it contains
+an exception.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Concrete Value Members</h3>
+              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $hash$hash">##</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Promise#&lt;&lt;" data-isabs="false">
+      <a id="&lt;&lt;(Future[T]):akka.dispatch.Future[T] @util.continuations.package.cps[akka.dispatch.Future[Any]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $less$less">&lt;&lt;</span><span class="params">(<span name="other">other: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[T]</span>)</span><span class="result">: akka.dispatch.Future[T] @util.continuations.package.cps[akka.dispatch.Future[Any]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.Promise#&lt;&lt;" data-isabs="false">
+      <a id="&lt;&lt;(T):akka.dispatch.Future[T] @util.continuations.package.cps[akka.dispatch.Future[Any]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $less$less">&lt;&lt;</span><span class="params">(<span name="value">value: T</span>)</span><span class="result">: akka.dispatch.Future[T] @util.continuations.package.cps[akka.dispatch.Future[Any]]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#andThen" data-isabs="false">
+      <a id="andThen[U](PartialFunction[Either[Throwable, T], U]):Future[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">andThen</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="pf">pf: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[<span name="scala.Either" class="extype">Either</span>[Throwable, T], U]</span>)</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[T]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a new Future that will contain the completed result of this Future,
+and which will invoke the supplied PartialFunction when completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that will contain the completed result of this Future,
+and which will invoke the supplied PartialFunction when completed.</p><p>This allows for establishing order of side-effects.</p><pre>
+ Future { <span class="num">5</span> } andThen {
+   <span class="kw">case</span> something <span class="kw">=&gt;</span> assert(something is awesome)
+ } andThen {
+   <span class="kw">case</span> Left(t) <span class="kw">=&gt;</span> handleProblem(t)
+   <span class="kw">case</span> Right(v) <span class="kw">=&gt;</span> dealWithSuccess(v)
+ }
+</pre><p>   Note: the callback function may (and probably will) run in another thread,
+   and therefore should not refer to any unsynchronized state. In
+   particular, if using this method from an actor, do not access
+   the state of the actor from the callback function.
+   <a name="akka.dispatch.Promise" class="extype" href="">Promise</a>.<code>completeWith</code>,
+   <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="../pattern/PipeToSupport$PipeableFuture.html">PipeableFuture</a>.<code>pipeTo</code>,
+   and <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>.<code>fallbackTo</code> are some methods to consider
+   using when possible, to avoid concurrent callbacks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#apply" data-isabs="false">
+      <a id="apply():T @util.continuations.package.cps[akka.dispatch.Future[Any]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">()</span><span class="result">: T @util.continuations.package.cps[akka.dispatch.Future[Any]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">For use only within a Future.</p><div class="fullcomment"><div class="comment cmt"><p>For use only within a Future.flow block or another compatible Delimited Continuations reset block.</p><p>Returns the result of this Future without blocking, by suspending execution and storing it as a
+continuation until the result is available.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Promise#complete" data-isabs="false">
+      <a id="complete(Either[Throwable, T]):Promise.this.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">complete</span><span class="params">(<span name="value">value: <span name="scala.Either" class="extype">Either</span>[Throwable, T]</span>)</span><span class="result">: Promise.this.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Completes this Promise with the specified result, if not already completed.</p><div class="fullcomment"><div class="comment cmt"><p>Completes this Promise with the specified result, if not already completed.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>this
+</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">IllegalStateException<p>if already completed, this is to aid in debugging of complete-races,
+        use tryComplete to do a conditional complete.</p></span></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Promise#completeWith" data-isabs="false">
+      <a id="completeWith(Future[T]):Promise.this.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">completeWith</span><span class="params">(<span name="other">other: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[T]</span>)</span><span class="result">: Promise.this.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Completes this Promise with the specified other Future, when that Future is completed,
+unless this Promise has already been completed.</p><div class="fullcomment"><div class="comment cmt"><p>Completes this Promise with the specified other Future, when that Future is completed,
+unless this Promise has already been completed.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>this.
+</p></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#failed" data-isabs="false">
+      <a id="failed:Future[Throwable]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">failed</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[Throwable]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a failure projection of this Future
+If <code>this</code> becomes completed with a failure, that failure will be the success of the returned Future
+If <code>this</code> becomes completed with a result, then the returned future will fail with a NoSuchElementException
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns a failure projection of this Future
+If <code>this</code> becomes completed with a failure, that failure will be the success of the returned Future
+If <code>this</code> becomes completed with a result, then the returned future will fail with a NoSuchElementException
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Promise#failure" data-isabs="false">
+      <a id="failure(Throwable):Promise.this.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">failure</span><span class="params">(<span name="exception">exception: Throwable</span>)</span><span class="result">: Promise.this.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Completes this Promise with the specified exception, if not already completed.</p><div class="fullcomment"><div class="comment cmt"><p>Completes this Promise with the specified exception, if not already completed.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>this
+</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#fallbackTo" data-isabs="false">
+      <a id="fallbackTo[U&gt;:T](Future[U]):Future[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fallbackTo</span><span class="tparams">[<span name="U">U &gt;: T</span>]</span><span class="params">(<span name="that">that: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[U]</span>)</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[U]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a new Future that will either hold the successful value of this Future,
+or, it this Future fails, it will hold the result of &quot;that&quot; Future.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that will either hold the successful value of this Future,
+or, it this Future fails, it will hold the result of &quot;that&quot; Future.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#filter" data-isabs="false">
+      <a id="filter((T) ⇒ Boolean):Future[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">filter</span><span class="params">(<span name="pred">pred: (T) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[T]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a new Future that will hold the successful result of this Future if it matches
+the given predicate, if it doesn't match, the resulting Future will be a failed Future
+with a MatchError, of if this Future fails, that failure will be propagated to the returned Future</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that will hold the successful result of this Future if it matches
+the given predicate, if it doesn't match, the resulting Future will be a failed Future
+with a MatchError, of if this Future fails, that failure will be propagated to the returned Future</p><p>   Note: the callback function may (and probably will) run in another thread,
+   and therefore should not refer to any unsynchronized state. In
+   particular, if using this method from an actor, do not access
+   the state of the actor from the callback function.
+   <a name="akka.dispatch.Promise" class="extype" href="">Promise</a>.<code>completeWith</code>,
+   <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="../pattern/PipeToSupport$PipeableFuture.html">PipeableFuture</a>.<code>pipeTo</code>,
+   and <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>.<code>fallbackTo</code> are some methods to consider
+   using when possible, to avoid concurrent callbacks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#flatMap" data-isabs="false">
+      <a id="flatMap[A]((T) ⇒ Future[A]):Future[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">flatMap</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="f">f: (T) ⇒ <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[A]</span>)</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[A]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new Future by applying a function to the successful result of
+this Future, and returns the result of the function as the new Future.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new Future by applying a function to the successful result of
+this Future, and returns the result of the function as the new Future.
+If this Future is completed with an exception then the new Future will
+also contain this exception.
+Example:
+<pre>
+val future1 = for {
+  a: Int    <- actor ? "Hello" // returns 5
+  b: String <- actor ? a       // returns "10"
+  c: String <- actor ? 7       // returns "14"
+} yield b + "-" + c
+</pre></p><p>   Note: the callback function may (and probably will) run in another thread,
+   and therefore should not refer to any unsynchronized state. In
+   particular, if using this method from an actor, do not access
+   the state of the actor from the callback function.
+   <a name="akka.dispatch.Promise" class="extype" href="">Promise</a>.<code>completeWith</code>,
+   <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="../pattern/PipeToSupport$PipeableFuture.html">PipeableFuture</a>.<code>pipeTo</code>,
+   and <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>.<code>fallbackTo</code> are some methods to consider
+   using when possible, to avoid concurrent callbacks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#foreach" data-isabs="false">
+      <a id="foreach[U]((T) ⇒ U):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">foreach</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: (T) ⇒ U</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Same as onSuccess { case r =&gt; f(r) } but is also used in for-comprehensions</p><div class="fullcomment"><div class="comment cmt"><p>Same as onSuccess { case r =&gt; f(r) } but is also used in for-comprehensions</p><p>   Note: the callback function may (and probably will) run in another thread,
+   and therefore should not refer to any unsynchronized state. In
+   particular, if using this method from an actor, do not access
+   the state of the actor from the callback function.
+   <a name="akka.dispatch.Promise" class="extype" href="">Promise</a>.<code>completeWith</code>,
+   <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="../pattern/PipeToSupport$PipeableFuture.html">PipeableFuture</a>.<code>pipeTo</code>,
+   and <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>.<code>fallbackTo</code> are some methods to consider
+   using when possible, to avoid concurrent callbacks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Promise#future" data-isabs="false">
+      <a id="future:Future[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">future</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[T]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the Future associated with this Promise
+</p>
+    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
+      <a id="getClass():java.lang.Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#map" data-isabs="false">
+      <a id="map[A]((T) ⇒ A):Future[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">map</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="f">f: (T) ⇒ A</span>)</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[A]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new Future by applying a function to the successful result of
+this Future.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new Future by applying a function to the successful result of
+this Future. If this Future is completed with an exception then the new
+Future will also contain this exception.
+Example:
+<pre>
+val future1 = for {
+  a: Int    <- actor ? "Hello" // returns 5
+  b: String <- actor ? a       // returns "10"
+  c: String <- actor ? 7       // returns "14"
+} yield b + "-" + c
+</pre></p><p>   Note: the callback function may (and probably will) run in another thread,
+   and therefore should not refer to any unsynchronized state. In
+   particular, if using this method from an actor, do not access
+   the state of the actor from the callback function.
+   <a name="akka.dispatch.Promise" class="extype" href="">Promise</a>.<code>completeWith</code>,
+   <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="../pattern/PipeToSupport$PipeableFuture.html">PipeableFuture</a>.<code>pipeTo</code>,
+   and <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>.<code>fallbackTo</code> are some methods to consider
+   using when possible, to avoid concurrent callbacks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#mapTo" data-isabs="false">
+      <a id="mapTo[A](Manifest[A]):Future[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mapTo</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="m">m: Manifest[A]</span>)</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[A]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new Future[A] which is completed with this Future's result if
+that conforms to A's erased type or a ClassCastException otherwise.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new Future[A] which is completed with this Future's result if
+that conforms to A's erased type or a ClassCastException otherwise.</p><p>When used from Java, to create the Manifest, use:
+import static akka.japi.Util.manifest;
+future.mapTo(manifest(MyClass.class));
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#onFailure" data-isabs="false">
+      <a id="onFailure[U](PartialFunction[Throwable, U]):Promise.this.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">onFailure</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="pf">pf: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[Throwable, U]</span>)</span><span class="result">: Promise.this.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">When the future is completed with an exception, apply the provided
+PartialFunction to the exception.</p><div class="fullcomment"><div class="comment cmt"><p>When the future is completed with an exception, apply the provided
+PartialFunction to the exception. See <code>onComplete</code> for more details.
+<pre>
+  future onFailure {
+    case NumberFormatException ⇒ target ! "wrong format"
+  }
+</pre></p><p>   Note: the callback function may (and probably will) run in another thread,
+   and therefore should not refer to any unsynchronized state. In
+   particular, if using this method from an actor, do not access
+   the state of the actor from the callback function.
+   <a name="akka.dispatch.Promise" class="extype" href="">Promise</a>.<code>completeWith</code>,
+   <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="../pattern/PipeToSupport$PipeableFuture.html">PipeableFuture</a>.<code>pipeTo</code>,
+   and <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>.<code>fallbackTo</code> are some methods to consider
+   using when possible, to avoid concurrent callbacks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#onSuccess" data-isabs="false">
+      <a id="onSuccess[U](PartialFunction[T, U]):Promise.this.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">onSuccess</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="pf">pf: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[T, U]</span>)</span><span class="result">: Promise.this.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">When the future is completed with a valid result, apply the provided
+PartialFunction to the result.</p><div class="fullcomment"><div class="comment cmt"><p>When the future is completed with a valid result, apply the provided
+PartialFunction to the result. See <code>onComplete</code> for more details.
+<pre>
+  future onSuccess {
+    case Foo ⇒ target ! "foo"
+    case Bar ⇒ target ! "bar"
+  }
+</pre></p><p>   Note: the callback function may (and probably will) run in another thread,
+   and therefore should not refer to any unsynchronized state. In
+   particular, if using this method from an actor, do not access
+   the state of the actor from the callback function.
+   <a name="akka.dispatch.Promise" class="extype" href="">Promise</a>.<code>completeWith</code>,
+   <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="../pattern/PipeToSupport$PipeableFuture.html">PipeableFuture</a>.<code>pipeTo</code>,
+   and <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>.<code>fallbackTo</code> are some methods to consider
+   using when possible, to avoid concurrent callbacks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#recover" data-isabs="false">
+      <a id="recover[A&gt;:T](PartialFunction[Throwable, A]):Future[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">recover</span><span class="tparams">[<span name="A">A &gt;: T</span>]</span><span class="params">(<span name="pf">pf: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[Throwable, A]</span>)</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[A]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a new Future that will handle any matching Throwable that this
+Future might contain.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a new Future that will handle any matching Throwable that this
+Future might contain. If there is no match, or if this Future contains
+a valid result then the new Future will contain the same.
+Example:
+<pre>
+Future(6 / 0) recover { case e: ArithmeticException ⇒ 0 } // result: 0
+Future(6 / 0) recover { case e: NotFoundException   ⇒ 0 } // result: exception
+Future(6 / 2) recover { case e: ArithmeticException ⇒ 0 } // result: 3
+</pre></p><p>   Note: the callback function may (and probably will) run in another thread,
+   and therefore should not refer to any unsynchronized state. In
+   particular, if using this method from an actor, do not access
+   the state of the actor from the callback function.
+   <a name="akka.dispatch.Promise" class="extype" href="">Promise</a>.<code>completeWith</code>,
+   <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="../pattern/PipeToSupport$PipeableFuture.html">PipeableFuture</a>.<code>pipeTo</code>,
+   and <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>.<code>fallbackTo</code> are some methods to consider
+   using when possible, to avoid concurrent callbacks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#recoverWith" data-isabs="false">
+      <a id="recoverWith[U&gt;:T](PartialFunction[Throwable, Future[U]]):Future[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">recoverWith</span><span class="tparams">[<span name="U">U &gt;: T</span>]</span><span class="params">(<span name="pf">pf: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[Throwable, <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[U]]</span>)</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[U]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a new Future that will, in case this future fails,
+be completed with the resulting Future of the given PartialFunction,
+if the given PartialFunction matches the failure of the original Future.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that will, in case this future fails,
+be completed with the resulting Future of the given PartialFunction,
+if the given PartialFunction matches the failure of the original Future.</p><p>If the PartialFunction throws, that Throwable will be propagated to the returned Future.</p><p> Example:</p><pre>
+ <span class="kw">val</span> f = Future { <span class="std">Int</span>.MaxValue }
+ Future (<span class="num">6</span> / <span class="num">0</span>) recoverWith { <span class="kw">case</span> e: ArithmeticException <span class="kw">=&gt;</span> f } <span class="cmt">// result: Int.MaxValue</span>
+</pre><p>   Note: the callback function may (and probably will) run in another thread,
+   and therefore should not refer to any unsynchronized state. In
+   particular, if using this method from an actor, do not access
+   the state of the actor from the callback function.
+   <a name="akka.dispatch.Promise" class="extype" href="">Promise</a>.<code>completeWith</code>,
+   <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="../pattern/PipeToSupport$PipeableFuture.html">PipeableFuture</a>.<code>pipeTo</code>,
+   and <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>.<code>fallbackTo</code> are some methods to consider
+   using when possible, to avoid concurrent callbacks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="prt" name="akka.dispatch.Future#resolve" data-isabs="false">
+      <a id="resolve[X](Either[Throwable, X]):Either[Throwable, X]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">resolve</span><span class="tparams">[<span name="X">X</span>]</span><span class="params">(<span name="source">source: <span name="scala.Either" class="extype">Either</span>[Throwable, X]</span>)</span><span class="result">: <span name="scala.Either" class="extype">Either</span>[Throwable, X]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Promise#success" data-isabs="false">
+      <a id="success(T):Promise.this.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">success</span><span class="params">(<span name="result">result: T</span>)</span><span class="result">: Promise.this.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Completes this Promise with the specified result, if not already completed.</p><div class="fullcomment"><div class="comment cmt"><p>Completes this Promise with the specified result, if not already completed.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>this
+</p></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
+      <a id="synchronized[T0](⇒ T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#withFilter" data-isabs="false">
+      <a id="withFilter((T) ⇒ Boolean):FutureWithFilter[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withFilter</span><span class="params">(<span name="p">p: (T) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="akka.dispatch.Future.FutureWithFilter" class="extype" href="Future$FutureWithFilter.html">FutureWithFilter</a>[T]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Used by for-comprehensions</p><div class="fullcomment"><div class="comment cmt"><p>Used by for-comprehensions</p><p>   Note: the callback function may (and probably will) run in another thread,
+   and therefore should not refer to any unsynchronized state. In
+   particular, if using this method from an actor, do not access
+   the state of the actor from the callback function.
+   <a name="akka.dispatch.Promise" class="extype" href="">Promise</a>.<code>completeWith</code>,
+   <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="../pattern/PipeToSupport$PipeableFuture.html">PipeableFuture</a>.<code>pipeTo</code>,
+   and <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>.<code>fallbackTo</code> are some methods to consider
+   using when possible, to avoid concurrent callbacks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Future#zip" data-isabs="false">
+      <a id="zip[U](Future[U]):Future[(T, U)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zip</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="that">that: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[U]</span>)</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[(T, U)]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a new Future that will contain a tuple containing the successful result of this and that Future.
+If this or that fail, they will race to complete the returned Future with their failure.
+The returned Future will not be completed if neither this nor that are completed.
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="akka.dispatch.Promise#&lt;&lt;" data-isabs="false">
+      <a id="&lt;&lt;(PromiseStreamOut[T]):akka.dispatch.Future[T] @util.continuations.package.cps[akka.dispatch.Future[Any]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="gt4s: $less$less. Deprecated: (Since version 2.0.2) Was never officially supported or documented, will be removed in Akka 2.1">&lt;&lt;</span><span class="params">(<span name="stream">stream: <a name="akka.dispatch.PromiseStreamOut" class="extype" href="PromiseStreamOut.html">PromiseStreamOut</a>[T]</span>)</span><span class="result">: akka.dispatch.Future[T] @util.continuations.package.cps[akka.dispatch.Future[Any]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Was never officially supported or documented, will be removed in Akka 2.1</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        <div name="akka.dispatch.Future" class="parent">
+              <h3>Inherited from <a name="akka.dispatch.Future" class="extype" href="Future.html">Future</a>[T]</h3>
+            </div><div name="akka.dispatch.Await.Awaitable" class="parent">
+              <h3>Inherited from <a name="akka.dispatch.Await.Awaitable" class="extype" href="Await$$Awaitable.html">Awaitable</a>[T]</h3>
+            </div><div name="scala.AnyRef" class="parent">
+              <h3>Inherited from AnyRef</h3>
+            </div><div name="scala.Any" class="parent">
+              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

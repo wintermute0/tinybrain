@@ -1,0 +1,377 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.event</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a></p>
+        <h1>event</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">event</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.event.ActorClassification" data-isabs="true">
+      <a id="ActorClassification:ActorClassification"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorClassification.html"><span class="name">ActorClassification</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Maps ActorRefs to ActorRefs to form an EventBus where ActorRefs can listen to other ActorRefs
+</p>
+    </li><li visbl="pub" name="akka.event.ActorClassifier" data-isabs="true">
+      <a id="ActorClassifier:ActorClassifier"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorClassifier.html"><span class="name">ActorClassifier</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Can be mixed into an EventBus to specify that the Classifier type is ActorRef
+</p>
+    </li><li visbl="pub" name="akka.event.ActorEventBus" data-isabs="true">
+      <a id="ActorEventBus:ActorEventBus"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ActorEventBus.html"><span class="name">ActorEventBus</span></a><span class="result"> extends EventBus</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents an EventBus where the Subscriber type is ActorRef
+</p>
+    </li><li visbl="pub" name="akka.event.BusLogging" data-isabs="false">
+      <a id="BusLogging:BusLogging"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BusLogging.html"><span class="name">BusLogging</span></a><span class="result"> extends LoggingAdapter</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.DeathWatch" data-isabs="true">
+      <a id="DeathWatch:DeathWatch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DeathWatch.html"><span class="name">DeathWatch</span></a><span class="result"> extends ActorEventBus with ActorClassifier</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The contract of DeathWatch is not properly expressed using the type system
+Whenever there is a publish, all listeners to the Terminated Actor should be atomically removed
+A failed subscribe should also only mean that the Classifier (ActorRef) that is listened to is already shut down
+See LocalDeathWatch for semantics
+</p>
+    </li><li visbl="pub" name="akka.event.DummyClassForStringSources" data-isabs="false">
+      <a id="DummyClassForStringSources:DummyClassForStringSources"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DummyClassForStringSources.html"><span class="name">DummyClassForStringSources</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This is a “marker” class which is inserted as originator class into
+akka.event.LogEvent when the string representation was supplied
+directly.</p>
+    </li><li visbl="pub" name="akka.event.EventBus" data-isabs="true">
+      <a id="EventBus:EventBus"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="EventBus.html"><span class="name">EventBus</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents the base type for EventBuses
+Internally has an Event type, a Classifier type and a Subscriber type</p>
+    </li><li visbl="pub" name="akka.event.EventStream" data-isabs="false">
+      <a id="EventStream:EventStream"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="EventStream.html"><span class="name">EventStream</span></a><span class="result"> extends LoggingBus with SubchannelClassification</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An Akka EventStream is a pub-sub stream of events both system and user generated,
+where subscribers are ActorRefs and the channels are Classes and Events are any java.</p>
+    </li><li visbl="pub" name="akka.event.LogSource" data-isabs="true">
+      <a id="LogSource:LogSource[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="LogSource.html"><span class="name">LogSource</span></a><span class="tparams">[<span name="T">-T</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This trait defines the interface to be provided by a “log source formatting
+rule” as used by akka.event.Logging’s <code>apply</code>/<code>create</code> method.</p>
+    </li><li visbl="pub" name="akka.event.LoggingAdapter" data-isabs="true">
+      <a id="LoggingAdapter:LoggingAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="LoggingAdapter.html"><span class="name">LoggingAdapter</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Logging wrapper to make nicer and optimize: provide template versions which
+evaluate .</p>
+    </li><li visbl="pub" name="akka.event.LoggingBus" data-isabs="true">
+      <a id="LoggingBus:LoggingBus"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="LoggingBus.html"><span class="name">LoggingBus</span></a><span class="result"> extends ActorEventBus</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This trait brings log level handling to the EventStream: it reads the log
+levels for the initial logging (StandardOutLogger) and the loggers &amp; level
+for after-init logging, possibly keeping the StandardOutLogger enabled if
+it is part of the configured loggers.</p>
+    </li><li visbl="pub" name="akka.event.LoggingReceive" data-isabs="false">
+      <a id="LoggingReceive:LoggingReceive"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="LoggingReceive.html"><span class="name">LoggingReceive</span></a><span class="result"> extends PartialFunction[Any, Unit]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This decorator adds invocation logging to a Receive function.</p>
+    </li><li visbl="pub" name="akka.event.LookupClassification" data-isabs="true">
+      <a id="LookupClassification:LookupClassification"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="LookupClassification.html"><span class="name">LookupClassification</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Maps Subscribers to Classifiers using equality on Classifier to store a Set of Subscribers (hence the need for compareSubscribers)
+Maps Events to Classifiers through the classify-method (so it knows who to publish to)</p>
+    </li><li visbl="pub" name="akka.event.PredicateClassifier" data-isabs="true">
+      <a id="PredicateClassifier:PredicateClassifier"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PredicateClassifier.html"><span class="name">PredicateClassifier</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Can be mixed into an EventBus to specify that the Classifier type is a Function from Event to Boolean (predicate)
+</p>
+    </li><li visbl="pub" name="akka.event.ScanningClassification" data-isabs="true">
+      <a id="ScanningClassification:ScanningClassification"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ScanningClassification.html"><span class="name">ScanningClassification</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Maps Classifiers to Subscribers and selects which Subscriber should receive which publication through scanning through all Subscribers
+through the matches(classifier, event) method</p>
+    </li><li visbl="pub" name="akka.event.SubchannelClassification" data-isabs="true">
+      <a id="SubchannelClassification:SubchannelClassification"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SubchannelClassification.html"><span class="name">SubchannelClassification</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Classification which respects relationships between channels: subscribing
+to one channel automatically and idempotently subscribes to all sub-channels.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="akka.event.EventStream" data-isabs="false">
+      <a id="EventStream:EventStream"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="EventStream$.html"><span class="name">EventStream</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.LogSource" data-isabs="false">
+      <a id="LogSource:LogSource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="LogSource$.html"><span class="name">LogSource</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This object holds predefined formatting rules for log sources.</p>
+    </li><li visbl="pub" name="akka.event.Logging" data-isabs="false">
+      <a id="Logging:Logging"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$.html"><span class="name">Logging</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Main entry point for Akka logging: log levels and message types (aka
+channels) defined for the main transport medium, the main event bus.</p>
+    </li><li visbl="pub" name="akka.event.LoggingReceive" data-isabs="false">
+      <a id="LoggingReceive:LoggingReceive"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="LoggingReceive$.html"><span class="name">LoggingReceive</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.japi" data-isabs="false">
+      <a id="japi:japi"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="japi/package.html"><span class="name">japi</span></a>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.slf4j" data-isabs="false">
+      <a id="slf4j:slf4j"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="slf4j/package.html"><span class="name">slf4j</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="akka.event.OldEventHandler" data-isabs="false">
+      <a id="OldEventHandler:OldEventHandler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="OldEventHandler$.html"><span class="name deprecated" title="Deprecated: (Since version 2.0) use Logging instead">OldEventHandler</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Migration replacement for <code>akka.event.EventHandler</code>
+</p>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

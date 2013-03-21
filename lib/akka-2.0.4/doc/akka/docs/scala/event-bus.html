@@ -1,0 +1,316 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Event Bus (Scala) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Scala API" href="index.html" />
+    <link rel="next" title="Scheduler (Scala)" href="scheduler.html" />
+    <link rel="prev" title="Logging (Scala)" href="logging.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Event Bus (Scala)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="scheduler.html">Scheduler (Scala)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="logging.html">Logging (Scala)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="event-bus-scala">
+<span id="id1"></span><h1>Event Bus (Scala)</h1>
+<p>Originally conceived as a way to send messages to groups of actors, the
+<tt class="xref py py-class docutils literal"><span class="pre">EventBus</span></tt> has been generalized into a set of composable traits
+implementing a simple interface:</p>
+<ul class="simple">
+<li><tt class="xref py py-meth docutils literal"><span class="pre">subscribe(subscriber:</span> <span class="pre">Subscriber,</span> <span class="pre">classifier:</span> <span class="pre">Classifier):</span> <span class="pre">Boolean</span></tt>
+subscribes the given subscriber to events with the given classifier</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">unsubscribe(subscriber:</span> <span class="pre">Subscriber,</span> <span class="pre">classifier:</span> <span class="pre">Classifier):</span> <span class="pre">Boolean</span></tt>
+undoes a specific subscription</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">unsubscribe(subscriber:</span> <span class="pre">Subscriber)</span></tt> undoes all subscriptions for the
+given subscriber</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">publish(event:</span> <span class="pre">Event)</span></tt> publishes an event, which first is classified
+according to the specific bus (see <a class="reference internal" href="#classifiers">Classifiers</a>) and then published to all
+subscribers for the obtained classifier</li>
+</ul>
+<p>This mechanism is used in different places within Akka, e.g. the
+<a class="reference internal" href="actors.html#deathwatch-scala"><em>DeathWatch</em></a> and the <a class="reference internal" href="#event-stream">Event Stream</a>. Implementations
+can make use of the specific building blocks presented below.</p>
+<p>An event bus must define the following three abstract types:</p>
+<ul class="simple">
+<li><tt class="xref py py-class docutils literal"><span class="pre">Event</span></tt> is the type of all events published on that bus</li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">Subscriber</span></tt> is the type of subscribers allowed to register on that
+event bus</li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">Classifier</span></tt> defines the classifier to be used in selecting
+subscribers for dispatching events</li>
+</ul>
+<p>The traits below are still generic in these types, but they need to be defined
+for any concrete implementation.</p>
+<div class="section" id="classifiers">
+<h2>Classifiers</h2>
+<p>The classifiers presented here are part of the Akka distribution, but rolling
+your own in case you do not find a perfect match is not difficult, check the
+implementation of the existing ones on <a class="reference external" href="http://github.com/akka/akka/tree/v2.0.4/akka-actor/src/main/scala/akka/event/EventBus.scala">github</a>.</p>
+<div class="section" id="lookup-classification">
+<h3>Lookup Classification</h3>
+<p>The simplest classification is just to extract an arbitrary classifier from
+each event and maintaining a set of subscribers for each possible classifier.
+This can be compared to tuning in on a radio station. The trait
+<tt class="xref py py-class docutils literal"><span class="pre">LookupClassification</span></tt> is still generic in that it abstracts over how to
+compare subscribers and how exactly to classify. The necessary methods to be
+implemented are the following:</p>
+<ul class="simple">
+<li><tt class="xref py py-meth docutils literal"><span class="pre">classify(event:</span> <span class="pre">Event):</span> <span class="pre">Classifier</span></tt> is used for extracting the
+classifier from the incoming events.</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">compareSubscribers(a:</span> <span class="pre">Subscriber,</span> <span class="pre">b:</span> <span class="pre">Subscriber):</span> <span class="pre">Int</span></tt> must define a
+partial order over the subscribers, expressed as expected from
+<tt class="xref py py-meth docutils literal"><span class="pre">java.lang.Comparable.compare</span></tt>.</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">publish(event:</span> <span class="pre">Event,</span> <span class="pre">subscriber:</span> <span class="pre">Subscriber)</span></tt> will be invoked for
+each event for all subscribers which registered themselves for the event’s
+classifier.</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">mapSize:</span> <span class="pre">Int</span></tt> determines the initial size of the index data structure
+used internally (i.e. the expected number of different classifiers).</li>
+</ul>
+<p>This classifier is efficient in case no subscribers exist for a particular event.</p>
+</div>
+<div class="section" id="subchannel-classification">
+<h3>Subchannel Classification</h3>
+<p>If classifiers form a hierarchy and it is desired that subscription be possible
+not only at the leaf nodes, this classification may be just the right one. It
+can be compared to tuning in on (possibly multiple) radio channels by genre.
+This classification has been developed for the case where the classifier is
+just the JVM class of the event and subscribers may be interested in
+subscribing to all subclasses of a certain class, but it may be used with any
+classifier hierarchy. The abstract members needed by this classifier are</p>
+<ul class="simple">
+<li><tt class="xref py py-obj docutils literal"><span class="pre">subclassification:</span> <span class="pre">Subclassification[Classifier]</span></tt> is an object
+providing <tt class="xref py py-meth docutils literal"><span class="pre">isEqual(a:</span> <span class="pre">Classifier,</span> <span class="pre">b:</span> <span class="pre">Classifier)</span></tt> and
+<tt class="xref py py-meth docutils literal"><span class="pre">isSubclass(a:</span> <span class="pre">Classifier,</span> <span class="pre">b:</span> <span class="pre">Classifier)</span></tt> to be consumed by the other
+methods of this classifier.</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">classify(event:</span> <span class="pre">Event):</span> <span class="pre">Classifier</span></tt> is used for extracting the
+classifier from the incoming events.</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">publish(event:</span> <span class="pre">Event,</span> <span class="pre">subscriber:</span> <span class="pre">Subscriber)</span></tt> will be invoked for
+each event for all subscribers which registered themselves for the event’s
+classifier.</li>
+</ul>
+<p>This classifier is also efficient in case no subscribers are found for an
+event, but it uses conventional locking to synchronize an internal classifier
+cache, hence it is not well-suited to use cases in which subscriptions change
+with very high frequency (keep in mind that “opening” a classifier by sending
+the first message will also have to re-check all previous subscriptions).</p>
+</div>
+<div class="section" id="scanning-classification">
+<h3>Scanning Classification</h3>
+<p>The previous classifier was built for multi-classifier subscriptions which are
+strictly hierarchical, this classifier is useful if there are overlapping
+classifiers which cover various parts of the event space without forming a
+hierarchy. It can be compared to tuning in on (possibly multiple) radio
+stations by geographical reachability (for old-school radio-wave transmission).
+The abstract members for this classifier are:</p>
+<ul class="simple">
+<li><tt class="xref py py-meth docutils literal"><span class="pre">compareClassifiers(a:</span> <span class="pre">Classifier,</span> <span class="pre">b:</span> <span class="pre">Classifier):</span> <span class="pre">Int</span></tt> is needed for
+determining matching classifiers and storing them in an ordered collection.</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">compareSubscribers(a:</span> <span class="pre">Subscriber,</span> <span class="pre">b:</span> <span class="pre">Subscriber):</span> <span class="pre">Int</span></tt> is needed for
+storing subscribers in an ordered collection.</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">matches(classifier:</span> <span class="pre">Classifier,</span> <span class="pre">event:</span> <span class="pre">Event):</span> <span class="pre">Boolean</span></tt> determines
+whether a given classifier shall match a given event; it is invoked for each
+subscription for all received events, hence the name of the classifier.</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">publish(event:</span> <span class="pre">Event,</span> <span class="pre">subscriber:</span> <span class="pre">Subscriber)</span></tt> will be invoked for
+each event for all subscribers which registered themselves for a classifier
+matching this event.</li>
+</ul>
+<p>This classifier takes always a time which is proportional to the number of
+subscriptions, independent of how many actually match.</p>
+</div>
+<div class="section" id="actor-classification">
+<h3>Actor Classification</h3>
+<p>This classification has been developed specifically for implementing
+<a class="reference internal" href="actors.html#deathwatch-scala"><em>DeathWatch</em></a>: subscribers as well as classifiers are of
+type <tt class="xref py py-class docutils literal"><span class="pre">ActorRef</span></tt>. The abstract members are</p>
+<ul class="simple">
+<li><tt class="xref py py-meth docutils literal"><span class="pre">classify(event:</span> <span class="pre">Event):</span> <span class="pre">ActorRef</span></tt> is used for extracting the
+classifier from the incoming events.</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">mapSize:</span> <span class="pre">Int</span></tt> determines the initial size of the index data structure
+used internally (i.e. the expected number of different classifiers).</li>
+</ul>
+<p>This classifier is still is generic in the event type, and it is efficient for
+all use cases.</p>
+</div>
+</div>
+<div class="section" id="event-stream">
+<span id="event-stream-scala"></span><h2>Event Stream</h2>
+<p>The event stream is the main event bus of each actor system: it is used for
+carrying <a class="reference internal" href="logging.html#logging-scala"><em>log messages</em></a> and <a class="reference internal" href="#dead-letters">Dead Letters</a> and may be
+used by the user code for other purposes as well. It uses <a class="reference internal" href="#subchannel-classification">Subchannel
+Classification</a> which enables registering to related sets of channels (as is
+used for <tt class="xref py py-class docutils literal"><span class="pre">RemoteLifeCycleMessage</span></tt>). The following example demonstrates
+how a simple subscription works:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">Actor</span><span class="o">,</span> <span class="nc">DeadLetter</span><span class="o">,</span> <span class="nc">Props</span> <span class="o">}</span>
+
+<span class="k">val</span> <span class="n">listener</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">d</span><span class="k">:</span> <span class="kt">DeadLetter</span> <span class="k">⇒</span> <span class="kt">println</span><span class="o">(</span><span class="kt">d</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}))</span>
+<span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">classOf</span><span class="o">[</span><span class="kt">DeadLetter</span><span class="o">])</span>
+</pre></div>
+</div>
+<div class="section" id="default-handlers">
+<h3>Default Handlers</h3>
+<p>Upon start-up the actor system creates and subscribes actors to the event
+stream for logging: these are the handlers which are configured for example in
+<tt class="docutils literal"><span class="pre">application.conf</span></tt>:</p>
+<div class="highlight-text"><div class="highlight"><pre>akka {
+  event-handlers = [&quot;akka.event.Logging$DefaultLogger&quot;]
+}
+</pre></div>
+</div>
+<p>The handlers listed here by fully-qualified class name will be subscribed to
+all log event classes with priority higher than or equal to the configured
+log-level and their subscriptions are kept in sync when changing the log-level
+at runtime:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">.</span><span class="n">setLogLevel</span><span class="o">(</span><span class="nc">Logging</span><span class="o">.</span><span class="nc">DebugLevel</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>This means that log events for a level which will not be logged are
+typically not dispatched at all (unless manual subscriptions to the respective
+event class have been done)</p>
+</div>
+<div class="section" id="dead-letters">
+<h3>Dead Letters</h3>
+<p>As described at <a class="reference internal" href="actors.html#stopping-actors-scala"><em>Stopping actors</em></a>, messages queued when an actor
+terminates or sent after its death are re-routed to the dead letter mailbox,
+which by default will publish the messages wrapped in <tt class="xref py py-class docutils literal"><span class="pre">DeadLetter</span></tt>. This
+wrapper holds the original sender, receiver and message of the envelope which
+was redirected.</p>
+</div>
+<div class="section" id="other-uses">
+<h3>Other Uses</h3>
+<p>The event stream is always there and ready to be used, just publish your own
+events (it accepts <tt class="docutils literal"><span class="pre">AnyRef</span></tt>) and subscribe listeners to the corresponding JVM
+classes.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

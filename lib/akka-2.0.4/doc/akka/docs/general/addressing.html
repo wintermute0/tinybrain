@@ -1,0 +1,445 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Actor References, Paths and Addresses &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="General" href="index.html" />
+    <link rel="next" title="Location Transparency" href="remoting.html" />
+    <link rel="prev" title="Supervision and Monitoring" href="supervision.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Actor References, Paths and Addresses</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="remoting.html">Location Transparency</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="supervision.html">Supervision and Monitoring</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="actor-references-paths-and-addresses">
+<span id="addressing"></span><h1>Actor References, Paths and Addresses</h1>
+<p>This chapter describes how actors are identified and located within a possibly
+distributed actor system. It ties into the central idea that
+<a class="reference internal" href="actor-systems.html#actor-systems"><em>Actor Systems</em></a> form intrinsic supervision hierarchies as well as that
+communication between actors is transparent with respect to their placement
+across multiple network nodes.</p>
+<img alt="../_images/ActorPath.png" src="../_images/ActorPath.png" />
+<p>The above image displays the relationship between the most important entities
+within an actor system, please read on for the details.</p>
+<div class="section" id="what-is-an-actor-reference">
+<h2>What is an Actor Reference?</h2>
+<p>An actor reference is a subtype of <tt class="xref py py-class docutils literal"><span class="pre">ActorRef</span></tt>, whose foremost purpose is
+to support sending messages to the actor it represents. Each actor has access
+to its canonical (local) reference through the <tt class="xref py py-meth docutils literal"><span class="pre">self</span></tt> field; this
+reference is also included as sender reference by default for all messages sent
+to other actors. Conversely, during message processing the actor has access to
+a reference representing the sender of the current message through the
+<tt class="xref py py-meth docutils literal"><span class="pre">sender</span></tt> field.</p>
+<p>There are several different types of actor references that are supported
+depending on the configuration of the actor system:</p>
+<ul class="simple">
+<li>Purely local actor references are used by actor systems which are not
+configured to support networking functions. These actor references cannot
+ever be sent across a network connection while retaining their functionality.</li>
+<li>Local actor references when remoting is enabled are used by actor systems
+which support networking functions for those references which represent
+actors within the same JVM. In order to be recognizable also when sent to
+other network nodes, these references include protocol and remote addressing
+information.</li>
+<li>There is a subtype of local actor references which is used for routers (i.e.
+actors mixing in the <tt class="xref py py-class docutils literal"><span class="pre">Router</span></tt> trait). Its logical structure is the
+same as for the aforementioned local references, but sending a message to
+them dispatches to one of their children directly instead.</li>
+<li>Remote actor references represent actors which are reachable using remote
+communication, i.e. sending messages to them will serialize the messages
+transparently and send them to the other JVM.</li>
+<li>There are several special types of actor references which behave like local
+actor references for all practical purposes:<ul>
+<li><tt class="xref py py-class docutils literal"><span class="pre">PromiseActorRef</span></tt> is the special representation of a <tt class="xref py py-meth docutils literal"><span class="pre">Promise</span></tt> for
+the purpose of being completed by the response from an actor; it is created
+by the <tt class="xref py py-meth docutils literal"><span class="pre">ActorRef.ask</span></tt> invocation.</li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">DeadLetterActorRef</span></tt> is the default implementation of the dead
+letters service, where all messages are re-routed whose routees are shut
+down or non-existent.</li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">EmptyLocalActorRef</span></tt> is what is returned when looking up a
+non-existing local actor path: it is equivalent to a
+<tt class="xref py py-class docutils literal"><span class="pre">DeadLetterActorRef</span></tt>, but it retains its path so that it can be sent
+over the network and compared to other existing actor refs for that path,
+some of which might have been obtained before the actor stopped existing.</li>
+</ul>
+</li>
+<li>And then there are some one-off internal implementations which you should
+never really see:<ul>
+<li>There is an actor reference which does not represent an actor but acts only
+as a pseudo-supervisor for the root guardian, we call it “the one who walks
+the bubbles of space-time”.</li>
+<li>The first logging service started before actually firing up actor creation
+facilities is a fake actor reference which accepts log events and prints
+them directly to standard output; it is <tt class="xref py py-class docutils literal"><span class="pre">Logging.StandardOutLogger</span></tt>.</li>
+</ul>
+</li>
+<li><strong>(Future Extension)</strong> Cluster actor references represent clustered actor
+services which may be replicated, migrated or load-balanced across multiple
+cluster nodes. As such they are virtual names which the cluster service
+translates into local or remote actor references as appropriate.</li>
+</ul>
+</div>
+<div class="section" id="what-is-an-actor-path">
+<h2>What is an Actor Path?</h2>
+<p>Since actors are created in a strictly hierarchical fashion, there exists a
+unique sequence of actor names given by recursively following the supervision
+links between child and parent down towards the root of the actor system. This
+sequence can be seen as enclosing folders in a file system, hence we adopted
+the name “path” to refer to it. As in some real file-systems there also are
+“symbolic links”, i.e. one actor may be reachable using more than one path,
+where all but one involve some translation which decouples part of the path
+from the actor’s actual supervision ancestor line; these specialities are
+described in the sub-sections to follow.</p>
+<p>An actor path consists of an anchor, which identifies the actor system,
+followed by the concatenation of the path elements, from root guardian to the
+designated actor; the path elements are the names of the traversed actors and
+are separated by slashes.</p>
+<div class="section" id="actor-path-anchors">
+<h3>Actor Path Anchors</h3>
+<p>Each actor path has an address component, describing the protocol and location
+by which the corresponding actor is reachable, followed by the names of the
+actors in the hierarchy from the root up. Examples are:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="s">&quot;akka://my-system/user/service-a/worker1&quot;</span>               <span class="c1">// purely local</span>
+<span class="s">&quot;akka://my-system@serv.example.com:5678/user/service-b&quot;</span> <span class="c1">// local or remote</span>
+<span class="s">&quot;cluster://my-cluster/service-c&quot;</span>                       <span class="c1">// clustered (Future Extension)</span>
+</pre></div>
+</div>
+<p>Here, <tt class="docutils literal"><span class="pre">akka</span></tt> is the default remote protocol for the 2.0 release, and others
+are pluggable. The interpretation of the host &amp; port part (i.e.
+<tt class="docutils literal"><span class="pre">serv.example.com:5678</span></tt> in the example) depends on the transport mechanism
+used, but it must abide by the URI structural rules.</p>
+</div>
+<div class="section" id="logical-actor-paths">
+<h3>Logical Actor Paths</h3>
+<p>The unique path obtained by following the parental supervision links towards
+the root guardian is called the logical actor path. This path matches exactly
+the creation ancestry of an actor, so it is completely deterministic as soon as
+the actor system’s remoting configuration (and with it the address component of
+the path) is set.</p>
+</div>
+<div class="section" id="physical-actor-paths">
+<h3>Physical Actor Paths</h3>
+<p>While the logical actor path describes the functional location within one actor
+system, configuration-based remote deployment means that an actor may be
+created on a different network host as its parent, i.e. within a different
+actor system. In this case, following the actor path from the root guardian up
+entails traversing the network, which is a costly operation. Therefore, each
+actor also has a physical path, starting at the root guardian of the actor
+system where the actual actor object resides. Using this path as sender
+reference when querying other actors will let them reply directly to this
+actor, minimizing delays incurred by routing.</p>
+<p>One important aspect is that a physical actor path never spans multiple actor
+systems or JVMs. This means that the logical path (supervision hierarchy) and
+the physical path (actor deployment) of an actor may diverge if one of its
+ancestors is remotely supervised.</p>
+</div>
+<div class="section" id="virtual-actor-paths-future-extension">
+<h3>Virtual Actor Paths <strong>(Future Extension)</strong></h3>
+<p>In order to be able to replicate and migrate actors across a cluster of Akka
+nodes, another level of indirection has to be introduced. The cluster component
+therefore provides a translation from virtual paths to physical paths which may
+change in reaction to node failures, cluster rebalancing, etc.</p>
+<p><em>This area is still under active development, expect updates in this section
+for the 2.1 release.</em></p>
+</div>
+</div>
+<div class="section" id="how-are-actor-references-obtained">
+<h2>How are Actor References obtained?</h2>
+<p>There are two general categories to how actor references may be obtained: by
+creating actors or by looking them up, where the latter functionality comes in
+the two flavours of creating actor references from concrete actor paths and
+querying the logical actor hierarchy.</p>
+<p><em>While local and remote actor references and their paths work in the same way
+concerning the facilities mentioned below, the exact semantics of clustered
+actor references and their paths—while certainly as similar as possible—may
+differ in certain aspects, owing to the virtual nature of those paths. Expect
+updates for the 2.1 release.</em></p>
+<div class="section" id="creating-actors">
+<h3>Creating Actors</h3>
+<p>An actor system is typically started by creating actors above the guardian
+actor using the <tt class="xref py py-meth docutils literal"><span class="pre">ActorSystem.actorOf</span></tt> method and then using
+<tt class="xref py py-meth docutils literal"><span class="pre">ActorContext.actorOf</span></tt> from within the created actors to spawn the actor
+tree. These methods return a reference to the newly created actor. Each actor
+has direct access to references for its parent, itself and its children. These
+references may be sent within messages to other actors, enabling those to reply
+directly.</p>
+</div>
+<div class="section" id="looking-up-actors-by-concrete-path">
+<h3>Looking up Actors by Concrete Path</h3>
+<p>In addition, actor references may be looked up using the
+<tt class="xref py py-meth docutils literal"><span class="pre">ActorSystem.actorFor</span></tt> method, which returns an (unverified) local,
+remote or clustered actor reference. Sending messages to such a reference or
+attempting to observe its liveness will traverse the actor hierarchy of the
+actor system from top to bottom by passing messages from parent to child until
+either the target is reached or failure is certain, i.e. a name in the path
+does not exist (in practice this process will be optimized using caches, but it
+still has added cost compared to using the physical actor path, which can for
+example to obtained from the sender reference included in replies from that
+actor). The messages passed are handled automatically by Akka, so this process
+is not visible to client code.</p>
+<div class="section" id="absolute-vs-relative-paths">
+<h4>Absolute vs. Relative Paths</h4>
+<p>In addition to <tt class="xref py py-meth docutils literal"><span class="pre">ActorSystem.actorFor</span></tt> there is also
+<tt class="xref py py-meth docutils literal"><span class="pre">ActorContext.actorFor</span></tt>, which is available inside any actor as
+<tt class="docutils literal"><span class="pre">context.actorFor</span></tt>. This yields an actor reference much like its twin on
+<tt class="xref py py-class docutils literal"><span class="pre">ActorSystem</span></tt>, but instead of looking up the path starting from the root
+of the actor tree it starts out on the current actor. Path elements consisting
+of two dots (<tt class="docutils literal"><span class="pre">&quot;..&quot;</span></tt>) may be used to access the parent actor. You can for
+example send a message to a specific sibling:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">context</span><span class="o">.</span><span class="n">actorFor</span><span class="o">(</span><span class="s">&quot;../brother&quot;</span><span class="o">)</span> <span class="o">!</span> <span class="n">msg</span>
+</pre></div>
+</div>
+<p>Absolute paths may of course also be looked up on <cite>context</cite> in the usual way, i.e.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">context</span><span class="o">.</span><span class="n">actorFor</span><span class="o">(</span><span class="s">&quot;/user/serviceA&quot;</span><span class="o">)</span> <span class="o">!</span> <span class="n">msg</span>
+</pre></div>
+</div>
+<p>will work as expected.</p>
+</div>
+</div>
+<div class="section" id="querying-the-logical-actor-hierarchy">
+<h3>Querying the Logical Actor Hierarchy</h3>
+<p>Since the actor system forms a file-system like hierarchy, matching on paths is
+possible in the same was as supported by Unix shells: you may replace (parts
+of) path element names with wildcards (<cite>«*»</cite> and <cite>«?»</cite>) to formulate a
+selection which may match zero or more actual actors. Because the result is not
+a single actor reference, it has a different type <tt class="xref py py-class docutils literal"><span class="pre">ActorSelection</span></tt> and
+does not support the full set of operations an <tt class="xref py py-class docutils literal"><span class="pre">ActorRef</span></tt> does.
+Selections may be formulated using the <tt class="xref py py-meth docutils literal"><span class="pre">ActorSystem.actorSelection</span></tt> and
+<tt class="xref py py-meth docutils literal"><span class="pre">ActorContext.actorSelection</span></tt> methods and do support sending messages:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">context</span><span class="o">.</span><span class="n">actorSelection</span><span class="o">(</span><span class="s">&quot;../*&quot;</span><span class="o">)</span> <span class="o">!</span> <span class="n">msg</span>
+</pre></div>
+</div>
+<p>will send <cite>msg</cite> to all siblings including the current actor. As for references
+obtained using <cite>actorFor</cite>, a traversal of the supervision hierarchy is done in
+order to perform the message send. As the exact set of actors which match a
+selection may change even while a message is making its way to the recipients,
+it is not possible to watch a selection for liveliness changes. In order to do
+that, resolve the uncertainty by sending a request and gathering all answers,
+extracting the sender references, and then watch all discovered concrete
+actors. This scheme of resolving a selection may be improved upon in a future
+release.</p>
+</div>
+<div class="section" id="summary-actorof-vs-actorfor">
+<span id="actorof-vs-actorfor"></span><h3>Summary: <tt class="docutils literal"><span class="pre">actorOf</span></tt> vs. <tt class="docutils literal"><span class="pre">actorFor</span></tt></h3>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>What the above sections described in some detail can be summarized and
+memorized easily as follows:</p>
+<ul class="last simple">
+<li><tt class="docutils literal"><span class="pre">actorOf</span></tt> only ever creates a new actor, and it creates it as a direct
+child of the context on which this method is invoked (which may be any
+actor or actor system).</li>
+<li><tt class="docutils literal"><span class="pre">actorFor</span></tt> only ever looks up an existing actor, i.e. does not create
+one.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="reusing-actor-paths">
+<h2>Reusing Actor Paths</h2>
+<p>When an actor is terminated, its path will point to the dead letter mailbox,
+DeathWatch will publish its final transition and in general it is not expected
+to come back to life again (since the actor life cycle does not allow this).
+While it is possible to create an actor at a later time with an identical
+path—simply due to it being impossible to enforce the opposite without keeping
+the set of all actors ever created available—this is not good practice: remote
+actor references which “died” suddenly start to work again, but without any
+guarantee of ordering between this transition and any other event, hence the
+new inhabitant of the path may receive messages which were destined for the
+previous tenant.</p>
+<p>It may be the right thing to do in very specific circumstances, but make sure
+to confine the handling of this precisely to the actor’s supervisor, because
+that is the only actor which can reliably detect proper deregistration of the
+name, before which creation of the new child will fail.</p>
+<p>It may also be required during testing, when the test subject depends on being
+instantiated at a specific path. In that case it is best to mock its supervisor
+so that it will forward the Terminated message to the appropriate point in the
+test procedure, enabling the latter to await proper deregistration of the name.</p>
+</div>
+<div class="section" id="the-interplay-with-remote-deployment">
+<h2>The Interplay with Remote Deployment</h2>
+<p>When an actor creates a child, the actor system’s deployer will decide whether
+the new actor resides in the same JVM or on another node. In the second case,
+creation of the actor will be triggered via a network connection to happen in a
+different JVM and consequently within a different actor system. The remote
+system will place the new actor below a special path reserved for this purpose
+and the supervisor of the new actor will be a remote actor reference
+(representing that actor which triggered its creation). In this case,
+<tt class="xref py py-meth docutils literal"><span class="pre">context.parent</span></tt> (the supervisor reference) and
+<tt class="xref py py-meth docutils literal"><span class="pre">context.path.parent</span></tt> (the parent node in the actor’s path) do not
+represent the same actor. However, looking up the child’s name within the
+supervisor will find it on the remote node, preserving logical structure e.g.
+when sending to an unresolved actor reference.</p>
+<img alt="../_images/RemoteDeployment.png" src="../_images/RemoteDeployment.png" />
+</div>
+<div class="section" id="the-interplay-with-clustering-future-extension">
+<h2>The Interplay with Clustering <strong>(Future Extension)</strong></h2>
+<p><em>This section is subject to change!</em></p>
+<p>When creating a scaled-out actor subtree, a cluster name is created for a
+routed actor reference, where sending to this reference will send to one (or
+more) of the actual actors created in the cluster. In order for those actors to
+be able to query other actors while processing their messages, their sender
+reference must be unique for each of the replicas, which means that physical
+paths will be used as <tt class="docutils literal"><span class="pre">self</span></tt> references for these instances. In the case
+of replication for achieving fault-tolerance the opposite is required: the
+<tt class="docutils literal"><span class="pre">self</span></tt> reference will be a virtual (cluster) path so that in case of
+migration or fail-over communication is resumed with the fresh instance.</p>
+</div>
+<div class="section" id="what-is-the-address-part-used-for">
+<h2>What is the Address part used for?</h2>
+<p>When sending an actor reference across the network, it is represented by its
+path. Hence, the path must fully encode all information necessary to send
+messages to the underlying actor. This is achieved by encoding protocol, host
+and port in the address part of the path string. When an actor system receives
+an actor path from a remote node, it checks whether that path’s address matches
+the address of this actor system, in which case it will be resolved to the
+actor’s local reference. Otherwise, it will be represented by a remote actor
+reference.</p>
+</div>
+<div class="section" id="special-paths-used-by-akka">
+<h2>Special Paths used by Akka</h2>
+<p>At the root of the path hierarchy resides the root guardian above which all
+other actors are found. The next level consists of the following:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">&quot;/user&quot;</span></tt> is the guardian actor for all user-created top-level actors;
+actors created using <tt class="xref py py-meth docutils literal"><span class="pre">ActorSystem.actorOf</span></tt> are found at the next level.</li>
+<li><tt class="docutils literal"><span class="pre">&quot;/system&quot;</span></tt> is the guardian actor for all system-created top-level actors,
+e.g. logging listeners or actors automatically deployed by configuration at
+the start of the actor system.</li>
+<li><tt class="docutils literal"><span class="pre">&quot;/deadLetters&quot;</span></tt> is the dead letter actor, which is where all messages sent to
+stopped or non-existing actors are re-routed.</li>
+<li><tt class="docutils literal"><span class="pre">&quot;/temp&quot;</span></tt> is the guardian for all short-lived system-created actors, e.g.
+those which are used in the implementation of <tt class="xref py py-meth docutils literal"><span class="pre">ActorRef.ask</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">&quot;/remote&quot;</span></tt> is an artificial path below which all actors reside whose
+supervisors are remote actor references</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

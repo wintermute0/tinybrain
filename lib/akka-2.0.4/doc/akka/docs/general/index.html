@@ -1,0 +1,214 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>General &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="next" title="Actor Systems" href="actor-systems.html" />
+    <link rel="prev" title="Examples of use-cases for Akka" href="../intro/use-cases.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">General</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="actor-systems.html">Actor Systems</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="../intro/use-cases.html">Examples of use-cases for Akka</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="general">
+<h1>General</h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="actor-systems.html">Actor Systems</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="actor-systems.html#hierarchical-structure">Hierarchical Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actor-systems.html#configuration-container">Configuration Container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actor-systems.html#actor-best-practices">Actor Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actor-systems.html#what-you-should-not-concern-yourself-with">What you should not concern yourself with</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">What is an Actor?</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#actor-reference">Actor Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#state">State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#behavior">Behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#mailbox">Mailbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#children">Children</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#supervisor-strategy">Supervisor Strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actors.html#when-an-actor-terminates">When an Actor Terminates</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="supervision.html">Supervision and Monitoring</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="supervision.html#what-supervision-means">What Supervision Means</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supervision.html#what-restarting-means">What Restarting Means</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supervision.html#what-lifecycle-monitoring-means">What Lifecycle Monitoring Means</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supervision.html#one-for-one-strategy-vs-all-for-one-strategy">One-For-One Strategy vs. All-For-One Strategy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="addressing.html">Actor References, Paths and Addresses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="addressing.html#what-is-an-actor-reference">What is an Actor Reference?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addressing.html#what-is-an-actor-path">What is an Actor Path?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addressing.html#how-are-actor-references-obtained">How are Actor References obtained?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addressing.html#reusing-actor-paths">Reusing Actor Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addressing.html#the-interplay-with-remote-deployment">The Interplay with Remote Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addressing.html#the-interplay-with-clustering-future-extension">The Interplay with Clustering <strong>(Future Extension)</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="addressing.html#what-is-the-address-part-used-for">What is the Address part used for?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addressing.html#special-paths-used-by-akka">Special Paths used by Akka</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="remoting.html">Location Transparency</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="remoting.html#distributed-by-default">Distributed by Default</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remoting.html#ways-in-which-transparency-is-broken">Ways in which Transparency is Broken</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remoting.html#how-is-remoting-used">How is Remoting Used?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remoting.html#marking-points-for-scaling-up-with-routers">Marking Points for Scaling Up with Routers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="jmm.html">Akka and the Java Memory Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="jmm.html#the-java-memory-model">The Java Memory Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jmm.html#actors-and-the-java-memory-model">Actors and the Java Memory Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jmm.html#futures-and-the-java-memory-model">Futures and the Java Memory Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jmm.html#stm-and-the-java-memory-model">STM and the Java Memory Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jmm.html#actors-and-shared-mutable-state">Actors and shared mutable state</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="message-send-semantics.html">Message send semantics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="message-send-semantics.html#guaranteed-delivery">Guaranteed Delivery?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="message-send-semantics.html#delivery-semantics">Delivery semantics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#where-configuration-is-read-from">Where configuration is read from</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#when-using-jarjar-onejar-assembly-or-any-jar-bundler">When using JarJar, OneJar, Assembly or any jar-bundler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#how-to-structure-your-configuration">How to structure your configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#listing-of-the-reference-configuration">Listing of the Reference Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#custom-application-conf">Custom application.conf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#including-files">Including files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#logging-of-configuration">Logging of Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#a-word-about-classloaders">A Word About ClassLoaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#application-specific-settings">Application specific settings</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

@@ -1,0 +1,920 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.event.Logging</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../lib/object_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a>.<a name="akka.event" class="extype" href="package.html">event</a></p>
+        <h1>Logging</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Logging</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Main entry point for Akka logging: log levels and message types (aka
+channels) defined for the main transport medium, the main event bus. The
+recommended use is to obtain an implementation of the Logging trait with
+suitable and efficient methods for generating log events:</p><p><pre>
+<code>
+val log = Logging(&lt;bus&gt;, &lt;source object&gt;)
+...
+log.info("hello world!")
+</code>
+</pre></p><p>The source object is used in two fashions: its <code>Class[_]</code> will be part of
+all log events produced by this logger, plus a string representation is
+generated which may contain per-instance information, see <code>apply</code> or <code>create</code>
+below.</p><p>Loggers are attached to the level-specific channels <code>Error</code>,
+<code>Warning</code>, <code>Info</code> and <code>Debug</code> as
+appropriate for the configured (or set) log level. If you want to implement
+your own, make sure to handle these four event types plus the <code>InitializeLogger</code>
+message which is sent before actually attaching it to the logging bus.</p><p>Logging is configured in <code>akka.conf</code> by setting (some of) the following:</p><p><pre>
+<code>
+akka {
+  event-handlers = ["akka.slf4j.Slf4jEventHandler"] # for example
+  loglevel = "INFO"        # used when normal logging ("event-handlers") has been started
+  stdout-loglevel = "WARN" # used during application start-up until normal logging is available
+}
+</code>
+</pre>
+</p></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+        </div></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+            </div>
+        <div id="ancestors">
+              <span class="filtertype">Inherited</span>
+              <ol><li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li></ol>
+              <ol id="linearization"><li name="akka.event.Logging" class="in"><span>Logging</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+            </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.event.Logging.Debug" data-isabs="false">
+      <a id="Debug:Debug"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$Debug.html"><span class="name">Debug</span></a><span class="params">(<span name="logSource">logSource: String</span>, <span name="logClass">logClass: Class[_]</span>, <span name="message">message: Any</span>)</span><span class="result"> extends LogEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">For DEBUG Logging
+</p>
+    </li><li visbl="pub" name="akka.event.Logging.DefaultLogger" data-isabs="false">
+      <a id="DefaultLogger:DefaultLogger"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$DefaultLogger.html"><span class="name">DefaultLogger</span></a><span class="result"> extends Actor with StdOutLogger</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Actor wrapper around the standard output logger.</p>
+    </li><li visbl="pub" name="akka.event.Logging.Error" data-isabs="false">
+      <a id="Error:Error"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$Error.html"><span class="name">Error</span></a><span class="params">(<span name="cause">cause: Throwable</span>, <span name="logSource">logSource: String</span>, <span name="logClass">logClass: Class[_]</span>, <span name="message">message: Any</span>)</span><span class="result"> extends LogEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">For ERROR Logging
+</p>
+    </li><li visbl="pub" name="akka.event.Logging.EventHandlerException" data-isabs="false">
+      <a id="EventHandlerException:EventHandlerException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$EventHandlerException.html"><span class="name">EventHandlerException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Artificial exception injected into Error events if no Throwable is
+supplied; used for getting a stack dump of error locations.</p>
+    </li><li visbl="pub" name="akka.event.Logging.Info" data-isabs="false">
+      <a id="Info:Info"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$Info.html"><span class="name">Info</span></a><span class="params">(<span name="logSource">logSource: String</span>, <span name="logClass">logClass: Class[_]</span>, <span name="message">message: Any</span>)</span><span class="result"> extends LogEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">For INFO Logging
+</p>
+    </li><li visbl="pub" name="akka.event.Logging.InitializeLogger" data-isabs="false">
+      <a id="InitializeLogger:InitializeLogger"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$InitializeLogger.html"><span class="name">InitializeLogger</span></a><span class="params">(<span name="bus">bus: LoggingBus</span>)</span><span class="result"> extends NoSerializationVerificationNeeded with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Message which is sent to each default logger (i.</p>
+    </li><li visbl="pub" name="akka.event.Logging.LogEvent" data-isabs="true">
+      <a id="LogEvent:LogEvent"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$LogEvent.html"><span class="name">LogEvent</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Base type of LogEvents
+</p>
+    </li><li visbl="pub" name="akka.event.Logging.LogEventException" data-isabs="false">
+      <a id="LogEventException:LogEventException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$LogEventException.html"><span class="name">LogEventException</span></a><span class="result"> extends Throwable with NoStackTrace</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Exception that wraps a LogEvent.</p>
+    </li><li visbl="pub" name="akka.event.Logging#LogLevel" data-isabs="false">
+      <a id="LogLevel:LogLevel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">LogLevel</span><span class="result"> = <span name="scala.Int" class="extype">Int</span> with <a name="akka.event.Logging.LogLevelType" class="extype" href="Logging$$LogLevelType.html">LogLevelType</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Log level in numeric form, used when deciding whether a certain log
+statement should generate a log event.</p><div class="fullcomment"><div class="comment cmt"><p>Log level in numeric form, used when deciding whether a certain log
+statement should generate a log event. Predefined levels are ErrorLevel (1)
+to DebugLevel (4). In case you want to add more levels, loggers need to
+be subscribed to their event bus channels manually.
+</p></div></div>
+    </li><li visbl="pub" name="akka.event.Logging.LogLevelType" data-isabs="true">
+      <a id="LogLevelType:LogLevelType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$LogLevelType.html"><span class="name">LogLevelType</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Marker trait for annotating LogLevel, which must be Int after erasure.</p>
+    </li><li visbl="pub" name="akka.event.Logging.LoggerInitializationException" data-isabs="false">
+      <a id="LoggerInitializationException:LoggerInitializationException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$LoggerInitializationException.html"><span class="name">LoggerInitializationException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging.LoggerInitialized" data-isabs="true">
+      <a id="LoggerInitialized:LoggerInitialized"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$LoggerInitialized.html"><span class="name">LoggerInitialized</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Response message each logger must send within 1 second after receiving the
+InitializeLogger request.</p>
+    </li><li visbl="pub" name="akka.event.Logging.StandardOutLogger" data-isabs="false">
+      <a id="StandardOutLogger:StandardOutLogger"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$StandardOutLogger.html"><span class="name">StandardOutLogger</span></a><span class="result"> extends InternalActorRef with MinimalActorRef with StdOutLogger</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Actor-less logging implementation for synchronous logging to standard
+output.</p>
+    </li><li visbl="pub" name="akka.event.Logging.StdOutLogger" data-isabs="true">
+      <a id="StdOutLogger:StdOutLogger"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$StdOutLogger.html"><span class="name">StdOutLogger</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging.Warning" data-isabs="false">
+      <a id="Warning:Warning"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$Warning.html"><span class="name">Warning</span></a><span class="params">(<span name="logSource">logSource: String</span>, <span name="logClass">logClass: Class[_]</span>, <span name="message">message: Any</span>)</span><span class="result"> extends LogEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">For WARNING Logging
+</p>
+    </li><li visbl="pub" name="akka.event.Logging.LogExt" data-isabs="false">
+      <a id="LogExt:LogExt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$LogExt.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">LogExt</span></a><span class="result"> extends Extension</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $hash$hash">##</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.event.Logging#AllLogLevels" data-isabs="false">
+      <a id="AllLogLevels:Seq[LogLevel]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">AllLogLevels</span><span class="result">: Seq[LogLevel]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging#DebugLevel" data-isabs="false">
+      <a id="DebugLevel:Int with LogLevelType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">DebugLevel</span><span class="result">: <span name="scala.Int" class="extype">Int</span> with <a name="akka.event.Logging.LogLevelType" class="extype" href="Logging$$LogLevelType.html">LogLevelType</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging.Error" data-isabs="false">
+      <a id="Error:Error"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$Error$.html"><span class="name">Error</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging#ErrorLevel" data-isabs="false">
+      <a id="ErrorLevel:Int with LogLevelType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ErrorLevel</span><span class="result">: <span name="scala.Int" class="extype">Int</span> with <a name="akka.event.Logging.LogLevelType" class="extype" href="Logging$$LogLevelType.html">LogLevelType</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging#InfoLevel" data-isabs="false">
+      <a id="InfoLevel:Int with LogLevelType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">InfoLevel</span><span class="result">: <span name="scala.Int" class="extype">Int</span> with <a name="akka.event.Logging.LogLevelType" class="extype" href="Logging$$LogLevelType.html">LogLevelType</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging.LoggerInitialized" data-isabs="false">
+      <a id="LoggerInitialized:LoggerInitialized"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$LoggerInitialized$.html"><span class="name">LoggerInitialized</span></a><span class="result"> extends LoggerInitialized with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging#StandardOutLogger" data-isabs="false">
+      <a id="StandardOutLogger:StandardOutLogger"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">StandardOutLogger</span><span class="result">: <a name="akka.event.Logging.StandardOutLogger" class="extype" href="Logging$$StandardOutLogger.html">StandardOutLogger</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging#StandardOutLoggerName" data-isabs="false">
+      <a id="StandardOutLoggerName:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">StandardOutLoggerName</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging#WarningLevel" data-isabs="false">
+      <a id="WarningLevel:Int with LogLevelType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">WarningLevel</span><span class="result">: <span name="scala.Int" class="extype">Int</span> with <a name="akka.event.Logging.LogLevelType" class="extype" href="Logging$$LogLevelType.html">LogLevelType</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging#apply" data-isabs="false">
+      <a id="apply[T](LoggingBus,T)(LogSource[T]):LoggingAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="bus">bus: <a name="akka.event.LoggingBus" class="extype" href="LoggingBus.html">LoggingBus</a></span>, <span name="logSource">logSource: T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a name="akka.event.LogSource" class="extype" href="LogSource.html">LogSource</a>[T]</span>)</span><span class="result">: <a name="akka.event.LoggingAdapter" class="extype" href="LoggingAdapter.html">LoggingAdapter</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Obtain LoggingAdapter for the given logging bus and source object.</p><div class="fullcomment"><div class="comment cmt"><p>Obtain LoggingAdapter for the given logging bus and source object.</p><p>The source is used to identify the source of this logging channel and
+must have a corresponding implicit LogSource[T] instance in scope; by
+default these are provided for Class[_], Actor, ActorRef and String types.
+See the companion object of <a name="akka.event.LogSource" class="extype" href="LogSource.html">LogSource</a> for details.</p><p>You can add your own rules quite easily, see <a name="akka.event.LogSource" class="extype" href="LogSource.html">LogSource</a>.
+</p></div></div>
+    </li><li visbl="pub" name="akka.event.Logging#apply" data-isabs="false">
+      <a id="apply[T](ActorSystem,T)(LogSource[T]):LoggingAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="system">system: <a name="akka.actor.ActorSystem" class="extype" href="../actor/ActorSystem.html">ActorSystem</a></span>, <span name="logSource">logSource: T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a name="akka.event.LogSource" class="extype" href="LogSource.html">LogSource</a>[T]</span>)</span><span class="result">: <a name="akka.event.LoggingAdapter" class="extype" href="LoggingAdapter.html">LoggingAdapter</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Obtain LoggingAdapter for the given actor system and source object.</p><div class="fullcomment"><div class="comment cmt"><p>Obtain LoggingAdapter for the given actor system and source object. This
+will use the system’s event stream and include the system’s address in the
+log source string.</p><p><b>Do not use this if you want to supply a log category string (like
+“com.example.app.whatever”) unaltered,</b> supply <code>system.eventStream</code> in this
+case or use</p><pre>
+Logging(system, <span class="kw">this</span>.getClass)
+</pre><p>The source is used to identify the source of this logging channel and
+must have a corresponding implicit LogSource[T] instance in scope; by
+default these are provided for Class[_], Actor, ActorRef and String types.
+See the companion object of <a name="akka.event.LogSource" class="extype" href="LogSource.html">LogSource</a> for details.</p><p>You can add your own rules quite easily, see <a name="akka.event.LogSource" class="extype" href="LogSource.html">LogSource</a>.
+</p></div></div>
+    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.event.Logging#classFor" data-isabs="false">
+      <a id="classFor(LogLevel):Class[_ &lt;: akka.event.Logging.LogEvent]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">classFor</span><span class="params">(<span name="level">level: LogLevel</span>)</span><span class="result">: Class[_ &lt;: akka.event.Logging.LogEvent]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the event class associated with the given LogLevel
+</p>
+    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="akka.event.Logging#debugFormat" data-isabs="false">
+      <a id="debugFormat:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">debugFormat</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.event.Logging#errorFormat" data-isabs="false">
+      <a id="errorFormat:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">errorFormat</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.event.Logging#errorFormatWithoutCause" data-isabs="false">
+      <a id="errorFormatWithoutCause:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">errorFormatWithoutCause</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
+      <a id="getClass():java.lang.Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.event.Logging#getLogger" data-isabs="false">
+      <a id="getLogger(LoggingBus,AnyRef):LoggingAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLogger</span><span class="params">(<span name="bus">bus: <a name="akka.event.LoggingBus" class="extype" href="LoggingBus.html">LoggingBus</a></span>, <span name="logSource">logSource: AnyRef</span>)</span><span class="result">: <a name="akka.event.LoggingAdapter" class="extype" href="LoggingAdapter.html">LoggingAdapter</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Obtain LoggingAdapter for the given logging bus and source object.</p><div class="fullcomment"><div class="comment cmt"><p>Obtain LoggingAdapter for the given logging bus and source object.</p><p>The source is used to identify the source of this logging channel and
+must have a corresponding implicit LogSource[T] instance in scope; by
+default these are provided for Class[_], Actor, ActorRef and String types.
+See the companion object of <a name="akka.event.LogSource" class="extype" href="LogSource.html">LogSource</a> for details.
+</p></div></div>
+    </li><li visbl="pub" name="akka.event.Logging#getLogger" data-isabs="false">
+      <a id="getLogger(ActorSystem,AnyRef):LoggingAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLogger</span><span class="params">(<span name="system">system: <a name="akka.actor.ActorSystem" class="extype" href="../actor/ActorSystem.html">ActorSystem</a></span>, <span name="logSource">logSource: AnyRef</span>)</span><span class="result">: <a name="akka.event.LoggingAdapter" class="extype" href="LoggingAdapter.html">LoggingAdapter</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Obtain LoggingAdapter for the given actor system and source object.</p><div class="fullcomment"><div class="comment cmt"><p>Obtain LoggingAdapter for the given actor system and source object. This
+will use the system’s event stream and include the system’s address in the
+log source string.</p><p><b>Do not use this if you want to supply a log category string (like
+“com.example.app.whatever”) unaltered,</b> supply <code>system.eventStream</code> in this
+case or use</p><pre>
+Logging.getLogger(system, <span class="kw">this</span>.getClass());
+</pre><p>The source is used to identify the source of this logging channel and
+must have a corresponding implicit LogSource[T] instance in scope; by
+default these are provided for Class[_], Actor, ActorRef and String types.
+See the companion object of <a name="akka.event.LogSource" class="extype" href="LogSource.html">LogSource</a> for details.
+</p></div></div>
+    </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.event.Logging#infoFormat" data-isabs="false">
+      <a id="infoFormat:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">infoFormat</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.event.Logging#levelFor" data-isabs="false">
+      <a id="levelFor(Class[_ &lt;: akka.event.Logging.LogEvent]):LogLevel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">levelFor</span><span class="params">(<span name="eventClass">eventClass: Class[_ &lt;: akka.event.Logging.LogEvent]</span>)</span><span class="result">: LogLevel</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the LogLevel associated with the given event class.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the LogLevel associated with the given event class.
+Defaults to DebugLevel.
+</p></div></div>
+    </li><li visbl="pub" name="akka.event.Logging#levelFor" data-isabs="false">
+      <a id="levelFor(String):Option[LogLevel]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">levelFor</span><span class="params">(<span name="s">s: String</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[LogLevel]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the LogLevel associated with the given string,
+valid inputs are upper or lowercase (not mixed) versions of:
+&quot;error&quot;, &quot;warning&quot;, &quot;info&quot; and &quot;debug&quot;
+</p>
+    </li><li visbl="pub" name="akka.event.Logging#loggerInitialized" data-isabs="false">
+      <a id="loggerInitialized():akka.event.Logging.LoggerInitialized.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">loggerInitialized</span><span class="params">()</span><span class="result">: akka.event.Logging.LoggerInitialized.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Java API to create a LoggerInitialized message.</p>
+    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="akka.event.Logging#stackTraceFor" data-isabs="false">
+      <a id="stackTraceFor(Throwable):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stackTraceFor</span><span class="params">(<span name="e">e: Throwable</span>)</span><span class="result">: String</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the StackTrace for the given Throwable as a String
+</p>
+    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
+      <a id="synchronized[T0](⇒ T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="akka.event.Logging#warningFormat" data-isabs="false">
+      <a id="warningFormat:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">warningFormat</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="akka.event.Logging.Extension" data-isabs="false">
+      <a id="Extension:Extension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Logging$$Extension$.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">Extension</span></a><span class="result"> extends ExtensionKey[LogExt]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        <div name="scala.AnyRef" class="parent">
+              <h3>Inherited from AnyRef</h3>
+            </div><div name="scala.Any" class="parent">
+              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

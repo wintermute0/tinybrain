@@ -1,0 +1,197 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Duration &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Common utilities" href="index.html" />
+    <link rel="next" title="Scala API" href="../scala/index.html" />
+    <link rel="prev" title="Common utilities" href="index.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Duration</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="../scala/index.html">Scala API</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="index.html">Common utilities</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="duration">
+<span id="id1"></span><h1>Duration</h1>
+<p>Durations are used throughout the Akka library, wherefore this concept is
+represented by a special data type, <tt class="xref py py-class docutils literal"><span class="pre">Duration</span></tt>. Values of this type may
+represent infinite (<tt class="xref py py-obj docutils literal"><span class="pre">Duration.Inf</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">Duration.MinusInf</span></tt>) or finite
+durations.</p>
+<div class="section" id="scala">
+<h2>Scala</h2>
+<p>In Scala durations are constructable using a mini-DSL and support all expected operations:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.util.duration._</span>   <span class="c1">// notice the small d</span>
+
+<span class="k">val</span> <span class="n">fivesec</span> <span class="k">=</span> <span class="mf">5.</span><span class="n">seconds</span>
+<span class="k">val</span> <span class="n">threemillis</span> <span class="k">=</span> <span class="mf">3.</span><span class="n">millis</span>
+<span class="k">val</span> <span class="n">diff</span> <span class="k">=</span> <span class="n">fivesec</span> <span class="o">-</span> <span class="n">threemillis</span>
+<span class="n">assert</span> <span class="o">(</span><span class="n">diff</span> <span class="o">&lt;</span> <span class="n">fivesec</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">fourmillis</span> <span class="k">=</span> <span class="n">threemillis</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">3</span>   <span class="c1">// though you cannot write it the other way around</span>
+<span class="k">val</span> <span class="n">n</span> <span class="k">=</span> <span class="n">threemillis</span> <span class="o">/</span> <span class="o">(</span><span class="mi">1</span> <span class="n">millisecond</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You may leave out the dot if the expression is clearly delimited (e.g.
+within parentheses or in an argument list), but it is recommended to use it
+if the time unit is the last token on a line, otherwise semi-colon inference
+might go wrong, depending on what starts the next line.</p>
+</div>
+</div>
+<div class="section" id="java">
+<h2>Java</h2>
+<p>Java provides less syntactic sugar, so you have to spell out the operations as
+method calls instead:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kd">final</span> <span class="n">Duration</span> <span class="n">fivesec</span> <span class="o">=</span> <span class="n">Duration</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="s">&quot;seconds&quot;</span><span class="o">);</span>
+<span class="kd">final</span> <span class="n">Duration</span> <span class="n">threemillis</span> <span class="o">=</span> <span class="n">Duration</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">&quot;3 millis&quot;</span><span class="o">);</span>
+<span class="kd">final</span> <span class="n">Duration</span> <span class="n">diff</span> <span class="o">=</span> <span class="n">fivesec</span><span class="o">.</span><span class="na">minus</span><span class="o">(</span><span class="n">threemillis</span><span class="o">);</span>
+<span class="k">assert</span> <span class="o">(</span><span class="n">diff</span><span class="o">.</span><span class="na">lt</span><span class="o">(</span><span class="n">fivesec</span><span class="o">));</span>
+<span class="k">assert</span> <span class="o">(</span><span class="n">Duration</span><span class="o">.</span><span class="na">Zero</span><span class="o">().</span><span class="na">lt</span><span class="o">(</span><span class="n">Duration</span><span class="o">.</span><span class="na">Inf</span><span class="o">()));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="deadline">
+<h2>Deadline</h2>
+<p>Durations have a brother named <tt class="xref py py-class docutils literal"><span class="pre">Deadline</span></tt>, which is a class holding a representation
+of an absolute point in time, and support deriving a duration from this by calculating the
+difference between now and the deadline. This is useful when you want to keep one overall
+deadline without having to take care of the book-keeping wrt. the passing of time yourself:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">deadline</span> <span class="k">=</span> <span class="mi">10</span> <span class="n">seconds</span> <span class="n">fromNow</span>
+<span class="c1">// do something which takes time</span>
+<span class="n">awaitCond</span><span class="o">(...,</span> <span class="n">deadline</span><span class="o">.</span><span class="n">timeLeft</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>In Java you create these from durations:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">final</span> <span class="nc">Deadline</span> <span class="n">d</span> <span class="k">=</span> <span class="nc">Duration</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="s">&quot;seconds&quot;</span><span class="o">).</span><span class="n">fromNow</span><span class="o">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

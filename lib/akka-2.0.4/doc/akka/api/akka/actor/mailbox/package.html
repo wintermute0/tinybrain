@@ -1,0 +1,405 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.actor.mailbox</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../../lib/package_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../../package.html">akka</a>.<a name="akka.actor" class="extype" href="../package.html">actor</a></p>
+        <h1>mailbox</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mailbox</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.actor.mailbox.BSONSerializableMessageQueue" data-isabs="false">
+      <a id="BSONSerializableMessageQueue:BSONSerializableMessageQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BSONSerializableMessageQueue.html"><span class="name">BSONSerializableMessageQueue</span></a><span class="result"> extends SerializableBSONObject[MongoDurableMessage]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.mailbox.DurableMailboxSettings" data-isabs="true">
+      <a id="DurableMailboxSettings:DurableMailboxSettings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DurableMailboxSettings.html"><span class="name">DurableMailboxSettings</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Conventional organization of durable mailbox settings:</p>
+    </li><li visbl="pub" name="akka.actor.mailbox.DurableMessageQueue" data-isabs="true">
+      <a id="DurableMessageQueue:DurableMessageQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DurableMessageQueue.html"><span class="name">DurableMessageQueue</span></a><span class="result"> extends MessageQueue</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.mailbox.DurableMessageSerialization" data-isabs="true">
+      <a id="DurableMessageSerialization:DurableMessageSerialization"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DurableMessageSerialization.html"><span class="name">DurableMessageSerialization</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.mailbox.FileBasedMailboxSettings" data-isabs="false">
+      <a id="FileBasedMailboxSettings:FileBasedMailboxSettings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FileBasedMailboxSettings.html"><span class="name">FileBasedMailboxSettings</span></a><span class="result"> extends DurableMailboxSettings</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.mailbox.FileBasedMailboxType" data-isabs="false">
+      <a id="FileBasedMailboxType:FileBasedMailboxType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FileBasedMailboxType.html"><span class="name">FileBasedMailboxType</span></a><span class="result"> extends MailboxType</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.mailbox.FileBasedMessageQueue" data-isabs="false">
+      <a id="FileBasedMessageQueue:FileBasedMessageQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FileBasedMessageQueue.html"><span class="name">FileBasedMessageQueue</span></a><span class="result"> extends DurableMessageQueue with DurableMessageSerialization</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.mailbox.RedisBasedMailboxException" data-isabs="false">
+      <a id="RedisBasedMailboxException:RedisBasedMailboxException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RedisBasedMailboxException.html"><span class="name">RedisBasedMailboxException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.mailbox.RedisBasedMailboxSettings" data-isabs="false">
+      <a id="RedisBasedMailboxSettings:RedisBasedMailboxSettings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RedisBasedMailboxSettings.html"><span class="name">RedisBasedMailboxSettings</span></a><span class="result"> extends DurableMailboxSettings</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.mailbox.RedisBasedMailboxType" data-isabs="false">
+      <a id="RedisBasedMailboxType:RedisBasedMailboxType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RedisBasedMailboxType.html"><span class="name">RedisBasedMailboxType</span></a><span class="result"> extends MailboxType</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.mailbox.RedisBasedMessageQueue" data-isabs="false">
+      <a id="RedisBasedMessageQueue:RedisBasedMessageQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="RedisBasedMessageQueue.html"><span class="name">RedisBasedMessageQueue</span></a><span class="result"> extends DurableMessageQueue with DurableMessageSerialization</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.mailbox.ZooKeeperBasedMailboxSettings" data-isabs="false">
+      <a id="ZooKeeperBasedMailboxSettings:ZooKeeperBasedMailboxSettings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ZooKeeperBasedMailboxSettings.html"><span class="name">ZooKeeperBasedMailboxSettings</span></a><span class="result"> extends DurableMailboxSettings</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.mailbox.BeanstalkBasedMailboxException" data-isabs="false">
+      <a id="BeanstalkBasedMailboxException:BeanstalkBasedMailboxException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BeanstalkBasedMailboxException.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) BeanstalkBasedMailbox will be removed in Akka 2.1">BeanstalkBasedMailboxException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> BeanstalkBasedMailbox will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.mailbox.BeanstalkBasedMailboxType" data-isabs="false">
+      <a id="BeanstalkBasedMailboxType:BeanstalkBasedMailboxType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BeanstalkBasedMailboxType.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) BeanstalkBasedMailbox will be removed in Akka 2.1">BeanstalkBasedMailboxType</span></a><span class="result"> extends MailboxType</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> BeanstalkBasedMailbox will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.mailbox.BeanstalkBasedMessageQueue" data-isabs="false">
+      <a id="BeanstalkBasedMessageQueue:BeanstalkBasedMessageQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BeanstalkBasedMessageQueue.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) BeanstalkBasedMailbox will be removed in Akka 2.1">BeanstalkBasedMessageQueue</span></a><span class="result"> extends DurableMessageQueue with DurableMessageSerialization</span>
+      </span>
+      </h4>
+      <p class="comment cmt"></p>
+    </li><li visbl="pub" name="akka.actor.mailbox.BeanstalkMailboxSettings" data-isabs="false">
+      <a id="BeanstalkMailboxSettings:BeanstalkMailboxSettings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BeanstalkMailboxSettings.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) BeanstalkBasedMailbox will be removed in Akka 2.1">BeanstalkMailboxSettings</span></a><span class="result"> extends DurableMailboxSettings</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> BeanstalkBasedMailbox will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.mailbox.MongoBasedMailboxException" data-isabs="false">
+      <a id="MongoBasedMailboxException:MongoBasedMailboxException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MongoBasedMailboxException.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) MongoBasedMailbox will be removed in Akka 2.1">MongoBasedMailboxException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> MongoBasedMailbox will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.mailbox.MongoBasedMailboxSettings" data-isabs="false">
+      <a id="MongoBasedMailboxSettings:MongoBasedMailboxSettings"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MongoBasedMailboxSettings.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) MongoBasedMailbox will be removed in Akka 2.1">MongoBasedMailboxSettings</span></a><span class="result"> extends DurableMailboxSettings</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> MongoBasedMailbox will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.mailbox.MongoBasedMailboxType" data-isabs="false">
+      <a id="MongoBasedMailboxType:MongoBasedMailboxType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MongoBasedMailboxType.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) MongoBasedMailbox will be removed in Akka 2.1">MongoBasedMailboxType</span></a><span class="result"> extends MailboxType</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> MongoBasedMailbox will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.mailbox.MongoBasedMessageQueue" data-isabs="false">
+      <a id="MongoBasedMessageQueue:MongoBasedMessageQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MongoBasedMessageQueue.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) MongoBasedMailbox will be removed in Akka 2.1">MongoBasedMessageQueue</span></a><span class="result"> extends DurableMessageQueue</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A &quot;naive&quot; durable mailbox which uses findAndRemove; it's possible if the actor crashes
+after consuming a message that the message could be lost.</p>
+    </li><li visbl="pub" name="akka.actor.mailbox.MongoDurableMessage" data-isabs="false">
+      <a id="MongoDurableMessage:MongoDurableMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MongoDurableMessage.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) MailboxBasedMailbox will be removed in Akka 2.1">MongoDurableMessage</span></a><span class="params">(<span name="ownerPath">ownerPath: String</span>, <span name="message">message: Any</span>, <span name="sender">sender: ActorRef</span>, <span name="_id">_id: ObjectId</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A container message for durable mailbox messages, which can be easily stuffed into
+and out of MongoDB.</p>
+    </li><li visbl="pub" name="akka.actor.mailbox.ZooKeeperBasedMailboxException" data-isabs="false">
+      <a id="ZooKeeperBasedMailboxException:ZooKeeperBasedMailboxException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ZooKeeperBasedMailboxException.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) ZooKeeperBasedMailbox will be removed in Akka 2.1">ZooKeeperBasedMailboxException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> ZooKeeperBasedMailbox will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.mailbox.ZooKeeperBasedMailboxType" data-isabs="false">
+      <a id="ZooKeeperBasedMailboxType:ZooKeeperBasedMailboxType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ZooKeeperBasedMailboxType.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) ZooKeeperBasedMailbox will be removed in Akka 2.1">ZooKeeperBasedMailboxType</span></a><span class="result"> extends MailboxType</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> ZooKeeperBasedMailbox will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.mailbox.ZooKeeperBasedMessageQueue" data-isabs="false">
+      <a id="ZooKeeperBasedMessageQueue:ZooKeeperBasedMessageQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ZooKeeperBasedMessageQueue.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) ZooKeeperBasedMailbox will be removed in Akka 2.1">ZooKeeperBasedMessageQueue</span></a><span class="result"> extends DurableMessageQueue with DurableMessageSerialization</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> ZooKeeperBasedMailbox will be removed in Akka 2.1</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="akka.actor.mailbox.filequeue" data-isabs="false">
+      <a id="filequeue:filequeue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="filequeue/package.html"><span class="name">filequeue</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

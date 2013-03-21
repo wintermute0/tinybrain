@@ -1,0 +1,599 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.actor.TypedActor</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../lib/object_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a>.<a name="akka.actor" class="extype" href="package.html">actor</a></p>
+        <h1>TypedActor</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <span class="name">TypedActor</span><span class="result"> extends <a name="akka.actor.ExtensionId" class="extype" href="ExtensionId.html">ExtensionId</a>[<a name="akka.actor.TypedActorExtension" class="extype" href="TypedActorExtension.html">TypedActorExtension</a>] with <a name="akka.actor.ExtensionIdProvider" class="extype" href="ExtensionIdProvider.html">ExtensionIdProvider</a></span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a name="akka.actor.ExtensionIdProvider" class="extype" href="ExtensionIdProvider.html">ExtensionIdProvider</a>, <a name="akka.actor.ExtensionId" class="extype" href="ExtensionId.html">ExtensionId</a>[<a name="akka.actor.TypedActorExtension" class="extype" href="TypedActorExtension.html">TypedActorExtension</a>], AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+        </div></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+            </div>
+        <div id="ancestors">
+              <span class="filtertype">Inherited</span>
+              <ol><li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li></ol>
+              <ol id="linearization"><li name="akka.actor.TypedActor" class="in"><span>TypedActor</span></li><li name="akka.actor.ExtensionIdProvider" class="in"><span>ExtensionIdProvider</span></li><li name="akka.actor.ExtensionId" class="in"><span>ExtensionId</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+            </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.actor.TypedActor.MethodCall" data-isabs="false">
+      <a id="MethodCall:MethodCall"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedActor$$MethodCall.html"><span class="name">MethodCall</span></a><span class="params">(<span name="method">method: Method</span>, <span name="parameters">parameters: Array[AnyRef]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This class represents a Method call, and has a reference to the Method to be called and the parameters to supply
+It's sent to the ActorRef backing the TypedActor and can be serialized and deserialized
+</p>
+    </li><li visbl="pub" name="akka.actor.TypedActor.PostRestart" data-isabs="true">
+      <a id="PostRestart:PostRestart"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedActor$$PostRestart.html"><span class="name">PostRestart</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.actor.TypedActor.PostStop" data-isabs="true">
+      <a id="PostStop:PostStop"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedActor$$PostStop.html"><span class="name">PostStop</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Mix this into your TypedActor to be able to hook into its lifecycle
+</p>
+    </li><li visbl="pub" name="akka.actor.TypedActor.PreRestart" data-isabs="true">
+      <a id="PreRestart:PreRestart"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedActor$$PreRestart.html"><span class="name">PreRestart</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Mix this into your TypedActor to be able to hook into its lifecycle
+</p>
+    </li><li visbl="pub" name="akka.actor.TypedActor.PreStart" data-isabs="true">
+      <a id="PreStart:PreStart"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedActor$$PreStart.html"><span class="name">PreStart</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Mix this into your TypedActor to be able to hook into its lifecycle
+</p>
+    </li><li visbl="pub" name="akka.actor.TypedActor.Receiver" data-isabs="true">
+      <a id="Receiver:Receiver"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedActor$$Receiver.html"><span class="name">Receiver</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Mix this into your TypedActor to be able to intercept Terminated messages
+</p>
+    </li><li visbl="pub" name="akka.actor.TypedActor.Supervisor" data-isabs="true">
+      <a id="Supervisor:Supervisor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedActor$$Supervisor.html"><span class="name">Supervisor</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Mix this into your TypedActor to be able to define supervisor strategy
+</p>
+    </li><li visbl="pub" name="akka.actor.TypedActor.SerializedMethodCall" data-isabs="false">
+      <a id="SerializedMethodCall:SerializedMethodCall"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedActor$$SerializedMethodCall.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">SerializedMethodCall</span></a><span class="params">(<span name="ownerType">ownerType: Class[_]</span>, <span name="methodName">methodName: String</span>, <span name="parameterTypes">parameterTypes: Array[Class[_]]</span>, <span name="serializedParameters">serializedParameters: Array[(Int, Class[_], Array[Byte])]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents the serialized form of a MethodCall, uses readResolve and writeReplace to marshall the call
+</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $hash$hash">##</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.TypedActor#apply" data-isabs="false">
+      <a id="apply(ActorContext):TypedActorFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="context">context: <a name="akka.actor.ActorContext" class="extype" href="ActorContext.html">ActorContext</a></span>)</span><span class="result">: <a name="akka.actor.TypedActorFactory" class="extype" href="TypedActorFactory.html">TypedActorFactory</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a contextual TypedActorFactory of this extension, this means that any TypedActors created by this TypedActorExtension
+will be children to the specified context, this allows for creating hierarchies of TypedActors.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a contextual TypedActorFactory of this extension, this means that any TypedActors created by this TypedActorExtension
+will be children to the specified context, this allows for creating hierarchies of TypedActors.
+Do _not_ let this instance escape the TypedActor since that will not be thread-safe.
+</p></div></div>
+    </li><li visbl="pub" name="akka.actor.ExtensionId#apply" data-isabs="false">
+      <a id="apply(ActorSystem):TypedActorExtension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="system">system: <a name="akka.actor.ActorSystem" class="extype" href="ActorSystem.html">ActorSystem</a></span>)</span><span class="result">: <a name="akka.actor.TypedActorExtension" class="extype" href="TypedActorExtension.html">TypedActorExtension</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns an instance of the extension identified by this ExtensionId instance.</p><div class="fullcomment"><div class="comment cmt"><p>Returns an instance of the extension identified by this ExtensionId instance.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.ExtensionId" class="extype" href="ExtensionId.html">ExtensionId</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.TypedActor#context" data-isabs="false">
+      <a id="context:ActorContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">context</span><span class="result">: <a name="akka.actor.ActorContext" class="extype" href="ActorContext.html">ActorContext</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the ActorContext (for a TypedActor) when inside a method call in a TypedActor.</p>
+    </li><li visbl="pub" name="akka.actor.TypedActor#createExtension" data-isabs="false">
+      <a id="createExtension(ExtendedActorSystem):TypedActorExtension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">createExtension</span><span class="params">(<span name="system">system: <a name="akka.actor.ExtendedActorSystem" class="extype" href="ExtendedActorSystem.html">ExtendedActorSystem</a></span>)</span><span class="result">: <a name="akka.actor.TypedActorExtension" class="extype" href="TypedActorExtension.html">TypedActorExtension</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Is used by Akka to instantiate the Extension identified by this ExtensionId,
+internal use only.</p><div class="fullcomment"><div class="comment cmt"><p>Is used by Akka to instantiate the Extension identified by this ExtensionId,
+internal use only.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.TypedActor" class="extype" href="">TypedActor</a> → <a name="akka.actor.ExtensionId" class="extype" href="ExtensionId.html">ExtensionId</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.TypedActor#dispatcher" data-isabs="false">
+      <a id="dispatcher:MessageDispatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dispatcher</span><span class="result">: <a name="akka.dispatch.MessageDispatcher" class="extype" href="../dispatch/MessageDispatcher.html">MessageDispatcher</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the default dispatcher (for a TypedActor) when inside a method call in a TypedActor.</p>
+    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.TypedActor#get" data-isabs="false">
+      <a id="get(ActorContext):TypedActorFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">(<span name="context">context: <a name="akka.actor.ActorContext" class="extype" href="ActorContext.html">ActorContext</a></span>)</span><span class="result">: <a name="akka.actor.TypedActorFactory" class="extype" href="TypedActorFactory.html">TypedActorFactory</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a contextual TypedActorFactory of this extension, this means that any TypedActors created by this TypedActorExtension
+will be children to the specified context, this allows for creating hierarchies of TypedActors.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a contextual TypedActorFactory of this extension, this means that any TypedActors created by this TypedActorExtension
+will be children to the specified context, this allows for creating hierarchies of TypedActors.
+Do _not_ let this instance escape the TypedActor since that will not be thread-safe.</p><p>Java API
+</p></div></div>
+    </li><li visbl="pub" name="akka.actor.TypedActor#get" data-isabs="false">
+      <a id="get(ActorSystem):TypedActorExtension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">(<span name="system">system: <a name="akka.actor.ActorSystem" class="extype" href="ActorSystem.html">ActorSystem</a></span>)</span><span class="result">: <a name="akka.actor.TypedActorExtension" class="extype" href="TypedActorExtension.html">TypedActorExtension</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns an instance of the extension identified by this ExtensionId instance.</p><div class="fullcomment"><div class="comment cmt"><p>Returns an instance of the extension identified by this ExtensionId instance.
+Java API
+For extensions written in Scala that are to be used used from Java also,
+this method should be overridden to get correct return type.</p><pre>
+<span class="kw">override</span> <span class="kw">def</span> get(system: ActorSystem): TheExtension = <span class="kw">super</span>.get(system)
+</pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.TypedActor" class="extype" href="">TypedActor</a> → <a name="akka.actor.ExtensionId" class="extype" href="ExtensionId.html">ExtensionId</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
+      <a id="getClass():java.lang.Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.TypedActor#lookup" data-isabs="false">
+      <a id="lookup():akka.actor.TypedActor.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lookup</span><span class="params">()</span><span class="result">: akka.actor.TypedActor.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the canonical ExtensionId for this Extension
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns the canonical ExtensionId for this Extension
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.TypedActor" class="extype" href="">TypedActor</a> → <a name="akka.actor.ExtensionIdProvider" class="extype" href="ExtensionIdProvider.html">ExtensionIdProvider</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.TypedActor#self" data-isabs="false">
+      <a id="self[T&lt;:AnyRef]:T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">self</span><span class="tparams">[<span name="T">T &lt;: AnyRef</span>]</span><span class="result">: T</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the reference to the proxy when called inside a method call in a TypedActor</p><div class="fullcomment"><div class="comment cmt"><p>Returns the reference to the proxy when called inside a method call in a TypedActor</p><p>Example:</p><p>class FooImpl extends Foo {
+  def doFoo {
+    val myself = TypedActor.self[Foo]
+  }
+}</p><p>Useful when you want to send a reference to this TypedActor to someone else.</p><p>NEVER EXPOSE &quot;this&quot; to someone else, always use &quot;self[TypeOfInterface(s)]&quot;
+</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">ClassCastException<p>if the supplied type T isn't the type of the proxy associated with this TypedActor
+</p></span><span class="cmt">IllegalStateException<p>if called outside of the scope of a method on this TypedActor</p></span></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
+      <a id="synchronized[T0](⇒ T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div name="akka.actor.ExtensionIdProvider" class="parent">
+              <h3>Inherited from <a name="akka.actor.ExtensionIdProvider" class="extype" href="ExtensionIdProvider.html">ExtensionIdProvider</a></h3>
+            </div><div name="akka.actor.ExtensionId" class="parent">
+              <h3>Inherited from <a name="akka.actor.ExtensionId" class="extype" href="ExtensionId.html">ExtensionId</a>[<a name="akka.actor.TypedActorExtension" class="extype" href="TypedActorExtension.html">TypedActorExtension</a>]</h3>
+            </div><div name="scala.AnyRef" class="parent">
+              <h3>Inherited from AnyRef</h3>
+            </div><div name="scala.Any" class="parent">
+              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

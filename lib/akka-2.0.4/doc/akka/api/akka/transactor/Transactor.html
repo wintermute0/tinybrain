@@ -1,0 +1,705 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.transactor.Transactor</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
+      <div id="definition">
+        <img src="../../lib/trait_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a>.<a name="akka.transactor" class="extype" href="package.html">transactor</a></p>
+        <h1>Transactor</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Transactor</span><span class="result"> extends <a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>An actor with built-in support for coordinated transactions.</p><p>Transactors implement the general pattern for using <a name="akka.transactor.Coordinated" class="extype" href="Coordinated.html">Coordinated</a> where
+coordination messages are sent to other transactors then the coordinated transaction is
+entered. Transactors can also accept explicitly sent <code>Coordinated</code> messages.
+<br/><br/></p><p>Simple transactors will just implement the <code>atomically</code> method which is similar to
+the actor <code>receive</code> method but runs within a coordinated transaction.</p><p>Example of a simple transactor that will join a coordinated transaction:</p><pre>
+<span class="kw">class</span> Counter <span class="kw">extends</span> Transactor {
+  <span class="kw">val</span> count = Ref(<span class="num">0</span>)
+
+  <span class="kw">def</span> atomically = <span class="kw">implicit</span> txn <span class="kw">=&gt;</span> {
+    <span class="kw">case</span> Increment <span class="kw">=&gt;</span> count transform (_ + <span class="num">1</span>)
+  }
+}
+</pre><p><br/></p><p>To coordinate with other transactors override the <code>coordinate</code> method.
+The <code>coordinate</code> method maps a message to a set of akka.actor.Transactor.SendTo
+objects, pairs of <code>ActorRef</code> and a message.
+You can use the <code>include</code> and <code>sendTo</code> methods to easily coordinate with other transactors.
+The <code>include</code> method will send on the same message that was received to other transactors.
+The <code>sendTo</code> method allows you to specify both the actor to send to, and message to send.</p><p>Example of coordinating an increment:</p><pre>
+<span class="kw">class</span> FriendlyCounter(friend: ActorRef) <span class="kw">extends</span> Transactor {
+  <span class="kw">val</span> count = Ref(<span class="num">0</span>)
+
+  <span class="kw">override</span> <span class="kw">def</span> coordinate = {
+    <span class="kw">case</span> Increment <span class="kw">=&gt;</span> include(friend)
+  }
+
+  <span class="kw">def</span> atomically = <span class="kw">implicit</span> txn <span class="kw">=&gt;</span> {
+    <span class="kw">case</span> Increment <span class="kw">=&gt;</span> count transform (_ + <span class="num">1</span>)
+  }
+}
+</pre><p><br/></p><p>Using <code>include</code> to include more than one transactor:</p><pre>
+<span class="kw">override</span> <span class="kw">def</span> coordinate = {
+  <span class="kw">case</span> Message <span class="kw">=&gt;</span> include(actor1, actor2, actor3)
+}
+</pre><p><br/></p><p>Using <code>sendTo</code> to coordinate transactions but send on a different message
+than the one that was received:</p><pre>
+<span class="kw">override</span> <span class="kw">def</span> coordinate = {
+  <span class="kw">case</span> Message <span class="kw">=&gt;</span> sendTo(someActor -&gt; SomeOtherMessage)
+  <span class="kw">case</span> SomeMessage <span class="kw">=&gt;</span> sendTo(actor1 -&gt; Message1, actor2 -&gt; Message2)
+}
+</pre><p><br/></p><p>To execute directly before or after the coordinated transaction, override
+the <code>before</code> and <code>after</code> methods. These methods also expect partial functions
+like the receive method. They do not execute within the transaction.</p><p>To completely bypass coordinated transactions override the <code>normally</code> method.
+Any message matched by <code>normally</code> will not be matched by the other methods,
+and will not be involved in coordinated transactions. In this method you
+can implement normal actor behavior, or use the normal STM atomic for
+local transactions.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a name="akka.transactor.Coordinated" class="extype" href="Coordinated.html">Coordinated</a> for more information about the underlying mechanism
+</p></span></dd></dl><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+        </div></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+            </div>
+        <div id="ancestors">
+              <span class="filtertype">Inherited</span>
+              <ol><li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li></ol>
+              <ol id="linearization"><li name="akka.transactor.Transactor" class="in"><span>Transactor</span></li><li name="akka.actor.Actor" class="in"><span>Actor</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+            </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.actor.Actor#Receive" data-isabs="false">
+      <a id="Receive:Receive"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Receive</span><span class="result"> = <span name="scala.PartialFunction" class="extype">PartialFunction</span>[<span name="scala.Any" class="extype">Any</span>, <span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Abstract Value Members</h3>
+              <ol><li visbl="pub" name="akka.transactor.Transactor#atomically" data-isabs="true">
+      <a id="atomically:(InTxn) ⇒ Receive"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">atomically</span><span class="result">: (<span name="scala.concurrent.stm.InTxn" class="extype">InTxn</span>) ⇒ Receive</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The Receive block to run inside the coordinated transaction.</p><div class="fullcomment"><div class="comment cmt"><p>The Receive block to run inside the coordinated transaction.
+This is a function from InTxn to Receive block.</p><p>For example:</p><pre>
+<span class="kw">def</span> atomically = <span class="kw">implicit</span> txn <span class="kw">=&gt;</span> {
+  <span class="kw">case</span> Increment <span class="kw">=&gt;</span> count transform (_ + <span class="num">1</span>)
+}
+</pre></div></div>
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Concrete Value Members</h3>
+              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $hash$hash">##</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.transactor.Transactor#after" data-isabs="false">
+      <a id="after:Receive"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">after</span><span class="result">: Receive</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A Receive block that runs after the coordinated transaction.</p>
+    </li><li visbl="pub" name="akka.transactor.Transactor#alone" data-isabs="false">
+      <a id="alone:PartialFunction[Any, Set[SendTo]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">alone</span><span class="result">: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[<span name="scala.Any" class="extype">Any</span>, Set[<a name="akka.transactor.SendTo" class="extype" href="SendTo.html">SendTo</a>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Default coordination - no other transactors.</p>
+    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.transactor.Transactor#before" data-isabs="false">
+      <a id="before:Receive"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">before</span><span class="result">: Receive</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A Receive block that runs before the coordinated transaction is entered.</p>
+    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="prt" name="akka.actor.Actor#context" data-isabs="false">
+      <a id="context:ActorContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">context</span><span class="result">: <a name="akka.actor.ActorContext" class="extype" href="../actor/ActorContext.html">ActorContext</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Stores the context for this actor, including self, and sender.</p><div class="fullcomment"><div class="comment cmt"><p>Stores the context for this actor, including self, and sender.
+It is implicit to support operations such as <code>forward</code>.</p><p><a name="akka.actor.ActorContext" class="extype" href="../actor/ActorContext.html">ActorContext</a> is the Scala API. <code>getContext</code> returns a
+<a name="akka.actor.UntypedActorContext" class="extype" href="../actor/UntypedActorContext.html">UntypedActorContext</a>, which is the Java API of the actor
+context.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="akka" class="extype" href="../package.html">akka</a>] </dd><dt>Definition Classes</dt><dd><a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.transactor.Transactor#coordinate" data-isabs="false">
+      <a id="coordinate:PartialFunction[Any, Set[SendTo]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">coordinate</span><span class="result">: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[<span name="scala.Any" class="extype">Any</span>, Set[<a name="akka.transactor.SendTo" class="extype" href="SendTo.html">SendTo</a>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Override this method to coordinate with other transactors.</p><div class="fullcomment"><div class="comment cmt"><p>Override this method to coordinate with other transactors.
+The other transactors are added to the coordinated transaction barrier
+and sent a Coordinated message. The message to send can be specified
+or otherwise the same message as received is sent. Use the 'include' and
+'sendTo' methods to easily create the set of transactors to be involved.
+</p></div></div>
+    </li><li visbl="pub" name="akka.transactor.Transactor#doNothing" data-isabs="false">
+      <a id="doNothing:Receive"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">doNothing</span><span class="result">: Receive</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Default catch-all for the different Receive methods.</p>
+    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
+      <a id="getClass():java.lang.Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.transactor.Transactor#include" data-isabs="false">
+      <a id="include(ActorRef*):Set[SendTo]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">include</span><span class="params">(<span name="actors">actors: <a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a>*</span>)</span><span class="result">: Set[<a name="akka.transactor.SendTo" class="extype" href="SendTo.html">SendTo</a>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Include other actors in this coordinated transaction and send
+them the same message as received.</p><div class="fullcomment"><div class="comment cmt"><p>Include other actors in this coordinated transaction and send
+them the same message as received. Use as the result in 'coordinated'.
+</p></div></div>
+    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="akka.transactor.Transactor#nobody" data-isabs="false">
+      <a id="nobody:Set[SendTo]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nobody</span><span class="result">: Set[<a name="akka.transactor.SendTo" class="extype" href="SendTo.html">SendTo</a>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Empty set of transactors to send to.</p>
+    </li><li visbl="pub" name="akka.transactor.Transactor#normally" data-isabs="false">
+      <a id="normally:Receive"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">normally</span><span class="result">: Receive</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Bypass transactionality and behave like a normal actor.</p>
+    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.Actor#postRestart" data-isabs="false">
+      <a id="postRestart(Throwable):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">postRestart</span><span class="params">(<span name="reason">reason: Throwable</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">User overridable callback: By default it calls <code>preStart()</code>.</p><div class="fullcomment"><div class="comment cmt"><p>User overridable callback: By default it calls <code>preStart()</code>.</p></div><dl class="paramcmts block"><dt class="param">reason</dt><dd class="cmt"><p>the Throwable that caused the restart to happen</p><p>Is called right AFTER restart on the newly created Actor to allow reinitialization after an Actor crash.
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.Actor#postStop" data-isabs="false">
+      <a id="postStop():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">postStop</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">User overridable callback.</p><div class="fullcomment"><div class="comment cmt"><p>User overridable callback.</p><p>Is called asynchronously after 'actor.stop()' is invoked.
+Empty default implementation.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.Actor#preRestart" data-isabs="false">
+      <a id="preRestart(Throwable,Option[Any]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">preRestart</span><span class="params">(<span name="reason">reason: Throwable</span>, <span name="message">message: <span name="scala.Option" class="extype">Option</span>[<span name="scala.Any" class="extype">Any</span>]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">User overridable callback: <b>By default it disposes of all children and then calls <code>postStop()</code>.</b></p><div class="fullcomment"><div class="comment cmt"><p>User overridable callback: <b>By default it disposes of all children and then calls <code>postStop()</code>.</b></p></div><dl class="paramcmts block"><dt class="param">reason</dt><dd class="cmt"><p>the Throwable that caused the restart to happen</p></dd><dt class="param">message</dt><dd class="cmt"><p>optionally the current message the actor processed when failing, if applicable</p><p>Is called on a crashed Actor right BEFORE it is restarted to allow clean
+up of resources before Actor is terminated.
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.Actor#preStart" data-isabs="false">
+      <a id="preStart():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">preStart</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">User overridable callback.</p><div class="fullcomment"><div class="comment cmt"><p>User overridable callback.</p><p>Is called when an Actor is started.
+Actors are automatically started asynchronously when created.
+Empty default implementation.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.transactor.Transactor#receive" data-isabs="false">
+      <a id="receive:PartialFunction[Any, Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">receive</span><span class="result">: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[<span name="scala.Any" class="extype">Any</span>, <span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Implement a general pattern for using coordinated transactions.</p><div class="fullcomment"><div class="comment cmt"><p>Implement a general pattern for using coordinated transactions.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.transactor.Transactor" class="extype" href="">Transactor</a> → <a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.Actor#self" data-isabs="false">
+      <a id="self:ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit final </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">self</span><span class="result">: <a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The 'self' field holds the ActorRef for this actor.</p><div class="fullcomment"><div class="comment cmt"><p>The 'self' field holds the ActorRef for this actor.</p><p>Can be used to send messages to itself:
+<pre>
+self ! message
+</pre>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.transactor.Transactor#sendTo" data-isabs="false">
+      <a id="sendTo((ActorRef, Any)*):Set[SendTo]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sendTo</span><span class="params">(<span name="pairs">pairs: (<a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a>, <span name="scala.Any" class="extype">Any</span>)*</span>)</span><span class="result">: Set[<a name="akka.transactor.SendTo" class="extype" href="SendTo.html">SendTo</a>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Include other actors in this coordinated transaction and specify the message
+to send by providing ActorRef -&gt; Message pairs.</p><div class="fullcomment"><div class="comment cmt"><p>Include other actors in this coordinated transaction and specify the message
+to send by providing ActorRef -&gt; Message pairs. Use as the result in 'coordinated'.
+</p></div></div>
+    </li><li visbl="pub" name="akka.actor.Actor#sender" data-isabs="false">
+      <a id="sender:ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sender</span><span class="result">: <a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The reference sender Actor of the last received message.</p><div class="fullcomment"><div class="comment cmt"><p>The reference sender Actor of the last received message.
+Is defined if the message was sent from another Actor,
+else <code>deadLetters</code> in <a name="akka.actor.ActorSystem" class="extype" href="../actor/ActorSystem.html">ActorSystem</a>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.Actor#supervisorStrategy" data-isabs="false">
+      <a id="supervisorStrategy():SupervisorStrategy"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">supervisorStrategy</span><span class="params">()</span><span class="result">: <a name="akka.actor.SupervisorStrategy" class="extype" href="../actor/SupervisorStrategy.html">SupervisorStrategy</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">User overridable definition the strategy to use for supervising
+child actors.</p><div class="fullcomment"><div class="comment cmt"><p>User overridable definition the strategy to use for supervising
+child actors.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
+      <a id="synchronized[T0](⇒ T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.actor.Actor#unhandled" data-isabs="false">
+      <a id="unhandled(Any):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unhandled</span><span class="params">(<span name="message">message: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">User overridable callback.</p><div class="fullcomment"><div class="comment cmt"><p>User overridable callback.</p><p>Is called when a message isn't handled by the current behavior of the actor
+by default it fails with either a <a name="akka.actor.DeathPactException" class="extype" href="../actor/DeathPactException.html">DeathPactException</a> (in
+case of an unhandled <a name="akka.actor.Terminated" class="extype" href="../actor/Terminated.html">Terminated</a> message) or publishes an <a name="akka.actor.UnhandledMessage" class="extype" href="../actor/UnhandledMessage.html">UnhandledMessage</a>
+to the actor's system's <a name="akka.event.EventStream" class="extype" href="../event/EventStream.html">EventStream</a>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div name="akka.actor.Actor" class="parent">
+              <h3>Inherited from <a name="akka.actor.Actor" class="extype" href="../actor/Actor.html">Actor</a></h3>
+            </div><div name="scala.AnyRef" class="parent">
+              <h3>Inherited from AnyRef</h3>
+            </div><div name="scala.Any" class="parent">
+              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

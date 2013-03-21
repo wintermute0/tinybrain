@@ -1,0 +1,260 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.pattern</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a></p>
+        <h1>pattern</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pattern</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><h4> Commonly Used Patterns With Akka </h4><p>This package is used as a collection point for usage patterns which involve
+actors, futures, etc. but are loosely enough coupled to (multiple of) them
+to present them separately from the core implementation. Currently supported
+are:</p><ul><li><b>ask:</b> create a temporary one-off actor for receiving a reply to a
+message and complete a <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a> with it; returns said
+Future.</li><li><b>pipeTo:</b> feed eventually computed value of a future to an actor as
+a message.</li></ul><p>In Scala the recommended usage is to import the pattern from the package
+object:</p><pre>
+<span class="kw">import</span> akka.pattern.ask
+
+ask(actor, message) <span class="cmt">// use it directly</span>
+actor ask message   <span class="cmt">// use it by implicit conversion</span>
+</pre><p>For Java the patterns are available as static methods of the akka.pattern.Patterns
+class:</p><pre>
+<span class="kw">import</span> static akka.pattern.Patterns.ask;
+
+ask(actor, message);
+</pre></div></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.pattern.AskSupport" data-isabs="true">
+      <a id="AskSupport:AskSupport"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="AskSupport.html"><span class="name">AskSupport</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This object contains implementation details of the “ask” pattern.</p>
+    </li><li visbl="pub" name="akka.pattern.AskTimeoutException" data-isabs="false">
+      <a id="AskTimeoutException:AskTimeoutException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AskTimeoutException.html"><span class="name">AskTimeoutException</span></a><span class="result"> extends TimeoutException</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This is what is used to complete a Future that is returned from an ask/? call,
+when it times out.</p>
+    </li><li visbl="pub" name="akka.pattern.GracefulStopSupport" data-isabs="true">
+      <a id="GracefulStopSupport:GracefulStopSupport"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="GracefulStopSupport.html"><span class="name">GracefulStopSupport</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.pattern.PipeToSupport" data-isabs="true">
+      <a id="PipeToSupport:PipeToSupport"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PipeToSupport.html"><span class="name">PipeToSupport</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.pattern.PipeToSupport.PipeableFuture" data-isabs="false">
+      <a id="PipeableFuture:PipeableFuture[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipeToSupport$PipeableFuture.html"><span class="name">PipeableFuture</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="akka.pattern.Patterns" data-isabs="false">
+      <a id="Patterns:Patterns"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Patterns$.html"><span class="name">Patterns</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.pattern.AskSupport#ask" data-isabs="false">
+      <a id="ask(ActorRef,Any)(Timeout):Future[Any]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ask</span><span class="params">(<span name="actorRef">actorRef: <a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a></span>, <span name="message">message: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="timeout">timeout: <a name="akka.util.Timeout" class="extype" href="../util/Timeout.html">Timeout</a></span>)</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a>[<span name="scala.Any" class="extype">Any</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Sends a message asynchronously and returns a <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a>
+holding the eventual reply message; this means that the target actor
+needs to send the result to the <code>sender</code> reference provided.</p><div class="fullcomment"><div class="comment cmt"><p>Sends a message asynchronously and returns a <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a>
+holding the eventual reply message; this means that the target actor
+needs to send the result to the <code>sender</code> reference provided. The Future
+will be completed with an akka.actor.AskTimeoutException after the
+given timeout has expired; this is independent from any timeout applied
+while awaiting a result for this future (i.e. in
+<code>Await.result(..., timeout)</code>).</p><p><b>Warning:</b>
+When using future callbacks, inside actors you need to carefully avoid closing over
+the containing actor’s object, i.e. do not call methods or access mutable state
+on the enclosing actor from within the callback. This would break the actor
+encapsulation and may introduce synchronization bugs and race conditions because
+the callback will be scheduled concurrently to the enclosing actor. Unfortunately
+there is not yet a way to detect these illegal accesses at compile time.</p><p><b>Recommended usage:</b></p><pre>
+  <span class="kw">val</span> f = ask(worker, request)(timeout)
+  flow {
+    EnrichedRequest(request, f())
+  } pipeTo nextActor
+</pre><p>[see <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a> for a description of <code>flow</code>]
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.pattern.AskSupport" class="extype" href="AskSupport.html">AskSupport</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.pattern.AskSupport#ask" data-isabs="false">
+      <a id="ask(ActorRef):AskableActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ask</span><span class="params">(<span name="actorRef">actorRef: <a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a></span>)</span><span class="result">: <span name="akka.pattern.AskSupport.AskableActorRef" class="extype">AskableActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Import this implicit conversion to gain <code>?</code> and <code>ask</code> methods on
+<a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a>, which will defer to the
+<code>ask(actorRef, message)(timeout)</code> method defined here.</p><div class="fullcomment"><div class="comment cmt"><p>Import this implicit conversion to gain <code>?</code> and <code>ask</code> methods on
+<a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a>, which will defer to the
+<code>ask(actorRef, message)(timeout)</code> method defined here.</p><pre>
+<span class="kw">import</span> akka.pattern.ask
+
+<span class="kw">val</span> future = actor ? message             <span class="cmt">// => ask(actor, message)</span>
+<span class="kw">val</span> future = actor ask message           <span class="cmt">// => ask(actor, message)</span>
+<span class="kw">val</span> future = actor.ask(message)(timeout) <span class="cmt">// => ask(actor, message)(timeout)</span>
+</pre><p>All of the above use an implicit akka.actor.Timeout.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.pattern.AskSupport" class="extype" href="AskSupport.html">AskSupport</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.pattern.GracefulStopSupport#gracefulStop" data-isabs="false">
+      <a id="gracefulStop(ActorRef,Duration)(ActorSystem):Future[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">gracefulStop</span><span class="params">(<span name="target">target: <a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a></span>, <span name="timeout">timeout: <a name="akka.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <a name="akka.actor.ActorSystem" class="extype" href="../actor/ActorSystem.html">ActorSystem</a></span>)</span><span class="result">: <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a>[<span name="scala.Boolean" class="extype">Boolean</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a> that will be completed with success (value <code>true</code>) when
+existing messages of the target actor has been processed and the actor has been
+terminated.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a> that will be completed with success (value <code>true</code>) when
+existing messages of the target actor has been processed and the actor has been
+terminated.</p><p>Useful when you need to wait for termination or compose ordered termination of several actors.</p><p>If the target actor isn't terminated within the timeout the <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a>
+is completed with failure <a name="akka.actor.ActorTimeoutException" class="extype" href="../actor/ActorTimeoutException.html">ActorTimeoutException</a>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.pattern.GracefulStopSupport" class="extype" href="GracefulStopSupport.html">GracefulStopSupport</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.pattern.PipeToSupport#pipe" data-isabs="false">
+      <a id="pipe[T](Future[T]):PipeableFuture[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pipe</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="future">future: <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a>[T]</span>)</span><span class="result">: <a name="akka.pattern.PipeToSupport.PipeableFuture" class="extype" href="PipeToSupport$PipeableFuture.html">PipeableFuture</a>[T]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Import this implicit conversion to gain the <code>pipeTo</code> method on <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a>:</p><div class="fullcomment"><div class="comment cmt"><p>Import this implicit conversion to gain the <code>pipeTo</code> method on <a name="akka.dispatch.Future" class="extype" href="../dispatch/Future.html">Future</a>:</p><pre>
+<span class="kw">import</span> akka.pattern.pipe
+
+Future { doExpensiveCalc() } pipeTo nextActor
+
+or
+
+pipe(someFuture) to nextActor
+
+</pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.pattern.PipeToSupport" class="extype" href="PipeToSupport.html">PipeToSupport</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

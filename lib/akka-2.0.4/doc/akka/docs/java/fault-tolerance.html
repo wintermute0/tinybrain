@@ -1,0 +1,407 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Fault Tolerance (Java) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Java API" href="index.html" />
+    <link rel="next" title="Diagrams of the Fault Tolerance Sample (Java)" href="fault-tolerance-sample.html" />
+    <link rel="prev" title="Futures (Java)" href="futures.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Fault Tolerance (Java)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="fault-tolerance-sample.html">Diagrams of the Fault Tolerance Sample (Java)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="futures.html">Futures (Java)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="fault-tolerance-java">
+<span id="id1"></span><h1>Fault Tolerance (Java)</h1>
+<p>As explained in <a class="reference internal" href="../general/actor-systems.html#actor-systems"><em>Actor Systems</em></a> each actor is the supervisor of its
+children, and as such each actor defines fault handling supervisor strategy.
+This strategy cannot be changed afterwards as it is an integral part of the
+actor system’s structure.</p>
+<div class="section" id="fault-handling-in-practice">
+<h2>Fault Handling in Practice</h2>
+<p>First, let us look at a sample that illustrates one way to handle data store errors,
+which is a typical source of failure in real world applications. Of course it depends
+on the actual application what is possible to do when the data store is unavailable,
+but in this sample we use a best effort re-connect approach.</p>
+<p>Read the following source code. The inlined comments explain the different pieces of
+the fault handling and why they are added. It is also highly recommended to run this
+sample as it is easy to follow the log output to understand what is happening in runtime.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance-sample.html">Diagrams of the Fault Tolerance Sample (Java)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance-sample.html#full-source-code-of-the-fault-tolerance-sample-java">Full Source Code of the Fault Tolerance Sample (Java)</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="creating-a-supervisor-strategy">
+<h2>Creating a Supervisor Strategy</h2>
+<p>The following sections explain the fault handling mechanism and alternatives
+in more depth.</p>
+<p>For the sake of demonstration let us consider the following strategy:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">private</span> <span class="n">static</span> <span class="nc">SupervisorStrategy</span> <span class="n">strategy</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">OneForOneStrategy</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="nc">Duration</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="s">&quot;1 minute&quot;</span><span class="o">),</span>
+    <span class="k">new</span> <span class="nc">Function</span><span class="o">&lt;</span><span class="nc">Throwable</span><span class="o">,</span> <span class="nc">Directive</span><span class="o">&gt;()</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="n">public</span> <span class="nc">Directive</span> <span class="n">apply</span><span class="o">(</span><span class="nc">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">t</span> <span class="n">instanceof</span> <span class="nc">ArithmeticException</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="n">resume</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">t</span> <span class="n">instanceof</span> <span class="nc">NullPointerException</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="n">restart</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">t</span> <span class="n">instanceof</span> <span class="nc">IllegalArgumentException</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="n">stop</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="n">escalate</span><span class="o">();</span>
+        <span class="o">}</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+
+<span class="nd">@Override</span>
+<span class="n">public</span> <span class="nc">SupervisorStrategy</span> <span class="n">supervisorStrategy</span><span class="o">()</span> <span class="o">{</span>
+  <span class="k">return</span> <span class="n">strategy</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>I have chosen a few well-known exception types in order to demonstrate the
+application of the fault handling directives described in <a class="reference internal" href="../general/supervision.html#supervision"><em>Supervision and Monitoring</em></a>.
+First off, it is a one-for-one strategy, meaning that each child is treated
+separately (an all-for-one strategy works very similarly, the only difference
+is that any decision is applied to all children of the supervisor, not only the
+failing one). There are limits set on the restart frequency, namely maximum 10
+restarts per minute. <tt class="docutils literal"><span class="pre">-1</span></tt> and <tt class="docutils literal"><span class="pre">Duration.Inf()</span></tt> means that the respective limit
+does not apply, leaving the possibility to specify an absolute upper limit on the
+restarts or to make the restarts work infinitely.</p>
+</div>
+<div class="section" id="default-supervisor-strategy">
+<h2>Default Supervisor Strategy</h2>
+<p><tt class="docutils literal"><span class="pre">Escalate</span></tt> is used if the defined strategy doesn't cover the exception that was thrown.</p>
+<p>When the supervisor strategy is not defined for an actor the following
+exceptions are handled by default:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">ActorInitializationException</span></tt> will stop the failing child actor</li>
+<li><tt class="docutils literal"><span class="pre">ActorKilledException</span></tt> will stop the failing child actor</li>
+<li><tt class="docutils literal"><span class="pre">Exception</span></tt> will restart the failing child actor</li>
+<li>Other types of <tt class="docutils literal"><span class="pre">Throwable</span></tt> will be escalated to parent actor</li>
+</ul>
+<p>If the exception escalate all the way up to the root guardian it will handle it
+in the same way as the default strategy defined above.</p>
+</div>
+<div class="section" id="test-application">
+<h2>Test Application</h2>
+<p>The following section shows the effects of the different directives in practice,
+wherefor a test setup is needed. First off, we need a suitable supervisor:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">static</span> <span class="n">public</span> <span class="k">class</span> <span class="nc">Supervisor</span> <span class="k">extends</span> <span class="nc">UntypedActor</span> <span class="o">{</span>
+
+  <span class="k">private</span> <span class="n">static</span> <span class="nc">SupervisorStrategy</span> <span class="n">strategy</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">OneForOneStrategy</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="nc">Duration</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="s">&quot;1 minute&quot;</span><span class="o">),</span>
+      <span class="k">new</span> <span class="nc">Function</span><span class="o">&lt;</span><span class="nc">Throwable</span><span class="o">,</span> <span class="nc">Directive</span><span class="o">&gt;()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="n">public</span> <span class="nc">Directive</span> <span class="n">apply</span><span class="o">(</span><span class="nc">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">if</span> <span class="o">(</span><span class="n">t</span> <span class="n">instanceof</span> <span class="nc">ArithmeticException</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">resume</span><span class="o">();</span>
+          <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">t</span> <span class="n">instanceof</span> <span class="nc">NullPointerException</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">restart</span><span class="o">();</span>
+          <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">t</span> <span class="n">instanceof</span> <span class="nc">IllegalArgumentException</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">stop</span><span class="o">();</span>
+          <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">escalate</span><span class="o">();</span>
+          <span class="o">}</span>
+        <span class="o">}</span>
+      <span class="o">});</span>
+
+  <span class="nd">@Override</span>
+  <span class="n">public</span> <span class="nc">SupervisorStrategy</span> <span class="n">supervisorStrategy</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">strategy</span><span class="o">;</span>
+  <span class="o">}</span>
+
+
+  <span class="n">public</span> <span class="n">void</span> <span class="n">onReceive</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="n">instanceof</span> <span class="nc">Props</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">getSender</span><span class="o">().</span><span class="n">tell</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="n">actorOf</span><span class="o">((</span><span class="nc">Props</span><span class="o">)</span> <span class="n">o</span><span class="o">));</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+      <span class="n">unhandled</span><span class="o">(</span><span class="n">o</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>This supervisor will be used to create a child, with which we can experiment:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">static</span> <span class="n">public</span> <span class="k">class</span> <span class="nc">Child</span> <span class="k">extends</span> <span class="nc">UntypedActor</span> <span class="o">{</span>
+  <span class="n">int</span> <span class="n">state</span> <span class="k">=</span> <span class="mi">0</span><span class="o">;</span>
+
+  <span class="n">public</span> <span class="n">void</span> <span class="n">onReceive</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">)</span> <span class="n">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="n">instanceof</span> <span class="nc">Exception</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">throw</span> <span class="o">(</span><span class="nc">Exception</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="n">instanceof</span> <span class="nc">Integer</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">state</span> <span class="k">=</span> <span class="o">(</span><span class="nc">Integer</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">equals</span><span class="o">(</span><span class="s">&quot;get&quot;</span><span class="o">))</span> <span class="o">{</span>
+      <span class="n">getSender</span><span class="o">().</span><span class="n">tell</span><span class="o">(</span><span class="n">state</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+      <span class="n">unhandled</span><span class="o">(</span><span class="n">o</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The test is easier by using the utilities described in <a class="reference internal" href="../scala/testing.html#akka-testkit"><em>Testing Actor Systems (Scala)</em></a>,
+where <tt class="docutils literal"><span class="pre">TestProbe</span></tt> provides an actor ref useful for receiving and inspecting replies.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.ActorRef</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.actor.ActorSystem</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.actor.SupervisorStrategy</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">static</span> <span class="n">akka</span><span class="o">.</span><span class="n">actor</span><span class="o">.</span><span class="nc">SupervisorStrategy</span><span class="o">.*;</span>
+<span class="k">import</span> <span class="nn">akka.actor.OneForOneStrategy</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.actor.Props</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.actor.Terminated</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.actor.UntypedActor</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.dispatch.Await</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">static</span> <span class="n">akka</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="nc">Patterns</span><span class="o">.</span><span class="n">ask</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.util.Duration</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.testkit.AkkaSpec</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">akka.testkit.TestProbe</span><span class="o">;</span>
+
+<span class="n">public</span> <span class="k">class</span> <span class="nc">FaultHandlingTestBase</span> <span class="o">{</span>
+  <span class="n">static</span> <span class="nc">ActorSystem</span> <span class="n">system</span><span class="o">;</span>
+  <span class="nc">Duration</span> <span class="n">timeout</span> <span class="k">=</span> <span class="nc">Duration</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="nc">SECONDS</span><span class="o">);</span>
+
+  <span class="nd">@BeforeClass</span>
+  <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">start</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="nc">AkkaSpec</span><span class="o">.</span><span class="n">testConf</span><span class="o">());</span>
+  <span class="o">}</span>
+
+  <span class="nd">@AfterClass</span>
+  <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">cleanup</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">system</span><span class="o">.</span><span class="n">shutdown</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Test</span>
+  <span class="n">public</span> <span class="n">void</span> <span class="n">mustEmploySupervisorStrategy</span><span class="o">()</span> <span class="n">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="c1">// code here</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Let us create actors:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">Props</span> <span class="n">superprops</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Props</span><span class="o">(</span><span class="nc">Supervisor</span><span class="o">.</span><span class="n">class</span><span class="o">);</span>
+<span class="nc">ActorRef</span> <span class="n">supervisor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="n">superprops</span><span class="o">,</span> <span class="s">&quot;supervisor&quot;</span><span class="o">);</span>
+<span class="nc">ActorRef</span> <span class="n">child</span> <span class="k">=</span> <span class="o">(</span><span class="nc">ActorRef</span><span class="o">)</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">ask</span><span class="o">(</span><span class="n">supervisor</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Props</span><span class="o">(</span><span class="nc">Child</span><span class="o">.</span><span class="n">class</span><span class="o">),</span> <span class="mi">5000</span><span class="o">),</span> <span class="n">timeout</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>The first test shall demonstrate the <tt class="docutils literal"><span class="pre">Resume</span></tt> directive, so we try it out by
+setting some non-initial state in the actor and have it fail:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">child</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="mi">42</span><span class="o">);</span>
+<span class="n">assert</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">ask</span><span class="o">(</span><span class="n">child</span><span class="o">,</span> <span class="s">&quot;get&quot;</span><span class="o">,</span> <span class="mi">5000</span><span class="o">),</span> <span class="n">timeout</span><span class="o">).</span><span class="n">equals</span><span class="o">(</span><span class="mi">42</span><span class="o">);</span>
+<span class="n">child</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="k">new</span> <span class="nc">ArithmeticException</span><span class="o">());</span>
+<span class="n">assert</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">ask</span><span class="o">(</span><span class="n">child</span><span class="o">,</span> <span class="s">&quot;get&quot;</span><span class="o">,</span> <span class="mi">5000</span><span class="o">),</span> <span class="n">timeout</span><span class="o">).</span><span class="n">equals</span><span class="o">(</span><span class="mi">42</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>As you can see the value 42 survives the fault handling directive. Now, if we
+change the failure to a more serious <tt class="docutils literal"><span class="pre">NullPointerException</span></tt>, that will no
+longer be the case:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">child</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="k">new</span> <span class="nc">NullPointerException</span><span class="o">());</span>
+<span class="n">assert</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">ask</span><span class="o">(</span><span class="n">child</span><span class="o">,</span> <span class="s">&quot;get&quot;</span><span class="o">,</span> <span class="mi">5000</span><span class="o">),</span> <span class="n">timeout</span><span class="o">).</span><span class="n">equals</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>And finally in case of the fatal <tt class="docutils literal"><span class="pre">IllegalArgumentException</span></tt> the child will be
+terminated by the supervisor:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">final</span> <span class="nc">TestProbe</span> <span class="n">probe</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">TestProbe</span><span class="o">(</span><span class="n">system</span><span class="o">);</span>
+<span class="n">probe</span><span class="o">.</span><span class="n">watch</span><span class="o">(</span><span class="n">child</span><span class="o">);</span>
+<span class="n">child</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="k">new</span> <span class="nc">IllegalArgumentException</span><span class="o">());</span>
+<span class="n">probe</span><span class="o">.</span><span class="n">expectMsg</span><span class="o">(</span><span class="k">new</span> <span class="nc">Terminated</span><span class="o">(</span><span class="n">child</span><span class="o">));</span>
+</pre></div>
+</div>
+<p>Up to now the supervisor was completely unaffected by the child’s failure,
+because the directives set did handle it. In case of an <tt class="docutils literal"><span class="pre">Exception</span></tt>, this is not
+true anymore and the supervisor escalates the failure.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">child</span> <span class="k">=</span> <span class="o">(</span><span class="nc">ActorRef</span><span class="o">)</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">ask</span><span class="o">(</span><span class="n">supervisor</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Props</span><span class="o">(</span><span class="nc">Child</span><span class="o">.</span><span class="n">class</span><span class="o">),</span> <span class="mi">5000</span><span class="o">),</span> <span class="n">timeout</span><span class="o">);</span>
+<span class="n">probe</span><span class="o">.</span><span class="n">watch</span><span class="o">(</span><span class="n">child</span><span class="o">);</span>
+<span class="n">assert</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">ask</span><span class="o">(</span><span class="n">child</span><span class="o">,</span> <span class="s">&quot;get&quot;</span><span class="o">,</span> <span class="mi">5000</span><span class="o">),</span> <span class="n">timeout</span><span class="o">).</span><span class="n">equals</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+<span class="n">child</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="k">new</span> <span class="nc">Exception</span><span class="o">());</span>
+<span class="n">probe</span><span class="o">.</span><span class="n">expectMsg</span><span class="o">(</span><span class="k">new</span> <span class="nc">Terminated</span><span class="o">(</span><span class="n">child</span><span class="o">));</span>
+</pre></div>
+</div>
+<p>The supervisor itself is supervised by the top-level actor provided by the
+<tt class="xref py py-class docutils literal"><span class="pre">ActorSystem</span></tt>, which has the default policy to restart in case of all
+<tt class="docutils literal"><span class="pre">Exception</span></tt> cases (with the notable exceptions of
+<tt class="docutils literal"><span class="pre">ActorInitializationException</span></tt> and <tt class="docutils literal"><span class="pre">ActorKilledException</span></tt>). Since the
+default directive in case of a restart is to kill all children, we expected our poor
+child not to survive this failure.</p>
+<p>In case this is not desired (which depends on the use case), we need to use a
+different supervisor which overrides this behavior.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">static</span> <span class="n">public</span> <span class="k">class</span> <span class="nc">Supervisor2</span> <span class="k">extends</span> <span class="nc">UntypedActor</span> <span class="o">{</span>
+
+  <span class="k">private</span> <span class="n">static</span> <span class="nc">SupervisorStrategy</span> <span class="n">strategy</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">OneForOneStrategy</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="nc">Duration</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="s">&quot;1 minute&quot;</span><span class="o">),</span>
+      <span class="k">new</span> <span class="nc">Function</span><span class="o">&lt;</span><span class="nc">Throwable</span><span class="o">,</span> <span class="nc">Directive</span><span class="o">&gt;()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="n">public</span> <span class="nc">Directive</span> <span class="n">apply</span><span class="o">(</span><span class="nc">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">if</span> <span class="o">(</span><span class="n">t</span> <span class="n">instanceof</span> <span class="nc">ArithmeticException</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">resume</span><span class="o">();</span>
+          <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">t</span> <span class="n">instanceof</span> <span class="nc">NullPointerException</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">restart</span><span class="o">();</span>
+          <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">t</span> <span class="n">instanceof</span> <span class="nc">IllegalArgumentException</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">stop</span><span class="o">();</span>
+          <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">escalate</span><span class="o">();</span>
+          <span class="o">}</span>
+        <span class="o">}</span>
+      <span class="o">});</span>
+
+  <span class="nd">@Override</span>
+  <span class="n">public</span> <span class="nc">SupervisorStrategy</span> <span class="n">supervisorStrategy</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">strategy</span><span class="o">;</span>
+  <span class="o">}</span>
+
+
+  <span class="n">public</span> <span class="n">void</span> <span class="n">onReceive</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="n">instanceof</span> <span class="nc">Props</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">getSender</span><span class="o">().</span><span class="n">tell</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="n">actorOf</span><span class="o">((</span><span class="nc">Props</span><span class="o">)</span> <span class="n">o</span><span class="o">));</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+      <span class="n">unhandled</span><span class="o">(</span><span class="n">o</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="n">public</span> <span class="n">void</span> <span class="n">preRestart</span><span class="o">(</span><span class="nc">Throwable</span> <span class="n">cause</span><span class="o">,</span> <span class="nc">Option</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">msg</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// do not kill all children, which is the default here</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>With this parent, the child survives the escalated restart, as demonstrated in
+the last test:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">superprops</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Props</span><span class="o">(</span><span class="nc">Supervisor2</span><span class="o">.</span><span class="n">class</span><span class="o">);</span>
+<span class="n">supervisor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="n">superprops</span><span class="o">,</span> <span class="s">&quot;supervisor2&quot;</span><span class="o">);</span>
+<span class="n">child</span> <span class="k">=</span> <span class="o">(</span><span class="nc">ActorRef</span><span class="o">)</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">ask</span><span class="o">(</span><span class="n">supervisor</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Props</span><span class="o">(</span><span class="nc">Child</span><span class="o">.</span><span class="n">class</span><span class="o">),</span> <span class="mi">5000</span><span class="o">),</span> <span class="n">timeout</span><span class="o">);</span>
+<span class="n">child</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="mi">23</span><span class="o">);</span>
+<span class="n">assert</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">ask</span><span class="o">(</span><span class="n">child</span><span class="o">,</span> <span class="s">&quot;get&quot;</span><span class="o">,</span> <span class="mi">5000</span><span class="o">),</span> <span class="n">timeout</span><span class="o">).</span><span class="n">equals</span><span class="o">(</span><span class="mi">23</span><span class="o">);</span>
+<span class="n">child</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="k">new</span> <span class="nc">Exception</span><span class="o">());</span>
+<span class="n">assert</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">ask</span><span class="o">(</span><span class="n">child</span><span class="o">,</span> <span class="s">&quot;get&quot;</span><span class="o">,</span> <span class="mi">5000</span><span class="o">),</span> <span class="n">timeout</span><span class="o">).</span><span class="n">equals</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

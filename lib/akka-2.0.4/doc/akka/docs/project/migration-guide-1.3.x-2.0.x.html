@@ -1,0 +1,1037 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Migration Guide 1.3.x to 2.0.x &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Migration Guides" href="migration-guides.html" />
+    <link rel="next" title="Release Notes" href="release-notes.html" />
+    <link rel="prev" title="Migration Guides" href="migration-guides.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Migration Guide 1.3.x to 2.0.x</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="release-notes.html">Release Notes</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="migration-guides.html">Migration Guides</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="migration-guide-1-3-x-to-2-0-x">
+<span id="migration-2-0"></span><h1>Migration Guide 1.3.x to 2.0.x</h1>
+<p>The 2.0 release contains several new features which require source-level
+changes in client code. This API cleanup is planned to be the last one for a
+significant amount of time.</p>
+<div class="section" id="new-concepts">
+<h2>New Concepts</h2>
+<p>First you should take some time to understand the new concepts of <a class="reference internal" href="../general/actor-systems.html#actor-systems"><em>Actor Systems</em></a>,
+<a class="reference internal" href="../general/supervision.html#supervision"><em>Supervision and Monitoring</em></a>, and <a class="reference internal" href="../general/addressing.html#addressing"><em>Actor References, Paths and Addresses</em></a>.</p>
+</div>
+<div class="section" id="migration-kit">
+<h2>Migration Kit</h2>
+<p>Nobody likes a big refactoring that takes several days to complete until
+anything is able to run again. Therefore we provide a migration kit that
+makes it possible to do the migration changes in smaller steps.</p>
+<p>The migration kit only covers the most common usage of Akka. It is not intended
+as a final solution. The whole migration kit is marked as deprecated and will
+be removed in Akka 2.1.</p>
+<p>The migration kit is provided in separate jar files. Add the following dependency:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="s">&quot;com.typesafe.akka&quot;</span> <span class="o">%</span> <span class="s">&quot;akka-actor-migration&quot;</span> <span class="o">%</span> <span class="s">&quot;2.0.4&quot;</span>
+</pre></div>
+</div>
+<p>The first step of the migration is to do some trivial replacements.
+Search and replace the following (be careful with the non qualified names):</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Search</th>
+<th class="head">Replace with</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">akka.actor.Actor</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">akka.actor.OldActor</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">extends</span> <span class="pre">Actor</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">extends</span> <span class="pre">OldActor</span></tt></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">akka.actor.Scheduler</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">akka.actor.OldScheduler</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">Scheduler</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">OldScheduler</span></tt></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">akka.event.EventHandler</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">akka.event.OldEventHandler</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">EventHandler</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">OldEventHandler</span></tt></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">akka.config.Config</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">akka.config.OldConfig</span></tt></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">Config</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">OldConfig</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>For Scala users the migration kit also contains some implicit conversions to be
+able to use some old methods. These conversions are useful from tests or other
+code used outside actors.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.migration._</span>
+</pre></div>
+</div>
+<p>Thereafter you need to fix compilation errors that are not handled by the migration
+kit, such as:</p>
+<ul class="simple">
+<li>Definition of supervisors</li>
+<li>Definition of dispatchers</li>
+<li>ActorRegistry</li>
+</ul>
+<p>When everything compiles you continue by replacing/removing the <tt class="docutils literal"><span class="pre">OldXxx</span></tt> classes
+one-by-one from the migration kit with appropriate migration.</p>
+<p>When using the migration kit there will be one global actor system, which loads
+the configuration <tt class="docutils literal"><span class="pre">akka.conf</span></tt> from the same locations as in Akka 1.x.
+This means that while you are using the migration kit you should not create your
+own <tt class="docutils literal"><span class="pre">ActorSystem</span></tt>, but instead use the <tt class="docutils literal"><span class="pre">akka.actor.GlobalActorSystem</span></tt>.
+In order to voluntarily exit the JVM you must <tt class="docutils literal"><span class="pre">shutdown</span></tt> the <tt class="docutils literal"><span class="pre">GlobalActorSystem</span></tt>
+Last task of the migration would be to create your own <tt class="docutils literal"><span class="pre">ActorSystem</span></tt>.</p>
+</div>
+<div class="section" id="unordered-collection-of-migration-items">
+<h2>Unordered Collection of Migration Items</h2>
+<div class="section" id="actors">
+<h3>Actors</h3>
+<div class="section" id="creating-and-starting-actors">
+<h4>Creating and starting actors</h4>
+<p>Actors are created by passing in a <tt class="docutils literal"><span class="pre">Props</span></tt> instance into the actorOf factory method in
+a <tt class="docutils literal"><span class="pre">ActorRefProvider</span></tt>, which is the <tt class="docutils literal"><span class="pre">ActorSystem</span></tt> or <tt class="docutils literal"><span class="pre">ActorContext</span></tt>.
+Use the system to create top level actors. Use the context to
+create actors from other actors. The difference is how the supervisor hierarchy is arranged.
+When using the context the current actor will be supervisor of the created child actor.
+When using the system it will be a top level actor, that is supervised by the system
+(internal guardian actor).</p>
+<p><tt class="docutils literal"><span class="pre">ActorRef.start()</span></tt> has been removed. Actors are now started automatically when created.
+Remove all invocations of <tt class="docutils literal"><span class="pre">ActorRef.start()</span></tt>.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">myActor</span> <span class="k">=</span> <span class="nc">Actor</span><span class="o">.</span><span class="n">actorOf</span><span class="o">[</span><span class="kt">MyActor</span><span class="o">]</span>
+<span class="n">myActor</span><span class="o">.</span><span class="n">start</span><span class="o">()</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="c1">// top level actor</span>
+<span class="k">val</span> <span class="n">firstActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">FirstActor</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;first&quot;</span><span class="o">)</span>
+
+<span class="c1">// child actor</span>
+<span class="k">class</span> <span class="nc">FirstActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">myActor</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">MyActor</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;myactor&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../scala/actors.html#actors-scala"><em>Actors (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/untyped-actors.html#untyped-actors-java"><em>Actors (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="stopping-actors">
+<h4>Stopping actors</h4>
+<p><tt class="docutils literal"><span class="pre">ActorRef.stop()</span></tt> has been moved. Use <tt class="docutils literal"><span class="pre">ActorSystem</span></tt> or <tt class="docutils literal"><span class="pre">ActorContext</span></tt> to stop actors.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">actorRef</span><span class="o">.</span><span class="n">stop</span><span class="o">()</span>
+<span class="n">self</span><span class="o">.</span><span class="n">stop</span><span class="o">()</span>
+<span class="n">actorRef</span> <span class="o">!</span> <span class="nc">PoisonPill</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">context</span><span class="o">.</span><span class="n">stop</span><span class="o">(</span><span class="n">someChild</span><span class="o">)</span>
+<span class="n">context</span><span class="o">.</span><span class="n">stop</span><span class="o">(</span><span class="n">self</span><span class="o">)</span>
+<span class="n">system</span><span class="o">.</span><span class="n">stop</span><span class="o">(</span><span class="n">actorRef</span><span class="o">)</span>
+<span class="n">actorRef</span> <span class="o">!</span> <span class="nc">PoisonPill</span>
+</pre></div>
+</div>
+<p><em>Stop all actors</em></p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">ActorRegistry</span><span class="o">.</span><span class="n">shutdownAll</span><span class="o">()</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">system</span><span class="o">.</span><span class="n">shutdown</span><span class="o">()</span> <span class="c1">// from outside of this system</span>
+<span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">shutdown</span><span class="o">()</span> <span class="c1">// from inside any actor</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../scala/actors.html#actors-scala"><em>Actors (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/untyped-actors.html#untyped-actors-java"><em>Actors (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="identifying-actors">
+<h4>Identifying Actors</h4>
+<p>In v1.3 actors have <tt class="docutils literal"><span class="pre">uuid</span></tt> and <tt class="docutils literal"><span class="pre">id</span></tt> field. In v2.0 each actor has a unique logical <tt class="docutils literal"><span class="pre">path</span></tt>.</p>
+<p>The <tt class="docutils literal"><span class="pre">ActorRegistry</span></tt> has been replaced by actor paths and lookup with
+<tt class="docutils literal"><span class="pre">actorFor</span></tt> in <tt class="docutils literal"><span class="pre">ActorRefProvider</span></tt> (<tt class="docutils literal"><span class="pre">ActorSystem</span></tt> or <tt class="docutils literal"><span class="pre">ActorContext</span></tt>). It
+is no longer possible to obtain references to all actors being implemented by a
+certain class (the reason being that this property is not known yet when an
+<tt class="xref py py-class docutils literal"><span class="pre">ActorRef</span></tt> is created because instantiation of the actor itself is
+asynchronous).</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">actor</span> <span class="k">=</span>  <span class="nc">Actor</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">actorFor</span><span class="o">(</span><span class="n">uuid</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">actors</span> <span class="k">=</span>  <span class="nc">Actor</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">actorsFor</span><span class="o">(</span><span class="n">id</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">actor</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">actorFor</span><span class="o">(</span><span class="s">&quot;/user/serviceA/aggregator&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../general/addressing.html#addressing"><em>Actor References, Paths and Addresses</em></a></li>
+<li><a class="reference internal" href="../scala/actors.html#actors-scala"><em>Actors (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/untyped-actors.html#untyped-actors-java"><em>Actors (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="reply-to-messages">
+<h4>Reply to messages</h4>
+<p><tt class="docutils literal"><span class="pre">self.channel</span></tt> has been replaced with unified reply mechanism using <tt class="docutils literal"><span class="pre">sender</span></tt> (Scala)
+or <tt class="docutils literal"><span class="pre">getSender()</span></tt> (Java). This works for both tell (!) and ask (?). Sending to
+an actor reference never throws an exception, hence <tt class="xref py py-meth docutils literal"><span class="pre">tryTell</span></tt> and
+<tt class="xref py py-meth docutils literal"><span class="pre">tryReply</span></tt> are removed.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">!</span> <span class="n">result</span>
+<span class="n">self</span><span class="o">.</span><span class="n">channel</span> <span class="n">tryTell</span> <span class="n">result</span>
+<span class="n">self</span><span class="o">.</span><span class="n">reply</span><span class="o">(</span><span class="n">result</span><span class="o">)</span>
+<span class="n">self</span><span class="o">.</span><span class="n">tryReply</span><span class="o">(</span><span class="n">result</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">sender</span> <span class="o">!</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../scala/actors.html#actors-scala"><em>Actors (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/untyped-actors.html#untyped-actors-java"><em>Actors (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="actorref-ask">
+<h4><tt class="docutils literal"><span class="pre">ActorRef.ask()</span></tt></h4>
+<p>The mechanism for collecting an actor’s reply in a <tt class="xref py py-class docutils literal"><span class="pre">Future</span></tt> has been
+reworked for better location transparency: it uses an actor under the hood.
+This actor needs to be disposable by the garbage collector in case no reply is
+ever received, and the decision is based upon a timeout. This timeout
+determines when the actor will stop itself and hence closes the window for a
+reply to be received; it is independent of the timeout applied when awaiting
+completion of the <tt class="xref py py-class docutils literal"><span class="pre">Future</span></tt>, however, the actor will complete the
+<tt class="xref py py-class docutils literal"><span class="pre">Future</span></tt> with an <tt class="xref py py-class docutils literal"><span class="pre">AskTimeoutException</span></tt> when it stops itself.</p>
+<p>Since there is no good library default value for the ask-timeout, specification
+of a timeout is required for all usages as shown below.</p>
+<p>Also, since the <tt class="docutils literal"><span class="pre">ask</span></tt> feature is coupling futures and actors, it is no longer
+offered on the <tt class="xref py py-class docutils literal"><span class="pre">ActorRef</span></tt> itself, but instead as a use pattern to be
+imported. While Scala’s implicit conversions enable transparent replacement,
+Java code will have to be changed by more than just adding an import statement.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">actorRef</span> <span class="o">?</span> <span class="n">message</span> <span class="c1">// Scala</span>
+<span class="n">actorRef</span><span class="o">.</span><span class="n">ask</span><span class="o">(</span><span class="n">message</span><span class="o">,</span> <span class="n">timeout</span><span class="o">);</span> <span class="c1">// Java</span>
+</pre></div>
+</div>
+<p>v2.0 (Scala):</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.pattern.ask</span>
+
+<span class="k">implicit</span> <span class="k">val</span> <span class="n">timeout</span><span class="k">:</span> <span class="kt">Timeout</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">actorRef</span> <span class="o">?</span> <span class="n">message</span>              <span class="c1">// uses implicit timeout</span>
+<span class="n">actorRef</span> <span class="n">ask</span> <span class="n">message</span>            <span class="c1">// uses implicit timeout</span>
+<span class="n">actorRef</span><span class="o">.</span><span class="n">ask</span><span class="o">(</span><span class="n">message</span><span class="o">)(</span><span class="n">timeout</span><span class="o">)</span>  <span class="c1">// uses explicit timeout</span>
+<span class="n">ask</span><span class="o">(</span><span class="n">actorRef</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>          <span class="c1">// uses implicit timeout</span>
+<span class="n">ask</span><span class="o">(</span><span class="n">actorRef</span><span class="o">,</span> <span class="n">message</span><span class="o">)(</span><span class="n">timeout</span><span class="o">)</span> <span class="c1">// uses explicit timeout</span>
+</pre></div>
+</div>
+<p>v2.0 (Java):</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.pattern.Patterns</span><span class="o">;</span>
+
+<span class="nc">Patterns</span><span class="o">.</span><span class="n">ask</span><span class="o">(</span><span class="n">actorRef</span><span class="o">,</span> <span class="n">message</span><span class="o">,</span> <span class="n">timeout</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../scala/actors.html#actors-scala"><em>Actors (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/untyped-actors.html#untyped-actors-java"><em>Actors (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="actorref-msg-timeout">
+<h4><tt class="docutils literal"><span class="pre">ActorRef.?(msg,</span> <span class="pre">timeout)</span></tt></h4>
+<p>This method has a dangerous overlap with <tt class="docutils literal"><span class="pre">ActorRef.?(msg)(implicit</span> <span class="pre">timeout)</span></tt>
+due to the fact that Scala allows to pass a <tt class="xref py py-class docutils literal"><span class="pre">Tuple</span></tt> in place of the
+message without requiring extra parentheses:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">actor</span> <span class="o">?</span> <span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;hallo&quot;</span><span class="o">)</span> <span class="c1">// will send a tuple</span>
+<span class="n">actor</span> <span class="o">?</span> <span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="nc">Timeout</span><span class="o">())</span> <span class="c1">// will send 1 with an explicit timeout</span>
+</pre></div>
+</div>
+<p>To remove this ambiguity, the latter variant is removed in version 2.0. If you
+were using it before, it will now send tuples where that is not desired. In
+order to correct all places in the code where this happens, simply import
+<tt class="docutils literal"><span class="pre">akka.migration.ask</span></tt> instead of <tt class="docutils literal"><span class="pre">akka.pattern.ask</span></tt> to obtain a variant
+which will give deprecation warnings where the old method signature is used:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.migration.ask</span>
+
+<span class="n">actor</span> <span class="o">?</span> <span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="nc">Timeout</span><span class="o">(</span><span class="mi">2</span> <span class="n">seconds</span><span class="o">))</span> <span class="c1">// will give deprecation warning</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="untypedactor-getcontext-java-api-only">
+<h4><tt class="docutils literal"><span class="pre">UntypedActor.getContext()</span></tt> (Java API only)</h4>
+<p><tt class="docutils literal"><span class="pre">getContext()</span></tt> in the Java API for UntypedActor is renamed to
+<tt class="docutils literal"><span class="pre">getSelf()</span></tt>.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">actorRef</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="s">&quot;Hello&quot;</span><span class="o">,</span> <span class="n">getContext</span><span class="o">());</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">actorRef</span><span class="o">.</span><span class="n">tell</span><span class="o">(</span><span class="s">&quot;Hello&quot;</span><span class="o">,</span> <span class="n">getSelf</span><span class="o">());</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../java/untyped-actors.html#untyped-actors-java"><em>Actors (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="configuration">
+<h4>Configuration</h4>
+<p>A new, more powerful, configuration utility has been implemented. The format of the
+configuration file is very similar to the format in v1.3. In addition it also supports
+configuration files in json and properties format. The syntax is described in the
+<a class="reference external" href="https://github.com/typesafehub/config/blob/master/HOCON.md">HOCON</a> specification.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">include</span> <span class="s">&quot;other.conf&quot;</span>
+
+<span class="n">akka</span> <span class="o">{</span>
+  <span class="n">event</span><span class="o">-</span><span class="n">handler</span><span class="o">-</span><span class="n">level</span> <span class="k">=</span> <span class="s">&quot;DEBUG&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">include</span> <span class="s">&quot;other&quot;</span>
+
+<span class="n">akka</span> <span class="o">{</span>
+  <span class="n">loglevel</span> <span class="k">=</span> <span class="s">&quot;DEBUG&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>In v1.3 the default name of the configuration file was <tt class="docutils literal"><span class="pre">akka.conf</span></tt>.
+In v2.0 the default name is <tt class="docutils literal"><span class="pre">application.conf</span></tt>. It is still loaded from classpath
+or can be specified with java System properties (<tt class="docutils literal"><span class="pre">-D</span></tt> command line arguments).</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="o">-</span><span class="nc">Dakka</span><span class="o">.</span><span class="n">config</span><span class="o">=&lt;</span><span class="n">file</span> <span class="n">path</span> <span class="n">to</span> <span class="n">configuration</span> <span class="n">file</span><span class="o">&gt;</span>
+<span class="o">-</span><span class="nc">Dakka</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">source</span><span class="o">=</span><span class="n">on</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="o">-</span><span class="nc">Dconfig</span><span class="o">.</span><span class="n">file</span><span class="o">=&lt;</span><span class="n">file</span> <span class="n">path</span> <span class="n">to</span> <span class="n">configuration</span> <span class="n">file</span><span class="o">&gt;</span>
+<span class="o">-</span><span class="nc">Dakka</span><span class="o">.</span><span class="n">log</span><span class="o">-</span><span class="n">config</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">start</span><span class="o">=</span><span class="n">on</span>
+</pre></div>
+</div>
+<p>Several configuration properties have been changed, such as:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">akka.event-handler-level</span></tt> =&gt; <tt class="docutils literal"><span class="pre">akka.loglevel</span></tt></li>
+<li>dispatcher <tt class="docutils literal"><span class="pre">type</span></tt> values are changed</li>
+<li><tt class="docutils literal"><span class="pre">akka.actor.throughput</span></tt> =&gt; <tt class="docutils literal"><span class="pre">akka.actor.default-dispatcher.throughput</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">akka.remote.layer</span></tt> =&gt; <tt class="docutils literal"><span class="pre">akka.remote.transport</span></tt></li>
+<li>the global <tt class="docutils literal"><span class="pre">time-unit</span></tt> property is removed, all durations are specified with duration unit in the property value, <tt class="docutils literal"><span class="pre">timeout</span> <span class="pre">=</span> <span class="pre">5s</span></tt></li>
+</ul>
+</div></blockquote>
+<p>Verify used configuration properties against the reference <a class="reference internal" href="../general/configuration.html#configuration"><em>Configuration</em></a>.</p>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../general/configuration.html#configuration"><em>Configuration</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="logging">
+<h4>Logging</h4>
+<p>EventHandler API has been replaced by LoggingAdapter, which publish log messages
+to the event bus. You can still plugin your own actor as event listener with the
+<tt class="docutils literal"><span class="pre">akka.event-handlers</span></tt> configuration property.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">EventHandler</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="n">exception</span><span class="o">,</span> <span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<span class="nc">EventHandler</span><span class="o">.</span><span class="n">warning</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<span class="nc">EventHandler</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<span class="nc">EventHandler</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<span class="nc">EventHandler</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="s">&quot;Processing took %s ms&quot;</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">duration</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.event.Logging</span>
+
+<span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">,</span> <span class="k">this</span><span class="o">)</span> <span class="c1">// will include system name in message source</span>
+<span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">,</span> <span class="n">getClass</span><span class="o">.</span><span class="n">getName</span><span class="o">)</span> <span class="c1">// will not include system name</span>
+<span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="n">exception</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="o">(</span><span class="n">message</span><span class="o">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="n">message</span><span class="o">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="n">message</span><span class="o">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="s">&quot;Processing took {} ms&quot;</span><span class="o">,</span> <span class="n">duration</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../scala/logging.html#logging-scala"><em>Logging (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/logging.html#logging-java"><em>Logging (Java)</em></a></li>
+<li><a class="reference internal" href="../scala/event-bus.html#event-bus-scala"><em>Event Bus (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/event-bus.html#event-bus-java"><em>Event Bus (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="scheduler">
+<h4>Scheduler</h4>
+<p>The functionality of the scheduler is identical, but the API is slightly adjusted.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="c1">//Schedules to send the &quot;foo&quot;-message to the testActor after 50ms</span>
+<span class="nc">Scheduler</span><span class="o">.</span><span class="n">scheduleOnce</span><span class="o">(</span><span class="n">testActor</span><span class="o">,</span> <span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="mi">50L</span><span class="o">,</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="nc">MILLISECONDS</span><span class="o">)</span>
+
+<span class="c1">// Schedules periodic send of &quot;foo&quot;-message to the testActor after 1s inital delay,</span>
+<span class="c1">// and then with 200ms between successive sends</span>
+<span class="nc">Scheduler</span><span class="o">.</span><span class="n">schedule</span><span class="o">(</span><span class="n">testActor</span><span class="o">,</span> <span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="mi">1000L</span><span class="o">,</span> <span class="mi">200L</span><span class="o">,</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="nc">MILLISECONDS</span><span class="o">)</span>
+
+<span class="c1">// Schedules a function to be executed (send the current time) to the testActor after 50ms</span>
+<span class="nc">Scheduler</span><span class="o">.</span><span class="n">scheduleOnce</span><span class="o">({</span><span class="n">testActor</span> <span class="o">!</span> <span class="nc">System</span><span class="o">.</span><span class="n">currentTimeMillis</span><span class="o">},</span> <span class="mi">50L</span><span class="o">,</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="nc">MILLISECONDS</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="c1">//Schedules to send the &quot;foo&quot;-message to the testActor after 50ms</span>
+<span class="n">system</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">scheduleOnce</span><span class="o">(</span><span class="mi">50</span> <span class="n">milliseconds</span><span class="o">,</span> <span class="n">testActor</span><span class="o">,</span> <span class="s">&quot;foo&quot;</span><span class="o">)</span>
+
+<span class="c1">// Schedules periodic send of &quot;foo&quot;-message to the testActor after 1s inital delay,</span>
+<span class="c1">// and then with 200ms between successive sends</span>
+<span class="n">system</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">schedule</span><span class="o">(</span><span class="mi">1</span> <span class="n">second</span><span class="o">,</span> <span class="mi">200</span> <span class="n">milliseconds</span><span class="o">,</span> <span class="n">testActor</span><span class="o">,</span> <span class="s">&quot;foo&quot;</span><span class="o">)</span>
+
+<span class="c1">// Schedules a function to be executed (send the current time) to the testActor after 50ms</span>
+<span class="n">system</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">scheduleOnce</span><span class="o">(</span><span class="mi">50</span> <span class="n">milliseconds</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">testActor</span> <span class="o">!</span> <span class="nc">System</span><span class="o">.</span><span class="n">currentTimeMillis</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The internal implementation of the scheduler is changed from
+<tt class="docutils literal"><span class="pre">java.util.concurrent.ScheduledExecutorService</span></tt> to a variant of
+<tt class="docutils literal"><span class="pre">org.jboss.netty.util.HashedWheelTimer</span></tt>.</p>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../scala/scheduler.html#scheduler-scala"><em>Scheduler (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/scheduler.html#scheduler-java"><em>Scheduler (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="supervision">
+<h4>Supervision</h4>
+<p>Akka v2.0 implements parental supervision. Actors can only be created by other actors — where the top-level
+actor is provided by the library — and each created actor is supervised by its parent.
+In contrast to the special supervision relationship between parent and child, each actor may monitor any
+other actor for termination.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">self</span><span class="o">.</span><span class="n">link</span><span class="o">(</span><span class="n">actorRef</span><span class="o">)</span>
+<span class="n">self</span><span class="o">.</span><span class="n">unlink</span><span class="o">(</span><span class="n">actorRef</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">class</span> <span class="nc">WatchActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">actorRef</span> <span class="k">=</span> <span class="o">...</span>
+  <span class="c1">// Terminated message will be delivered when the actorRef actor</span>
+  <span class="c1">// is stopped</span>
+  <span class="n">context</span><span class="o">.</span><span class="n">watch</span><span class="o">(</span><span class="n">actorRef</span><span class="o">)</span>
+
+  <span class="k">val</span> <span class="n">supervisedChild</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">ChildActor</span><span class="o">])</span>
+
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Terminated</span><span class="o">(</span><span class="n">`actorRef`</span><span class="o">)</span> <span class="k">⇒</span> <span class="o">...</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Note that <tt class="docutils literal"><span class="pre">link</span></tt> in v1.3 established a supervision relation, which <tt class="docutils literal"><span class="pre">watch</span></tt> doesn't.
+<tt class="docutils literal"><span class="pre">watch</span></tt> is only a way to get notification, <tt class="docutils literal"><span class="pre">Terminated</span></tt> message, when the monitored
+actor has been stopped.</p>
+<p><em>Refererence to the supervisor</em></p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">self</span><span class="o">.</span><span class="n">supervisor</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">context</span><span class="o">.</span><span class="n">parent</span>
+</pre></div>
+</div>
+<p><em>Supervisor Strategy</em></p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">supervisor</span> <span class="k">=</span> <span class="nc">Supervisor</span><span class="o">(</span>
+  <span class="nc">SupervisorConfig</span><span class="o">(</span>
+    <span class="nc">OneForOneStrategy</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="n">classOf</span><span class="o">[</span><span class="kt">Exception</span><span class="o">]),</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">1000</span><span class="o">),</span>
+    <span class="nc">Supervise</span><span class="o">(</span>
+      <span class="n">actorOf</span><span class="o">[</span><span class="kt">MyActor1</span><span class="o">],</span>
+      <span class="nc">Permanent</span><span class="o">)</span> <span class="o">::</span>
+    <span class="nc">Supervise</span><span class="o">(</span>
+      <span class="n">actorOf</span><span class="o">[</span><span class="kt">MyActor2</span><span class="o">],</span>
+      <span class="nc">Permanent</span><span class="o">)</span> <span class="o">::</span>
+    <span class="nc">Nil</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="n">supervisorStrategy</span> <span class="k">=</span> <span class="nc">OneForOneStrategy</span><span class="o">(</span><span class="n">maxNrOfRetries</span> <span class="k">=</span> <span class="mi">10</span><span class="o">,</span> <span class="n">withinTimeRange</span> <span class="k">=</span> <span class="mi">1</span> <span class="n">minute</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="n">_:</span> <span class="nc">ArithmeticException</span>      <span class="k">⇒</span> <span class="nc">Resume</span>
+      <span class="k">case</span> <span class="n">_:</span> <span class="nc">NullPointerException</span>     <span class="k">⇒</span> <span class="nc">Restart</span>
+      <span class="k">case</span> <span class="n">_:</span> <span class="nc">IllegalArgumentException</span> <span class="k">⇒</span> <span class="nc">Stop</span>
+      <span class="k">case</span> <span class="n">_:</span> <span class="nc">Exception</span>                <span class="k">⇒</span> <span class="nc">Escalate</span>
+    <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">x</span> <span class="k">=&gt;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../general/supervision.html#supervision"><em>Supervision and Monitoring</em></a></li>
+<li><a class="reference internal" href="../java/fault-tolerance.html#fault-tolerance-java"><em>Fault Tolerance (Java)</em></a></li>
+<li><a class="reference internal" href="../scala/fault-tolerance.html#fault-tolerance-scala"><em>Fault Tolerance (Scala)</em></a></li>
+<li><a class="reference internal" href="../scala/actors.html#actors-scala"><em>Actors (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/untyped-actors.html#untyped-actors-java"><em>Actors (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="dispatchers">
+<h4>Dispatchers</h4>
+<p>Dispatchers are defined in configuration instead of in code.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="c1">// in code</span>
+<span class="k">val</span> <span class="n">myDispatcher</span> <span class="k">=</span> <span class="nc">Dispatchers</span><span class="o">.</span><span class="n">newExecutorBasedEventDrivenDispatcher</span><span class="o">(</span><span class="n">name</span><span class="o">)</span>
+  <span class="o">.</span><span class="n">withNewThreadPoolWithLinkedBlockingQueueWithCapacity</span><span class="o">(</span><span class="mi">100</span><span class="o">)</span>
+  <span class="o">.</span><span class="n">setCorePoolSize</span><span class="o">(</span><span class="mi">16</span><span class="o">)</span>
+  <span class="o">.</span><span class="n">setMaxPoolSize</span><span class="o">(</span><span class="mi">128</span><span class="o">)</span>
+  <span class="o">.</span><span class="n">setKeepAliveTimeInMillis</span><span class="o">(</span><span class="mi">60000</span><span class="o">)</span>
+  <span class="o">.</span><span class="n">build</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="c1">// in config</span>
+<span class="n">my</span><span class="o">-</span><span class="n">dispatcher</span> <span class="o">{</span>
+  <span class="k">type</span> <span class="o">=</span> <span class="nc">Dispatcher</span>
+  <span class="n">core</span><span class="o">-</span><span class="n">pool</span><span class="o">-</span><span class="n">size</span><span class="o">-</span><span class="n">factor</span> <span class="k">=</span> <span class="mf">8.0</span>
+  <span class="n">max</span><span class="o">-</span><span class="n">pool</span><span class="o">-</span><span class="n">size</span><span class="o">-</span><span class="n">factor</span>  <span class="k">=</span> <span class="mf">16.0</span>
+  <span class="n">mailbox</span><span class="o">-</span><span class="n">capacity</span> <span class="k">=</span> <span class="mi">100</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The dispatcher is assigned to the actor in a different way.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">actorRef</span><span class="o">.</span><span class="n">dispatcher</span> <span class="k">=</span> <span class="nc">MyGlobals</span><span class="o">.</span><span class="n">myDispatcher</span>
+<span class="n">self</span><span class="o">.</span><span class="n">dispatcher</span> <span class="k">=</span> <span class="nc">MyGlobals</span><span class="o">.</span><span class="n">myDispatcher</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">myActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">MyActor</span><span class="o">].</span><span class="n">withDispatcher</span><span class="o">(</span><span class="s">&quot;my-dispatcher&quot;</span><span class="o">),</span> <span class="s">&quot;myactor&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../java/dispatchers.html#dispatchers-java"><em>Dispatchers (Java)</em></a></li>
+<li><a class="reference internal" href="../scala/dispatchers.html#dispatchers-scala"><em>Dispatchers (Scala)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="spawn">
+<h4>Spawn</h4>
+<p><tt class="docutils literal"><span class="pre">spawn</span></tt> has been removed and should be replaced by creating a <tt class="xref py py-class docutils literal"><span class="pre">Future</span></tt>. Be careful to not
+access any shared mutable state closed over by the body.</p>
+<p>Scala:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">Future</span> <span class="o">{</span> <span class="n">doSomething</span><span class="o">()</span> <span class="o">}</span> <span class="c1">// will be executed asynchronously</span>
+</pre></div>
+</div>
+<p>Java:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">Futures</span><span class="o">.</span><span class="n">future</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;(</span><span class="k">new</span> <span class="nc">Callable</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+  <span class="n">public</span> <span class="nc">String</span> <span class="n">call</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">doSomething</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">},</span> <span class="n">executionContext</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../scala/futures.html#futures-scala"><em>Futures (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/futures.html#futures-java"><em>Futures (Java)</em></a></li>
+<li><a class="reference internal" href="../general/jmm.html#jmm"><em>Akka and the Java Memory Model</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="hotswap">
+<h4>HotSwap</h4>
+<p>In v2.0 <tt class="docutils literal"><span class="pre">become</span></tt> and <tt class="docutils literal"><span class="pre">unbecome</span></tt> metods are located in <tt class="docutils literal"><span class="pre">ActorContext</span></tt>, i.e. <tt class="docutils literal"><span class="pre">context.become</span></tt> and <tt class="docutils literal"><span class="pre">context.unbecome</span></tt>.</p>
+<p>The special <tt class="docutils literal"><span class="pre">HotSwap</span></tt> and <tt class="docutils literal"><span class="pre">RevertHotswap</span></tt> messages in v1.3 has been removed. Similar can be
+implemented with your own message and using <tt class="docutils literal"><span class="pre">context.become</span></tt> and <tt class="docutils literal"><span class="pre">context.unbecome</span></tt>
+in the actor receiving the message. The rationale is that being able to replace
+any actor’s behavior generically is not a good idea because actor implementors
+would have no way to defend against that; hence the change to lay it into the
+hands of the actor itself.</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../scala/actors.html#actors-scala"><em>Actors (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/untyped-actors.html#untyped-actors-java"><em>Actors (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="routing">
+<h4>Routing</h4>
+<p>Routing has been redesign with improved performance and additional features as a result.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyLoadBalancer</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="k">with</span> <span class="nc">LoadBalancer</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">pinger</span> <span class="k">=</span> <span class="n">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span> <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span> <span class="k">case</span> <span class="n">x</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Pinger: &quot;</span> <span class="o">+</span> <span class="n">x</span><span class="o">)</span> <span class="o">}</span> <span class="o">}).</span><span class="n">start</span><span class="o">()</span>
+  <span class="k">val</span> <span class="n">ponger</span> <span class="k">=</span> <span class="n">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span> <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span> <span class="k">case</span> <span class="n">x</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Ponger: &quot;</span> <span class="o">+</span> <span class="n">x</span><span class="o">)</span> <span class="o">}</span> <span class="o">}).</span><span class="n">start</span><span class="o">()</span>
+
+  <span class="k">val</span> <span class="n">seq</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">CyclicIterator</span><span class="o">[</span><span class="kt">ActorRef</span><span class="o">](</span><span class="nc">List</span><span class="o">(</span><span class="n">pinger</span><span class="o">,</span><span class="n">ponger</span><span class="o">))</span>
+<span class="o">}</span>
+<span class="k">val</span> <span class="n">loadbalancer</span> <span class="k">=</span> <span class="n">actorOf</span><span class="o">[</span><span class="kt">MyLoadBalancer</span><span class="o">].</span><span class="n">start</span><span class="o">()</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">pinger</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span> <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span> <span class="k">case</span> <span class="n">x</span> <span class="k">⇒</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Pinger: &quot;</span> <span class="o">+</span> <span class="n">x</span><span class="o">)</span> <span class="o">}</span> <span class="o">}))</span>
+<span class="k">val</span> <span class="n">ponger</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span> <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span> <span class="k">case</span> <span class="n">x</span> <span class="k">⇒</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Ponger: &quot;</span> <span class="o">+</span> <span class="n">x</span><span class="o">)</span> <span class="o">}</span> <span class="o">}))</span>
+<span class="k">val</span> <span class="n">loadbalancer</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">().</span><span class="n">withRouter</span><span class="o">(</span><span class="nc">RoundRobinRouter</span><span class="o">(</span><span class="nc">Seq</span><span class="o">(</span><span class="n">pinger</span><span class="o">,</span> <span class="n">ponger</span><span class="o">))))</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../scala/routing.html#routing-scala"><em>Routing (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/routing.html#routing-java"><em>Routing (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="actorpool">
+<h4>ActorPool</h4>
+<p>The ActorPool has been replaced by dynamically resizable routers.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">class</span> <span class="nc">TestPool</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="k">with</span> <span class="nc">DefaultActorPool</span>
+                             <span class="k">with</span> <span class="nc">BoundedCapacityStrategy</span>
+                             <span class="k">with</span> <span class="nc">ActiveFuturesPressureCapacitor</span>
+                             <span class="k">with</span> <span class="nc">SmallestMailboxSelector</span>
+                             <span class="k">with</span> <span class="nc">BasicNoBackoffFilter</span>
+<span class="o">{</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="nc">_route</span>
+  <span class="k">def</span> <span class="n">lowerBound</span> <span class="k">=</span> <span class="mi">2</span>
+  <span class="k">def</span> <span class="n">upperBound</span> <span class="k">=</span> <span class="mi">4</span>
+  <span class="k">def</span> <span class="n">rampupRate</span> <span class="k">=</span> <span class="mf">0.1</span>
+  <span class="k">def</span> <span class="n">partialFill</span> <span class="k">=</span> <span class="kc">true</span>
+  <span class="k">def</span> <span class="n">selectionCount</span> <span class="k">=</span> <span class="mi">1</span>
+  <span class="k">def</span> <span class="n">instance</span> <span class="k">=</span> <span class="n">actorOf</span><span class="o">[</span><span class="kt">ExampleActor</span><span class="o">]</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="c1">// in configuration</span>
+<span class="n">akka</span><span class="o">.</span><span class="n">actor</span><span class="o">.</span><span class="n">deployment</span> <span class="o">{</span>
+  <span class="o">/</span><span class="n">router2</span> <span class="o">{</span>
+    <span class="n">router</span> <span class="k">=</span> <span class="n">round</span><span class="o">-</span><span class="n">robin</span>
+    <span class="n">resizer</span> <span class="o">{</span>
+      <span class="n">lower</span><span class="o">-</span><span class="n">bound</span> <span class="k">=</span> <span class="mi">2</span>
+      <span class="n">upper</span><span class="o">-</span><span class="n">bound</span> <span class="k">=</span> <span class="mi">15</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// in code</span>
+<span class="k">val</span> <span class="n">router2</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">ExampleActor</span><span class="o">].</span><span class="n">withRouter</span><span class="o">(</span><span class="nc">FromConfig</span><span class="o">())</span>
+</pre></div>
+</div>
+<p>Documentation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../scala/routing.html#routing-scala"><em>Routing (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/routing.html#routing-java"><em>Routing (Java)</em></a></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="stm">
+<h3>STM</h3>
+<p>In Akka v2.0 <a class="reference external" href="http://nbronson.github.com/scala-stm/">ScalaSTM</a> is used rather than Multiverse.</p>
+<p>Agent and Transactor have been ported to ScalaSTM. The API's for Agent and
+Transactor are basically the same, other than integration with ScalaSTM. See:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="../scala/agents.html#agents-scala"><em>Agents (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/agents.html#agents-java"><em>Agents (Java)</em></a></li>
+<li><a class="reference internal" href="../scala/transactors.html#transactors-scala"><em>Transactors (Scala)</em></a></li>
+<li><a class="reference internal" href="../java/transactors.html#transactors-java"><em>Transactors (Java)</em></a></li>
+</ul>
+</div></blockquote>
+<div class="section" id="imports">
+<h4>Imports</h4>
+<div class="section" id="scala">
+<h5>Scala</h5>
+<p>To use ScalaSTM the import from Scala is:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">scala.concurrent.stm._</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="java">
+<h5>Java</h5>
+<p>For Java there is a special helper object with Java-friendly methods:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">scala.concurrent.stm.japi.STM</span><span class="o">;</span>
+</pre></div>
+</div>
+<p>These methods can also be statically imported:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">static</span> <span class="n">scala</span><span class="o">.</span><span class="n">concurrent</span><span class="o">.</span><span class="n">stm</span><span class="o">.</span><span class="n">japi</span><span class="o">.</span><span class="nc">STM</span><span class="o">.*;</span>
+</pre></div>
+</div>
+<p>Other imports that are needed are in the stm package, particularly <tt class="docutils literal"><span class="pre">Ref</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">scala.concurrent.stm.Ref</span><span class="o">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="transactions">
+<h4>Transactions</h4>
+<div class="section" id="id1">
+<h5>Scala</h5>
+<p>Both v1.3 and v2.0 provide an <tt class="docutils literal"><span class="pre">atomic</span></tt> block, however, the ScalaSTM <tt class="docutils literal"><span class="pre">atomic</span></tt>
+is a function from <tt class="docutils literal"><span class="pre">InTxn</span></tt> to return type.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">atomic</span> <span class="o">{</span>
+  <span class="c1">// do something in transaction</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">atomic</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">txn</span> <span class="k">=&gt;</span>
+  <span class="c1">// do something in transaction</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Note that in ScalaSTM the <tt class="docutils literal"><span class="pre">InTxn</span></tt> in the atomic function is usually marked as
+implicit as transactional references require an implicit <tt class="docutils literal"><span class="pre">InTxn</span></tt> on all
+methods. That is, the transaction is statically required and it is a
+compile-time warning to use a reference without a transaction. There is also a
+<tt class="docutils literal"><span class="pre">Ref.View</span></tt> for operations without requiring an <tt class="docutils literal"><span class="pre">InTxn</span></tt> statically. See below
+for more information.</p>
+</div>
+<div class="section" id="id2">
+<h5>Java</h5>
+<p>In the ScalaSTM Java API helpers there are atomic methods which accept
+<tt class="docutils literal"><span class="pre">java.lang.Runnable</span></tt> and <tt class="docutils literal"><span class="pre">java.util.concurrent.Callable</span></tt>.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">new</span> <span class="nc">Atomic</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">public</span> <span class="nc">Object</span> <span class="n">atomically</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// in transaction</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}.</span><span class="n">execute</span><span class="o">();</span>
+
+<span class="nc">SomeObject</span> <span class="n">result</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Atomic</span><span class="o">&lt;</span><span class="nc">SomeObject</span><span class="o">&gt;()</span> <span class="o">{</span>
+    <span class="n">public</span> <span class="nc">SomeObject</span> <span class="n">atomically</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// in transaction</span>
+        <span class="k">return</span> <span class="o">...;</span>
+    <span class="o">}</span>
+<span class="o">}.</span><span class="n">execute</span><span class="o">();</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">static</span> <span class="n">scala</span><span class="o">.</span><span class="n">concurrent</span><span class="o">.</span><span class="n">stm</span><span class="o">.</span><span class="n">japi</span><span class="o">.</span><span class="nc">STM</span><span class="o">.</span><span class="n">atomic</span><span class="o">;</span>
+<span class="k">import</span> <span class="nn">java.util.concurrent.Callable</span><span class="o">;</span>
+
+<span class="n">atomic</span><span class="o">(</span><span class="k">new</span> <span class="nc">Runnable</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">run</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// in transaction</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+
+<span class="nc">SomeObject</span> <span class="n">result</span> <span class="k">=</span> <span class="n">atomic</span><span class="o">(</span><span class="k">new</span> <span class="nc">Callable</span><span class="o">&lt;</span><span class="nc">SomeObject</span><span class="o">&gt;()</span> <span class="o">{</span>
+    <span class="n">public</span> <span class="nc">SomeObject</span> <span class="n">call</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// in transaction</span>
+        <span class="k">return</span> <span class="o">...;</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="ref">
+<h4>Ref</h4>
+<div class="section" id="id3">
+<h5>Scala</h5>
+<p>Other than the import, creating a Ref is basically identical between Akka STM in
+v1.3 and ScalaSTM used in v2.0.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">ref</span> <span class="k">=</span> <span class="nc">Ref</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">val</span> <span class="n">ref</span> <span class="k">=</span> <span class="nc">Ref</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The API for Ref is similar. For example:</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">ref</span><span class="o">.</span><span class="n">get</span> <span class="c1">// get current value</span>
+<span class="n">ref</span><span class="o">()</span>   <span class="c1">// same as get</span>
+
+<span class="n">ref</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>  <span class="c1">// set to new value, return old value</span>
+<span class="n">ref</span><span class="o">()</span> <span class="k">=</span> <span class="mi">1</span>   <span class="c1">// same as set</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">swap</span><span class="o">(</span><span class="mi">2</span><span class="o">)</span> <span class="c1">// same as set</span>
+
+<span class="n">ref</span> <span class="n">alter</span> <span class="o">{</span> <span class="k">_</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">}</span> <span class="c1">// apply a function, return new value</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">ref</span><span class="o">.</span><span class="n">get</span> <span class="c1">// get current value</span>
+<span class="n">ref</span><span class="o">()</span>   <span class="c1">// same as get</span>
+
+<span class="n">ref</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>  <span class="c1">// set to new value, return nothing</span>
+<span class="n">ref</span><span class="o">()</span> <span class="k">=</span> <span class="mi">1</span>   <span class="c1">// same as set</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">swap</span><span class="o">(</span><span class="mi">2</span><span class="o">)</span> <span class="c1">// set and return old value</span>
+
+<span class="n">ref</span> <span class="n">transform</span> <span class="o">{</span> <span class="k">_</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">}</span> <span class="c1">// apply function, return nothing</span>
+
+<span class="n">ref</span> <span class="n">transformIfDefined</span> <span class="o">{</span> <span class="k">case</span> <span class="mi">1</span> <span class="k">=&gt;</span> <span class="mi">2</span> <span class="o">}</span> <span class="c1">// apply partial function if defined</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="ref-view">
+<h4>Ref.View</h4>
+<p>In v1.3 using a <tt class="docutils literal"><span class="pre">Ref</span></tt> method outside of a transaction would automatically
+create a single-operation transaction. In v2.0 (in ScalaSTM) there is a
+<tt class="docutils literal"><span class="pre">Ref.View</span></tt> which provides methods without requiring a current
+transaction.</p>
+<div class="section" id="id4">
+<h5>Scala</h5>
+<p>The <tt class="docutils literal"><span class="pre">Ref.View</span></tt> can be accessed with the <tt class="docutils literal"><span class="pre">single</span></tt> method:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">ref</span><span class="o">.</span><span class="n">single</span><span class="o">()</span> <span class="c1">// returns current value</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">single</span><span class="o">()</span> <span class="k">=</span> <span class="mi">1</span> <span class="c1">// set new value</span>
+
+<span class="c1">// with atomic this would be:</span>
+
+<span class="n">atomic</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">t</span> <span class="k">=&gt;</span> <span class="n">ref</span><span class="o">()</span> <span class="o">}</span>
+<span class="n">atomic</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">t</span> <span class="k">=&gt;</span> <span class="n">ref</span><span class="o">()</span> <span class="k">=</span> <span class="mi">1</span> <span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h5>Java</h5>
+<p>As <tt class="docutils literal"><span class="pre">Ref.View</span></tt> in ScalaSTM does not require implicit transactions, this is more
+easily used from Java. <tt class="docutils literal"><span class="pre">Ref</span></tt> could be used, but requires explicit threading of
+transactions. There are helper methods in <tt class="docutils literal"><span class="pre">japi.STM</span></tt> for creating <tt class="docutils literal"><span class="pre">Ref.View</span></tt>
+references.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">Ref</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">ref</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Ref</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;(</span><span class="mi">0</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">Ref</span><span class="o">.</span><span class="nc">View</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">ref</span> <span class="k">=</span> <span class="nc">STM</span><span class="o">.</span><span class="n">newRef</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">set</span></tt> and <tt class="docutils literal"><span class="pre">get</span></tt> methods work the same way for both versions.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">ref</span><span class="o">.</span><span class="n">get</span><span class="o">();</span>  <span class="c1">// get current value</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span> <span class="c1">// set new value</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">ref</span><span class="o">.</span><span class="n">get</span><span class="o">();</span>  <span class="c1">// get current value</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span> <span class="c1">// set new value</span>
+</pre></div>
+</div>
+<p>There are also <tt class="docutils literal"><span class="pre">transform</span></tt>, <tt class="docutils literal"><span class="pre">getAndTransform</span></tt>, and <tt class="docutils literal"><span class="pre">transformAndGet</span></tt>
+methods in <tt class="docutils literal"><span class="pre">japi.STM</span></tt> which accept <tt class="docutils literal"><span class="pre">japi.STM.Transformer</span></tt> objects.</p>
+<p>There are <tt class="docutils literal"><span class="pre">increment</span></tt> helper methods for <tt class="docutils literal"><span class="pre">Ref.View&lt;Integer&gt;</span></tt> and
+<tt class="docutils literal"><span class="pre">Ref.View&lt;Long&gt;</span></tt> references.</p>
+</div>
+</div>
+<div class="section" id="transaction-lifecycle-callbacks">
+<h4>Transaction lifecycle callbacks</h4>
+<div class="section" id="id6">
+<h5>Scala</h5>
+<p>It is also possible to hook into the transaction lifecycle in ScalaSTM. See the
+ScalaSTM documentation for the full range of possibilities.</p>
+<p>v1.3:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">atomic</span> <span class="o">{</span>
+  <span class="n">deferred</span> <span class="o">{</span>
+    <span class="c1">// executes when transaction commits</span>
+  <span class="o">}</span>
+  <span class="n">compensating</span> <span class="o">{</span>
+    <span class="c1">// executes when transaction aborts</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>v2.0:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">atomic</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">txn</span> <span class="k">=&gt;</span>
+  <span class="n">txn</span><span class="o">.</span><span class="n">afterCommit</span> <span class="o">{</span> <span class="n">txnStatus</span> <span class="k">=&gt;</span>
+    <span class="c1">// executes when transaction commits</span>
+  <span class="o">}</span>
+  <span class="n">txn</span><span class="o">.</span><span class="n">afterRollback</span> <span class="o">{</span> <span class="n">txnStatus</span> <span class="k">=&gt;</span>
+    <span class="c1">// executes when transaction rolls back</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id7">
+<h5>Java</h5>
+<p>Rather than using the <tt class="docutils literal"><span class="pre">deferred</span></tt> and <tt class="docutils literal"><span class="pre">compensating</span></tt> methods in
+<tt class="docutils literal"><span class="pre">akka.stm.StmUtils</span></tt>, use the <tt class="docutils literal"><span class="pre">afterCommit</span></tt> and <tt class="docutils literal"><span class="pre">afterRollback</span></tt> methods in
+<tt class="docutils literal"><span class="pre">scala.concurrent.stm.japi.STM</span></tt>, which behave in the same way and accept
+<tt class="docutils literal"><span class="pre">Runnable</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="transactional-datastructures">
+<h4>Transactional Datastructures</h4>
+<p>In ScalaSTM see <tt class="docutils literal"><span class="pre">TMap</span></tt>, <tt class="docutils literal"><span class="pre">TSet</span></tt>, and <tt class="docutils literal"><span class="pre">TArray</span></tt> for transactional
+datastructures.</p>
+<p>There are helper methods for creating these from Java in <tt class="docutils literal"><span class="pre">japi.STM</span></tt>:
+<tt class="docutils literal"><span class="pre">newTMap</span></tt>, <tt class="docutils literal"><span class="pre">newTSet</span></tt>, and <tt class="docutils literal"><span class="pre">newTArray</span></tt>. These datastructures implement the
+<tt class="docutils literal"><span class="pre">scala.collection</span></tt> interfaces and can also be used from Java with Scala's
+<tt class="docutils literal"><span class="pre">JavaConversions</span></tt>. There are helper methods that apply the conversions,
+returning <tt class="docutils literal"><span class="pre">java.util</span></tt> <tt class="docutils literal"><span class="pre">Map</span></tt>, <tt class="docutils literal"><span class="pre">Set</span></tt>, and <tt class="docutils literal"><span class="pre">List</span></tt>: <tt class="docutils literal"><span class="pre">newMap</span></tt>, <tt class="docutils literal"><span class="pre">newSet</span></tt>,
+and <tt class="docutils literal"><span class="pre">newArrayAsList</span></tt>.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

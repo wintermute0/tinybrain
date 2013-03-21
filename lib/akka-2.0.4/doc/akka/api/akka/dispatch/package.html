@@ -1,0 +1,1189 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.dispatch</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a></p>
+        <h1>dispatch</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dispatch</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="akka.dispatch.BalancingDispatcher" data-isabs="false">
+      <a id="BalancingDispatcher:BalancingDispatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BalancingDispatcher.html"><span class="name">BalancingDispatcher</span></a><span class="result"> extends Dispatcher</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An executor based event driven dispatcher which will try to redistribute work from busy actors to idle actors.</p>
+    </li><li visbl="pub" name="akka.dispatch.BalancingDispatcherConfigurator" data-isabs="false">
+      <a id="BalancingDispatcherConfigurator:BalancingDispatcherConfigurator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BalancingDispatcherConfigurator.html"><span class="name">BalancingDispatcherConfigurator</span></a><span class="result"> extends MessageDispatcherConfigurator</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Configurator for creating <a name="akka.dispatch.BalancingDispatcher" class="extype" href="BalancingDispatcher.html">BalancingDispatcher</a>.</p>
+    </li><li visbl="pub" name="akka.dispatch.BoundedDequeBasedMailbox" data-isabs="false">
+      <a id="BoundedDequeBasedMailbox:BoundedDequeBasedMailbox"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BoundedDequeBasedMailbox.html"><span class="name">BoundedDequeBasedMailbox</span></a><span class="params">(<span name="capacity">capacity: Int</span>, <span name="pushTimeOut">pushTimeOut: Duration</span>)</span><span class="result"> extends MailboxType with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.BoundedDequeBasedMessageQueueSemantics" data-isabs="true">
+      <a id="BoundedDequeBasedMessageQueueSemantics:BoundedDequeBasedMessageQueueSemantics"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BoundedDequeBasedMessageQueueSemantics.html"><span class="name">BoundedDequeBasedMessageQueueSemantics</span></a><span class="result"> extends DequeBasedMessageQueue</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.BoundedMailbox" data-isabs="false">
+      <a id="BoundedMailbox:BoundedMailbox"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BoundedMailbox.html"><span class="name">BoundedMailbox</span></a><span class="params">(<span name="capacity">capacity: Int</span>, <span name="pushTimeOut">pushTimeOut: Duration</span>)</span><span class="result"> extends MailboxType with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.BoundedMessageQueueSemantics" data-isabs="true">
+      <a id="BoundedMessageQueueSemantics:BoundedMessageQueueSemantics"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BoundedMessageQueueSemantics.html"><span class="name">BoundedMessageQueueSemantics</span></a><span class="result"> extends QueueBasedMessageQueue</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.BoundedPriorityMailbox" data-isabs="false">
+      <a id="BoundedPriorityMailbox:BoundedPriorityMailbox"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BoundedPriorityMailbox.html"><span class="name">BoundedPriorityMailbox</span></a><span class="result"> extends MailboxType</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Extend me to provide the comparator
+</p>
+    </li><li visbl="pub" name="akka.dispatch.DefaultPromise" data-isabs="false">
+      <a id="DefaultPromise:DefaultPromise[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DefaultPromise.html"><span class="name">DefaultPromise</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AbstractPromise with Promise[T]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The default concrete Future implementation.</p>
+    </li><li visbl="pub" name="akka.dispatch.DequeBasedMessageQueue" data-isabs="true">
+      <a id="DequeBasedMessageQueue:DequeBasedMessageQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DequeBasedMessageQueue.html"><span class="name">DequeBasedMessageQueue</span></a><span class="result"> extends QueueBasedMessageQueue</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.Dispatcher" data-isabs="false">
+      <a id="Dispatcher:Dispatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Dispatcher.html"><span class="name">Dispatcher</span></a><span class="result"> extends MessageDispatcher</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The event-based <code><code>Dispatcher</code></code> binds a set of Actors to a thread pool backed up by a
+<code>BlockingQueue</code>.</p>
+    </li><li visbl="pub" name="akka.dispatch.DispatcherConfigurator" data-isabs="false">
+      <a id="DispatcherConfigurator:DispatcherConfigurator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DispatcherConfigurator.html"><span class="name">DispatcherConfigurator</span></a><span class="result"> extends MessageDispatcherConfigurator</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Configurator for creating <a name="akka.dispatch.Dispatcher" class="extype" href="Dispatcher.html">Dispatcher</a>.</p>
+    </li><li visbl="pub" name="akka.dispatch.DispatcherPrerequisites" data-isabs="true">
+      <a id="DispatcherPrerequisites:DispatcherPrerequisites"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DispatcherPrerequisites.html"><span class="name">DispatcherPrerequisites</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.Dispatchers" data-isabs="false">
+      <a id="Dispatchers:Dispatchers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Dispatchers.html"><span class="name">Dispatchers</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Dispatchers are to be defined in configuration to allow for tuning
+for different environments.</p>
+    </li><li visbl="pub" name="akka.dispatch.Envelope" data-isabs="false">
+      <a id="Envelope:Envelope"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Envelope.html"><span class="name">Envelope</span></a><span class="params">(<span name="message">message: Any</span>, <span name="sender">sender: ActorRef</span>, <span name="system">system: ActorSystem</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.ExecutionContext" data-isabs="true">
+      <a id="ExecutionContext:ExecutionContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutionContext.html"><span class="name">ExecutionContext</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An ExecutionContext is essentially the same thing as a java.</p>
+    </li><li visbl="pub" name="akka.dispatch.ExecutionContextExecutor" data-isabs="true">
+      <a id="ExecutionContextExecutor:ExecutionContextExecutor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutionContextExecutor.html"><span class="name">ExecutionContextExecutor</span></a><span class="result"> extends ExecutionContext with Executor</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Union interface since Java does not support union types
+</p>
+    </li><li visbl="pub" name="akka.dispatch.ExecutionContextExecutorService" data-isabs="true">
+      <a id="ExecutionContextExecutorService:ExecutionContextExecutorService"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutionContextExecutorService.html"><span class="name">ExecutionContextExecutorService</span></a><span class="result"> extends ExecutionContextExecutor with ExecutorService</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Union interface since Java does not support union types
+</p>
+    </li><li visbl="pub" name="akka.dispatch.ExecutorServiceConfigurator" data-isabs="true">
+      <a id="ExecutorServiceConfigurator:ExecutorServiceConfigurator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutorServiceConfigurator.html"><span class="name">ExecutorServiceConfigurator</span></a><span class="result"> extends ExecutorServiceFactoryProvider</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.ExecutorServiceDelegate" data-isabs="true">
+      <a id="ExecutorServiceDelegate:ExecutorServiceDelegate"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutorServiceDelegate.html"><span class="name">ExecutorServiceDelegate</span></a><span class="result"> extends ExecutorService</span>
+      </span>
+      </h4>
+      <p class="comment cmt">As the name says
+</p>
+    </li><li visbl="pub" name="akka.dispatch.ExecutorServiceFactory" data-isabs="true">
+      <a id="ExecutorServiceFactory:ExecutorServiceFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutorServiceFactory.html"><span class="name">ExecutorServiceFactory</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Function0 without the fun stuff (mostly for the sake of the Java API side of things)
+</p>
+    </li><li visbl="pub" name="akka.dispatch.ExecutorServiceFactoryProvider" data-isabs="true">
+      <a id="ExecutorServiceFactoryProvider:ExecutorServiceFactoryProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutorServiceFactoryProvider.html"><span class="name">ExecutorServiceFactoryProvider</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Generic way to specify an ExecutorService to a Dispatcher, create it with the given name if desired
+</p>
+    </li><li visbl="pub" name="akka.dispatch.Foreach" data-isabs="true">
+      <a id="Foreach:Foreach[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Foreach.html"><span class="name">Foreach</span></a><span class="tparams">[<span name="T">-T</span>]</span><span class="result"> extends UnitFunctionBridge[T]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Callback for the Future.</p>
+    </li><li visbl="pub" name="akka.dispatch.ForkJoinExecutorConfigurator" data-isabs="false">
+      <a id="ForkJoinExecutorConfigurator:ForkJoinExecutorConfigurator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ForkJoinExecutorConfigurator.html"><span class="name">ForkJoinExecutorConfigurator</span></a><span class="result"> extends ExecutorServiceConfigurator</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.Future" data-isabs="true">
+      <a id="Future:Future[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Future.html"><span class="name">Future</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends Awaitable[T]</span>
+      </span>
+      </h4>
+      <p class="comment cmt"> Trait representing a value that may not have been computed yet.</p>
+    </li><li visbl="pub" name="akka.dispatch.KeptPromise" data-isabs="false">
+      <a id="KeptPromise:KeptPromise[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="KeptPromise.html"><span class="name">KeptPromise</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends Promise[T]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An already completed Future is seeded with it's result at creation, is useful for when you are participating in
+a Future-composition but you already have a value to contribute.</p>
+    </li><li visbl="pub" name="akka.dispatch.MailboxType" data-isabs="true">
+      <a id="MailboxType:MailboxType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MailboxType.html"><span class="name">MailboxType</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Mailbox configuration.</p>
+    </li><li visbl="pub" name="akka.dispatch.Mapper" data-isabs="true">
+      <a id="Mapper:Mapper[T, R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Mapper.html"><span class="name">Mapper</span></a><span class="tparams">[<span name="T">-T</span>, <span name="R">+R</span>]</span><span class="result"> extends AbstractFunction1[T, R]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Callback for the Future.</p>
+    </li><li visbl="pub" name="akka.dispatch.MessageDispatcher" data-isabs="true">
+      <a id="MessageDispatcher:MessageDispatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageDispatcher.html"><span class="name">MessageDispatcher</span></a><span class="result"> extends AbstractMessageDispatcher with Executor with ExecutionContext</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.MessageDispatcherConfigurator" data-isabs="true">
+      <a id="MessageDispatcherConfigurator:MessageDispatcherConfigurator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageDispatcherConfigurator.html"><span class="name">MessageDispatcherConfigurator</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Base class to be used for hooking in new dispatchers into Dispatchers.</p>
+    </li><li visbl="pub" name="akka.dispatch.MessageQueue" data-isabs="true">
+      <a id="MessageQueue:MessageQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageQueue.html"><span class="name">MessageQueue</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.MessageQueueAppendFailedException" data-isabs="false">
+      <a id="MessageQueueAppendFailedException:MessageQueueAppendFailedException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageQueueAppendFailedException.html"><span class="name">MessageQueueAppendFailedException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.MonitorableThreadFactory" data-isabs="false">
+      <a id="MonitorableThreadFactory:MonitorableThreadFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MonitorableThreadFactory.html"><span class="name">MonitorableThreadFactory</span></a><span class="params">(<span name="name">name: String</span>, <span name="daemonic">daemonic: Boolean</span>, <span name="contextClassLoader">contextClassLoader: Option[ClassLoader]</span>, <span name="exceptionHandler">exceptionHandler: UncaughtExceptionHandler</span>)</span><span class="result"> extends ThreadFactory with ForkJoinWorkerThreadFactory with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.OnComplete" data-isabs="true">
+      <a id="OnComplete:OnComplete[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OnComplete.html"><span class="name">OnComplete</span></a><span class="tparams">[<span name="T">-T</span>]</span><span class="result"> extends CallbackBridge[Either[Throwable, T]]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Callback for when a Future is completed with either failure or a success
+SAM (Single Abstract Method) class</p>
+    </li><li visbl="pub" name="akka.dispatch.OnFailure" data-isabs="true">
+      <a id="OnFailure:OnFailure"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OnFailure.html"><span class="name">OnFailure</span></a><span class="result"> extends CallbackBridge[Throwable]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Callback for when a Future is completed with a failure
+SAM (Single Abstract Method) class</p>
+    </li><li visbl="pub" name="akka.dispatch.OnSuccess" data-isabs="true">
+      <a id="OnSuccess:OnSuccess[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OnSuccess.html"><span class="name">OnSuccess</span></a><span class="tparams">[<span name="T">-T</span>]</span><span class="result"> extends CallbackBridge[T]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Callback for when a Future is completed successfully
+SAM (Single Abstract Method) class</p>
+    </li><li visbl="pub" name="akka.dispatch.PinnedDispatcher" data-isabs="false">
+      <a id="PinnedDispatcher:PinnedDispatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PinnedDispatcher.html"><span class="name">PinnedDispatcher</span></a><span class="result"> extends Dispatcher</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Dedicates a unique thread for each actor passed in as reference.</p>
+    </li><li visbl="pub" name="akka.dispatch.PinnedDispatcherConfigurator" data-isabs="false">
+      <a id="PinnedDispatcherConfigurator:PinnedDispatcherConfigurator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PinnedDispatcherConfigurator.html"><span class="name">PinnedDispatcherConfigurator</span></a><span class="result"> extends MessageDispatcherConfigurator</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Configurator for creating <a name="akka.dispatch.PinnedDispatcher" class="extype" href="PinnedDispatcher.html">PinnedDispatcher</a>.</p>
+    </li><li visbl="pub" name="akka.dispatch.PriorityGenerator" data-isabs="true">
+      <a id="PriorityGenerator:PriorityGenerator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PriorityGenerator.html"><span class="name">PriorityGenerator</span></a><span class="result"> extends Comparator[Envelope]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A PriorityGenerator is a convenience API to create a Comparator that orders the messages of a
+PriorityDispatcher
+</p>
+    </li><li visbl="pub" name="akka.dispatch.Promise" data-isabs="true">
+      <a id="Promise:Promise[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Promise.html"><span class="name">Promise</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends Future[T]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Essentially this is the Promise (or write-side) of a Future (read-side).</p>
+    </li><li visbl="pub" name="akka.dispatch.QueueBasedMessageQueue" data-isabs="true">
+      <a id="QueueBasedMessageQueue:QueueBasedMessageQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="QueueBasedMessageQueue.html"><span class="name">QueueBasedMessageQueue</span></a><span class="result"> extends MessageQueue</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.Recover" data-isabs="true">
+      <a id="Recover:Recover[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Recover.html"><span class="name">Recover</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends RecoverBridge[T]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Callback for the Future.</p>
+    </li><li visbl="pub" name="akka.dispatch.SaneRejectedExecutionHandler" data-isabs="false">
+      <a id="SaneRejectedExecutionHandler:SaneRejectedExecutionHandler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SaneRejectedExecutionHandler.html"><span class="name">SaneRejectedExecutionHandler</span></a><span class="result"> extends RejectedExecutionHandler</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The RejectedExecutionHandler used by Akka, it improves on CallerRunsPolicy
+by throwing a RejectedExecutionException if the executor isShutdown.</p>
+    </li><li visbl="pub" name="akka.dispatch.TaskInvocation" data-isabs="false">
+      <a id="TaskInvocation:TaskInvocation"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TaskInvocation.html"><span class="name">TaskInvocation</span></a><span class="params">(<span name="eventStream">eventStream: EventStream</span>, <span name="runnable">runnable: Runnable</span>, <span name="cleanup">cleanup: () ⇒ Unit</span>)</span><span class="result"> extends Runnable with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.ThreadPoolConfig" data-isabs="false">
+      <a id="ThreadPoolConfig:ThreadPoolConfig"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ThreadPoolConfig.html"><span class="name">ThreadPoolConfig</span></a><span class="params">(<span name="allowCorePoolTimeout">allowCorePoolTimeout: Boolean</span>, <span name="corePoolSize">corePoolSize: Int</span>, <span name="maxPoolSize">maxPoolSize: Int</span>, <span name="threadTimeout">threadTimeout: Duration</span>, <span name="queueFactory">queueFactory: () ⇒ BlockingQueue[Runnable]</span>, <span name="rejectionPolicy">rejectionPolicy: RejectedExecutionHandler</span>)</span><span class="result"> extends ExecutorServiceFactoryProvider with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A small configuration DSL to create ThreadPoolExecutors that can be provided as an ExecutorServiceFactoryProvider to Dispatcher
+</p>
+    </li><li visbl="pub" name="akka.dispatch.ThreadPoolConfigBuilder" data-isabs="false">
+      <a id="ThreadPoolConfigBuilder:ThreadPoolConfigBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ThreadPoolConfigBuilder.html"><span class="name">ThreadPoolConfigBuilder</span></a><span class="params">(<span name="config">config: ThreadPoolConfig</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A DSL to configure and create a MessageDispatcher with a ThreadPoolExecutor
+</p>
+    </li><li visbl="pub" name="akka.dispatch.ThreadPoolExecutorConfigurator" data-isabs="false">
+      <a id="ThreadPoolExecutorConfigurator:ThreadPoolExecutorConfigurator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ThreadPoolExecutorConfigurator.html"><span class="name">ThreadPoolExecutorConfigurator</span></a><span class="result"> extends ExecutorServiceConfigurator</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.UnboundedDequeBasedMailbox" data-isabs="false">
+      <a id="UnboundedDequeBasedMailbox:UnboundedDequeBasedMailbox"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="UnboundedDequeBasedMailbox.html"><span class="name">UnboundedDequeBasedMailbox</span></a><span class="params">()</span><span class="result"> extends MailboxType with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.UnboundedDequeBasedMessageQueueSemantics" data-isabs="true">
+      <a id="UnboundedDequeBasedMessageQueueSemantics:UnboundedDequeBasedMessageQueueSemantics"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="UnboundedDequeBasedMessageQueueSemantics.html"><span class="name">UnboundedDequeBasedMessageQueueSemantics</span></a><span class="result"> extends DequeBasedMessageQueue</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.UnboundedMailbox" data-isabs="false">
+      <a id="UnboundedMailbox:UnboundedMailbox"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="UnboundedMailbox.html"><span class="name">UnboundedMailbox</span></a><span class="params">()</span><span class="result"> extends MailboxType with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">It's a case class for Java (new UnboundedMailbox)
+</p>
+    </li><li visbl="pub" name="akka.dispatch.UnboundedMessageQueueSemantics" data-isabs="true">
+      <a id="UnboundedMessageQueueSemantics:UnboundedMessageQueueSemantics"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="UnboundedMessageQueueSemantics.html"><span class="name">UnboundedMessageQueueSemantics</span></a><span class="result"> extends QueueBasedMessageQueue</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.UnboundedPriorityMailbox" data-isabs="false">
+      <a id="UnboundedPriorityMailbox:UnboundedPriorityMailbox"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="UnboundedPriorityMailbox.html"><span class="name">UnboundedPriorityMailbox</span></a><span class="result"> extends MailboxType</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Extend me to provide the comparator
+</p>
+    </li><li visbl="pub" name="akka.dispatch.ChildTerminated" data-isabs="false">
+      <a id="ChildTerminated:ChildTerminated"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ChildTerminated.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">ChildTerminated</span></a><span class="params">(<span name="child">child: ActorRef</span>)</span><span class="result"> extends SystemMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Create" data-isabs="false">
+      <a id="Create:Create"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Create.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">Create</span></a><span class="params">()</span><span class="result"> extends SystemMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.DefaultDispatcherPrerequisites" data-isabs="false">
+      <a id="DefaultDispatcherPrerequisites:DefaultDispatcherPrerequisites"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DefaultDispatcherPrerequisites.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">DefaultDispatcherPrerequisites</span></a><span class="params">(<span name="threadFactory">threadFactory: ThreadFactory</span>, <span name="eventStream">eventStream: EventStream</span>, <span name="deadLetterMailbox">deadLetterMailbox: Mailbox</span>, <span name="scheduler">scheduler: Scheduler</span>, <span name="dynamicAccess">dynamicAccess: DynamicAccess</span>, <span name="settings">settings: Settings</span>)</span><span class="result"> extends DispatcherPrerequisites with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.FutureTimeoutException" data-isabs="false">
+      <a id="FutureTimeoutException:FutureTimeoutException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FutureTimeoutException.html"><span class="name deprecated" title="Deprecated: (Since version 2.0) Await throws java.util.concurrent.TimeoutException">FutureTimeoutException</span></a><span class="result"> extends AkkaException</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0)</i> Await throws java.util.concurrent.TimeoutException</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Link" data-isabs="false">
+      <a id="Link:Link"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Link.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">Link</span></a><span class="params">(<span name="subject">subject: ActorRef</span>)</span><span class="result"> extends SystemMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.OldFuture" data-isabs="false">
+      <a id="OldFuture:OldFuture[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OldFuture.html"><span class="name deprecated" title="Deprecated: (Since version 2.0) use new Future api instead">OldFuture</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Some old methods made available through implicit conversion in
+<a name="akka.migration" class="extype" href="../migration/package.html">migration</a>.</p>
+    </li><li visbl="pub" name="akka.dispatch.PromiseStream" data-isabs="false">
+      <a id="PromiseStream:PromiseStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PromiseStream.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Was never officially supported or documented, will be removed in Akka 2.1">PromiseStream</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends PromiseStreamOut[A] with PromiseStreamIn[A]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Was never officially supported or documented, will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.PromiseStreamIn" data-isabs="true">
+      <a id="PromiseStreamIn:PromiseStreamIn[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PromiseStreamIn.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Was never officially supported or documented, will be removed in Akka 2.1">PromiseStreamIn</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Was never officially supported or documented, will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.PromiseStreamOut" data-isabs="true">
+      <a id="PromiseStreamOut:PromiseStreamOut[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PromiseStreamOut.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Was never officially supported or documented, will be removed in Akka 2.1">PromiseStreamOut</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Was never officially supported or documented, will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Recreate" data-isabs="false">
+      <a id="Recreate:Recreate"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Recreate.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">Recreate</span></a><span class="params">(<span name="cause">cause: Throwable</span>)</span><span class="result"> extends SystemMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Resume" data-isabs="false">
+      <a id="Resume:Resume"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Resume.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">Resume</span></a><span class="params">()</span><span class="result"> extends SystemMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.SharingMailbox" data-isabs="false">
+      <a id="SharingMailbox:SharingMailbox"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SharingMailbox.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">SharingMailbox</span></a><span class="result"> extends Mailbox with DefaultSystemMessageQueue</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Supervise" data-isabs="false">
+      <a id="Supervise:Supervise"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Supervise.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">Supervise</span></a><span class="params">(<span name="child">child: ActorRef</span>)</span><span class="result"> extends SystemMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Suspend" data-isabs="false">
+      <a id="Suspend:Suspend"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Suspend.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">Suspend</span></a><span class="params">()</span><span class="result"> extends SystemMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.SystemMessage" data-isabs="true">
+      <a id="SystemMessage:SystemMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SystemMessage.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">SystemMessage</span></a><span class="result"> extends PossiblyHarmful</span>
+      </span>
+      </h4>
+      <p class="comment cmt">System messages are handled specially: they form their own queue within
+each actor’s mailbox.</p>
+    </li><li visbl="pub" name="akka.dispatch.Terminate" data-isabs="false">
+      <a id="Terminate:Terminate"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Terminate.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">Terminate</span></a><span class="params">()</span><span class="result"> extends SystemMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.Unlink" data-isabs="false">
+      <a id="Unlink:Unlink"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Unlink.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">Unlink</span></a><span class="params">(<span name="subject">subject: ActorRef</span>)</span><span class="result"> extends SystemMessage with Product with Serializable</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="akka.dispatch.Await" data-isabs="false">
+      <a id="Await:Await"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Await$.html"><span class="name">Await</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.Dispatchers" data-isabs="false">
+      <a id="Dispatchers:Dispatchers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Dispatchers$.html"><span class="name">Dispatchers</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.ExecutionContext" data-isabs="false">
+      <a id="ExecutionContext:ExecutionContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutionContext$.html"><span class="name">ExecutionContext</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.ExecutionContexts" data-isabs="false">
+      <a id="ExecutionContexts:ExecutionContexts"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutionContexts$.html"><span class="name">ExecutionContexts</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Java API to create ExecutionContexts
+</p>
+    </li><li visbl="pub" name="akka.dispatch.Filter" data-isabs="false">
+      <a id="Filter:Filter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Filter$.html"><span class="name">Filter</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt"><i><b>Java API (not recommended):</b></i>
+Callback for the Future.</p>
+    </li><li visbl="pub" name="akka.dispatch.ForkJoinExecutorConfigurator" data-isabs="false">
+      <a id="ForkJoinExecutorConfigurator:ForkJoinExecutorConfigurator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ForkJoinExecutorConfigurator$.html"><span class="name">ForkJoinExecutorConfigurator</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.Future" data-isabs="false">
+      <a id="Future:Future"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Future$.html"><span class="name">Future</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.Futures" data-isabs="false">
+      <a id="Futures:Futures"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Futures$.html"><span class="name">Futures</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Futures is the Java API for Futures and Promises
+</p>
+    </li><li visbl="pub" name="akka.dispatch.MessageDispatcher" data-isabs="false">
+      <a id="MessageDispatcher:MessageDispatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageDispatcher$.html"><span class="name">MessageDispatcher</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.MonitorableThreadFactory" data-isabs="false">
+      <a id="MonitorableThreadFactory:MonitorableThreadFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MonitorableThreadFactory$.html"><span class="name">MonitorableThreadFactory</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.PriorityGenerator" data-isabs="false">
+      <a id="PriorityGenerator:PriorityGenerator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PriorityGenerator$.html"><span class="name">PriorityGenerator</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.Promise" data-isabs="false">
+      <a id="Promise:Promise"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Promise$.html"><span class="name">Promise</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.ThreadPoolConfig" data-isabs="false">
+      <a id="ThreadPoolConfig:ThreadPoolConfig"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ThreadPoolConfig$.html"><span class="name">ThreadPoolConfig</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.ThreadPoolConfigBuilder" data-isabs="false">
+      <a id="ThreadPoolConfigBuilder:ThreadPoolConfigBuilder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ThreadPoolConfigBuilder$.html"><span class="name">ThreadPoolConfigBuilder</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.dispatch.japi" data-isabs="false">
+      <a id="japi:japi"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="japi$.html"><span class="name">japi</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This class contains bridge classes between Scala and Java.</p>
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="akka.dispatch.Mailbox" data-isabs="false">
+      <a id="Mailbox:Mailbox"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Mailbox$.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">Mailbox</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.PromiseStream" data-isabs="false">
+      <a id="PromiseStream:PromiseStream"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PromiseStream$.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Was never officially supported or documented, will be removed in Akka 2.1">PromiseStream</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Was never officially supported or documented, will be removed in Akka 2.1</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.dispatch.SystemMessage" data-isabs="false">
+      <a id="SystemMessage:SystemMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SystemMessage$.html"><span class="name deprecated" title="Deprecated: (Since version 2.0.2) Will become private[akka] in 2.1, this is not user-api">SystemMessage</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.0.2)</i> Will become private[akka] in 2.1, this is not user-api</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

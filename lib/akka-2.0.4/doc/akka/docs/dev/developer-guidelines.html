@@ -1,0 +1,198 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Developer Guidelines &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Information for Developers" href="index.html" />
+    <link rel="next" title="Documentation Guidelines" href="documentation.html" />
+    <link rel="prev" title="Multi-JVM Testing" href="multi-jvm-testing.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Developer Guidelines</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="documentation.html">Documentation Guidelines</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="multi-jvm-testing.html">Multi-JVM Testing</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="developer-guidelines">
+<span id="id1"></span><h1>Developer Guidelines</h1>
+<div class="section" id="code-style">
+<h2>Code Style</h2>
+<p>The Akka code style follows <a class="reference external" href="http://davetron5000.github.com/scala-style/ScalaStyleGuide.pdf">this document</a> .</p>
+<p>Akka is using <tt class="docutils literal"><span class="pre">Scalariform</span></tt> to format the source code as part of the build. So just hack away and then run <tt class="docutils literal"><span class="pre">sbt</span> <span class="pre">compile</span></tt> and it will reformat the code according to Akka standards.</p>
+</div>
+<div class="section" id="process">
+<h2>Process</h2>
+<ul class="simple">
+<li>Make sure you have signed the Akka CLA, if not, ask for it on the Mailing List.</li>
+<li>Pick a ticket, if there is no ticket for your work then create one first.</li>
+<li>Start working in a feature branch. Name it something like <tt class="docutils literal"><span class="pre">wip-&lt;ticket</span> <span class="pre">number&gt;-&lt;descriptive</span> <span class="pre">name&gt;-&lt;your</span> <span class="pre">username&gt;</span></tt>.</li>
+<li>When you are done, create a GitHub Pull-Request towards the targeted branch and email the Akka Mailing List that you want it reviewed</li>
+<li>When there's consensus on the review, someone from the Akka Core Team will merge it.</li>
+</ul>
+</div>
+<div class="section" id="commit-messages">
+<h2>Commit messages</h2>
+<p>Please follow these guidelines when creating public commits and writing commit messages.</p>
+<ol class="arabic simple">
+<li>If your work spans multiple local commits (for example; if you do safe point commits while working in a topic branch or work in a branch for long time doing merges/rebases etc.) then please do <strong>not</strong> commit it all but rewrite the history by squashing the commits into a single big commit which you write a good commit message for (like discussed below). Here is a great article for how to do that: <a class="reference external" href="http://sandofsky.com/blog/git-workflow.html">http://sandofsky.com/blog/git-workflow.html</a>. Every commit should be able to be used in isolation, cherry picked etc.</li>
+<li>First line should be a descriptive sentence what the commit is doing. It should be possible to fully understand what the commit does by just reading this single line. It is <strong>not</strong> ok to only list the ticket number, type &quot;minor fix&quot; or similar. Include reference to ticket number, prefixed with #, at the end of the first line. If the commit is a <strong>small</strong> fix, then you are done. If not, go to 3.</li>
+<li>Following the single line description should be a blank line followed by an enumerated list with the details of the commit.</li>
+</ol>
+<p>Example:</p>
+<div class="highlight-scala"><pre>Completed replication over BookKeeper based transaction log with configurable actor snapshotting every X message. Fixes #XXX
+
+  * Details 1
+  * Details 2
+  * Details 3</pre>
+</div>
+</div>
+<div class="section" id="testing">
+<h2>Testing</h2>
+<p>All code that is checked in <strong>should</strong> have tests. All testing is done with <tt class="docutils literal"><span class="pre">ScalaTest</span></tt> and <tt class="docutils literal"><span class="pre">ScalaCheck</span></tt>.</p>
+<ul class="simple">
+<li>Name tests as <strong>Test.scala</strong> if they do not depend on any external stuff. That keeps surefire happy.</li>
+<li>Name tests as <strong>Spec.scala</strong> if they have external dependencies.</li>
+</ul>
+<p>There is a testing standard that should be followed: <a class="reference external" href="http://github.com/akka/akka/tree/v2.0.4/akka-actor-tests/src/test/scala/akka/ticket/Ticket001Spec.scala">Ticket001Spec</a></p>
+<div class="section" id="actor-testkit">
+<h3>Actor TestKit</h3>
+<p>There is a useful test kit for testing actors: <a class="reference external" href="http://github.com/akka/akka/tree/v2.0.4/akka-testkit/src/main/scala/akka/testkit/TestKit.scala">akka.util.TestKit</a>. It enables assertions concerning replies received and their timing, there is more documentation in the <a class="reference internal" href="../scala/testing.html#akka-testkit"><em>Testing Actor Systems (Scala)</em></a> module.</p>
+</div>
+<div class="section" id="multi-jvm-testing">
+<h3>Multi-JVM Testing</h3>
+<p>Included in the example is an sbt trait for multi-JVM testing which will fork
+JVMs for multi-node testing. There is support for running applications (objects
+with main methods) and running ScalaTest tests.</p>
+</div>
+<div class="section" id="networkfailuretest">
+<h3>NetworkFailureTest</h3>
+<p>You can use the 'NetworkFailureTest' trait to test network failure.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

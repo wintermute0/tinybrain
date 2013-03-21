@@ -1,0 +1,242 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>What is Akka? &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Introduction" href="index.html" />
+    <link rel="next" title="Why Akka?" href="why-akka.html" />
+    <link rel="prev" title="Introduction" href="index.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">What is Akka?</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="why-akka.html">Why Akka?</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="index.html">Introduction</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="what-is-akka">
+<span id="id1"></span><h1>What is Akka?</h1>
+<p><strong>Scalable real-time transaction processing</strong></p>
+<p>We believe that writing correct concurrent, fault-tolerant and scalable
+applications is too hard. Most of the time it's because we are using the wrong
+tools and the wrong level of abstraction. Akka is here to change that. Using the
+Actor Model we raise the abstraction level and provide a better platform to build
+correct concurrent and scalable applications. For fault-tolerance we adopt the
+&quot;Let it crash&quot; model which have been used with great success in the telecom industry to build
+applications that self-heals, systems that never stop. Actors also provides the
+abstraction for transparent distribution and the basis for truly scalable and
+fault-tolerant applications.</p>
+<p>Akka is Open Source and available under the Apache 2 License.</p>
+<p>Download from <a class="reference external" href="http://akka.io/downloads/">http://akka.io/downloads/</a></p>
+<div class="section" id="akka-implements-a-unique-hybrid">
+<h2>Akka implements a unique hybrid</h2>
+<div class="section" id="actors">
+<h3>Actors</h3>
+<p>Actors give you:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Simple and high-level abstractions for concurrency and parallelism.</li>
+<li>Asynchronous, non-blocking and highly performant event-driven programming model.</li>
+<li>Very lightweight event-driven processes (approximately 2.7 million actors per GB RAM).</li>
+</ul>
+</div></blockquote>
+<p>See <a class="reference internal" href="../scala/actors.html#actors-scala"><em>Actors (Scala)</em></a> and <a class="reference internal" href="../java/untyped-actors.html#untyped-actors-java"><em>Actors (Java)</em></a></p>
+</div>
+<div class="section" id="fault-tolerance">
+<h3>Fault Tolerance</h3>
+<p>Fault tolerance through supervisor hierarchies with &quot;let-it-crash&quot;
+semantics. Excellent for writing highly fault-tolerant systems that never stop,
+systems that self-heal. Supervisor hierarchies can span over multiple JVMs to
+provide truly fault-tolerant systems.</p>
+<p>See <a class="reference internal" href="../scala/fault-tolerance.html#fault-tolerance-scala"><em>Fault Tolerance (Scala)</em></a> and <a class="reference internal" href="../java/fault-tolerance.html#fault-tolerance-java"><em>Fault Tolerance (Java)</em></a></p>
+</div>
+<div class="section" id="location-transparency">
+<h3>Location Transparency</h3>
+<p>Everything in Akka is designed to work in a distributed environment: all
+interactions of actors use purely message passing and everything is asynchronous.</p>
+<p>For an overview of the remoting see <a class="reference internal" href="../general/remoting.html#remoting"><em>Location Transparency</em></a></p>
+</div>
+<div class="section" id="transactors">
+<h3>Transactors</h3>
+<p>Transactors combine actors and STM (Software Transactional Memory) into transactional actors.
+It allows you to compose atomic message flows with automatic retry and rollback.</p>
+<p>See <a class="reference internal" href="../scala/transactors.html#transactors-scala"><em>Transactors (Scala)</em></a> and <a class="reference internal" href="../java/transactors.html#transactors-java"><em>Transactors (Java)</em></a></p>
+</div>
+</div>
+<div class="section" id="scala-and-java-apis">
+<h2>Scala and Java APIs</h2>
+<p>Akka has both a <a class="reference internal" href="../scala/index.html#scala-api"><em>Scala API</em></a> and a <a class="reference internal" href="../java/index.html#java-api"><em>Java API</em></a>.</p>
+</div>
+<div class="section" id="akka-can-be-used-in-two-different-ways">
+<h2>Akka can be used in two different ways</h2>
+<ul class="simple">
+<li>As a library: used by a web app, to be put into <tt class="docutils literal"><span class="pre">WEB-INF/lib</span></tt> or as a regular
+JAR on your classpath.</li>
+<li>As a microkernel: stand-alone kernel to drop your application into.</li>
+</ul>
+<p>See the <a class="reference internal" href="deployment-scenarios.html#deployment-scenarios"><em>Use-case and Deployment Scenarios</em></a> for details.</p>
+</div>
+<div class="section" id="what-happened-to-cloudy-akka">
+<h2>What happened to Cloudy Akka?</h2>
+<p>The commercial offering was earlier referred to as Cloudy Akka. This offering
+consisted of two things:</p>
+<ul class="simple">
+<li>Cluster support for Akka</li>
+<li>Monitoring &amp; Management (formerly called Atmos)</li>
+</ul>
+<p>Cloudy Akka have been discontinued and the Cluster support is now being moved into the
+Open Source version of Akka (the upcoming Akka 2.1), while the Monitoring &amp; Management
+(Atmos) is now rebranded into Typesafe Console and is part of the commercial subscription
+for the Typesafe Stack (see below for details).</p>
+</div>
+<div class="section" id="typesafe-stack">
+<h2>Typesafe Stack</h2>
+<p>Akka is now also part of the <a class="reference external" href="http://typesafe.com/stack">Typesafe Stack</a>.</p>
+<p>The Typesafe Stack is a modern software platform that makes it easy for developers
+to build scalable software applications. It combines the Scala programming language,
+Akka, the Play! web framework and robust developer tools in a simple package that
+integrates seamlessly with existing Java infrastructure.</p>
+<p>The Typesafe Stack is all fully open source.</p>
+</div>
+<div class="section" id="typesafe-console">
+<h2>Typesafe Console</h2>
+<p>On top of the Typesafe Stack we also have commercial product called Typesafe
+Console which provides the following features:</p>
+<ol class="arabic simple">
+<li>Slick Web UI with real-time view into the system</li>
+<li>Management through Dashboard, JMX and REST</li>
+<li>Dapper-style tracing of messages across components and remote nodes</li>
+<li>Real-time statistics</li>
+<li>Very low overhead monitoring agents (should always be on in production)</li>
+<li>Consolidation of statistics and logging information to a single node</li>
+<li>Storage of statistics data for later processing</li>
+<li>Provisioning and rolling upgrades</li>
+</ol>
+<p>Read more <a class="reference external" href="http://typesafe.com/products/typesafe-subscription">here</a>.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>

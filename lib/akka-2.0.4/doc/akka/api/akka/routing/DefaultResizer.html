@@ -1,0 +1,696 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>akka.routing.DefaultResizer</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
+      <div id="definition">
+        <a title="Go to companion" href="DefaultResizer$.html"><img src="../../lib/class_to_object_big.png" /></a>
+        <p id="owner"><a name="akka" class="extype" href="../package.html">akka</a>.<a name="akka.routing" class="extype" href="package.html">routing</a></p>
+        <h1><a title="Go to companion" href="DefaultResizer$.html">DefaultResizer</a></h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">DefaultResizer</span><span class="params">(<span name="lowerBound">lowerBound: <span name="scala.Int" class="extype">Int</span></span>, <span name="upperBound">upperBound: <span name="scala.Int" class="extype">Int</span></span>, <span name="pressureThreshold">pressureThreshold: <span name="scala.Int" class="extype">Int</span></span>, <span name="rampupRate">rampupRate: <span name="scala.Double" class="extype">Double</span></span>, <span name="backoffThreshold">backoffThreshold: <span name="scala.Double" class="extype">Double</span></span>, <span name="backoffRate">backoffRate: <span name="scala.Double" class="extype">Double</span></span>, <span name="stopDelay">stopDelay: <a name="akka.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>, <span name="messagesPerResize">messagesPerResize: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result"> extends <a name="akka.routing.Resizer" class="extype" href="Resizer.html">Resizer</a> with <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, <a name="akka.routing.Resizer" class="extype" href="Resizer.html">Resizer</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+        </div></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+            </div>
+        <div id="ancestors">
+              <span class="filtertype">Inherited</span>
+              <ol><li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li></ol>
+              <ol id="linearization"><li name="akka.routing.DefaultResizer" class="in"><span>DefaultResizer</span></li><li name="scala.Serializable" class="in"><span>Serializable</span></li><li name="java.io.Serializable" class="in"><span>Serializable</span></li><li name="scala.Product" class="in"><span>Product</span></li><li name="scala.Equals" class="in"><span>Equals</span></li><li name="akka.routing.Resizer" class="in"><span>Resizer</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+            </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div class="members" id="constructors">
+              <h3>Instance Constructors</h3>
+              <ol><li visbl="pub" name="akka.routing.DefaultResizer#this" data-isabs="false">
+      <a id="this:DefaultResizer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">DefaultResizer</span><span class="params">(<span name="lower">lower: <span name="scala.Int" class="extype">Int</span></span>, <span name="upper">upper: <span name="scala.Int" class="extype">Int</span></span>)</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Java API constructor for default values except bounds.</p>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#this" data-isabs="false">
+      <a id="this:DefaultResizer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">DefaultResizer</span><span class="params">(<span name="lowerBound">lowerBound: <span name="scala.Int" class="extype">Int</span> = <span class="symbol">1</span></span>, <span name="upperBound">upperBound: <span name="scala.Int" class="extype">Int</span> = <span class="symbol">10</span></span>, <span name="pressureThreshold">pressureThreshold: <span name="scala.Int" class="extype">Int</span> = <span class="symbol">1</span></span>, <span name="rampupRate">rampupRate: <span name="scala.Double" class="extype">Double</span> = <span class="symbol">0.2</span></span>, <span name="backoffThreshold">backoffThreshold: <span name="scala.Double" class="extype">Double</span> = <span class="symbol">0.3</span></span>, <span name="backoffRate">backoffRate: <span name="scala.Double" class="extype">Double</span> = <span class="symbol">0.1</span></span>, <span name="stopDelay">stopDelay: <a name="akka.util.Duration" class="extype" href="../util/Duration.html">Duration</a> = <span name="akka.util.duration.`package`.intToDurationInt(1).second" class="defval">...</span></span>, <span name="messagesPerResize">messagesPerResize: <span name="scala.Int" class="extype">Int</span> = <span class="symbol">10</span></span>)</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $hash$hash">##</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#backoff" data-isabs="false">
+      <a id="backoff(Int,Int):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">backoff</span><span class="params">(<span name="pressure">pressure: <span name="scala.Int" class="extype">Int</span></span>, <span name="capacity">capacity: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Computes a proposed negative (or zero) capacity delta using
+the configured <code>backoffThreshold</code> and <code>backoffRate</code></p><div class="fullcomment"><div class="comment cmt"><p>Computes a proposed negative (or zero) capacity delta using
+the configured <code>backoffThreshold</code> and <code>backoffRate</code></p></div><dl class="paramcmts block"><dt class="param">pressure</dt><dd class="cmt"><p>the current number of busy routees</p></dd><dt class="param">capacity</dt><dd class="cmt"><p>the current number of total routees</p></dd><dt>returns</dt><dd class="cmt"><p>proposed decrease in capacity (as a negative number)
+</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#backoffRate" data-isabs="false">
+      <a id="backoffRate:Double"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">backoffRate</span><span class="result">: <span name="scala.Double" class="extype">Double</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#backoffThreshold" data-isabs="false">
+      <a id="backoffThreshold:Double"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">backoffThreshold</span><span class="result">: <span name="scala.Double" class="extype">Double</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#canEqual" data-isabs="false">
+      <a id="canEqual(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">canEqual</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.routing.DefaultResizer" class="extype" href="">DefaultResizer</a> → Equals</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#capacity" data-isabs="false">
+      <a id="capacity(IndexedSeq[ActorRef]):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">capacity</span><span class="params">(<span name="routees">routees: IndexedSeq[<a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a>]</span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the overall desired change in resizer capacity.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the overall desired change in resizer capacity. Positive value will
+add routees to the resizer. Negative value will remove routees from the
+resizer.</p></div><dl class="paramcmts block"><dt class="param">routees</dt><dd class="cmt"><p>The current actor in the resizer</p></dd><dt>returns</dt><dd class="cmt"><p>the number of routees by which the resizer should be adjusted (positive, negative or zero)
+</p></dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="prt" name="akka.routing.DefaultResizer#delayedStop" data-isabs="false">
+      <a id="delayedStop(Scheduler,IndexedSeq[ActorRef]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">delayedStop</span><span class="params">(<span name="scheduler">scheduler: <a name="akka.actor.Scheduler" class="extype" href="../actor/Scheduler.html">Scheduler</a></span>, <span name="abandon">abandon: IndexedSeq[<a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a>]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Give concurrent messages a chance to be placed in mailbox before
+sending PoisonPill.</p><div class="fullcomment"><div class="comment cmt"><p>Give concurrent messages a chance to be placed in mailbox before
+sending PoisonPill.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#equals" data-isabs="false">
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.routing.DefaultResizer" class="extype" href="">DefaultResizer</a> → Equals → AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#filter" data-isabs="false">
+      <a id="filter(Int,Int):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">filter</span><span class="params">(<span name="pressure">pressure: <span name="scala.Int" class="extype">Int</span></span>, <span name="capacity">capacity: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">This method can be used to smooth the capacity delta by considering
+the current pressure and current capacity.</p><div class="fullcomment"><div class="comment cmt"><p>This method can be used to smooth the capacity delta by considering
+the current pressure and current capacity.
+</p></div><dl class="paramcmts block"><dt class="param">pressure</dt><dd class="cmt"><p>current number of busy routees</p></dd><dt class="param">capacity</dt><dd class="cmt"><p>current number of routees</p></dd><dt>returns</dt><dd class="cmt"><p>proposed change in the capacity
+</p></dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
+      <a id="getClass():java.lang.Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#hashCode" data-isabs="false">
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.routing.DefaultResizer" class="extype" href="">DefaultResizer</a> → AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#isTimeForResize" data-isabs="false">
+      <a id="isTimeForResize(Long):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isTimeForResize</span><span class="params">(<span name="messageCounter">messageCounter: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Is it time for resizing.</p><div class="fullcomment"><div class="comment cmt"><p>Is it time for resizing. Typically implemented with modulo of nth message, but
+could be based on elapsed time or something else. The messageCounter starts with 0
+for the initial resize and continues with 1 for the first message. Make sure to perform
+initial resize before first message (messageCounter == 0), because there is no guarantee
+that resize will be done when concurrent messages are in play.</p><p>CAUTION: this method is invoked from the thread which tries to send a
+message to the pool, i.e. the ActorRef.!() method, hence it may be called
+concurrently.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.routing.DefaultResizer" class="extype" href="">DefaultResizer</a> → <a name="akka.routing.Resizer" class="extype" href="Resizer.html">Resizer</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#lowerBound" data-isabs="false">
+      <a id="lowerBound:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lowerBound</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#messagesPerResize" data-isabs="false">
+      <a id="messagesPerResize:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">messagesPerResize</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#pressure" data-isabs="false">
+      <a id="pressure(IndexedSeq[ActorRef]):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pressure</span><span class="params">(<span name="routees">routees: IndexedSeq[<a name="akka.actor.ActorRef" class="extype" href="../actor/ActorRef.html">ActorRef</a>]</span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Number of routees considered busy, or above 'pressure level'.</p><div class="fullcomment"><div class="comment cmt"><p>Number of routees considered busy, or above 'pressure level'.</p><p>Implementation depends on the value of <code>pressureThreshold</code>
+(default is 1).</p><ul><li> 0:   number of routees currently processing a message.</li><li> 1:   number of routees currently processing a message has
+          some messages in mailbox.</li><li> &gt; 1: number of routees with at least the configured <code>pressureThreshold</code>
+          messages in their mailbox. Note that estimating mailbox size of
+          default UnboundedMailbox is O(N) operation.</li></ul></div><dl class="paramcmts block"><dt class="param">routees</dt><dd class="cmt"><p>the current resizer of routees</p></dd><dt>returns</dt><dd class="cmt"><p>number of busy routees, between 0 and routees.size
+</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#pressureThreshold" data-isabs="false">
+      <a id="pressureThreshold:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pressureThreshold</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#productArity" data-isabs="false">
+      <a id="productArity:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">productArity</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.routing.DefaultResizer" class="extype" href="">DefaultResizer</a> → Product</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#productElement" data-isabs="false">
+      <a id="productElement(Int):Any"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">productElement</span><span class="params">(<span name="arg0">arg0: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Any" class="extype">Any</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.routing.DefaultResizer" class="extype" href="">DefaultResizer</a> → Product</dd></dl></div>
+    </li><li visbl="pub" name="scala.Product#productIterator" data-isabs="false">
+      <a id="productIterator:Iterator[Any]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">productIterator</span><span class="result">: Iterator[<span name="scala.Any" class="extype">Any</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Product</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#productPrefix" data-isabs="false">
+      <a id="productPrefix:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">productPrefix</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.routing.DefaultResizer" class="extype" href="">DefaultResizer</a> → Product</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#rampup" data-isabs="false">
+      <a id="rampup(Int,Int):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rampup</span><span class="params">(<span name="pressure">pressure: <span name="scala.Int" class="extype">Int</span></span>, <span name="capacity">capacity: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Computes a proposed positive (or zero) capacity delta using
+the configured <code>rampupRate</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Computes a proposed positive (or zero) capacity delta using
+the configured <code>rampupRate</code>.</p></div><dl class="paramcmts block"><dt class="param">pressure</dt><dd class="cmt"><p>the current number of busy routees</p></dd><dt class="param">capacity</dt><dd class="cmt"><p>the current number of total routees</p></dd><dt>returns</dt><dd class="cmt"><p>proposed increase in capacity
+</p></dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#rampupRate" data-isabs="false">
+      <a id="rampupRate:Double"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rampupRate</span><span class="result">: <span name="scala.Double" class="extype">Double</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#resize" data-isabs="false">
+      <a id="resize(Props,RouteeProvider):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">resize</span><span class="params">(<span name="props">props: <a name="akka.actor.Props" class="extype" href="../actor/Props.html">Props</a></span>, <span name="routeeProvider">routeeProvider: <a name="akka.routing.RouteeProvider" class="extype" href="RouteeProvider.html">RouteeProvider</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Decide if the capacity of the router need to be changed.</p><div class="fullcomment"><div class="comment cmt"><p>Decide if the capacity of the router need to be changed. Will be invoked when <code>isTimeForResize</code>
+returns true and no other resize is in progress.
+Create and register more routees with <code>routeeProvider.registerRoutees(newRoutees)
+or remove routees with </code>routeeProvider.unregisterRoutees(abandonedRoutees)<code> and
+sending <a name="akka.actor.PoisonPill" class="extype" href="../actor/PoisonPill.html">PoisonPill</a> to them.</code></p><p>This method is invoked only in the context of the Router actor in order to safely
+create/stop children.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.routing.DefaultResizer" class="extype" href="">DefaultResizer</a> → <a name="akka.routing.Resizer" class="extype" href="Resizer.html">Resizer</a></dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#stopDelay" data-isabs="false">
+      <a id="stopDelay:Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stopDelay</span><span class="result">: <a name="akka.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
+      <a id="synchronized[T0](⇒ T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#toString" data-isabs="false">
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: String</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="akka.routing.DefaultResizer" class="extype" href="">DefaultResizer</a> → AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="akka.routing.DefaultResizer#upperBound" data-isabs="false">
+      <a id="upperBound:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">upperBound</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="scala.Product#productElements" data-isabs="false">
+      <a id="productElements:Iterator[Any]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 2.8.0) use productIterator instead">productElements</span><span class="result">: Iterator[<span name="scala.Any" class="extype">Any</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Product</dd><dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.8.0)</i> use productIterator instead</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        <div name="scala.Serializable" class="parent">
+              <h3>Inherited from <span name="scala.Serializable" class="extype">Serializable</span></h3>
+            </div><div name="java.io.Serializable" class="parent">
+              <h3>Inherited from <span name="java.io.Serializable" class="extype">Serializable</span></h3>
+            </div><div name="scala.Product" class="parent">
+              <h3>Inherited from <span name="scala.Product" class="extype">Product</span></h3>
+            </div><div name="scala.Equals" class="parent">
+              <h3>Inherited from <span name="scala.Equals" class="extype">Equals</span></h3>
+            </div><div name="akka.routing.Resizer" class="parent">
+              <h3>Inherited from <a name="akka.routing.Resizer" class="extype" href="Resizer.html">Resizer</a></h3>
+            </div><div name="scala.AnyRef" class="parent">
+              <h3>Inherited from AnyRef</h3>
+            </div><div name="scala.Any" class="parent">
+              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

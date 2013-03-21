@@ -1,0 +1,421 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Dispatchers (Java) &mdash; Akka Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/base.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/docs.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Exo:300,400,600,700" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/toc.js"></script>
+    <script type="text/javascript" src="../_static/prettify.js"></script>
+    <script type="text/javascript" src="../_static/highlightCode.js"></script>
+    <script type="text/javascript" src="../_static/effects.core.js"></script>
+    <script type="text/javascript" src="../_static/effects.highlight.js"></script>
+    <script type="text/javascript" src="../_static/scrollTo.js"></script>
+    <script type="text/javascript" src="../_static/contentsFix.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Akka Documentation" href="../index.html" />
+    <link rel="up" title="Java API" href="index.html" />
+    <link rel="next" title="Routing (Java)" href="routing.html" />
+    <link rel="prev" title="Diagrams of the Fault Tolerance Sample (Java)" href="fault-tolerance-sample.html" />
+
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="http://akka.io"><img src="../_static/logo-small.png" /></a>
+        </div>    
+        <ul class="nav">
+          <li><a href="http://akka.io/docs">Documentation</a></li>
+          <li><a href="http://akka.io/downloads">Download</a></li>
+          <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>
+          <li><a href="http://github.com/akka/akka">Code</a></li>           
+          <li><a href="http://typesafe.com/products/typesafe-subscription">Commerical Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="container">
+      <div class="page-title">Dispatchers (Java)</div><div class="pdf-link"><a href="http://akka.io/docs/akka/2.0.4/Akka.pdf"><img src="../_static/pdf-icon.png" style="height: 40px;" /></a></div></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul class="breadcrumb">           
+              <li>
+                 <span class="divider">|</span> <a href="routing.html">Routing (Java)</a> <span class="divider">»</span>
+              </li>
+              <li>
+                <a href="../index.html">Contents</a>
+              </li>
+              <li>
+                <span class="divider">«</span> <a href="fault-tolerance-sample.html">Diagrams of the Fault Tolerance Sample (Java)</a> <span class="divider">|</span>
+              </li>
+              <li>
+                Version 2.0.4
+              </li>
+            </ul>         
+          </div>
+        </div>
+        <div class="row">
+          <div class="span9">
+            
+  <div class="section" id="dispatchers-java">
+<span id="id1"></span><h1>Dispatchers (Java)</h1>
+<p>An Akka <tt class="docutils literal"><span class="pre">MessageDispatcher</span></tt> is what makes Akka Actors &quot;tick&quot;, it is the engine of the machine so to speak.
+All <tt class="docutils literal"><span class="pre">MessageDispatcher</span></tt> implementations are also an <tt class="docutils literal"><span class="pre">ExecutionContext</span></tt>, which means that they can be used
+to execute arbitrary code, for instance <a class="reference internal" href="futures.html#futures-java"><em>Futures (Java)</em></a>.</p>
+<div class="section" id="default-dispatcher">
+<h2>Default dispatcher</h2>
+<p>Every <tt class="docutils literal"><span class="pre">ActorSystem</span></tt> will have a default dispatcher that will be used in case nothing else is configured for an <tt class="docutils literal"><span class="pre">Actor</span></tt>.
+The default dispatcher can be configured, and is by default a <tt class="docutils literal"><span class="pre">Dispatcher</span></tt> with a &quot;fork-join-executor&quot;, which gives excellent performance in most cases.</p>
+</div>
+<div class="section" id="setting-the-dispatcher-for-an-actor">
+<h2>Setting the dispatcher for an Actor</h2>
+<p>So in case you want to give your <tt class="docutils literal"><span class="pre">Actor</span></tt> a different dispatcher than the default, you need to do two things, of which the first is:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">ActorRef</span> <span class="n">myActor</span> <span class="k">=</span>
+  <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="nc">Props</span><span class="o">(</span><span class="nc">MyUntypedActor</span><span class="o">.</span><span class="n">class</span><span class="o">).</span><span class="n">withDispatcher</span><span class="o">(</span><span class="s">&quot;my-dispatcher&quot;</span><span class="o">),</span>
+    <span class="s">&quot;myactor3&quot;</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The &quot;dispatcherId&quot; you specify in withDispatcher is in fact a path into your configuration.
+So in this example it's a top-level section, but you could for instance put it as a sub-section,
+where you'd use periods to denote sub-sections, like this: <tt class="docutils literal"><span class="pre">&quot;foo.bar.my-dispatcher&quot;</span></tt></p>
+</div>
+<p>And then you just need to configure that dispatcher in your configuration:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">my</span><span class="o">-</span><span class="n">dispatcher</span> <span class="o">{</span>
+  <span class="k">#</span> <span class="nc">Dispatcher</span> <span class="n">is</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">event</span><span class="o">-</span><span class="n">based</span> <span class="n">dispatcher</span>
+  <span class="k">type</span> <span class="o">=</span> <span class="nc">Dispatcher</span>
+  <span class="k">#</span> <span class="nc">What</span> <span class="n">kind</span> <span class="n">of</span> <span class="nc">ExecutionService</span> <span class="n">to</span> <span class="n">use</span>
+  <span class="n">executor</span> <span class="k">=</span> <span class="s">&quot;fork-join-executor&quot;</span>
+  <span class="k">#</span> <span class="nc">Configuration</span> <span class="k">for</span> <span class="n">the</span> <span class="n">fork</span> <span class="n">join</span> <span class="n">pool</span>
+  <span class="n">fork</span><span class="o">-</span><span class="n">join</span><span class="o">-</span><span class="n">executor</span> <span class="o">{</span>
+    <span class="k">#</span> <span class="nc">Min</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+    <span class="n">parallelism</span><span class="o">-</span><span class="n">min</span> <span class="k">=</span> <span class="mi">2</span>
+    <span class="k">#</span> <span class="nc">Parallelism</span> <span class="o">(</span><span class="n">threads</span><span class="o">)</span> <span class="o">...</span> <span class="n">ceil</span><span class="o">(</span><span class="n">available</span> <span class="n">processors</span> <span class="o">*</span> <span class="n">factor</span><span class="o">)</span>
+    <span class="n">parallelism</span><span class="o">-</span><span class="n">factor</span> <span class="k">=</span> <span class="mf">2.0</span>
+    <span class="k">#</span> <span class="nc">Max</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+    <span class="n">parallelism</span><span class="o">-</span><span class="n">max</span> <span class="k">=</span> <span class="mi">10</span>
+  <span class="o">}</span>
+  <span class="k">#</span> <span class="nc">Throughput</span> <span class="n">defines</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">number</span> <span class="n">of</span> <span class="n">messages</span> <span class="n">to</span> <span class="n">be</span>
+  <span class="k">#</span> <span class="n">processed</span> <span class="n">per</span> <span class="n">actor</span> <span class="n">before</span> <span class="n">the</span> <span class="n">thread</span> <span class="n">jumps</span> <span class="n">to</span> <span class="n">the</span> <span class="n">next</span> <span class="n">actor</span><span class="o">.</span>
+  <span class="k">#</span> <span class="nc">Set</span> <span class="n">to</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">as</span> <span class="n">fair</span> <span class="n">as</span> <span class="n">possible</span><span class="o">.</span>
+  <span class="n">throughput</span> <span class="k">=</span> <span class="mi">100</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>And here's another example that uses the &quot;thread-pool-executor&quot;:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">my</span><span class="o">-</span><span class="n">thread</span><span class="o">-</span><span class="n">pool</span><span class="o">-</span><span class="n">dispatcher</span> <span class="o">{</span>
+  <span class="k">#</span> <span class="nc">Dispatcher</span> <span class="n">is</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">event</span><span class="o">-</span><span class="n">based</span> <span class="n">dispatcher</span>
+  <span class="k">type</span> <span class="o">=</span> <span class="nc">Dispatcher</span>
+  <span class="k">#</span> <span class="nc">What</span> <span class="n">kind</span> <span class="n">of</span> <span class="nc">ExecutionService</span> <span class="n">to</span> <span class="n">use</span>
+  <span class="n">executor</span> <span class="k">=</span> <span class="s">&quot;thread-pool-executor&quot;</span>
+  <span class="k">#</span> <span class="nc">Configuration</span> <span class="k">for</span> <span class="n">the</span> <span class="n">thread</span> <span class="n">pool</span>
+  <span class="n">thread</span><span class="o">-</span><span class="n">pool</span><span class="o">-</span><span class="n">executor</span> <span class="o">{</span>
+    <span class="k">#</span> <span class="n">minimum</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">core</span> <span class="n">number</span> <span class="n">to</span>
+    <span class="n">core</span><span class="o">-</span><span class="n">pool</span><span class="o">-</span><span class="n">size</span><span class="o">-</span><span class="n">min</span> <span class="k">=</span> <span class="mi">2</span>
+    <span class="k">#</span> <span class="nc">No</span> <span class="n">of</span> <span class="n">core</span> <span class="n">threads</span> <span class="o">...</span> <span class="n">ceil</span><span class="o">(</span><span class="n">available</span> <span class="n">processors</span> <span class="o">*</span> <span class="n">factor</span><span class="o">)</span>
+    <span class="n">core</span><span class="o">-</span><span class="n">pool</span><span class="o">-</span><span class="n">size</span><span class="o">-</span><span class="n">factor</span> <span class="k">=</span> <span class="mf">2.0</span>
+    <span class="k">#</span> <span class="n">maximum</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">number</span> <span class="n">to</span>
+    <span class="n">core</span><span class="o">-</span><span class="n">pool</span><span class="o">-</span><span class="n">size</span><span class="o">-</span><span class="n">max</span> <span class="k">=</span> <span class="mi">10</span>
+  <span class="o">}</span>
+  <span class="k">#</span> <span class="nc">Throughput</span> <span class="n">defines</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">number</span> <span class="n">of</span> <span class="n">messages</span> <span class="n">to</span> <span class="n">be</span>
+  <span class="k">#</span> <span class="n">processed</span> <span class="n">per</span> <span class="n">actor</span> <span class="n">before</span> <span class="n">the</span> <span class="n">thread</span> <span class="n">jumps</span> <span class="n">to</span> <span class="n">the</span> <span class="n">next</span> <span class="n">actor</span><span class="o">.</span>
+  <span class="k">#</span> <span class="nc">Set</span> <span class="n">to</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">as</span> <span class="n">fair</span> <span class="n">as</span> <span class="n">possible</span><span class="o">.</span>
+  <span class="n">throughput</span> <span class="k">=</span> <span class="mi">100</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>For more options, see the default-dispatcher section of the <a class="reference internal" href="../general/configuration.html#configuration"><em>Configuration</em></a>.</p>
+</div>
+<div class="section" id="types-of-dispatchers">
+<h2>Types of dispatchers</h2>
+<p>There are 4 different types of message dispatchers:</p>
+<ul>
+<li><p class="first">Dispatcher</p>
+<ul>
+<li><p class="first">This is an event-based dispatcher that binds a set of Actors to a thread pool. It is the default dispatcher used if one is not specified.</p>
+</li>
+<li><p class="first">Sharability: Unlimited</p>
+</li>
+<li><p class="first">Mailboxes: Any, creates one per Actor</p>
+</li>
+<li><p class="first">Use cases: Default dispatcher, Bulkheading</p>
+</li>
+<li><dl class="first docutils">
+<dt>Driven by: <tt class="docutils literal"><span class="pre">java.util.concurrent.ExecutorService</span></tt></dt>
+<dd><p class="first last">specify using &quot;executor&quot; using &quot;fork-join-executor&quot;,
+&quot;thread-pool-executor&quot; or the FQCN of
+an <tt class="docutils literal"><span class="pre">akka.dispatcher.ExecutorServiceConfigurator</span></tt></p>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+<li><p class="first">PinnedDispatcher</p>
+<ul>
+<li><p class="first">This dispatcher dedicates a unique thread for each actor using it; i.e. each actor will have its own thread pool with only one thread in the pool.</p>
+</li>
+<li><p class="first">Sharability: None</p>
+</li>
+<li><p class="first">Mailboxes: Any, creates one per Actor</p>
+</li>
+<li><p class="first">Use cases: Bulkheading</p>
+</li>
+<li><dl class="first docutils">
+<dt>Driven by: Any <tt class="docutils literal"><span class="pre">akka.dispatch.ThreadPoolExecutorConfigurator</span></tt></dt>
+<dd><p class="first last">by default a &quot;thread-pool-executor&quot;</p>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+<li><p class="first">BalancingDispatcher</p>
+<ul>
+<li><p class="first">This is an executor based event driven dispatcher that will try to redistribute work from busy actors to idle actors.</p>
+</li>
+<li><p class="first">All the actors share a single Mailbox that they get their messages from.</p>
+</li>
+<li><p class="first">It is assumed that all actors using the same instance of this dispatcher can process all messages that have been sent to one of the actors; i.e. the actors belong to a pool of actors, and to the client there is no guarantee about which actor instance actually processes a given message.</p>
+</li>
+<li><p class="first">Sharability: Actors of the same type only</p>
+</li>
+<li><p class="first">Mailboxes: Any, creates one for all Actors</p>
+</li>
+<li><p class="first">Use cases: Work-sharing</p>
+</li>
+<li><dl class="first docutils">
+<dt>Driven by: <tt class="docutils literal"><span class="pre">java.util.concurrent.ExecutorService</span></tt></dt>
+<dd><p class="first last">specify using &quot;executor&quot; using &quot;fork-join-executor&quot;,
+&quot;thread-pool-executor&quot; or the FQCN of
+an <tt class="docutils literal"><span class="pre">akka.dispatcher.ExecutorServiceConfigurator</span></tt></p>
+</dd>
+</dl>
+</li>
+<li><p class="first">Note that you can <strong>not</strong> use a <tt class="docutils literal"><span class="pre">BalancingDispatcher</span></tt> as a <strong>Router Dispatcher</strong>. (You can however use it for the <strong>Routees</strong>)</p>
+</li>
+</ul>
+</li>
+<li><p class="first">CallingThreadDispatcher</p>
+<ul class="simple">
+<li>This dispatcher runs invocations on the current thread only. This dispatcher does not create any new threads,
+but it can be used from different threads concurrently for the same actor. See <a class="reference internal" href="../scala/testing.html#testcallingthreaddispatcherref"><em>CallingThreadDispatcher</em></a>
+for details and restrictions.</li>
+<li>Sharability: Unlimited</li>
+<li>Mailboxes: Any, creates one per Actor per Thread (on demand)</li>
+<li>Use cases: Testing</li>
+<li>Driven by: The calling thread (duh)</li>
+</ul>
+</li>
+</ul>
+<div class="section" id="more-dispatcher-configuration-examples">
+<h3>More dispatcher configuration examples</h3>
+<p>Configuring a <tt class="docutils literal"><span class="pre">PinnedDispatcher</span></tt>:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">my</span><span class="o">-</span><span class="n">pinned</span><span class="o">-</span><span class="n">dispatcher</span> <span class="o">{</span>
+  <span class="n">executor</span> <span class="k">=</span> <span class="s">&quot;thread-pool-executor&quot;</span>
+  <span class="k">type</span> <span class="o">=</span> <span class="nc">PinnedDispatcher</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>And then using it:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="nc">ActorRef</span> <span class="n">myActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="nc">Props</span><span class="o">(</span><span class="nc">MyUntypedActor</span><span class="o">.</span><span class="n">class</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">withDispatcher</span><span class="o">(</span><span class="s">&quot;my-pinned-dispatcher&quot;</span><span class="o">));</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="mailboxes">
+<h2>Mailboxes</h2>
+<p>An Akka <tt class="docutils literal"><span class="pre">Mailbox</span></tt> holds the messages that are destined for an <tt class="docutils literal"><span class="pre">Actor</span></tt>.
+Normally each <tt class="docutils literal"><span class="pre">Actor</span></tt> has its own mailbox, but with example a <tt class="docutils literal"><span class="pre">BalancingDispatcher</span></tt> all actors with the same <tt class="docutils literal"><span class="pre">BalancingDispatcher</span></tt> will share a single instance.</p>
+<div class="section" id="builtin-implementations">
+<h3>Builtin implementations</h3>
+<p>Akka comes shipped with a number of default mailbox implementations:</p>
+<ul class="simple">
+<li>UnboundedMailbox<ul>
+<li>Backed by a <tt class="docutils literal"><span class="pre">java.util.concurrent.ConcurrentLinkedQueue</span></tt></li>
+<li>Blocking: No</li>
+<li>Bounded: No</li>
+</ul>
+</li>
+<li>BoundedMailbox<ul>
+<li>Backed by a <tt class="docutils literal"><span class="pre">java.util.concurrent.LinkedBlockingQueue</span></tt></li>
+<li>Blocking: Yes</li>
+<li>Bounded: Yes</li>
+</ul>
+</li>
+<li>UnboundedPriorityMailbox<ul>
+<li>Backed by a <tt class="docutils literal"><span class="pre">java.util.concurrent.PriorityBlockingQueue</span></tt></li>
+<li>Blocking: Yes</li>
+<li>Bounded: No</li>
+</ul>
+</li>
+<li>BoundedPriorityMailbox<ul>
+<li>Backed by a <tt class="docutils literal"><span class="pre">java.util.PriorityBlockingQueue</span></tt> wrapped in an <tt class="docutils literal"><span class="pre">akka.util.BoundedBlockingQueue</span></tt></li>
+<li>Blocking: Yes</li>
+<li>Bounded: Yes</li>
+</ul>
+</li>
+<li>Durable mailboxes, see <a class="reference internal" href="../modules/durable-mailbox.html#durable-mailboxes"><em>Durable Mailboxes</em></a>.</li>
+</ul>
+</div>
+<div class="section" id="mailbox-configuration-examples">
+<h3>Mailbox configuration examples</h3>
+<p>How to create a PriorityMailbox:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">public</span> <span class="n">static</span> <span class="k">class</span> <span class="nc">MyPrioMailbox</span> <span class="k">extends</span> <span class="nc">UnboundedPriorityMailbox</span> <span class="o">{</span>
+  <span class="n">public</span> <span class="nc">MyPrioMailbox</span><span class="o">(</span><span class="nc">ActorSystem</span><span class="o">.</span><span class="nc">Settings</span> <span class="n">settings</span><span class="o">,</span> <span class="nc">Config</span> <span class="n">config</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// needed for reflective instantiation</span>
+    <span class="c1">// Create a new PriorityGenerator, lower prio means more important</span>
+    <span class="k">super</span><span class="o">(</span><span class="k">new</span> <span class="nc">PriorityGenerator</span><span class="o">()</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="n">public</span> <span class="n">int</span> <span class="n">gen</span><span class="o">(</span><span class="nc">Object</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="n">equals</span><span class="o">(</span><span class="s">&quot;highpriority&quot;</span><span class="o">))</span>
+          <span class="k">return</span> <span class="mi">0</span><span class="o">;</span> <span class="c1">// &#39;highpriority messages should be treated first if possible</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="n">equals</span><span class="o">(</span><span class="s">&quot;lowpriority&quot;</span><span class="o">))</span>
+          <span class="k">return</span> <span class="mi">2</span><span class="o">;</span> <span class="c1">// &#39;lowpriority messages should be treated last if possible</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="n">equals</span><span class="o">(</span><span class="nc">Actors</span><span class="o">.</span><span class="n">poisonPill</span><span class="o">()))</span>
+          <span class="k">return</span> <span class="mi">3</span><span class="o">;</span> <span class="c1">// PoisonPill when no other left</span>
+        <span class="k">else</span>
+          <span class="k">return</span> <span class="mi">1</span><span class="o">;</span> <span class="c1">// By default they go between high and low prio</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>And then add it to the configuration:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="n">prio</span><span class="o">-</span><span class="n">dispatcher</span> <span class="o">{</span>
+  <span class="n">mailbox</span><span class="o">-</span><span class="k">type</span> <span class="o">=</span> <span class="s">&quot;akka.docs.dispatcher.DispatcherDocSpec$MyPrioMailbox&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>And then an example on how you would use it:</p>
+<div class="highlight-scala"><div class="highlight"><pre>  <span class="c1">// We create a new Actor that just prints out what it processes</span>
+<span class="nc">ActorRef</span> <span class="n">myActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span>
+    <span class="k">new</span> <span class="nc">Props</span><span class="o">().</span><span class="n">withCreator</span><span class="o">(</span><span class="k">new</span> <span class="nc">UntypedActorFactory</span><span class="o">()</span> <span class="o">{</span>
+      <span class="n">public</span> <span class="nc">UntypedActor</span> <span class="n">create</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nc">UntypedActor</span><span class="o">()</span> <span class="o">{</span>
+          <span class="nc">LoggingAdapter</span> <span class="n">log</span> <span class="k">=</span>
+                  <span class="nc">Logging</span><span class="o">.</span><span class="n">getLogger</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="n">system</span><span class="o">(),</span> <span class="k">this</span><span class="o">);</span>
+          <span class="o">{</span>
+            <span class="n">getSelf</span><span class="o">().</span><span class="n">tell</span><span class="o">(</span><span class="s">&quot;lowpriority&quot;</span><span class="o">);</span>
+            <span class="n">getSelf</span><span class="o">().</span><span class="n">tell</span><span class="o">(</span><span class="s">&quot;lowpriority&quot;</span><span class="o">);</span>
+            <span class="n">getSelf</span><span class="o">().</span><span class="n">tell</span><span class="o">(</span><span class="s">&quot;highpriority&quot;</span><span class="o">);</span>
+            <span class="n">getSelf</span><span class="o">().</span><span class="n">tell</span><span class="o">(</span><span class="s">&quot;pigdog&quot;</span><span class="o">);</span>
+            <span class="n">getSelf</span><span class="o">().</span><span class="n">tell</span><span class="o">(</span><span class="s">&quot;pigdog2&quot;</span><span class="o">);</span>
+            <span class="n">getSelf</span><span class="o">().</span><span class="n">tell</span><span class="o">(</span><span class="s">&quot;pigdog3&quot;</span><span class="o">);</span>
+            <span class="n">getSelf</span><span class="o">().</span><span class="n">tell</span><span class="o">(</span><span class="s">&quot;highpriority&quot;</span><span class="o">);</span>
+            <span class="n">getSelf</span><span class="o">().</span><span class="n">tell</span><span class="o">(</span><span class="nc">Actors</span><span class="o">.</span><span class="n">poisonPill</span><span class="o">());</span>
+          <span class="o">}</span>
+
+          <span class="n">public</span> <span class="n">void</span> <span class="n">onReceive</span><span class="o">(</span><span class="nc">Object</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="n">toString</span><span class="o">());</span>
+          <span class="o">}</span>
+        <span class="o">};</span>
+      <span class="o">}</span>
+    <span class="o">}).</span><span class="n">withDispatcher</span><span class="o">(</span><span class="s">&quot;prio-dispatcher&quot;</span><span class="o">));</span>
+
+<span class="cm">/*</span>
+<span class="cm">Logs:</span>
+<span class="cm">  &#39;highpriority</span>
+<span class="cm">  &#39;highpriority</span>
+<span class="cm">  &#39;pigdog</span>
+<span class="cm">  &#39;pigdog2</span>
+<span class="cm">  &#39;pigdog3</span>
+<span class="cm">  &#39;lowpriority</span>
+<span class="cm">  &#39;lowpriority</span>
+<span class="cm">*/</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Make sure to include a constructor which takes
+<tt class="docutils literal"><span class="pre">akka.actor.ActorSystem.Settings</span></tt> and <tt class="docutils literal"><span class="pre">com.typesafe.config.Config</span></tt>
+arguments, as this constructor is invoked reflectively to construct your
+mailbox type. The config passed in as second argument is that section from
+the configuration which describes the dispatcher using this mailbox type; the
+mailbox type will be instantiated once for each dispatcher using it.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="span3"><p class="contents-title">Contents</p>
+              <div id="scroller-anchor">
+                <div id="scroller">
+                  <div id="toc"></div>
+                </div>
+              </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+  <div class="container">
+    <ul>
+      <li><h5>Akka</h5></li>
+      <li><a href="http://akka.io/docs">Documentation</a></li>
+      <li><a href="http://akka.io/downloads">Downloads</a></li>
+    </ul>
+    <ul>
+      <li><h5>Contribute</h5></li>
+      <li><a href="http://github.com/akka/akka">Source Code</a></li>
+      <li><a href="http://groups.google.com/group/akka-user">Mailing List</a></li>      
+      <li><a href="http://www.assembla.com/spaces/akka/tickets">Report a Bug</a></li>      
+    </ul>
+    <ul>
+      <li><h5>Company</h5></li>
+      <li><a href="http://typesafe.com/products/typesafe-subscription">Commercial Support</a></li>
+      <li><a href="http://akka.io/team">Team</a></li>
+      <li><a href="mailto:info@typesafe.com">Contact</a></li>
+    </ul>
+    <ul>
+      <li><img src="../_static/watermark.png" align="center"/></li>
+    </ul>
+  </div>
+  <div class="container copyright">
+    <p style="float: left;">
+      © 2012 <a href="http://typesafe.com/">Typesafe Inc.</a> <span class="license">Akka is Open Source and available under the Apache 2 License.</span>
+    </p>
+    <p style="float: right; font-size: 12px;">
+      Last updated: Nov 14, 2012
+    </p>          
+  </div>
+</div>
+<script type="text/javascript">
+  $('#toc').toc();
+</script>
+  
+
+  </body>
+</html>
