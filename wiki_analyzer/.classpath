@@ -14,10 +14,6 @@
 	<classpathentry kind="lib" path="lib/log4j/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/mysql/mysql-connector-java-5.1.18-bin.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="E:/projects/graduate/lib/bliki.3.0.19/info.bliki.wiki/bliki-core/target/bliki-core-3.0.19.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/E:/projects/graduate/lib/bliki.3.0.19/info.bliki.wiki/bliki-core/target/apidocs/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="/lib/bliki.3.0.19/info.bliki.wiki/bliki-core/target/bliki-core-3.0.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

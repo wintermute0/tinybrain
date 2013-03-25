@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>build.xml</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/build.xml</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>

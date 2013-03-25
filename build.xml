@@ -46,6 +46,10 @@
 		</ftp>
 	</target>
 
+	<target name="deploy_ssh" depends="dist">
+		<scp file="${dist.dir}/word_embedding_trainer.jar" trust="true" password="topcoder" todir="master_dev_scp@ec2-23-22-7-175.compute-1.amazonaws.com:/usr/master_dev/tinybrain" verbose="true" />
+	</target>
+
 	<target name="clean">
 		<delete dir="${dist.dir}" />
 	</target>

@@ -34,11 +34,11 @@ import yatan.distributedcomputer.actors.ParameterActor;
 import yatan.distributedcomputer.contract.ParameterActorContract;
 
 public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContract implements ParameterActorContract {
+    public static final double ADAGRAD_LEARNING_RATE_LAMPDA = 0.01;
+
     private static final double STATE_SAVING_INTERVAL_MINUTES = 10;
 
     private static final String MODEL_FOLDER = "test_files/results/";
-
-    public static final double ADAGRAD_LEARNING_RATE_LAMPDA = 0.01;
 
     private static Date lastSaveTime = new Date();
 

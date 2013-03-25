@@ -138,6 +138,8 @@ public class WordSegmentationDataProducer implements DataProducer {
                 }
             }
 
+            // FIXME: if this is a single number or a single letter, is not gonna be dealt with
+
             return tokens;
         }
 
