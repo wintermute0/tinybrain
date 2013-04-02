@@ -114,44 +114,76 @@ public class WordSegmentationDataProducer implements DataProducer {
             return ImmutableList.copyOf(instances);
         }
 
-        private static List<String> breakWord(String word) {
+        private static List<String> breakWord(String word, List<String> originalWordContainer) {
             List<String> tokens = Lists.newArrayList();
             boolean lastCharacterIsNumber = false;
             boolean lastCharacterIsLetter = false;
+
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < word.length(); i++) {
                 char ch = word.charAt(i);
                 boolean isEnLetter = (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
                 if (Character.isDigit(ch) || (lastCharacterIsNumber && ch == '.')) {
                     lastCharacterIsNumber = true;
+                    sb.append(ch);
                 } else if (isEnLetter) {
                     lastCharacterIsLetter = true;
+                    sb.append(ch);
                 } else {
                     if (lastCharacterIsNumber) {
                         tokens.add(Dictionary.NUMBER_WORD);
                         lastCharacterIsNumber = false;
+
+                        if (originalWordContainer != null) {
+                            originalWordContainer.add(sb.toString());
+                            sb = new StringBuilder();
+                        }
                     } else if (lastCharacterIsLetter) {
                         tokens.add(Dictionary.EN_WORD);
                         lastCharacterIsLetter = false;
+
+                        if (originalWordContainer != null) {
+                            originalWordContainer.add(sb.toString());
+                            sb = new StringBuilder();
+                        }
                     }
 
                     tokens.add(String.valueOf(ch));
+                    if (originalWordContainer != null) {
+                        originalWordContainer.add(String.valueOf(ch));
+                    }
                 }
             }
 
             // FIXME: if this is a single number or a single letter, is not gonna be dealt with
+            if (lastCharacterIsNumber) {
+                tokens.add(Dictionary.NUMBER_WORD);
+                lastCharacterIsNumber = false;
+
+                if (originalWordContainer != null) {
+                    originalWordContainer.add(sb.toString());
+                }
+            } else if (lastCharacterIsLetter) {
+                tokens.add(Dictionary.EN_WORD);
+                lastCharacterIsLetter = false;
+
+                if (originalWordContainer != null) {
+                    originalWordContainer.add(sb.toString());
+                }
+            }
 
             return tokens;
         }
 
         public static List<WordEmbeddingTrainingInstance> convertTaggedSentenceToWordEmbeddingTrainingInstance(
-                Dictionary dictionary, TaggedSentence sentence) {
+                Dictionary dictionary, TaggedSentence sentence, List<String> originalWordContainer) {
             List<WordEmbeddingTrainingInstance> results = Lists.newArrayList();
 
             // covert words sentence to character sentence
             List<String> characters = Lists.newArrayList();
             List<String> tags = Lists.newArrayList();
             for (String word : sentence.words()) {
-                List<String> tokens = breakWord(word);
+                List<String> tokens = breakWord(word, originalWordContainer);
                 for (int i = 0; i < tokens.size(); i++) {
                     characters.add(tokens.get(i));
                     if (tokens.size() == 1) {
@@ -197,7 +229,8 @@ public class WordSegmentationDataProducer implements DataProducer {
 
                 LOGGER.info("Coverting data to training instance...");
                 for (TaggedSentence sentence : this.taggedSentenceDataset.getSentences()) {
-                    instances.addAll(convertTaggedSentenceToWordEmbeddingTrainingInstance(this.dictionary, sentence));
+                    instances.addAll(convertTaggedSentenceToWordEmbeddingTrainingInstance(this.dictionary, sentence,
+                            null));
                 }
 
                 if (this.shuffle) {

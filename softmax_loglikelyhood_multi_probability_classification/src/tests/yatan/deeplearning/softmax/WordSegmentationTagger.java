@@ -1,10 +1,16 @@
 package yatan.deeplearning.softmax;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.io.output.FileWriterWithEncoding;
+
+import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 
 import yatan.ann.AnnData;
@@ -27,16 +33,24 @@ public class WordSegmentationTagger {
         AnnModel annModel = (AnnModel) model[1];
         AnnTrainer trainer = new AnnTrainer();
 
+        Writer writer = new BufferedWriter(new FileWriterWithEncoding("test_files/tag_result.txt", Charsets.UTF_8));
+        int i = 0;
         for (TaggedSentence sentence : dataset.getSentences()) {
-            tag(sentence, dictionary, wordEmbedding, annModel, trainer);
+            tag(sentence, dictionary, wordEmbedding, annModel, trainer, writer);
+            System.out.println(++i * 100.0 / dataset.getSentences().size());
         }
+        writer.close();
     }
 
     private static void tag(TaggedSentence sentence, Dictionary dictionary, WordEmbedding wordEmbedding,
-            AnnModel annModel, AnnTrainer trainer) {
+            AnnModel annModel, AnnTrainer trainer, Writer writer) throws Exception {
+        List<String> originalWords = Lists.newArrayList();
         List<WordEmbeddingTrainingInstance> instances =
-                WordSegmentationInstancePool.convertTaggedSentenceToWordEmbeddingTrainingInstance(dictionary, sentence);
+                WordSegmentationInstancePool.convertTaggedSentenceToWordEmbeddingTrainingInstance(dictionary, sentence,
+                        originalWords);
         List<String> tags = Lists.newArrayList();
+
+        int characterIndex = 0;
         for (WordEmbeddingTrainingInstance instance : instances) {
             // first convert input data into word embedding
             // FIXME: could reuse an array, no need to allocate it every time
@@ -79,16 +93,17 @@ public class WordSegmentationTagger {
 
             String tag = availableTags.get(0);
             tags.add(tag);
-            String ch = dictionary.words().get(instance.getInput().get(instance.getInput().size() / 2));
-            if (ch.equals(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)) {
-                ch = "*";
-            }
-            System.out.print(ch);
+            // String ch = dictionary.words().get(instance.getInput().get(instance.getInput().size() / 2));
+            // if (ch.equals(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)) {
+            // ch = "*";
+            // }
+            // System.out.print(ch);
+            writer.write(originalWords.get(characterIndex++));
             if (tag.equals("L") || tag.equals("U")) {
-                System.out.print("  ");
+                writer.write("  ");
             }
         }
 
-        System.out.println();
+        writer.write("\n");
     }
 }

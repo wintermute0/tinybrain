@@ -34,7 +34,7 @@ import yatan.distributedcomputer.contract.ParameterActorContract;
 import yatan.distributedcomputer.contract.data.impl.DataProducer;
 
 public class Trainer {
-    private static final int WORD_VECTOR_SIZE = 50;
+    private static final int WORD_VECTOR_SIZE = 100;
 
     @SuppressWarnings("serial")
     public static void main(String[] args) {
@@ -62,7 +62,7 @@ public class Trainer {
             }
         }), "audit");
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 16; i++) {
             system.actorOf(new Props(new UntypedActorFactory() {
                 @Override
                 public Actor create() throws Exception {

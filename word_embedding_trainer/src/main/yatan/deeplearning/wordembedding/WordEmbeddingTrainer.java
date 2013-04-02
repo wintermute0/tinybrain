@@ -86,6 +86,9 @@ public class WordEmbeddingTrainer {
             bind(Dictionary.class).toInstance(dictionary);
             bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(200000);
 
+            // set data actor path of to evaluate data actor
+            bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
+
             bind(ParameterActorContract.class).to(ParameterActorWordEmbeddingImpl.class);
             bind(DataProducer.class).to(ZhWikiTrainingDataProducer.class);
             bind(ComputeActorContract.class).to(ComputeActorWordEmbeddingTrainingImpl.class);
@@ -95,6 +98,9 @@ public class WordEmbeddingTrainer {
     public static class EvaluatingModule extends AbstractModule {
         @Override
         protected void configure() {
+            // set data actor path of to evaluate data actor
+            bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
+
             bind(ComputeActorContract.class).to(ComputeActorWordEmbeddingEvaluatorImpl.class);
         }
     }
@@ -103,6 +109,9 @@ public class WordEmbeddingTrainer {
         @Override
         protected void configure() {
             bind(Dictionary.class).toInstance(TrainingModule.dictionary);
+
+            // set data actor path of to evaluate data actor
+            bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
 
             bind(ComputeActorContract.class).to(PerplextiyEvaluator.class);
         }

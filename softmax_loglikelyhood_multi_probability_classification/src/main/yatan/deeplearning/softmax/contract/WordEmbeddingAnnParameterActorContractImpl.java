@@ -143,19 +143,26 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
 
             if (annModel == null) {
                 getLogger().info("Create new ANN model with configuration " + this.annConfiguration);
-                wordEmbeddingDeltaSumSquare =
-                        new Matrix(wordEmbedding.getMatrix().rowSize(), wordEmbedding.getMatrix().columnSize());
                 // Configuration configuration =
                 // new Configuration(wordEmbedding.getWordVectorSize() * TrainingInstanceProducer.WINDOWS_SIZE);
                 // configuration.addLayer(300, ActivationFunction.TANH);
                 // configuration.addLayer(DataCenter.tags().size(), ActivationFunction.SOFTMAX, false);
                 annModel = new AnnModel(this.annConfiguration);
+            }
 
+            if (annDeltaSumSquare == null) {
+                getLogger().info("Create new ANN delta sum squre.");
                 annDeltaSumSquare = new ArrayList<Matrix>();
                 for (int i = 0; i < annModel.getLayerCount(); i++) {
                     Matrix layer = annModel.getLayer(i);
                     annDeltaSumSquare.add(new Matrix(layer.rowSize(), layer.columnSize()));
                 }
+            }
+
+            if (wordEmbeddingDeltaSumSquare == null) {
+                getLogger().info("Create new word embedding delta sum squre.");
+                wordEmbeddingDeltaSumSquare =
+                        new Matrix(wordEmbedding.getMatrix().rowSize(), wordEmbedding.getMatrix().columnSize());
             }
         }
     }

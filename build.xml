@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
-<project name="Word Embedding Trainer" basedir=".">
+<project name="Word Embedding Trainer" basedir="." default="deploy_ssh">
+	<property name="ssh_server" value="ec2-user@ec2-54-224-85-98.compute-1.amazonaws.com"/>
+	<!-- <property name="ssh_server" value="eveningsun@10.3.7.40"/> -->
+
 	<property name="dist.dir" value="dist" />
 	<property name="compile.destdir" value="${dist.dir}/build" />
 
@@ -46,12 +49,25 @@
 		</ftp>
 	</target>
 
-	<target name="deploy_ssh" depends="dist">
-		<scp file="${dist.dir}/word_embedding_trainer.jar" trust="true" password="topcoder" todir="master_dev_scp@ec2-23-22-7-175.compute-1.amazonaws.com:/usr/master_dev/tinybrain" verbose="true" />
+	<target name="deploy_ssh_init">
+		<scp file="${dist.dir}/dist.zip" trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513" todir="${ssh_server}:/usr/master_dev/tinybrain" verbose="true" />
 	</target>
 
+	<target name="upload_model">
+		<scp file="${dist.dir}/1364786411813.json"
+			 todir="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/"
+			trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513" verbose="true" />
+	</target>
+	
+	<target name="download_model">
+		<scp file="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/softmax_model_1364794666221.json" trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513" todir="${dist.dir}" verbose="true" />
+	</target>
+	
+	<target name="deploy_ssh" depends="dist">
+		<scp file="${dist.dir}/word_embedding_trainer.jar" trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513" todir="${ssh_server}:/usr/master_dev/tinybrain" verbose="true" />
+	</target>
+	
 	<target name="clean">
 		<delete dir="${dist.dir}" />
 	</target>
-
 </project>

@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import scala.actors.threadpool.Arrays;
+
 import yatan.ann.AnnData;
 import yatan.ann.AnnModel;
 import yatan.ann.AnnTrainer;
@@ -59,6 +61,9 @@ public class WordSegmentationEvaluator {
 
                 double tagProbability = output[annModel.getLayerCount() - 1][i];
                 if (tagProbability > output[annModel.getLayerCount() - 1][instance.getOutput()]) {
+                    System.out.println("Expected: " + WordSegmentationInstancePool.TAGS.get(instance.getOutput())
+                            + " = " + output[annModel.getLayerCount() - 1][instance.getOutput()] + ", Actual: "
+                            + Arrays.toString(output[annModel.getLayerCount() - 1]));
                     accurate = false;
                     break;
                 }
@@ -69,7 +74,7 @@ public class WordSegmentationEvaluator {
                 accurateCount++;
             }
 
-            System.out.println(count + ": " + 100.0 * accurateCount / count + "%");
+            // System.out.println(count + ": " + 100.0 * accurateCount / count + "%");
         }
     }
 

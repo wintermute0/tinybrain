@@ -1,0 +1,1 @@
+./score ../gold/pku_training_words.txt ../gold/pku_test_gold.utf8 ../tag_result.txt > score.txt

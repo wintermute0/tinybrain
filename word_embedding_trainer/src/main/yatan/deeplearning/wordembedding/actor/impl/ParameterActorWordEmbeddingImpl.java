@@ -40,7 +40,7 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
 
     // THIS IS THE LEARNING RATE FOR ENGLISH WORDS: public static final double ADAGRAD_LEARNING_RATE_LAMPDA = 0.0001;
     // public static final double ADAGRAD_LEARNING_RATE_LAMPDA = 0.0001;
-    public static final double ADAGRAD_LEARNING_RATE_LAMPDA = 0.001;
+    public static final double ADAGRAD_LEARNING_RATE_LAMPDA = 0.01;
 
     private static final String STATE_FOLDER = "test_files/results/";
 
@@ -106,7 +106,7 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
         if (wordEmbedding == null) {
             getLogger().info("Initializing parameter actor...");
             // init stuff
-            wordEmbedding = new WordEmbedding(this.dictionary.words(), 50);
+            wordEmbedding = new WordEmbedding(this.dictionary.words(), 100);
 
             wordEmbeddingDeltaSumSquare =
                     new Matrix(wordEmbedding.getMatrix().rowSize(), wordEmbedding.getMatrix().columnSize());

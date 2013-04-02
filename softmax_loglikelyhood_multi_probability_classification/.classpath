@@ -67,5 +67,6 @@
 	<classpathentry kind="lib" path="/lib/log4j/log4j.jar"/>
 	<classpathentry kind="lib" path="/lib/google-gson-2.2.2/gson-2.2.2.jar"/>
 	<classpathentry kind="lib" path="/lib/guice-3.0/aopalliance.jar"/>
+	<classpathentry kind="lib" path="/lib/kryo/kryo-2.21-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

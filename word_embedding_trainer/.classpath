@@ -66,5 +66,6 @@
 	<classpathentry kind="lib" path="/lib/guice-3.0/guice-3.0.jar"/>
 	<classpathentry kind="lib" path="/lib/guice-3.0/javax.inject.jar"/>
 	<classpathentry kind="lib" path="/lib/log4j/log4j.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/aopalliance.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

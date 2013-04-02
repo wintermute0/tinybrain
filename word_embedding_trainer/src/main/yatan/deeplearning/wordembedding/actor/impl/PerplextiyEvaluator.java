@@ -22,7 +22,7 @@ import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
     private static final int REQUEST_DATA_SIZE = 1000;
-    private static final int REPEAT_DELAY_IN_SECONDS = 10 * 60;
+    private static final int REPEAT_DELAY_IN_SECONDS = 20 * 60;
 
     private final Dictionary dictionary;
 
