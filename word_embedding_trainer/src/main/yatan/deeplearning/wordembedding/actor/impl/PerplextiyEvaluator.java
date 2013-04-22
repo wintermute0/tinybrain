@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -101,7 +99,13 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
                 outputRank.add(rank, i);
             }
 
-            totalRank += outputRank.indexOf(actualWordIndex);
+            int rank = outputRank.indexOf(actualWordIndex);
+            if (rank > 4000) {
+                // ignore this because it's probably &NUM& or something like it
+                continue;
+            }
+
+            totalRank += rank;
 
             double pw = outputs[actualWordIndex] / outputSum;
             // System.out.print(positiveInstanceCount + ": P(w) = " + pw + ". ");

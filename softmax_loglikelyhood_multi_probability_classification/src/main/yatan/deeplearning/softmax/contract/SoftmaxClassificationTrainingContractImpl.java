@@ -23,7 +23,7 @@ public class SoftmaxClassificationTrainingContractImpl extends AbstractComputeAc
 
     @Override
     protected int requestDataSize() {
-        return 200;
+        return 1000;
     }
 
     @Override

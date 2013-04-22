@@ -37,7 +37,10 @@ public class WordEmbeddingEvaluator {
     public static void main(String[] args) throws Exception {
         Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict.txt"));
 
-        Object[] models = loadWordEmbedding();
+        // 1365269964401(100 word embedding).json
+        String wordEmbeddingFile = "1365687497933.json";
+
+        Object[] models = loadWordEmbeddingFromFile(new File("test_files/results/" + wordEmbeddingFile));
         if (models.length == 0) {
             LOGGER.info("No word embedding found.");
             return;
@@ -63,8 +66,10 @@ public class WordEmbeddingEvaluator {
         double[] outputs = new double[wordEmbedding.getDictionary().size()];
         double outputSum = 0;
         double hT = 0;
-        int positiveInstanceCount = 0;
+        int instanceCount = 0;
         TaggedSentenceDataset dataset = new ICWB2Parser().parse(new File("data/icwb2-data/gold/pku_test_gold.utf8"));
+
+        int excessiveSmallRankCount = 0;
 
         for (Data data : new WordSegmentationDataProducer(true, new WordSegmentationInstancePool(dictionary, dataset,
                 false)).produceData(1000)) {
@@ -75,7 +80,7 @@ public class WordEmbeddingEvaluator {
                 continue;
             }
 
-            positiveInstanceCount++;
+            instanceCount++;
 
             outputSum = 0;
 
@@ -99,16 +104,23 @@ public class WordEmbeddingEvaluator {
             }
 
             int rank = outputRank.indexOf(actualWordIndex);
-            System.out.print("Possible words: " + possibleWordCount + ". Actual work rank = " + rank + ". ");
+            System.out.print(dictionary.words().get(actualWordIndex) + ", Possible words: " + possibleWordCount
+                    + ". Actual work rank = " + rank + ". ");
 
-            double pw = outputs[actualWordIndex] / outputSum;
-            System.out.print(positiveInstanceCount + ": P(w) = " + pw + ". ");
-            hT += Math.log(pw) / Math.log(2);
-            double ce = (-1.0 / positiveInstanceCount * hT);
-            System.out.println("Cross entropy = " + ce + ". Perperlexity = " + Math.pow(2, ce));
+            if (rank > 4000) {
+                excessiveSmallRankCount++;
+                System.out.println(dictionary.words().get(actualWordIndex) + ": Ignore excessive small rank, total "
+                        + excessiveSmallRankCount);
+            } else {
+                double pw = outputs[actualWordIndex] / outputSum;
+                System.out.print(instanceCount + ": P(w) = " + pw + ". ");
+                hT += Math.log(pw) / Math.log(2);
+                double ce = (-1.0 / instanceCount * hT);
+                System.out.println("Cross entropy = " + ce + ". Perperlexity = " + Math.pow(2, ce));
+            }
         }
 
-        return -1.0 / positiveInstanceCount * hT;
+        return -1.0 / instanceCount * hT;
     }
 
     private static double runWordEmbeddingInstance(WordEmbedding wordEmbedding, AnnModel annModel, AnnTrainer trainer,
@@ -149,20 +161,26 @@ public class WordEmbeddingEvaluator {
                     }
                 });
                 File file = modelFiles.get(0);
-                LOGGER.info("Load word embedding from file " + file);
-                try {
-                    String text = Files.toString(file, Charsets.UTF_8);
-                    JsonElement jsonElement = new JsonParser().parse(text);
-                    Gson gson = new Gson();
-                    WordEmbedding wordEmbedding =
-                            gson.fromJson(jsonElement.getAsJsonObject().get("wordEmbedding"), WordEmbedding.class);
-                    AnnModel annModel = gson.fromJson(jsonElement.getAsJsonObject().get("annModel"), AnnModel.class);
-
-                    return new Object[] {wordEmbedding, annModel};
-                } catch (IOException e) {
-                    LOGGER.error("Error occurred while loading word embedding from file.", e);
-                }
+                return loadWordEmbeddingFromFile(file);
             }
+        }
+
+        return null;
+    }
+
+    private static Object[] loadWordEmbeddingFromFile(File file) {
+        LOGGER.info("Load word embedding from file " + file);
+        try {
+            String text = Files.toString(file, Charsets.UTF_8);
+            JsonElement jsonElement = new JsonParser().parse(text);
+            Gson gson = new Gson();
+            WordEmbedding wordEmbedding =
+                    gson.fromJson(jsonElement.getAsJsonObject().get("wordEmbedding"), WordEmbedding.class);
+            AnnModel annModel = gson.fromJson(jsonElement.getAsJsonObject().get("annModel"), AnnModel.class);
+
+            return new Object[] {wordEmbedding, annModel};
+        } catch (IOException e) {
+            LOGGER.error("Error occurred while loading word embedding from file.", e);
         }
 
         return null;

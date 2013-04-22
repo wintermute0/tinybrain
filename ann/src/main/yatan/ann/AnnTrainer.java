@@ -123,6 +123,8 @@ public class AnnTrainer {
      */
     public AnnGradient backpropagateSoftmaxLogLikelyhood(AnnModel model, AnnData data, double[][] output,
             double[][] sum, AnnGradient reuse) {
+        // double l2Lambda = 0.001f;
+
         // calculate the last layer of particial derivative L/a
         double[] lOverA = Arrays.copyOf(output[output.length - 1], output[output.length - 1].length);
         for (int i = 0; i < lOverA.length; i++) {
@@ -144,12 +146,16 @@ public class AnnTrainer {
             double[] h = k > 0 ? output[k - 1] : data.getInput();
             for (int j = 0; j < gradient.rowSize() - 1; j++) {
                 for (int i = 0; i < gradient.columnSize(); i++) {
+                    // L2 regularization
                     gradient.getData()[j][i] = lOverA[i] * h[j];
+                    // gradient.getData()[j][i] = lOverA[i] * h[j] - l2Lambda * model.getLayer(k).getData()[j][i];
                 }
             }
             int lastJ = gradient.rowSize() - 1;
             for (int i = 0; i < gradient.columnSize(); i++) {
+                // L2 regularization
                 gradient.getData()[lastJ][i] = lOverA[i];
+                // gradient.getData()[lastJ][i] = lOverA[i] - l2Lambda * model.getLayer(k).getData()[lastJ][i];
             }
 
             if (k > 0) {

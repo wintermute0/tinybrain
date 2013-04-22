@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import yatan.ann.AnnData;
 import yatan.ann.AnnModel;
 import yatan.ann.AnnTrainer;
@@ -20,6 +23,10 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
 
     private static final int EVALUATION_INTERVAL_IN_SECONDS = 60;
     private int count;
+
+    @Inject
+    @Named("training_data_evaluator")
+    private boolean trainingDataEvaluator;
 
     @Override
     protected int requestDataSize() {
@@ -73,11 +80,17 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
             }
         }
 
-        logWordEmbedding(wordEmbedding, "吴");
-        logWordEmbedding(wordEmbedding, "的");
-        getLogger().info("Precision: " + 100.0 * accurateCount / dataset.size() + "%");
-        getLogger().info("Evaluating cost " + (new Date().getTime() - startTime) / 1000.0 + "s");
-        System.out.println(++count + ": " + 100.0 * accurateCount / dataset.size() + "%");
+        if (!this.trainingDataEvaluator) {
+            logWordEmbedding(wordEmbedding, "吴");
+            logWordEmbedding(wordEmbedding, "的");
+            getLogger().info("Precision: " + 100.0 * accurateCount / dataset.size() + "%");
+            getLogger().info("Evaluating cost " + (new Date().getTime() - startTime) / 1000.0 + "s");
+            System.out.println(++count + ": " + 100.0 * accurateCount / dataset.size() + "%");
+        } else {
+            getLogger().info("Training Precision: " + 100.0 * accurateCount / dataset.size() + "%");
+            getLogger().info("Training evaluating cost " + (new Date().getTime() - startTime) / 1000.0 + "s");
+            System.out.println(++count + " training: " + 100.0 * accurateCount / dataset.size() + "%");
+        }
 
         // return computation result
         ComputeResult result = new ComputeResult();

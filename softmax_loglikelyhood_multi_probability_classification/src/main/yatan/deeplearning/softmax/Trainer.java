@@ -34,13 +34,15 @@ import yatan.distributedcomputer.contract.ParameterActorContract;
 import yatan.distributedcomputer.contract.data.impl.DataProducer;
 
 public class Trainer {
-    private static final int WORD_VECTOR_SIZE = 100;
+    private static final int WORD_VECTOR_SIZE = 50;
 
     @SuppressWarnings("serial")
     public static void main(String[] args) {
         final Injector commonModuleInjector = Guice.createInjector(new CommonModule());
         final Injector trainingModuleInjector = commonModuleInjector.createChildInjector(new TrainingModule());
         final Injector evaluatingModuleInjector = commonModuleInjector.createChildInjector(new EvaluatingModule());
+        final Injector trainingDataEvaluatingModuleInjector =
+                commonModuleInjector.createChildInjector(new TrainingDataEvaluatingModule());
 
         ActorSystem system = ActorSystem.create();
         system.actorOf(new Props(new UntypedActorFactory() {
@@ -83,6 +85,12 @@ public class Trainer {
                 return evaluatingModuleInjector.getInstance(ComputeActor.class);
             }
         }), "evalutor1");
+        system.actorOf(new Props(new UntypedActorFactory() {
+            @Override
+            public Actor create() throws Exception {
+                return trainingDataEvaluatingModuleInjector.getInstance(ComputeActor.class);
+            }
+        }), "evaluator2");
     }
 
     public static class CommonModule extends AbstractModule {
@@ -149,6 +157,22 @@ public class Trainer {
                 bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/evaluate_data");
 
                 // bind compute actor impl
+                bind(boolean.class).annotatedWith(Names.named("training_data_evaluator")).toInstance(false);
+                bind(ComputeActorContract.class).to(SoftmaxClassificationEvaluatorContractImpl.class);
+            } catch (Exception e) {
+                Logger.getLogger(EvaluatingModule.class).error(
+                        "Error occurred while configuring evaluating module: " + e.getMessage(), e);
+            }
+        }
+    }
+
+    public static class TrainingDataEvaluatingModule extends AbstractModule {
+        @Override
+        protected void configure() {
+            try {
+                // bind compute actor impl
+                bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
+                bind(boolean.class).annotatedWith(Names.named("training_data_evaluator")).toInstance(true);
                 bind(ComputeActorContract.class).to(SoftmaxClassificationEvaluatorContractImpl.class);
             } catch (Exception e) {
                 Logger.getLogger(EvaluatingModule.class).error(

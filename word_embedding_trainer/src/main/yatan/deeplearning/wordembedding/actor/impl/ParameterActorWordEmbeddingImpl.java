@@ -35,6 +35,8 @@ import yatan.distributedcomputer.actors.ParameterActor;
 import yatan.distributedcomputer.contract.ParameterActorContract;
 
 public class ParameterActorWordEmbeddingImpl extends BaseActorContract implements ParameterActorContract {
+    private static final int WORD_EMBEDDING_LEARNING_RATE_MULTIPLIER = 1;
+
     private static final boolean SCALE_AND_RETRAING = false;
     private static final double STATE_SAVING_INTERVAL_MINUTES = 10;
 
@@ -79,7 +81,8 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
         annModel.update(annGradient, ADAGRAD_LEARNING_RATE_LAMPDA, annDeltaSumSquare);
 
         Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
-        wordEmbedding.update(wordEmbeddingDelta, ADAGRAD_LEARNING_RATE_LAMPDA, wordEmbeddingDeltaSumSquare);
+        wordEmbedding.update(wordEmbeddingDelta,
+                ADAGRAD_LEARNING_RATE_LAMPDA * WORD_EMBEDDING_LEARNING_RATE_MULTIPLIER, wordEmbeddingDeltaSumSquare);
 
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {
             lastSaveTime = new Date();
@@ -231,7 +234,7 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
         private Matrix wordEmbeddingDeltaSumSquare;
         private List<Matrix> annDeltaSumSquare;
 
-        public PersistableState(WordEmbedding wordEmbedding, AnnModel annModel, Matrix wordEmbeddingDeltaSumSquare,
+        public PersistableState(WordEmbedding wordEmbedding,  AnnModel annModel, Matrix wordEmbeddingDeltaSumSquare,
                 List<Matrix> annDeltaSumSquare) {
             this.wordEmbedding = wordEmbedding;
             this.annModel = annModel;
