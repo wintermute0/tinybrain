@@ -15,7 +15,7 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 
 import yatan.ann.AnnData;
-import yatan.ann.AnnModel;
+import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.deeplearning.softmax.data.TaggedSentence;
 import yatan.deeplearning.softmax.data.TaggedSentenceDataset;
@@ -31,7 +31,7 @@ public class WordSegmentationTagger {
         TaggedSentenceDataset dataset = new ICWB2Parser().parse(new File("data/icwb2-data/gold/pku_test_gold.utf8"));
         Object[] model = WordSegmentationEvaluator.loadState();
         WordEmbedding wordEmbedding = (WordEmbedding) model[0];
-        AnnModel annModel = (AnnModel) model[1];
+        DefaultAnnModel annModel = (DefaultAnnModel) model[1];
         AnnTrainer trainer = new AnnTrainer();
 
         Writer writer = new BufferedWriter(new FileWriterWithEncoding("test_files/tag_result.txt", Charsets.UTF_8));
@@ -45,7 +45,7 @@ public class WordSegmentationTagger {
     }
 
     private static void tag(TaggedSentence sentence, Dictionary dictionary, WordEmbedding wordEmbedding,
-            AnnModel annModel, AnnTrainer trainer, Writer writer) throws Exception {
+            DefaultAnnModel annModel, AnnTrainer trainer, Writer writer) throws Exception {
         List<String> originalWords = Lists.newArrayList();
         List<WordEmbeddingTrainingInstance> instances =
                 WordSegmentationInstancePool.convertTaggedSentenceToWordEmbeddingTrainingInstance(dictionary, sentence,
@@ -110,7 +110,7 @@ public class WordSegmentationTagger {
     }
 
     private static void viterbi(TaggedSentence sentence, Dictionary dictionary, WordEmbedding wordEmbedding,
-            AnnModel annModel, AnnTrainer trainer, Writer writer) throws Exception {
+            DefaultAnnModel annModel, AnnTrainer trainer, Writer writer) throws Exception {
         List<String> originalWords = Lists.newArrayList();
         List<WordEmbeddingTrainingInstance> instances =
                 WordSegmentationInstancePool.convertTaggedSentenceToWordEmbeddingTrainingInstance(dictionary, sentence,

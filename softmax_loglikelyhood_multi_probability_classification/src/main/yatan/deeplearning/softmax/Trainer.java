@@ -15,8 +15,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 
-import yatan.ann.AnnModel.Configuration;
-import yatan.ann.AnnModel.Configuration.ActivationFunction;
+import yatan.ann.AnnConfiguration;
+import yatan.ann.AnnConfiguration.ActivationFunction;
 import yatan.deeplearning.softmax.contract.SoftmaxClassificationEvaluatorContractImpl;
 import yatan.deeplearning.softmax.contract.WordEmbeddingAnnParameterActorContractImpl;
 import yatan.deeplearning.softmax.contract.SoftmaxClassificationTrainingContractImpl;
@@ -34,7 +34,17 @@ import yatan.distributedcomputer.contract.ParameterActorContract;
 import yatan.distributedcomputer.contract.data.impl.DataProducer;
 
 public class Trainer {
-    private static final int WORD_VECTOR_SIZE = 50;
+    public static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
+
+    static {
+        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001};
+        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0};
+
+        TRAINER_CONFIGURATION.hiddenLayerSize = 100;
+        TRAINER_CONFIGURATION.wordVectorSize = 50;
+
+        TRAINER_CONFIGURATION.dropout = false;
+    }
 
     @SuppressWarnings("serial")
     public static void main(String[] args) {
@@ -45,6 +55,7 @@ public class Trainer {
                 commonModuleInjector.createChildInjector(new TrainingDataEvaluatingModule());
 
         ActorSystem system = ActorSystem.create();
+
         system.actorOf(new Props(new UntypedActorFactory() {
             @Override
             public Actor create() throws Exception {
@@ -96,10 +107,13 @@ public class Trainer {
     public static class CommonModule extends AbstractModule {
         @Override
         protected void configure() {
+            // bind trainer configuration
+            bind(TrainerConfiguration.class).toInstance(TRAINER_CONFIGURATION);
             // load dictionary
             bind(Dictionary.class).toInstance(Dictionary.create(new File("test_files/zh_dict.txt")));
             // set word vector size
-            bind(Integer.class).annotatedWith(Names.named("word_vector_size")).toInstance(WORD_VECTOR_SIZE);
+            bind(Integer.class).annotatedWith(Names.named("word_vector_size")).toInstance(
+                    TRAINER_CONFIGURATION.wordVectorSize);
         }
     }
 
@@ -118,11 +132,14 @@ public class Trainer {
                 bind(DataProducer.class).to(WordSegmentationDataProducer.class);
 
                 // bind ann configuration
-                Configuration annConfiguration =
-                        new Configuration(WORD_VECTOR_SIZE * WordSegmentationDataProducer.WINDOWS_SIZE);
-                annConfiguration.addLayer(300, ActivationFunction.TANH);
-                annConfiguration.addLayer(WordSegmentationInstancePool.TAGS.size(), ActivationFunction.SOFTMAX, false);
-                bind(Configuration.class).annotatedWith(Names.named("ann_configuration")).toInstance(annConfiguration);
+                AnnConfiguration annConfiguration =
+                        new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize
+                                * WordSegmentationDataProducer.WINDOWS_SIZE);
+                annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+                // annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+                annConfiguration.addLayer(WordSegmentationInstancePool.TAGS.size(), ActivationFunction.SOFTMAX);
+                bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(
+                        annConfiguration);
 
                 // bind parameter actor impl
                 bind(ParameterActorContract.class).to(WordEmbeddingAnnParameterActorContractImpl.class);

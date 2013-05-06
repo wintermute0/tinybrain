@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import yatan.ann.AnnData;
 import yatan.ann.AnnGradient;
-import yatan.ann.AnnModel;
+import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.distributedcomputer.Data;
 import yatan.distributedcomputer.Parameter;
@@ -31,7 +31,7 @@ public class ComputeActorContractTrainingImpl extends AbstractComputeActorContra
         for (Data data : dataset) {
             batch.add((AnnData) data.getSerializable());
             if (batch.size() == MINIBATCH_SIZE) {
-                AnnGradient newGradient = trainer.trainWithMiniBatch((AnnModel) parameter.getSerializable(), batch);
+                AnnGradient newGradient = trainer.trainWithMiniBatch((DefaultAnnModel) parameter.getSerializable(), batch);
                 if (gradient == null) {
                     gradient = newGradient;
                 } else {

@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import scala.actors.threadpool.Arrays;
 
 import yatan.ann.AnnData;
-import yatan.ann.AnnModel;
+import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.deeplearning.softmax.data.TaggedSentenceDataset;
 import yatan.deeplearning.softmax.data.parser.ICWB2Parser;
@@ -30,7 +30,7 @@ public class WordSegmentationEvaluator {
         TaggedSentenceDataset dataset = new ICWB2Parser().parse(new File("data/icwb2-data/gold/pku_test_gold.utf8"));
         Object[] model = loadState();
         WordEmbedding wordEmbedding = (WordEmbedding) model[0];
-        AnnModel annModel = (AnnModel) model[1];
+        DefaultAnnModel annModel = (DefaultAnnModel) model[1];
         AnnTrainer trainer = new AnnTrainer();
 
         WordSegmentationInstancePool instancePool = new WordSegmentationInstancePool(dictionary, dataset, false);
@@ -97,7 +97,7 @@ public class WordSegmentationEvaluator {
                 reader = new InputStreamReader(is, Charsets.UTF_8);
                 JsonObject json = new JsonParser().parse(reader).getAsJsonObject();
                 WordEmbedding wordEmbedding = new Gson().fromJson(json.get("wordEmbedding"), WordEmbedding.class);
-                AnnModel annModel = new Gson().fromJson(json.get("annModel"), AnnModel.class);
+                DefaultAnnModel annModel = new Gson().fromJson(json.get("annModel"), DefaultAnnModel.class);
 
                 return new Object[] {wordEmbedding, annModel};
             } finally {

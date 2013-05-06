@@ -5,14 +5,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import yatan.ann.AnnModel.Configuration;
-import yatan.ann.AnnModel.Configuration.ActivationFunction;
+import yatan.ann.AnnConfiguration.ActivationFunction;
 import yatan.commons.matrix.Matrix;
 import yatan.commons.matrix.MatrixTestsHelper;
 
 public class AnnTrainerUnitTests extends Assert {
     private AnnTrainer instance;
-    private AnnModel model;
+    private DefaultAnnModel model;
     private double[] input;
     private AnnData data;
 
@@ -21,7 +20,7 @@ public class AnnTrainerUnitTests extends Assert {
         this.instance = new AnnTrainer();
 
         this.model =
-                new AnnModel(new Configuration(2).addLayer(3, ActivationFunction.SIGMOID)
+                new DefaultAnnModel(new AnnConfiguration(2).addLayer(3, ActivationFunction.SIGMOID)
                         .addLayer(2, ActivationFunction.SIGMOID).addLayer(1, ActivationFunction.SIGMOID));
         this.model.getLayer(0).setData(new double[][] { {0.1, 0.3, 0.5}, {0.2, 0.4, 0.6}, {0, 0, 0}});
         this.model.getLayer(1).setData(new double[][] { {0.7, 0.8}, {0.9, -0.1}, {-0.2, -0.3}, {0, 0}});
@@ -75,7 +74,7 @@ public class AnnTrainerUnitTests extends Assert {
     @Test
     public void testBackpropagation2() {
         this.model =
-                new AnnModel(new Configuration(2).addLayer(2, ActivationFunction.SIGMOID).addLayer(1,
+                new DefaultAnnModel(new AnnConfiguration(2).addLayer(2, ActivationFunction.SIGMOID).addLayer(1,
                         ActivationFunction.SIGMOID));
         this.model.getLayer(0).setData(new double[][] { {2, 1}, {-2, 3}, {0, -1}});
         this.model.getLayer(1).setData(new double[][] { {3}, {-2}, {-1}});

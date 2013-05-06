@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.common.base.Preconditions;
+
 import yatan.common.CheckUtility;
 import yatan.commons.matrix.Matrix;
 
@@ -60,22 +62,30 @@ public class WordEmbedding implements Serializable {
         }
     }
 
-    public void update(int wordIndex, Double[] delta, double lampda, Matrix wordEmbeddingDeltaSqureSum) {
+    public void update(int wordIndex, Double[] grident, double rho, double epsilon,
+            Matrix wordEmbeddingGradientSqureSum, Matrix deltaWordEmbeddingSquareSum) {
         if (wordIndex < 0 || wordIndex > this.dictionary.size()) {
             throw new IllegalArgumentException("WordIndex " + wordIndex + " out of bounds.");
         }
-        if (delta.length != this.getWordVectorSize()) {
+        if (grident.length != this.getWordVectorSize()) {
             throw new IllegalArgumentException("Delta size does not match.");
         }
 
         for (int i = 0; i < this.getWordVectorSize(); i++) {
-            if (delta[i] == 0) {
-                continue;
-            }
+            wordEmbeddingGradientSqureSum.getData()[i][wordIndex] =
+                    rho * wordEmbeddingGradientSqureSum.getData()[i][wordIndex] + (1 - rho) * Math.pow(grident[i], 2);
 
-            wordEmbeddingDeltaSqureSum.getData()[i][wordIndex] += Math.pow(delta[i], 2);
-            double learningRate = lampda / Math.sqrt(wordEmbeddingDeltaSqureSum.getData()[i][wordIndex]);
-            this.matrix.getData()[i][wordIndex] += delta[i] * learningRate;
+            // wordEmbeddingDeltaSqureSum.getData()[i][wordIndex] += Math.pow(delta[i], 2);
+            double learningRate =
+                    Math.sqrt(deltaWordEmbeddingSquareSum.getData()[i][wordIndex] + epsilon)
+                            / Math.sqrt(wordEmbeddingGradientSqureSum.getData()[i][wordIndex] + epsilon);
+
+            double delta = grident[i] * learningRate;
+            this.matrix.getData()[i][wordIndex] += delta;
+
+            // update delta(x) square sum matrix
+            deltaWordEmbeddingSquareSum.getData()[i][wordIndex] =
+                    rho * deltaWordEmbeddingSquareSum.getData()[i][wordIndex] + (1 - rho) * Math.pow(delta, 2);
         }
     }
 
@@ -85,9 +95,23 @@ public class WordEmbedding implements Serializable {
         }
     }
 
-    public void update(Map<Integer, Double[]> wordEmbeddingDelta, double lampda, Matrix wordEmbeddingDeltaSqureSum) {
+    public void update(Map<Integer, Double[]> wordEmbeddingDelta, double rho, double epsilon,
+            Matrix wordEmbeddingGradientSqureSum, Matrix deltaWordEmbeddingSquareSum) {
+        Preconditions.checkArgument(rho < 1 && rho > 0.5, "Rho must be inside (0.5, 1).");
+        Preconditions.checkArgument(epsilon < 0.1, "Epsilon must < 0.1");
+        Preconditions.checkArgument(wordEmbeddingGradientSqureSum != null,
+                "Word embedding gradient square sum matrix cannot be empty.");
+        Preconditions.checkArgument(wordEmbeddingGradientSqureSum.rowSize() == this.matrix.rowSize()
+                && wordEmbeddingGradientSqureSum.columnSize() == this.matrix.columnSize(),
+                "Word embedding gradient square sum matrix must be the same size as gradient matrix.");
+        Preconditions.checkArgument(deltaWordEmbeddingSquareSum != null, "Delta square sum matrix cannot be empty.");
+        Preconditions.checkArgument(deltaWordEmbeddingSquareSum.rowSize() == this.matrix.rowSize()
+                && deltaWordEmbeddingSquareSum.columnSize() == this.matrix.columnSize(),
+                "Delta square sum matrix must be the same size as gradient matrix.");
+
         for (Entry<Integer, Double[]> entry : wordEmbeddingDelta.entrySet()) {
-            update(entry.getKey(), entry.getValue(), lampda, wordEmbeddingDeltaSqureSum);
+            update(entry.getKey(), entry.getValue(), rho, epsilon, wordEmbeddingGradientSqureSum,
+                    deltaWordEmbeddingSquareSum);
         }
     }
 

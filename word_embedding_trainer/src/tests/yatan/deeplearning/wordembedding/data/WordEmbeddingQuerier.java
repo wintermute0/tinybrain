@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import yatan.ann.AnnModel;
+import yatan.ann.DefaultAnnModel;
 import yatan.commons.matrix.Matrix;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 
@@ -119,7 +119,7 @@ public class WordEmbeddingQuerier {
                     Gson gson = new Gson();
                     WordEmbedding wordEmbedding =
                             gson.fromJson(jsonElement.getAsJsonObject().get("wordEmbedding"), WordEmbedding.class);
-                    AnnModel annModel = gson.fromJson(jsonElement.getAsJsonObject().get("annModel"), AnnModel.class);
+                    DefaultAnnModel annModel = gson.fromJson(jsonElement.getAsJsonObject().get("annModel"), DefaultAnnModel.class);
 
                     return new Object[] {wordEmbedding, annModel};
                 } catch (IOException e) {

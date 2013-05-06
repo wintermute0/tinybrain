@@ -19,17 +19,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import yatan.ann.AnnData;
-import yatan.ann.AnnModel;
+import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.deeplearning.softmax.data.TaggedSentenceDataset;
 import yatan.deeplearning.softmax.data.parser.ICWB2Parser;
-import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer;
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer.WordSegmentationInstancePool;
 import yatan.deeplearning.wordembedding.data.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
-import yatan.distributedcomputer.Data;
 
 public class WordEmbeddingEvaluator {
     private static final Logger LOGGER = Logger.getLogger(WordEmbeddingEvaluator.class);
@@ -38,7 +35,7 @@ public class WordEmbeddingEvaluator {
         Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict.txt"));
 
         // 1365269964401(100 word embedding).json
-        String wordEmbeddingFile = "1365687497933.json";
+        String wordEmbeddingFile = "softmax_model_1367787124327.json";
 
         Object[] models = loadWordEmbeddingFromFile(new File("test_files/results/" + wordEmbeddingFile));
         if (models.length == 0) {
@@ -47,7 +44,7 @@ public class WordEmbeddingEvaluator {
         }
 
         WordEmbedding wordEmbedding = (WordEmbedding) models[0];
-        AnnModel annModel = (AnnModel) models[1];
+        DefaultAnnModel annModel = (DefaultAnnModel) models[1];
 
         double crossEntropy = calculateCrossEntropy(dictionary, wordEmbedding, annModel);
         LOGGER.info("CrossEntropy: " + crossEntropy);
@@ -60,8 +57,8 @@ public class WordEmbeddingEvaluator {
      * @return
      * @throws Exception
      */
-    private static double calculateCrossEntropy(Dictionary dictionary, WordEmbedding wordEmbedding, AnnModel annModel)
-            throws Exception {
+    private static double calculateCrossEntropy(Dictionary dictionary, WordEmbedding wordEmbedding,
+            DefaultAnnModel annModel) throws Exception {
         AnnTrainer trainer = new AnnTrainer();
         double[] outputs = new double[wordEmbedding.getDictionary().size()];
         double outputSum = 0;
@@ -71,10 +68,9 @@ public class WordEmbeddingEvaluator {
 
         int excessiveSmallRankCount = 0;
 
-        for (Data data : new WordSegmentationDataProducer(true, new WordSegmentationInstancePool(dictionary, dataset,
-                false)).produceData(1000)) {
+        for (WordEmbeddingTrainingInstance instance : new WordSegmentationInstancePool(dictionary, dataset, false)
+                .getInstances().subList(0, 1000)) {
             List<Integer> outputRank = Lists.newArrayList();
-            WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
             if (instance.getOutput() < 0) {
                 // ignore negative case
                 continue;
@@ -83,12 +79,17 @@ public class WordEmbeddingEvaluator {
             instanceCount++;
 
             outputSum = 0;
+            double actualWordOutput = 0;
 
             int possibleWordCount = 0;
             int actualWordIndex = instance.getInput().get(instance.getInput().size() / 2);
             for (int i = 0; i < wordEmbedding.getDictionary().size(); i++) {
                 instance.getInput().set(instance.getInput().size() / 2, i);
                 double output = runWordEmbeddingInstance(wordEmbedding, annModel, trainer, instance);
+                if (i == actualWordIndex) {
+                    actualWordOutput = output;
+                }
+
                 outputs[i] = output;
                 outputSum += output;
 
@@ -105,9 +106,9 @@ public class WordEmbeddingEvaluator {
 
             int rank = outputRank.indexOf(actualWordIndex);
             System.out.print(dictionary.words().get(actualWordIndex) + ", Possible words: " + possibleWordCount
-                    + ". Actual work rank = " + rank + ". ");
+                    + ". Actual work rank = " + rank + ". " + "Actual word output = " + actualWordOutput);
 
-            if (rank > 4000) {
+            if (rank > 4000 || "$NUM$".equals(dictionary.words().get(actualWordIndex))) {
                 excessiveSmallRankCount++;
                 System.out.println(dictionary.words().get(actualWordIndex) + ": Ignore excessive small rank, total "
                         + excessiveSmallRankCount);
@@ -123,8 +124,8 @@ public class WordEmbeddingEvaluator {
         return -1.0 / instanceCount * hT;
     }
 
-    private static double runWordEmbeddingInstance(WordEmbedding wordEmbedding, AnnModel annModel, AnnTrainer trainer,
-            WordEmbeddingTrainingInstance instance) {
+    private static double runWordEmbeddingInstance(WordEmbedding wordEmbedding, DefaultAnnModel annModel,
+            AnnTrainer trainer, WordEmbeddingTrainingInstance instance) {
         // first convert input data into word embedding
         // FIXME: could reuse an array, no need to allocate it every time
         double[] input = new double[instance.getInput().size() * wordEmbedding.getWordVectorSize()];
@@ -135,12 +136,9 @@ public class WordEmbeddingEvaluator {
             }
         }
 
-        AnnData annData = new AnnData(input, new double[] {instance.getOutput()});
+        double[][] output = trainer.run(annModel, input, new double[annModel.getLayerCount()][]);
 
-        // train with this ann data instance and update gradient
-        double[][] output = trainer.run(annModel, annData.getInput(), new double[annModel.getLayerCount()][]);
-
-        return output[annModel.getLayerCount() - 1][0];
+        return output[annModel.getLayerCount() - 1][1];
     }
 
     private static Object[] loadWordEmbedding() {
@@ -176,7 +174,8 @@ public class WordEmbeddingEvaluator {
             Gson gson = new Gson();
             WordEmbedding wordEmbedding =
                     gson.fromJson(jsonElement.getAsJsonObject().get("wordEmbedding"), WordEmbedding.class);
-            AnnModel annModel = gson.fromJson(jsonElement.getAsJsonObject().get("annModel"), AnnModel.class);
+            DefaultAnnModel annModel =
+                    gson.fromJson(jsonElement.getAsJsonObject().get("annModel"), DefaultAnnModel.class);
 
             return new Object[] {wordEmbedding, annModel};
         } catch (IOException e) {

@@ -2,17 +2,14 @@ package yatan.deeplearning.wordembedding.actor.impl;
 
 import java.io.Serializable;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
-
-import scala.actors.threadpool.Arrays;
 
 import yatan.ann.AnnData;
-import yatan.ann.AnnModel;
+import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
+import yatan.deeplearning.wordembedding.utility.LogUtility;
 import yatan.distributedcomputer.Data;
 import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
@@ -22,14 +19,14 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
 
     @Override
     protected int requestDataSize() {
-        return 10000;
+        return 100000;
     }
 
     @Override
     protected ComputeResult doCompute(List<Data> dataset, Parameter parameter) {
         Serializable[] parameters = (Serializable[]) parameter.getSerializable();
         WordEmbedding wordEmbedding = (WordEmbedding) parameters[0];
-        AnnModel annModel = (AnnModel) parameters[1];
+        DefaultAnnModel annModel = (DefaultAnnModel) parameters[1];
 
         double totalPositiveScore = 0;
         int positiveCount = 0;
@@ -56,15 +53,15 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
             // train with this ann data instance and update gradient
             double[][] output = trainer.run(annModel, annData.getInput(), new double[annModel.getLayerCount()][]);
             // System.out.println(output[annModel.getLayerCount() - 1][0]);
-            if (annData.getOutput()[0] > 0) {
-                if (output[annModel.getLayerCount() - 1][0] > 0.5) {
+            if (annData.getOutput()[0] >= 0.99999999) {
+                if (output[annModel.getLayerCount() - 1][1] > 0.5) {
                     accurate++;
                 }
 
-                totalPositiveScore += output[annModel.getLayerCount() - 1][0];
+                totalPositiveScore += output[annModel.getLayerCount() - 1][1];
                 positiveCount++;
             } else {
-                if (output[annModel.getLayerCount() - 1][0] < 0.5) {
+                if (output[annModel.getLayerCount() - 1][0] > 0.5) {
                     accurate++;
                 }
 
@@ -76,10 +73,11 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
         getLogger().info("Average positive score: " + totalPositiveScore / positiveCount);
         getLogger().info("Average negative score: " + totalNegativeScore / negativeCount);
         getLogger().info("Precision: " + 100.0 * accurate / requestDataSize() + "%");
-        logWordEmbedding(wordEmbedding, "的");
-        logWordEmbedding(wordEmbedding, "吴");
-        logWordEmbedding(wordEmbedding, "煮");
-        printAnnModel(annModel);
+        LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "的");
+        LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "吴");
+        LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "煮");
+        LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
+        LogUtility.logAnnModel(getLogger(), annModel);
 
         // evaluate some word distance rank
         // evaluateWordDistanceRank(wordEmbedding, "france", "germany", "greece", "spain", "america", "canada", "china",
@@ -94,13 +92,6 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
         result.setGradient(null);
 
         return result;
-    }
-
-    private void printAnnModel(AnnModel annModel) {
-        Random random = new Random(new Date().getTime());
-        getLogger().info(
-                Arrays.toString(annModel.getLayer(0).getData()[random.nextInt(annModel.getLayer(0).getData().length)]));
-        getLogger().info(Arrays.toString(annModel.getLayer(1).getData()[0]));
     }
 
     private void evaluateWordDistanceRank(WordEmbedding wordEmbedding, String word, String... candidates) {
@@ -127,14 +118,5 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
         }
         getLogger().info(sb.toString());
         System.out.println(sb.toString());
-    }
-
-    private void logWordEmbedding(WordEmbedding wordEmbedding, String word) {
-        StringBuilder sb = new StringBuilder();
-        int index = wordEmbedding.indexOf(word);
-        for (int i = 0; i < wordEmbedding.getWordVectorSize(); i++) {
-            sb.append(wordEmbedding.getMatrix().getData()[i][index]).append(" ");
-        }
-        getLogger().info(sb.toString());
     }
 }

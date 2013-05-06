@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,15 +15,17 @@ import org.apache.commons.io.output.FileWriterWithEncoding;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import yatan.ann.AnnGradient;
-import yatan.ann.AnnModel;
-import yatan.ann.AnnModel.Configuration;
+import yatan.ann.DefaultAnnModel;
+import yatan.ann.AnnConfiguration;
 import yatan.commons.matrix.Matrix;
+import yatan.deeplearning.softmax.TrainerConfiguration;
 import yatan.deeplearning.wordembedding.data.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.distributed.akka.BaseActorContract;
@@ -34,7 +35,8 @@ import yatan.distributedcomputer.actors.ParameterActor;
 import yatan.distributedcomputer.contract.ParameterActorContract;
 
 public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContract implements ParameterActorContract {
-    public static final double ADAGRAD_LEARNING_RATE_LAMPDA = 0.01;
+    private static final double ADA_DELTA_RHO = 0.95;
+    private static final double ADA_DELTA_EPSILON = 0.000001;
 
     private static final double STATE_SAVING_INTERVAL_MINUTES = 10;
 
@@ -45,18 +47,24 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
     private static final String MODEL_FILE_PREFIX = "softmax_model_";
 
     private final Dictionary dictionary;
-    private final Configuration annConfiguration;
+    private final AnnConfiguration annConfiguration;
     private final int wordVectorSize;
 
-    private WordEmbedding wordEmbedding;
-    private AnnModel annModel;
+    @Inject(optional = false)
+    private TrainerConfiguration trainerConfiguration;
 
-    private Matrix wordEmbeddingDeltaSumSquare;
-    private List<Matrix> annDeltaSumSquare;
+    private WordEmbedding wordEmbedding;
+    private DefaultAnnModel annModel;
+
+    private Matrix wordEmbeddingGradientSumSquare;
+    private List<Matrix> annDeltaGradientSumSquare;
+
+    private Matrix deltaWordEmbeddingSumSquare;
+    private List<Matrix> deltaAnnWeightSumSquare;
 
     @Inject
     public WordEmbeddingAnnParameterActorContractImpl(Dictionary dictionary,
-            @Named("ann_configuration") Configuration annConfiguration, @Named("word_vector_size") int wordVectorSize) {
+            @Named("ann_configuration") AnnConfiguration annConfiguration, @Named("word_vector_size") int wordVectorSize) {
         Preconditions.checkArgument(dictionary != null, "The parameter 'dictionary' cannot be null.");
         Preconditions.checkArgument(annConfiguration != null);
 
@@ -82,16 +90,23 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
 
         Serializable[] inputData = (Serializable[]) gradient.getSerializable();
         AnnGradient annGradient = (AnnGradient) inputData[0];
-        annModel.update(annGradient, ADAGRAD_LEARNING_RATE_LAMPDA, annDeltaSumSquare);
+        annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
+                this.deltaAnnWeightSumSquare);
 
         Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
-        wordEmbedding.update(wordEmbeddingDelta, ADAGRAD_LEARNING_RATE_LAMPDA, wordEmbeddingDeltaSumSquare);
+        // wordEmbedding.update(wordEmbeddingDelta, 0.001);
+        wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON, this.wordEmbeddingGradientSumSquare,
+                this.deltaWordEmbeddingSumSquare);
 
         // save state if necessary
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {
             lastSaveTime = new Date();
             saveState();
         }
+
+        // report update to metrics
+        // GradientUpdateMetrics.report(getLogger(), annGradient, wordEmbeddingDelta, wordEmbeddingGradientSumSquare,
+        // annDeltaGradientSumSquare);
     }
 
     private void initIfNecessary() {
@@ -147,21 +162,24 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
                 // new Configuration(wordEmbedding.getWordVectorSize() * TrainingInstanceProducer.WINDOWS_SIZE);
                 // configuration.addLayer(300, ActivationFunction.TANH);
                 // configuration.addLayer(DataCenter.tags().size(), ActivationFunction.SOFTMAX, false);
-                annModel = new AnnModel(this.annConfiguration);
+                annModel = new DefaultAnnModel(this.annConfiguration);
             }
 
-            if (annDeltaSumSquare == null) {
-                getLogger().info("Create new ANN delta sum squre.");
-                annDeltaSumSquare = new ArrayList<Matrix>();
+            if (annDeltaGradientSumSquare == null || wordEmbeddingGradientSumSquare == null
+                    || deltaAnnWeightSumSquare == null || deltaWordEmbeddingSumSquare == null) {
+                getLogger().info("Create new ANN gradient/delta sum squre.");
+                this.annDeltaGradientSumSquare = Lists.newArrayList();
+                this.deltaAnnWeightSumSquare = Lists.newArrayList();
                 for (int i = 0; i < annModel.getLayerCount(); i++) {
                     Matrix layer = annModel.getLayer(i);
-                    annDeltaSumSquare.add(new Matrix(layer.rowSize(), layer.columnSize()));
+                    this.annDeltaGradientSumSquare.add(new Matrix(layer.rowSize(), layer.columnSize()));
+                    this.deltaAnnWeightSumSquare.add(new Matrix(layer.rowSize(), layer.columnSize()));
                 }
-            }
 
-            if (wordEmbeddingDeltaSumSquare == null) {
-                getLogger().info("Create new word embedding delta sum squre.");
-                wordEmbeddingDeltaSumSquare =
+                getLogger().info("Create new word embedding gradient/delta sum squre.");
+                this.wordEmbeddingGradientSumSquare =
+                        new Matrix(wordEmbedding.getMatrix().rowSize(), wordEmbedding.getMatrix().columnSize());
+                this.deltaWordEmbeddingSumSquare =
                         new Matrix(wordEmbedding.getMatrix().rowSize(), wordEmbedding.getMatrix().columnSize());
             }
         }
@@ -174,8 +192,8 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
         try {
             writer = new FileWriterWithEncoding(stateFile, Charsets.UTF_8);
             String json =
-                    new Gson().toJson(new PersistableState(wordEmbedding, annModel, wordEmbeddingDeltaSumSquare,
-                            annDeltaSumSquare));
+                    new Gson().toJson(new PersistableState(wordEmbedding, annModel, wordEmbeddingGradientSumSquare,
+                            annDeltaGradientSumSquare, this.deltaWordEmbeddingSumSquare, this.deltaAnnWeightSumSquare));
             writer.write(json);
         } catch (IOException e) {
             getLogger().error("Error occurred while trying to save parameter server state: " + e.getMessage(), e);
@@ -187,10 +205,13 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
     private boolean loadState() {
         getLogger().info("Trying to find persisted parameter server state...");
         File stateFile = null;
-        for (File file : new File(MODEL_FOLDER).listFiles()) {
-            if (file.isFile() && Files.getFileExtension(file.getName()).equals("json")
-                    && (stateFile == null || stateFile.getName().compareTo(file.getName()) < 0)) {
-                stateFile = file;
+        File modelFolderFile = new File(MODEL_FOLDER);
+        if (modelFolderFile.isDirectory()) {
+            for (File file : modelFolderFile.listFiles()) {
+                if (file.isFile() && Files.getFileExtension(file.getName()).equals("json")
+                        && (stateFile == null || stateFile.getName().compareTo(file.getName()) < 0)) {
+                    stateFile = file;
+                }
             }
         }
 
@@ -212,9 +233,13 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
                     if (this.annConfiguration.equals(state.annModel.getConfiguration())) {
                         getLogger()
                                 .info("Loading ANN and delta sum squre data because the ANN model configuration is identical.");
-                        wordEmbeddingDeltaSumSquare = state.wordEmbeddingDeltaSumSquare;
-                        annModel = state.annModel;
-                        annDeltaSumSquare = state.annDeltaSumSquare;
+                        this.wordEmbeddingGradientSumSquare = state.wordEmbeddingWeightSumSquare;
+
+                        this.annModel = state.annModel;
+                        this.annDeltaGradientSumSquare = state.annDeltaWeightSumSquare;
+
+                        this.deltaWordEmbeddingSumSquare = state.deltaWordEmbeddingSumSquare;
+                        this.deltaAnnWeightSumSquare = state.deltaAnnSumSquare;
                     } else {
                         getLogger()
                                 .info("Ignore ANN and delta sum squre data because the ANN model configuration is differenct.");
@@ -281,24 +306,21 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
 
     public static class PersistableState {
         public WordEmbedding wordEmbedding;
-        public AnnModel annModel;
+        public DefaultAnnModel annModel;
 
-        public Matrix wordEmbeddingDeltaSumSquare;
-        public List<Matrix> annDeltaSumSquare;
+        public Matrix wordEmbeddingWeightSumSquare;
+        public List<Matrix> annDeltaWeightSumSquare;
 
-        public PersistableState(WordEmbedding wordEmbedding, AnnModel annModel, Matrix wordEmbeddingDeltaSumSquare,
-                List<Matrix> annDeltaSumSquare) {
+        public Matrix deltaWordEmbeddingSumSquare;
+        public List<Matrix> deltaAnnSumSquare;
+
+        public PersistableState(WordEmbedding wordEmbedding, DefaultAnnModel annModel,
+                Matrix wordEmbeddingDeltaSumSquare, List<Matrix> annDeltaSumSquare, Matrix deltaWordEmbeddingSumSquare,
+                List<Matrix> deltaAnnSumSquare) {
             this.wordEmbedding = wordEmbedding;
             this.annModel = annModel;
-            this.wordEmbeddingDeltaSumSquare = wordEmbeddingDeltaSumSquare;
-            this.annDeltaSumSquare = annDeltaSumSquare;
-        }
-
-        @Override
-        public String toString() {
-            return "PersistableState [wordEmbedding=" + wordEmbedding + ", annModel=" + annModel
-                    + ", wordEmbeddingDeltaSumSquare=" + wordEmbeddingDeltaSumSquare + ", annDeltaSumSquare="
-                    + annDeltaSumSquare + "]";
+            this.wordEmbeddingWeightSumSquare = wordEmbeddingDeltaSumSquare;
+            this.annDeltaWeightSumSquare = annDeltaSumSquare;
         }
     }
 }

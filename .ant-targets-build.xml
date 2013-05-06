@@ -1,0 +1,8 @@
+clean
+compile
+deploy
+deploy_ssh
+deploy_ssh_init
+dist
+download_model
+upload_model

@@ -97,13 +97,17 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
                                     positiveInstance.getInput().add(wordIndecies.get(j));
                                     if (j == i) {
                                         negativeInstance.getInput().add(this.random.nextInt(this.dictionary.size()));
-                                        // negativeInstance.getInput().add(this.dictionary.sampleWord());
+                                        // int negativeWord = this.dictionary.sampleWord();
+                                        // while (negativeWord == wordIndecies.get(j)) {
+                                        // negativeWord = this.dictionary.sampleWord();
+                                        // }
+                                        // negativeInstance.getInput().add(negativeWord);
                                     } else {
                                         negativeInstance.getInput().add(wordIndecies.get(j));
                                     }
                                 }
                                 positiveInstance.setOutput(1);
-                                negativeInstance.setOutput(-1);
+                                negativeInstance.setOutput(0);
 
                                 int noSuchWordCount = 0;
                                 for (int index : positiveInstance.getInput()) {

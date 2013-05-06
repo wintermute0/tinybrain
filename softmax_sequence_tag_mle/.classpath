@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main"/>
+	<classpathentry kind="src" path="src/tests"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ann"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commons_ml"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/distributed_computer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/softmax_loglikelyhood_multi_probability_classification"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wiki_analyzer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/word_embedding_trainer"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-actor-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-actor-migration-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-agent-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-beanstalk-mailbox-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-durable-mailboxes-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-file-mailbox-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-kernel-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-mailboxes-common-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-mongo-mailbox-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-redis-mailbox-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-remote-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-sample-fsm-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-sample-hello-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-sample-hello-kernel-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-sample-remote-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-samples-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-slf4j-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-testkit-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-transactor-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-tutorial-first-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-tutorials-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-zeromq-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-zookeeper-mailbox-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/beanstalk_client-1.4.5.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/bson-driver_2.9.0-1-0.2.9-1.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/commons-codec-1.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/commons-io-2.0.1.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/commons-pool-1.5.6.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/config-0.3.1.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/dispatch-json_2.9.1-0.8.5.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/h2-lzf-1.0.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/httpclient-4.1.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/httpcore-4.1.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/jna-3.0.9.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/jnr-constants-0.8.2.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/mongo-driver_2.9.0-1-0.2.9-1.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/mongo-java-driver-2.7.1.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/netty-3.5.4.Final.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/objenesis-1.2.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/protobuf-java-2.4.1.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/redisclient_2.9.1-2.4.0.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/scala-stm_2.9.1-0.5.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/scalaj-collection_2.9.0-1-1.2.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/sjson_2.9.1-0.15.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/slf4j-api-1.6.4.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/util-core-1.12.2.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/zeromq-scala-binding_2.9.1-0.0.6.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/zkclient-0.3.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/zookeeper-3.4.0.jar"/>
+	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/scala-library.jar"/>
+	<classpathentry kind="lib" path="/lib/google-gson-2.2.2/gson-2.2.2.jar"/>
+	<classpathentry kind="lib" path="/lib/guava/14/guava.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/aopalliance.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/guice-3.0.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/guice-assistedinject-3.0.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/guice-grapher-3.0.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/guice-jmx-3.0.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/guice-jndi-3.0.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/guice-multibindings-3.0.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/guice-persist-3.0.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/guice-servlet-3.0.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/guice-spring-3.0.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/guice-struts2-plugin-3.0.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/guice-throwingproviders-3.0.jar"/>
+	<classpathentry kind="lib" path="/lib/guice-3.0/javax.inject.jar"/>
+	<classpathentry kind="lib" path="/lib/log4j/log4j.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import yatan.ann.AnnModel.Configuration.ActivationFunction;
+import com.google.common.base.Preconditions;
+
+import yatan.ann.AnnConfiguration.ActivationFunction;
 import yatan.commons.matrix.Matrix;
 import yatan.commons.ml.SingleFunction;
 
 public class AnnTrainer {
-    public AnnGradient trainWithMiniBatch(AnnModel model, List<AnnData> dataSet) {
+    public AnnGradient trainWithMiniBatch(DefaultAnnModel model, List<AnnData> dataSet) {
         AnnGradient gradient = null;
         double[][] sum = new double[model.getLayerCount()][];
         for (int i = 0; i < dataSet.size(); i++) {
@@ -34,10 +36,8 @@ public class AnnTrainer {
 
             double[] layerInput = i == 0 ? input : output[i - 1];
             // add an extra 1 to the input if necessary
-            if (model.getConfiguration().isLayerBiased(i)) {
-                layerInput = Arrays.copyOf(layerInput, layerInput.length + 1);
-                layerInput[layerInput.length - 1] = 1;
-            }
+            layerInput = Arrays.copyOf(layerInput, layerInput.length + 1);
+            layerInput[layerInput.length - 1] = 1;
 
             // calculate output
             output[i] = model.getLayer(i).multiplyBy(layerInput);
@@ -99,9 +99,7 @@ public class AnnTrainer {
             // calculate delta[x] for the next layer
             delta = model.getLayer(i).transpose().multiplyBy(delta);
             // remove the trailing delta if the layer is biased
-            if (model.getConfiguration().isLayerBiased(i)) {
-                delta = Arrays.copyOf(delta, delta.length - 1);
-            }
+            delta = Arrays.copyOf(delta, delta.length - 1);
         }
 
         return new AnnGradient(gradients);
@@ -122,8 +120,11 @@ public class AnnTrainer {
      * @return
      */
     public AnnGradient backpropagateSoftmaxLogLikelyhood(AnnModel model, AnnData data, double[][] output,
-            double[][] sum, AnnGradient reuse) {
-        // double l2Lambda = 0.001f;
+            double[][] sum, double[] l2Lambdas, AnnGradient reuse) {
+        if (l2Lambdas != null) {
+            Preconditions.checkArgument(l2Lambdas.length == model.getLayerCount()
+                    || l2Lambdas.length == model.getLayerCount() + 1);
+        }
 
         // calculate the last layer of particial derivative L/a
         double[] lOverA = Arrays.copyOf(output[output.length - 1], output[output.length - 1].length);
@@ -143,30 +144,28 @@ public class AnnTrainer {
             }
             gradients.add(0, gradient);
 
+            double l2Lambda = l2Lambdas == null ? 0 : l2Lambdas[k];
             double[] h = k > 0 ? output[k - 1] : data.getInput();
             for (int j = 0; j < gradient.rowSize() - 1; j++) {
                 for (int i = 0; i < gradient.columnSize(); i++) {
                     // L2 regularization
-                    gradient.getData()[j][i] = lOverA[i] * h[j];
-                    // gradient.getData()[j][i] = lOverA[i] * h[j] - l2Lambda * model.getLayer(k).getData()[j][i];
+                    // gradient.getData()[j][i] = lOverA[i] * h[j];
+                    gradient.getData()[j][i] = lOverA[i] * h[j] - l2Lambda * model.getLayer(k).getData()[j][i];
                 }
             }
+            // FIXME: this part means this bp only applies to ANN that all has biases
             int lastJ = gradient.rowSize() - 1;
             for (int i = 0; i < gradient.columnSize(); i++) {
                 // L2 regularization
-                gradient.getData()[lastJ][i] = lOverA[i];
-                // gradient.getData()[lastJ][i] = lOverA[i] - l2Lambda * model.getLayer(k).getData()[lastJ][i];
+                // gradient.getData()[lastJ][i] = lOverA[i];
+                gradient.getData()[lastJ][i] = lOverA[i] - l2Lambda * model.getLayer(k).getData()[lastJ][i];
             }
 
             if (k > 0) {
                 // calculate delta[x] for the next layer
                 double[] lOverH = model.getLayer(k).transpose().multiplyBy(lOverA);
                 // remove the trailing delta if the layer is biased
-                if (model.getConfiguration().isLayerBiased(k)) {
-                    lOverA = Arrays.copyOf(lOverH, lOverH.length - 1);
-                } else {
-                    lOverA = lOverH;
-                }
+                lOverA = Arrays.copyOf(lOverH, lOverH.length - 1);
 
                 // calculate the particial derivative L/a of the next layer
                 SingleFunction<Double, Double> activation =
@@ -181,6 +180,18 @@ public class AnnTrainer {
         // calculate L over x which equesl paricial(l)/parcial(a) * w
         double[] lOverX = model.getLayer(0).transpose().multiplyBy(lOverA);
 
-        return new AnnGradient(gradients, lOverX);
+        // l2 regularization for lOverX
+        if (l2Lambdas != null && l2Lambdas.length > model.getLayerCount()) {
+            // we have a l2lambda for input
+            double l2Lambda = l2Lambdas[model.getLayerCount()];
+            for (int i = 0; i < lOverX.length - 1; i++) {
+                lOverX[i] -= l2Lambda * data.getInput()[i];
+            }
+        }
+
+        AnnGradient annGradient = new AnnGradient(gradients, lOverX);
+        model.postProcessAnnGradient(annGradient);
+
+        return annGradient;
     }
 }

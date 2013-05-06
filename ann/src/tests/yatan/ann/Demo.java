@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import yatan.ann.AnnModel.Configuration;
-import yatan.ann.AnnModel.Configuration.ActivationFunction;
+import yatan.ann.AnnConfiguration.ActivationFunction;
+
 
 public class Demo {
     public static void main(String[] args) {
@@ -14,10 +14,10 @@ public class Demo {
         List<AnnData> training = dataset.subList(0, (int) (dataset.size() * 0.9));
         List<AnnData> test = dataset.subList((int) (dataset.size() * 0.9), dataset.size());
 
-        Configuration configuration = new Configuration(16);
+        AnnConfiguration configuration = new AnnConfiguration(16);
         configuration.addLayer(10, ActivationFunction.SIGMOID);
         configuration.addLayer(1, ActivationFunction.SIGMOID);
-        AnnModel model = new AnnModel(configuration);
+        DefaultAnnModel model = new DefaultAnnModel(configuration);
 
         AnnTrainer trainer = new AnnTrainer();
 
@@ -56,7 +56,7 @@ public class Demo {
         return dataset;
     }
 
-    private static double evaluate(AnnModel model, List<AnnData> testSet) {
+    private static double evaluate(DefaultAnnModel model, List<AnnData> testSet) {
         AnnTrainer trainer = new AnnTrainer();
         int accurate = 0;
         for (AnnData data : testSet) {

@@ -67,6 +67,23 @@ public final class Dictionary {
         return index;
     }
 
+    public int frenquencyRank(int wordIndex) {
+        int result = 0;
+
+        if (!this.wordLikelyhood.containsKey(this.words.get(wordIndex))) {
+            return Integer.MAX_VALUE;
+        }
+
+        double frequency = this.wordLikelyhood.get(this.words.get(wordIndex));
+        for (Entry<String, Double> entry : wordLikelyhood.entrySet()) {
+            if (entry.getValue() > frequency) {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
     public List<String> words() {
         return Collections.unmodifiableList(words);
     }

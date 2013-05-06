@@ -216,10 +216,12 @@ public abstract class AbstractComputeActorContractImpl extends BaseActorContract
             }
 
             // audit
-            AuditEntry auditEntry = new AuditEntry();
-            auditEntry.setProcessedInstanceCount(this.data.size());
-            auditEntry.setTimeCost(new Date().getTime() - startTime);
-            getActor().getContext().actorFor(AUDIT_ACTOR_PATH).tell(new AuditActor.AuditMessage(auditEntry));
+            if (result.isAudit()) {
+                AuditEntry auditEntry = new AuditEntry();
+                auditEntry.setProcessedInstanceCount(this.data.size());
+                auditEntry.setTimeCost(new Date().getTime() - startTime);
+                getActor().getContext().actorFor(AUDIT_ACTOR_PATH).tell(new AuditActor.AuditMessage(auditEntry));
+            }
 
             // after actual computing is completed, reset
             reset();
@@ -250,6 +252,7 @@ public abstract class AbstractComputeActorContractImpl extends BaseActorContract
         private boolean repeat;
         private int repeatDelayInSeconds;
         private Parameter gradient;
+        private boolean audit = true;
 
         public boolean isRepeat() {
             return repeat;
@@ -273,6 +276,14 @@ public abstract class AbstractComputeActorContractImpl extends BaseActorContract
 
         public void setRepeatDelayInSeconds(int repeatDelayInSeconds) {
             this.repeatDelayInSeconds = repeatDelayInSeconds;
+        }
+
+        public boolean isAudit() {
+            return audit;
+        }
+
+        public void setAudit(boolean audit) {
+            this.audit = audit;
         }
     }
 

@@ -1,9 +1,9 @@
 package yatan.distributed;
 
 import yatan.ann.AnnGradient;
-import yatan.ann.AnnModel;
-import yatan.ann.AnnModel.Configuration;
-import yatan.ann.AnnModel.Configuration.ActivationFunction;
+import yatan.ann.DefaultAnnModel;
+import yatan.ann.AnnConfiguration;
+import yatan.ann.AnnConfiguration.ActivationFunction;
 import yatan.common.LogUtility;
 
 import yatan.distributed.akka.BaseActorContract;
@@ -16,13 +16,13 @@ public class ParameterActorContractImpl extends BaseActorContract implements Par
     private static final String CLAZZ = ParameterActorContractImpl.class.getName();
 
     private static final double LEARNING_RATE = 0.1;
-    private static AnnModel ANN_MODEL;
+    private static DefaultAnnModel ANN_MODEL;
 
     static {
-        Configuration configuration = new Configuration(16);
+        AnnConfiguration configuration = new AnnConfiguration(16);
         configuration.addLayer(10, ActivationFunction.SIGMOID);
         configuration.addLayer(1, ActivationFunction.SIGMOID);
-        ANN_MODEL = new AnnModel(configuration);
+        ANN_MODEL = new DefaultAnnModel(configuration);
     }
 
     public ParameterActorContractImpl() {

@@ -1,6 +1,6 @@
 package yatan.ann;
 
-import yatan.ann.AnnModel.Configuration.ActivationFunction;
+import yatan.ann.AnnConfiguration.ActivationFunction;
 import yatan.commons.ml.SingleFunction;
 
 final public class AnnActivationFunctions {

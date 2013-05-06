@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 
 import yatan.ann.AnnData;
 import yatan.ann.AnnGradient;
-import yatan.ann.AnnModel;
+import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
@@ -29,7 +29,7 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
     protected ComputeResult doCompute(List<Data> dataset, Parameter parameter) {
         Serializable[] parameters = (Serializable[]) parameter.getSerializable();
         WordEmbedding wordEmbedding = (WordEmbedding) parameters[0];
-        AnnModel annModel = (AnnModel) parameters[1];
+        DefaultAnnModel annModel = (DefaultAnnModel) parameters[1];
 
         AnnGradient totalGradient = null;
         AnnGradient batchGradient = null;
@@ -154,10 +154,10 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
     // }
     // }
 
-    private AnnGradient wordEmbeddingBackpropagate(AnnModel model, AnnData data, double[][] output, double[][] sum,
-            AnnGradient reuseGradient) {
+    private AnnGradient wordEmbeddingBackpropagate(DefaultAnnModel model, AnnData data, double[][] output,
+            double[][] sum, AnnGradient reuseGradient) {
         data.setOutput(data.getOutput()[0] > 0 ? new double[] {1, 0} : new double[] {0, 1});
-        return new AnnTrainer().backpropagateSoftmaxLogLikelyhood(model, data, output, sum, reuseGradient);
+        return new AnnTrainer().backpropagateSoftmaxLogLikelyhood(model, data, output, sum, null, reuseGradient);
     }
 
     private static AnnGradient saveGradient(AnnGradient gradient, AnnGradient newGradient) {

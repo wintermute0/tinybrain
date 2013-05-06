@@ -24,7 +24,8 @@ import yatan.distributedcomputer.contract.data.impl.DataProducer;
 import yatan.distributedcomputer.contract.data.impl.DataProducerException;
 
 public class WordSegmentationDataProducer implements DataProducer {
-    public static final int WINDOWS_SIZE = 11;
+    public static final int WINDOWS_SIZE = 5;
+    // public static final int WINDOWS_SIZE = 11;
 
     private static final Logger LOGGER = Logger.getLogger(WordSegmentationDataProducer.class);
     private static final Random RANDOM = new Random(new Date().getTime());
@@ -47,6 +48,11 @@ public class WordSegmentationDataProducer implements DataProducer {
     @Override
     public List<Data> produceData(int size) throws DataProducerException {
         List<WordEmbeddingTrainingInstance> instances = this.instancePool.getInstances();
+
+        // FIXME: does randomize help??
+        instances = new ArrayList<WordEmbeddingTrainingInstance>(instances);
+        Collections.shuffle(instances);
+
         if (this.training) {
             LOGGER.info("Epoch: " + this.epoch + ", " + 100.0 * this.offset / instances.size() + "%");
         } else {
@@ -106,6 +112,11 @@ public class WordSegmentationDataProducer implements DataProducer {
             this.dictionary = dictionary;
             this.taggedSentenceDataset = taggedSentenceDataset;
             this.shuffle = shuffle;
+        }
+
+        public void shuffle() {
+            LOGGER.info("Shuffling instances...");
+            Collections.shuffle(this.instances);
         }
 
         public List<WordEmbeddingTrainingInstance> getInstances() throws DataProducerException {

@@ -8,8 +8,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-import yatan.ann.AnnData;
-import yatan.ann.AnnModel;
+import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.deeplearning.wordembedding.data.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
@@ -43,7 +42,7 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
 
         Serializable[] parameters = (Serializable[]) parameter.getSerializable();
         WordEmbedding wordEmbedding = (WordEmbedding) parameters[0];
-        AnnModel annModel = (AnnModel) parameters[1];
+        DefaultAnnModel annModel = (DefaultAnnModel) parameters[1];
 
         double crossEntropy = calculateCrossEntropy(this.dictionary, wordEmbedding, annModel, dataset);
         double perplexity = Math.pow(2, crossEntropy);
@@ -66,7 +65,7 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
      * @return
      * @throws Exception
      */
-    private double calculateCrossEntropy(Dictionary dictionary, WordEmbedding wordEmbedding, AnnModel annModel,
+    private double calculateCrossEntropy(Dictionary dictionary, WordEmbedding wordEmbedding, DefaultAnnModel annModel,
             List<Data> dataset) {
         AnnTrainer trainer = new AnnTrainer();
         double[] outputs = new double[wordEmbedding.getDictionary().size()];
@@ -77,7 +76,7 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
         for (Data data : dataset) {
             List<Integer> outputRank = Lists.newArrayList();
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
-            if (instance.getOutput() < 0) {
+            if (instance.getOutput() < 0.000001) {
                 // ignore negative case
                 continue;
             }
@@ -124,8 +123,8 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
         return -1.0 / positiveInstanceCount * hT;
     }
 
-    private static double runWordEmbeddingInstance(WordEmbedding wordEmbedding, AnnModel annModel, AnnTrainer trainer,
-            WordEmbeddingTrainingInstance instance) {
+    private static double runWordEmbeddingInstance(WordEmbedding wordEmbedding, DefaultAnnModel annModel,
+            AnnTrainer trainer, WordEmbeddingTrainingInstance instance) {
         // first convert input data into word embedding
         // FIXME: could reuse an array, no need to allocate it every time
         double[] input = new double[instance.getInput().size() * wordEmbedding.getWordVectorSize()];
@@ -136,11 +135,9 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
             }
         }
 
-        AnnData annData = new AnnData(input, new double[] {instance.getOutput()});
-
         // train with this ann data instance and update gradient
-        double[][] output = trainer.run(annModel, annData.getInput(), new double[annModel.getLayerCount()][]);
+        double[][] output = trainer.run(annModel, input, new double[annModel.getLayerCount()][]);
 
-        return output[annModel.getLayerCount() - 1][0];
+        return output[annModel.getLayerCount() - 1][1];
     }
 }

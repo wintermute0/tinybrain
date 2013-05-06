@@ -10,15 +10,19 @@ import com.google.inject.name.Named;
 
 import yatan.ann.AnnData;
 import yatan.ann.AnnModel;
+import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
+import yatan.ann.DropoutAnnModel;
+import yatan.deeplearning.softmax.TrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
+import yatan.deeplearning.wordembedding.utility.LogUtility;
 import yatan.distributedcomputer.Data;
 import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeActorContractImpl {
-    public static final int REQUEST_DATA_SIZE = 10000;
+    public static final int REQUEST_DATA_SIZE = 100000;
     // public static final int REQUEST_DATA_SIZE = 5000;
 
     private static final int EVALUATION_INTERVAL_IN_SECONDS = 60;
@@ -27,6 +31,9 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
     @Inject
     @Named("training_data_evaluator")
     private boolean trainingDataEvaluator;
+
+    @Inject(optional = false)
+    private TrainerConfiguration trainerConfiguration;
 
     @Override
     protected int requestDataSize() {
@@ -38,7 +45,7 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
         long startTime = new Date().getTime();
         Serializable[] parameters = (Serializable[]) parameter.getSerializable();
         WordEmbedding wordEmbedding = (WordEmbedding) parameters[0];
-        AnnModel annModel = (AnnModel) parameters[1];
+        AnnModel originalAnnModel = (DefaultAnnModel) parameters[1];
 
         int accurateCount = 0;
 
@@ -57,6 +64,12 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
             }
 
             AnnData annData = new AnnData(input, new double[] {instance.getOutput()});
+
+            // use dropout ann model if necessary
+            AnnModel annModel = originalAnnModel;
+            if (this.trainerConfiguration.dropout) {
+                annModel = new DropoutAnnModel(originalAnnModel, false);
+            }
 
             // train with this ann data instance and update gradient
             double[][] output = trainer.run(annModel, annData.getInput(), new double[annModel.getLayerCount()][]);
@@ -81,8 +94,11 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
         }
 
         if (!this.trainingDataEvaluator) {
-            logWordEmbedding(wordEmbedding, "吴");
-            logWordEmbedding(wordEmbedding, "的");
+            LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "吴");
+            LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "的");
+            LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
+            LogUtility.logAnnModel(getLogger(), (DefaultAnnModel) parameters[1]);
+            // logAnnModel(annModel);
             getLogger().info("Precision: " + 100.0 * accurateCount / dataset.size() + "%");
             getLogger().info("Evaluating cost " + (new Date().getTime() - startTime) / 1000.0 + "s");
             System.out.println(++count + ": " + 100.0 * accurateCount / dataset.size() + "%");
@@ -97,16 +113,8 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
         result.setRepeat(true);
         result.setRepeatDelayInSeconds(EVALUATION_INTERVAL_IN_SECONDS);
         result.setGradient(null);
+        result.setAudit(false);
 
         return result;
-    }
-
-    private void logWordEmbedding(WordEmbedding wordEmbedding, String word) {
-        StringBuilder sb = new StringBuilder();
-        int index = wordEmbedding.indexOf(word);
-        for (int i = 0; i < wordEmbedding.getWordVectorSize(); i++) {
-            sb.append(wordEmbedding.getMatrix().getData()[i][index]).append(" ");
-        }
-        getLogger().info(sb.toString());
     }
 }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yatan.ann.AnnData;
-import yatan.ann.AnnModel;
+import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.distributedcomputer.Data;
 import yatan.distributedcomputer.Parameter;
@@ -23,7 +23,7 @@ public class ComputeActorContractEvaluatorImpl extends AbstractComputeActorContr
             annDataset.add((AnnData) data.getSerializable());
         }
 
-        double precision = evaluate((AnnModel) parameter.getSerializable(), annDataset);
+        double precision = evaluate((DefaultAnnModel) parameter.getSerializable(), annDataset);
 
         getLogger().info("Precision: " + precision);
 
@@ -35,7 +35,7 @@ public class ComputeActorContractEvaluatorImpl extends AbstractComputeActorContr
         return result;
     }
 
-    private static double evaluate(AnnModel model, List<AnnData> testSet) {
+    private static double evaluate(DefaultAnnModel model, List<AnnData> testSet) {
         AnnTrainer trainer = new AnnTrainer();
         int accurate = 0;
         for (AnnData data : testSet) {

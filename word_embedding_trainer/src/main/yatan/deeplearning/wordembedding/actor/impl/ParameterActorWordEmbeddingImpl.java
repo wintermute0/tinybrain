@@ -21,9 +21,9 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 
 import yatan.ann.AnnGradient;
-import yatan.ann.AnnModel;
-import yatan.ann.AnnModel.Configuration;
-import yatan.ann.AnnModel.Configuration.ActivationFunction;
+import yatan.ann.DefaultAnnModel;
+import yatan.ann.AnnConfiguration;
+import yatan.ann.AnnConfiguration.ActivationFunction;
 import yatan.commons.matrix.Matrix;
 import yatan.deeplearning.wordembedding.data.Dictionary;
 import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
@@ -34,6 +34,7 @@ import yatan.distributedcomputer.Parameter.ParameterIndexPath;
 import yatan.distributedcomputer.actors.ParameterActor;
 import yatan.distributedcomputer.contract.ParameterActorContract;
 
+@Deprecated
 public class ParameterActorWordEmbeddingImpl extends BaseActorContract implements ParameterActorContract {
     private static final int WORD_EMBEDDING_LEARNING_RATE_MULTIPLIER = 1;
 
@@ -47,7 +48,7 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
     private static final String STATE_FOLDER = "test_files/results/";
 
     private static WordEmbedding wordEmbedding;
-    private static AnnModel annModel;
+    private static DefaultAnnModel annModel;
 
     private static Matrix wordEmbeddingDeltaSumSquare;
     private static List<Matrix> annDeltaSumSquare;
@@ -78,11 +79,11 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
     public void updateGradient(Parameter gradient) {
         Serializable[] inputData = (Serializable[]) gradient.getSerializable();
         AnnGradient annGradient = (AnnGradient) inputData[0];
-        annModel.update(annGradient, ADAGRAD_LEARNING_RATE_LAMPDA, annDeltaSumSquare);
+        // annModel.update(annGradient, ADAGRAD_LEARNING_RATE_LAMPDA, annDeltaSumSquare);
 
         Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
-        wordEmbedding.update(wordEmbeddingDelta,
-                ADAGRAD_LEARNING_RATE_LAMPDA * WORD_EMBEDDING_LEARNING_RATE_MULTIPLIER, wordEmbeddingDeltaSumSquare);
+        // wordEmbedding.update(wordEmbeddingDelta,
+        // ADAGRAD_LEARNING_RATE_LAMPDA * WORD_EMBEDDING_LEARNING_RATE_MULTIPLIER, wordEmbeddingDeltaSumSquare);
 
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {
             lastSaveTime = new Date();
@@ -114,12 +115,12 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
             wordEmbeddingDeltaSumSquare =
                     new Matrix(wordEmbedding.getMatrix().rowSize(), wordEmbedding.getMatrix().columnSize());
 
-            Configuration configuration =
-                    new Configuration(wordEmbedding.getWordVectorSize() * ZhWikiTrainingDataProducer.WINDOWS_SIZE);
+            AnnConfiguration configuration =
+                    new AnnConfiguration(wordEmbedding.getWordVectorSize() * ZhWikiTrainingDataProducer.WINDOWS_SIZE);
             configuration.addLayer(100, ActivationFunction.TANH);
             // configuration.addLayer(1, ActivationFunction.Y_EQUALS_X, false);
             configuration.addLayer(2, ActivationFunction.SOFTMAX);
-            annModel = new AnnModel(configuration);
+            annModel = new DefaultAnnModel(configuration);
 
             annDeltaSumSquare = new ArrayList<Matrix>();
             for (int i = 0; i < annModel.getLayerCount(); i++) {
@@ -229,13 +230,13 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
 
     public static class PersistableState {
         private WordEmbedding wordEmbedding;
-        private AnnModel annModel;
+        private DefaultAnnModel annModel;
 
         private Matrix wordEmbeddingDeltaSumSquare;
         private List<Matrix> annDeltaSumSquare;
 
-        public PersistableState(WordEmbedding wordEmbedding,  AnnModel annModel, Matrix wordEmbeddingDeltaSumSquare,
-                List<Matrix> annDeltaSumSquare) {
+        public PersistableState(WordEmbedding wordEmbedding, DefaultAnnModel annModel,
+                Matrix wordEmbeddingDeltaSumSquare, List<Matrix> annDeltaSumSquare) {
             this.wordEmbedding = wordEmbedding;
             this.annModel = annModel;
             this.wordEmbeddingDeltaSumSquare = wordEmbeddingDeltaSumSquare;

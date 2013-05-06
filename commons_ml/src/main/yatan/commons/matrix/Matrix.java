@@ -5,6 +5,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Random;
 
+import yatan.commons.metrics.SingleValueMetrics;
+
+import com.google.common.base.Preconditions;
+
 @SuppressWarnings("serial")
 final public class Matrix implements Serializable {
     private final double[][] data;
@@ -28,13 +32,17 @@ final public class Matrix implements Serializable {
         this.data = data;
     }
 
-    public void randomInitialize() {
+    public void randomInitialize(double low, double high) {
         Random random = new Random(new Date().getTime());
         for (int i = 0; i < rowSize(); i++) {
             for (int j = 0; j < columnSize(); j++) {
-                this.data[i][j] = (random.nextDouble() - 0.5) / 5;
+                this.data[i][j] = low + (high - low) * random.nextDouble();
             }
         }
+    }
+
+    public void randomInitialize() {
+        randomInitialize(-0.1, 0.1);
     }
 
     public Matrix transpose() {
@@ -106,20 +114,48 @@ final public class Matrix implements Serializable {
         }
     }
 
-    public void update(Matrix gradient, double lampda, Matrix annDeltaSqureSum) {
+    public void update(Matrix gradient, double rho, double epsilon, Matrix gradientSquareSum, Matrix deltaSquareSum) {
+        if (rowSize() != gradient.rowSize() || columnSize() != gradient.columnSize()) {
+            throw new IllegalArgumentException("The size of the gradient matrix does not match.");
+        }
+        Preconditions.checkArgument(rho < 1 && rho > 0.5, "Rho must be inside (0.5, 1).");
+        Preconditions.checkArgument(epsilon < 0.1, "Epsilon must < 0.1");
+        Preconditions.checkArgument(deltaSquareSum != null, "Delta square sum matrix cannot be empty.");
+        Preconditions.checkArgument(deltaSquareSum.rowSize() == rowSize()
+                && deltaSquareSum.columnSize() == columnSize(),
+                "Delta square sum matrix must be the same size as gradient matrix.");
+
+        for (int i = 0; i < rowSize(); i++) {
+            for (int j = 0; j < columnSize(); j++) {
+                gradientSquareSum.getData()[i][j] =
+                        rho * gradientSquareSum.getData()[i][j] + (1 - rho) * Math.pow(gradient.getData()[i][j], 2);
+
+                double learningRate =
+                        Math.sqrt(deltaSquareSum.getData()[i][j] + epsilon)
+                                / Math.sqrt(gradientSquareSum.getData()[i][j] + epsilon);
+                double delta = learningRate * gradient.getData()[i][j];
+
+                this.data[i][j] += delta;
+
+                deltaSquareSum.getData()[i][j] = rho * deltaSquareSum.getData()[i][j] + (1 - rho) * Math.pow(delta, 2);
+            }
+        }
+    }
+
+    public void update(Matrix gradient, double lampda, Matrix annDeltaSqureSum, double momentumWeight, Matrix lastDelta) {
         if (rowSize() != gradient.rowSize() || columnSize() != gradient.columnSize()) {
             throw new IllegalArgumentException("The size of the gradient matrix does not match.");
         }
 
         for (int i = 0; i < rowSize(); i++) {
             for (int j = 0; j < columnSize(); j++) {
-                if (gradient.getData()[i][j] == 0) {
-                    continue;
-                }
-
-                annDeltaSqureSum.getData()[i][j] += Math.pow(gradient.getData()[i][j], 2);
+                // annDeltaSqureSum.getData()[i][j] += Math.pow(gradient.getData()[i][j], 2);
                 double learningRate = lampda / Math.sqrt(annDeltaSqureSum.getData()[i][j]);
-                this.data[i][j] += gradient.getData()[i][j] * learningRate;
+                double deltaW = gradient.getData()[i][j] * learningRate + momentumWeight * lastDelta.getData()[i][j];
+                this.data[i][j] += deltaW;
+
+                // update last deltaW
+                lastDelta.getData()[i][j] = deltaW;
             }
         }
     }
@@ -164,16 +200,16 @@ final public class Matrix implements Serializable {
         }
     }
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < this.data.length; i++) {
-            for (int j = 0; j < this.data[i].length; j++) {
-                sb.append(this.data[i][j]).append(" ");
-            }
-            sb.append("\n");
-        }
-
-        return sb.toString();
-    }
+    // public String toString() {
+    // StringBuilder sb = new StringBuilder();
+    //
+    // for (int i = 0; i < this.data.length; i++) {
+    // for (int j = 0; j < this.data[i].length; j++) {
+    // sb.append(this.data[i][j]).append(" ");
+    // }
+    // sb.append("\n");
+    // }
+    //
+    // return sb.toString();
+    // }
 }
