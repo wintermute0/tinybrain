@@ -19,7 +19,7 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
 
     @Override
     protected int requestDataSize() {
-        return 100000;
+        return 50000;
     }
 
     @Override
@@ -53,15 +53,15 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
             // train with this ann data instance and update gradient
             double[][] output = trainer.run(annModel, annData.getInput(), new double[annModel.getLayerCount()][]);
             // System.out.println(output[annModel.getLayerCount() - 1][0]);
-            if (annData.getOutput()[0] >= 0.99999999) {
-                if (output[annModel.getLayerCount() - 1][1] > 0.5) {
+            if (annData.getOutput()[0] >= 0) {
+                if (output[annModel.getLayerCount() - 1][0] > 0) {
                     accurate++;
                 }
 
-                totalPositiveScore += output[annModel.getLayerCount() - 1][1];
+                totalPositiveScore += output[annModel.getLayerCount() - 1][0];
                 positiveCount++;
             } else {
-                if (output[annModel.getLayerCount() - 1][0] > 0.5) {
+                if (output[annModel.getLayerCount() - 1][0] < 0) {
                     accurate++;
                 }
 
@@ -90,6 +90,7 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
         result.setRepeat(true);
         result.setRepeatDelayInSeconds(EVALUATION_INTERVAL_IN_SECONDS);
         result.setGradient(null);
+        result.setAudit(false);
 
         return result;
     }

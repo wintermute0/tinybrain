@@ -6,8 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import scala.actors.threadpool.Arrays;
-
 import yatan.ann.AnnData;
 import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;

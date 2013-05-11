@@ -137,4 +137,9 @@ public class DropoutAnnModel implements AnnModel {
             List<Matrix> lastDeltaW) {
         this.annModel.update(gradient, lampda, annDeltaSqureSum, momentumWeight, lastDeltaW);
     }
+
+    @Override
+    public void reuseLowerLayer(AnnModel annModel) {
+        this.annModel.reuseLowerLayer(annModel);
+    }
 }

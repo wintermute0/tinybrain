@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="Word Embedding Trainer" basedir="." default="deploy_ssh">
-	<!-- <property name="ssh_server" value="ec2-user@ec2-184-72-165-248.compute-1.amazonaws.com"/> -->
+	<!-- <property name="ssh_server" value="ec2-user@ec2-107-22-92-135.compute-1.amazonaws.com"/> -->
 	<property name="ssh_server" value="eveningsun@10.3.7.40"/>
 	
 	<property name="dist.dir" value="dist" />
@@ -23,6 +23,7 @@
 			<src path="wiki_analyzer" />
 			<src path="word_embedding_trainer" />
 			<src path="softmax_loglikelyhood_multi_probability_classification" />
+			<src path="auto_encoder" />
 
 			<include name="**/src/main/**/*.java" />
 			<exclude name="**/src/tests/**/*.java" />
@@ -54,13 +55,13 @@
 	</target>
 
 	<target name="upload_model">
-		<scp file="softmax_loglikelyhood_multi_probability_classification/test_files/results/zmodified_1364361527411(best 50 word embedding).json"
+		<scp file="softmax_loglikelyhood_multi_probability_classification/test_files/results/ae_model_1368161602367.json"
 			 todir="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/"
 			trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513" verbose="true" />
 	</target>
 	
 	<target name="download_model">
-		<scp file="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/softmax_model_1367787124327.json" trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513"
+		<scp file="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/ae_model_1368161602367.json" trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513"
 			todir="softmax_loglikelyhood_multi_probability_classification/test_files/results/" verbose="true" />
 	</target>
 	

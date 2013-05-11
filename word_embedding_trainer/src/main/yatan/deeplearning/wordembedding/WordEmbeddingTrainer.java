@@ -7,6 +7,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 
+import yatan.ann.AnnConfiguration;
+import yatan.ann.AnnConfiguration.ActivationFunction;
 import yatan.deeplearning.wordembedding.actor.impl.ComputeActorWordEmbeddingEvaluatorImpl;
 import yatan.deeplearning.wordembedding.actor.impl.ComputeActorWordEmbeddingTrainingImpl;
 import yatan.deeplearning.wordembedding.actor.impl.ParameterActorWordEmbeddingImpl;
@@ -21,41 +23,55 @@ import yatan.distributedcomputer.contract.ComputeActorContract;
 import yatan.distributedcomputer.contract.ParameterActorContract;
 import yatan.distributedcomputer.contract.data.impl.DataProducer;
 import akka.actor.Actor;
-import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.actor.UntypedActorFactory;
 
 public class WordEmbeddingTrainer {
+    private static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
+    private static final int TRAINING_ACTOR_COUNT = 4;
+
+    static {
+        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001};
+        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0};
+
+        TRAINER_CONFIGURATION.hiddenLayerSize = 100;
+        TRAINER_CONFIGURATION.wordVectorSize = 50;
+
+        TRAINER_CONFIGURATION.dropout = false;
+    }
+
     @SuppressWarnings("serial")
     public static void main(String[] args) {
-        final Injector trainingModuleInjector = Guice.createInjector(new TrainingModule());
-        final Injector evaluatingModuleInjector = Guice.createInjector(new EvaluatingModule());
-        final Injector perplexityEvaluatingModuleInjector = Guice.createInjector(new PerplexityEvaluatingModule());
+        final Injector commonModuleInjector = Guice.createInjector(new CommonModule());
+        final Injector trainingModuleInjector = commonModuleInjector.createChildInjector(new TrainingModule());
+        final Injector evaluatingModuleInjector = commonModuleInjector.createChildInjector(new EvaluatingModule());
+        final Injector perplexityEvaluatingModuleInjector =
+                commonModuleInjector.createChildInjector(new PerplexityEvaluatingModule());
 
         ActorSystem system = ActorSystem.create();
-        ActorRef parametersActor = system.actorOf(new Props(new UntypedActorFactory() {
+        system.actorOf(new Props(new UntypedActorFactory() {
             @Override
             public Actor create() throws Exception {
                 return trainingModuleInjector.getInstance(ParameterActor.class);
             }
         }), "parameter");
-        ActorRef dataActor = system.actorOf(new Props(new UntypedActorFactory() {
+        system.actorOf(new Props(new UntypedActorFactory() {
             @Override
             public Actor create() throws Exception {
                 return trainingModuleInjector.getInstance(DataActor.class);
             }
         }), "data");
 
-        ActorRef auditActor = system.actorOf(new Props(new UntypedActorFactory() {
+        system.actorOf(new Props(new UntypedActorFactory() {
             @Override
             public Actor create() throws Exception {
                 return trainingModuleInjector.getInstance(AuditActor.class);
             }
         }), "audit");
 
-        for (int i = 0; i < 8; i++) {
-            ActorRef computeActor1 = system.actorOf(new Props(new UntypedActorFactory() {
+        for (int i = 0; i < TRAINING_ACTOR_COUNT; i++) {
+            system.actorOf(new Props(new UntypedActorFactory() {
                 @Override
                 public Actor create() throws Exception {
                     return trainingModuleInjector.getInstance(ComputeActor.class);
@@ -63,14 +79,14 @@ public class WordEmbeddingTrainer {
             }), "compute" + i);
         }
 
-        ActorRef evaluatorActor1 = system.actorOf(new Props(new UntypedActorFactory() {
+        system.actorOf(new Props(new UntypedActorFactory() {
             @Override
             public Actor create() throws Exception {
                 return evaluatingModuleInjector.getInstance(ComputeActor.class);
             }
         }), "evalutor1");
 
-        ActorRef evaluatorActor2 = system.actorOf(new Props(new UntypedActorFactory() {
+        system.actorOf(new Props(new UntypedActorFactory() {
             @Override
             public Actor create() throws Exception {
                 return perplexityEvaluatingModuleInjector.getInstance(ComputeActor.class);
@@ -78,13 +94,30 @@ public class WordEmbeddingTrainer {
         }), "evalutor2");
     }
 
-    public static class TrainingModule extends AbstractModule {
-        private static Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict.txt"));
-
+    public static class CommonModule extends AbstractModule {
         @Override
         protected void configure() {
-            bind(Dictionary.class).toInstance(dictionary);
-            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(200000);
+            // bind trainer configuration
+            bind(TrainerConfiguration.class).toInstance(TRAINER_CONFIGURATION);
+            // load dictionary
+            bind(Dictionary.class).toInstance(Dictionary.create(new File("test_files/zh_dict.txt")));
+            // set word vector size
+            bind(Integer.class).annotatedWith(Names.named("word_vector_size")).toInstance(
+                    TRAINER_CONFIGURATION.wordVectorSize);
+        }
+    }
+
+    public static class TrainingModule extends AbstractModule {
+        @Override
+        protected void configure() {
+            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(500000);
+
+            // bind ann configuration
+            AnnConfiguration annConfiguration =
+                    new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize * ZhWikiTrainingDataProducer.WINDOWS_SIZE);
+            annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+            annConfiguration.addLayer(1, ActivationFunction.Y_EQUALS_X, false);
+            bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(annConfiguration);
 
             // set data actor path of to evaluate data actor
             bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
@@ -108,8 +141,6 @@ public class WordEmbeddingTrainer {
     public static class PerplexityEvaluatingModule extends AbstractModule {
         @Override
         protected void configure() {
-            bind(Dictionary.class).toInstance(TrainingModule.dictionary);
-
             // set data actor path of to evaluate data actor
             bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
 

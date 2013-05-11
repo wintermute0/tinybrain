@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 @SuppressWarnings("serial")
 public class AnnConfiguration implements Serializable {
     public static enum ActivationFunction {
@@ -23,8 +25,10 @@ public class AnnConfiguration implements Serializable {
         }
     }
 
-    final int inputDegree;
-    final List<Integer> layers = new ArrayList<Integer>();
+    public final int inputDegree;
+    public final List<Integer> layers = new ArrayList<Integer>();
+    public final List<Boolean> biased = Lists.newArrayList();
+
     private final List<AnnConfiguration.ActivationFunction> activationFunctions =
             new ArrayList<AnnConfiguration.ActivationFunction>();
 
@@ -32,11 +36,16 @@ public class AnnConfiguration implements Serializable {
         this.inputDegree = inputDegree;
     }
 
-    public AnnConfiguration addLayer(int units, AnnConfiguration.ActivationFunction activationFunction) {
+    public AnnConfiguration addLayer(int units, AnnConfiguration.ActivationFunction activationFunction, boolean biased) {
         this.layers.add(units);
         this.activationFunctions.add(activationFunction);
+        this.biased.add(biased);
 
         return this;
+    }
+
+    public AnnConfiguration addLayer(int units, AnnConfiguration.ActivationFunction activationFunction) {
+        return addLayer(units, activationFunction, true);
     }
 
     public AnnConfiguration.ActivationFunction activationFunctionOfLayer(int layer) {
@@ -48,7 +57,8 @@ public class AnnConfiguration implements Serializable {
         sb.append("AnnConfiguration: [Input degree = " + this.inputDegree);
         for (int i = 0; i < this.layers.size(); i++) {
             sb.append(", layer ").append(i).append(" = (").append(this.layers.get(i)).append(", ")
-                    .append(this.activationFunctions.get(i)).append(", ").append("baised").append(")");
+                    .append(this.activationFunctions.get(i)).append(", ")
+                    .append(this.biased.get(i) ? "baised" : "un-baised").append(")");
         }
         sb.append("]");
         return sb.toString();

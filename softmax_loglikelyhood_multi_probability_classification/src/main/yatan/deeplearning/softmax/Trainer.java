@@ -37,10 +37,10 @@ public class Trainer {
     public static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
 
     static {
-        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001};
-        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0};
+        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001, 0.0001, 0.0001};
+        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0};
 
-        TRAINER_CONFIGURATION.hiddenLayerSize = 100;
+        TRAINER_CONFIGURATION.hiddenLayerSize = 300;
         TRAINER_CONFIGURATION.wordVectorSize = 50;
 
         TRAINER_CONFIGURATION.dropout = false;
@@ -136,6 +136,7 @@ public class Trainer {
                         new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize
                                 * WordSegmentationDataProducer.WINDOWS_SIZE);
                 annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+                // annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
                 // annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
                 annConfiguration.addLayer(WordSegmentationInstancePool.TAGS.size(), ActivationFunction.SOFTMAX);
                 bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(

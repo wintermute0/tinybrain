@@ -1,6 +1,7 @@
 package yatan.deeplearning.autoencoder.data.chinesewordembedding;
 
 import java.sql.DriverManager;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +17,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import yatan.deeplearning.wordembedding.data.Dictionary;
-import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.distributedcomputer.Data;
 import yatan.distributedcomputer.contract.data.impl.DataProducer;
@@ -27,7 +27,7 @@ import yatan.wiki.dao.mysql.ArticleDaoImpl;
 import yatan.wiki.entities.Article;
 
 public class ChineseWordEmbeddingAutoEncoderDataProvider implements DataProducer {
-    private final Logger logger = Logger.getLogger(ZhWikiTrainingDataProducer.class);
+    private final Logger logger = Logger.getLogger(ChineseWordEmbeddingAutoEncoderDataProvider.class);
     private final List<Data> INSTANCES_CATCH = Lists.newArrayList();
     private final Dictionary dictionary;
 
@@ -90,23 +90,21 @@ public class ChineseWordEmbeddingAutoEncoderDataProvider implements DataProducer
                                     continue;
                                 }
 
-                                WordEmbeddingTrainingInstance positiveInstance = new WordEmbeddingTrainingInstance();
-                                positiveInstance.setInput(new ArrayList<Integer>());
+                                WordEmbeddingTrainingInstance instance = new WordEmbeddingTrainingInstance();
+                                instance.setInput(new ArrayList<Integer>());
                                 for (int j = i - WINDOWS_SIZE / 2; j < i + WINDOWS_SIZE / 2 + 1; j++) {
-                                    positiveInstance.getInput().add(wordIndecies.get(j));
-                                }
-
-                                int noSuchWordCount = 0;
-                                for (int index : positiveInstance.getInput()) {
-                                    if (index == this.dictionary.indexOf(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)) {
-                                        noSuchWordCount++;
+                                    int wordIndex = wordIndecies.get(j);
+                                    if (wordIndex == this.dictionary.indexOf(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)) {
+                                        instance = null;
+                                        break;
                                     }
-                                }
-                                if (noSuchWordCount > 0) {
-                                    continue;
+
+                                    instance.getInput().add(wordIndecies.get(j));
                                 }
 
-                                INSTANCES_CATCH.add(new Data(positiveInstance));
+                                if (instance != null) {
+                                    INSTANCES_CATCH.add(new Data(instance));
+                                }
                             }
                         }
                     }

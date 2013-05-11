@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +46,32 @@ public final class Dictionary {
     }
 
     @SuppressWarnings("unchecked")
-    public static Dictionary create(File file) {
+    public static Dictionary create(File file, int limit) {
         Object[] objects = loadDictionary(file);
-        return create((List<String>) objects[0], (Map<String, Double>) objects[1]);
+        List<String> words = (List<String>) objects[0];
+        final Map<String, Double> wordLikelyhood = (Map<String, Double>) objects[1];
+
+        if (words.size() > limit) {
+            Collections.sort(words, new Comparator<String>() {
+                @Override
+                public int compare(String arg0, String arg1) {
+                    return wordLikelyhood.get(arg0) - wordLikelyhood.get(arg1) > 0 ? -1 : 1;
+                }
+            });
+
+            words = words.subList(0, limit);
+            for (String word : Lists.newArrayList(wordLikelyhood.keySet())) {
+                if (!words.contains(word)) {
+                    wordLikelyhood.remove(word);
+                }
+            }
+        }
+
+        return create(words, wordLikelyhood);
+    }
+
+    public static Dictionary create(File file) {
+        return create(file, Integer.MAX_VALUE);
     }
 
     public static Dictionary create(Collection<String> words, Map<String, Double> wordLikelyhood) {

@@ -43,6 +43,14 @@ public class DefaultAnnModel implements Serializable, AnnModel {
             matrix.randomInitialize(-absMaxValue, absMaxValue);
             this.matrices.add(matrix);
             lastDegree = this.configuration.layers.get(i);
+
+            // if this layer is not biased, set the biase weight to zero
+            if (!this.configuration.biased.get(i)) {
+                int lastRow = matrix.rowSize() - 1;
+                for (int column = 0; column < matrix.columnSize(); column++) {
+                    matrix.getData()[lastRow][column] = 0;
+                }
+            }
         }
     }
 
@@ -86,8 +94,10 @@ public class DefaultAnnModel implements Serializable, AnnModel {
         }
 
         for (int i = 0; i < this.matrices.size(); i++) {
-            this.matrices.get(i).update(gradient.getGradients().get(i), rho, epsilon, annGradientSqureSum.get(i),
-                    deltaAnnSquareSum.get(i));
+            if (gradient.getGradients().get(i) != null) {
+                this.matrices.get(i).update(gradient.getGradients().get(i), rho, epsilon, annGradientSqureSum.get(i),
+                        deltaAnnSquareSum.get(i));
+            }
         }
     }
 
@@ -107,5 +117,23 @@ public class DefaultAnnModel implements Serializable, AnnModel {
     @Override
     public void postProcessAnnGradient(AnnGradient annGradient) {
         // do nothing
+    }
+
+    @Override
+    public void reuseLowerLayer(AnnModel annModel) {
+        for (int layer = 0; layer < Math.min(annModel.getLayerCount(), getLayerCount()); layer++) {
+            if (annModel.getConfiguration().activationFunctionOfLayer(layer) == this.configuration
+                    .activationFunctionOfLayer(layer)) {
+                Matrix reuse = annModel.getLayer(layer);
+                Matrix current = getLayer(layer);
+                if (reuse.columnSize() == current.columnSize() && reuse.rowSize() == current.rowSize()) {
+                    for (int i = 0; i < reuse.rowSize(); i++) {
+                        for (int j = 0; j < reuse.columnSize(); j++) {
+                            current.getData()[i][j] = reuse.getData()[i][j];
+                        }
+                    }
+                }
+            }
+        }
     }
 }

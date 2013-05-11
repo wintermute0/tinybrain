@@ -3,3 +3,4 @@ bin
 *.json
 dist
 .metadata
+auto_encoder/data

@@ -1,7 +1,6 @@
 package yatan.deeplearning.wordembedding.actor.impl;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
@@ -19,7 +18,7 @@ import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
     private static final int REQUEST_DATA_SIZE = 1000;
-    private static final int REPEAT_DELAY_IN_SECONDS = 20 * 60;
+    private static final int REPEAT_DELAY_IN_SECONDS = 10 * 60;
 
     private final Dictionary dictionary;
 
@@ -37,23 +36,26 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
 
     @Override
     protected ComputeResult doCompute(List<Data> dataset, Parameter parameter) {
-        long start = new Date().getTime();
+        // long start = new Date().getTime();
         getLogger().info("Start calculating perplexity...");
 
         Serializable[] parameters = (Serializable[]) parameter.getSerializable();
         WordEmbedding wordEmbedding = (WordEmbedding) parameters[0];
         DefaultAnnModel annModel = (DefaultAnnModel) parameters[1];
 
-        double crossEntropy = calculateCrossEntropy(this.dictionary, wordEmbedding, annModel, dataset);
-        double perplexity = Math.pow(2, crossEntropy);
-        getLogger().info(
-                "Perplexity = " + perplexity + ", cross entropy = " + crossEntropy + ", calculation cost "
-                        + (new Date().getTime() - start) / 1000.0f + "s.");
-        System.out.println("Perplexity = " + perplexity + ", cross entropy = " + crossEntropy);
+        // double crossEntropy = calculateCrossEntropy(this.dictionary, wordEmbedding, annModel, dataset);
+        // double perplexity = Math.pow(2, crossEntropy);
+        // getLogger().info(
+        // "Perplexity = " + perplexity + ", cross entropy = " + crossEntropy + ", calculation cost "
+        // + (new Date().getTime() - start) / 1000.0f + "s.");
+        // System.out.println("Perplexity = " + perplexity + ", cross entropy = " + crossEntropy);
+
+        calculateCrossEntropy(this.dictionary, wordEmbedding, annModel, dataset);
 
         ComputeResult result = new ComputeResult();
         result.setGradient(null);
         result.setRepeat(true);
+        result.setAudit(false);
         result.setRepeatDelayInSeconds(REPEAT_DELAY_IN_SECONDS);
         return result;
     }
@@ -69,27 +71,28 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
             List<Data> dataset) {
         AnnTrainer trainer = new AnnTrainer();
         double[] outputs = new double[wordEmbedding.getDictionary().size()];
-        double outputSum = 0;
-        double hT = 0;
+        // double outputSum = 0;
+        // double hT = 0;
         int positiveInstanceCount = 0;
         int totalRank = 0;
         for (Data data : dataset) {
             List<Integer> outputRank = Lists.newArrayList();
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
-            if (instance.getOutput() < 0.000001) {
+            if (instance.getOutput() < 0) {
                 // ignore negative case
                 continue;
             }
 
             positiveInstanceCount++;
 
-            outputSum = 0;
+            // outputSum = 0;
             int actualWordIndex = instance.getInput().get(instance.getInput().size() / 2);
             for (int i = 0; i < wordEmbedding.getDictionary().size(); i++) {
                 instance.getInput().set(instance.getInput().size() / 2, i);
                 double output = runWordEmbeddingInstance(wordEmbedding, annModel, trainer, instance);
+
                 outputs[i] = output;
-                outputSum += output;
+                // outputSum += output;
 
                 int rank = 0;
                 while (rank < outputRank.size() && output < outputs[outputRank.get(rank)]) {
@@ -106,21 +109,22 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
 
             totalRank += rank;
 
-            double pw = outputs[actualWordIndex] / outputSum;
+            // double pw = outputs[actualWordIndex] / outputSum;
             // System.out.print(positiveInstanceCount + ": P(w) = " + pw + ". ");
-            hT += Math.log(pw) / Math.log(2);
-            double ce = -1.0 / positiveInstanceCount * hT;
+            // hT += Math.log(pw) / Math.log(2);
+            // double ce = -1.0 / positiveInstanceCount * hT;
 
-            if (Double.isNaN(ce) || Double.isInfinite(ce)) {
-                return ce;
-            }
+            // if (Double.isNaN(ce) || Double.isInfinite(ce)) {
+            // return ce;
+            // }
             // System.out.println("Cross entropy = " + ce + ". Perperlexity = " + Math.pow(2, ce));
         }
 
         System.out.println("Average actual word rank is: " + (1.0 * totalRank / positiveInstanceCount));
         getLogger().info("Average actual word rank is: " + (1.0 * totalRank / positiveInstanceCount));
 
-        return -1.0 / positiveInstanceCount * hT;
+        // return -1.0 / positiveInstanceCount * hT;
+        return 0;
     }
 
     private static double runWordEmbeddingInstance(WordEmbedding wordEmbedding, DefaultAnnModel annModel,
@@ -138,6 +142,6 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
         // train with this ann data instance and update gradient
         double[][] output = trainer.run(annModel, input, new double[annModel.getLayerCount()][]);
 
-        return output[annModel.getLayerCount() - 1][1];
+        return output[annModel.getLayerCount() - 1][0];
     }
 }

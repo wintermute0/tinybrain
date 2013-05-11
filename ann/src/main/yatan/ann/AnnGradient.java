@@ -34,12 +34,16 @@ public class AnnGradient implements Serializable {
     public AnnGradient clone() {
         List<Matrix> gradients = Lists.newArrayList();
         for (Matrix matrix : this.gradients) {
-            Matrix clone = new Matrix(matrix.rowSize(), matrix.columnSize());
-            for (int i = 0; i < matrix.rowSize(); i++) {
-                for (int j = 0; j < matrix.columnSize(); j++) {
-                    clone.getData()[i][j] = matrix.getData()[i][j];
+            Matrix clone = null;
+            if (matrix != null) {
+                clone = new Matrix(matrix.rowSize(), matrix.columnSize());
+                for (int i = 0; i < matrix.rowSize(); i++) {
+                    for (int j = 0; j < matrix.columnSize(); j++) {
+                        clone.getData()[i][j] = matrix.getData()[i][j];
+                    }
                 }
             }
+
             gradients.add(clone);
         }
 
@@ -59,13 +63,30 @@ public class AnnGradient implements Serializable {
 
         // update gradients for all layer
         for (int i = 0; i < this.gradients.size(); i++) {
-            this.gradients.get(i).updateByPlus(gradient.getGradients().get(i));
+            if (gradient.getGradients().get(i) != null) {
+                this.gradients.get(i).updateByPlus(gradient.getGradients().get(i));
+            }
         }
 
         /*
          * // update delta for input layer if (this.deltaForInputLayer != null) { for (int i = 0; i <
          * this.deltaForInputLayer.length; i++) { this.deltaForInputLayer[i] += gradient.getDeltaForInputLayer()[i]; } }
          */
+    }
+
+    public void averageBy(double batchSize) {
+        for (Matrix matrix : this.gradients) {
+            if (matrix == null) {
+                continue;
+            }
+
+            double[][] data = matrix.getData();
+            for (int i = 0; i < matrix.rowSize(); i++) {
+                for (int j = 0; j < matrix.columnSize(); j++) {
+                    data[i][j] /= batchSize;
+                }
+            }
+        }
     }
 
     public double[] getDeltaForInputLayer() {

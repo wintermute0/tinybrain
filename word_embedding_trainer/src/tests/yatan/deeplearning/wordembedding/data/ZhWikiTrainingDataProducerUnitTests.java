@@ -15,7 +15,7 @@ public class ZhWikiTrainingDataProducerUnitTests {
 
     @Before
     public void setUp() {
-        this.dictionary = Dictionary.create(new File("test_files/zh_dict.txt"));
+        this.dictionary = Dictionary.create(new File("test_files/zh_dict.txt"), 250);
         this.producer = new ZhWikiTrainingDataProducer(this.dictionary);
     }
 

@@ -28,6 +28,7 @@ import yatan.commons.matrix.Matrix;
 import yatan.deeplearning.softmax.TrainerConfiguration;
 import yatan.deeplearning.wordembedding.data.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
+import yatan.deeplearning.wordembedding.utility.LogUtility;
 import yatan.distributed.akka.BaseActorContract;
 import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.Parameter.ParameterIndexPath;
@@ -112,42 +113,9 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
     private void initIfNecessary() {
         if (wordEmbedding == null) {
             getLogger().info("Initializing parameter actor...");
-            // File modelFolder = new File(MODEL_FOLDER);
-            // if (modelFolder.isDirectory()) {
-            // List<File> modelFiles = ImmutableList.copyOf(modelFolder.listFiles());
-            // modelFiles = Lists.newArrayList(Collections2.filter(modelFiles, new Predicate<File>() {
-            // public boolean apply(File file) {
-            // return file.isFile() && Files.getFileExtension(file.getName()).equals("json");
-            // }
-            // }));
-            //
-            // if (!modelFiles.isEmpty()) {
-            // Collections.sort(modelFiles, new Comparator<File>() {
-            // @Override
-            // public int compare(File arg0, File arg1) {
-            // return -arg0.getName().compareTo(arg1.getName());
-            // }
-            // });
-            // File file = modelFiles.get(0);
-            // getLogger().info("Load word embedding from file " + file);
-            // try {
-            // String text = Files.toString(file, Charsets.UTF_8);
-            // JsonElement jsonElement = new JsonParser().parse(text);
-            // wordEmbedding =
-            // new Gson().fromJson(jsonElement.getAsJsonObject().get("wordEmbedding"),
-            // WordEmbedding.class);
-            //
-            // double sigma = 0.1;
-            // getLogger().info("Scale word embedding with sigma " + sigma);
-            // scaleWordEmbedding(wordEmbedding, sigma);
-            // } catch (IOException e) {
-            // getLogger().error("Error occurred while loading word embedding from file.", e);
-            // }
-            // }
-            // }
 
             // load persisted states
-            loadState();
+            PersistableState persistableState = loadState();
 
             if (wordEmbedding == null) {
                 getLogger().info(
@@ -163,6 +131,14 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
                 // configuration.addLayer(300, ActivationFunction.TANH);
                 // configuration.addLayer(DataCenter.tags().size(), ActivationFunction.SOFTMAX, false);
                 annModel = new DefaultAnnModel(this.annConfiguration);
+
+                // reuse the same lower layer o the persistable state
+                if (persistableState != null && persistableState.annModel != null) {
+                    getLogger().info("Reuse the lower layer of the persisted ann model...");
+                    this.annModel.reuseLowerLayer(persistableState.annModel);
+                    getLogger().info("Ann model statistics after reuseing:");
+                    LogUtility.logAnnModel(getLogger(), annModel);
+                }
             }
 
             if (annDeltaGradientSumSquare == null || wordEmbeddingGradientSumSquare == null
@@ -202,7 +178,7 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
         }
     }
 
-    private boolean loadState() {
+    private PersistableState loadState() {
         getLogger().info("Trying to find persisted parameter server state...");
         File stateFile = null;
         File modelFolderFile = new File(MODEL_FOLDER);
@@ -230,7 +206,7 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
                     getLogger().info("Word embedding " + wordEmbedding + " has been loaded.");
 
                     // only reuse other saved states if the ANN model configuration is identical
-                    if (this.annConfiguration.equals(state.annModel.getConfiguration())) {
+                    if (state.annModel != null && this.annConfiguration.equals(state.annModel.getConfiguration())) {
                         getLogger()
                                 .info("Loading ANN and delta sum squre data because the ANN model configuration is identical.");
                         this.wordEmbeddingGradientSumSquare = state.wordEmbeddingWeightSumSquare;
@@ -252,17 +228,17 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
                 } else {
                     getLogger().info("Word embedding configuration does not match. Ingore the state file.");
                 }
+
+                return state;
             } catch (IOException e) {
                 getLogger().error("Error occurred while trying to load parameter server state: " + e.getMessage(), e);
-                return false;
+                return null;
             } finally {
                 close(reader, is);
             }
-
-            return true;
         } else {
             getLogger().info("Can't find any persisted parameter sever state. Let's start from strach.");
-            return false;
+            return null;
         }
     }
 
@@ -321,6 +297,8 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
             this.annModel = annModel;
             this.wordEmbeddingWeightSumSquare = wordEmbeddingDeltaSumSquare;
             this.annDeltaWeightSumSquare = annDeltaSumSquare;
+            this.deltaWordEmbeddingSumSquare = deltaWordEmbeddingSumSquare;
+            this.deltaAnnSumSquare = deltaAnnSumSquare;
         }
     }
 }

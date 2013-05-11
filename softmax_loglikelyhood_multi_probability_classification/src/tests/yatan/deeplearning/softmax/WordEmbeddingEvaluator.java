@@ -35,7 +35,7 @@ public class WordEmbeddingEvaluator {
         Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict.txt"));
 
         // 1365269964401(100 word embedding).json
-        String wordEmbeddingFile = "softmax_model_1367787124327.json";
+        String wordEmbeddingFile = "softmax_model_1367880455774.json";
 
         Object[] models = loadWordEmbeddingFromFile(new File("test_files/results/" + wordEmbeddingFile));
         if (models.length == 0) {
@@ -138,7 +138,7 @@ public class WordEmbeddingEvaluator {
 
         double[][] output = trainer.run(annModel, input, new double[annModel.getLayerCount()][]);
 
-        return output[annModel.getLayerCount() - 1][1];
+        return output[annModel.getLayerCount() - 1][0];
     }
 
     private static Object[] loadWordEmbedding() {

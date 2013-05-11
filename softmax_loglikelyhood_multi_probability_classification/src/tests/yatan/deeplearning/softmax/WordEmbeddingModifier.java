@@ -27,6 +27,11 @@ public class WordEmbeddingModifier {
     public static void main(String[] args) {
         loadState();
 
+        state.annModel = null;
+        state.deltaAnnSumSquare = null;
+        state.deltaWordEmbeddingSumSquare = null;
+        state.wordEmbeddingWeightSumSquare = null;
+        state.annDeltaWeightSumSquare = null;
         System.out.println(state.wordEmbedding.getMatrix().rowSize() + ", "
                 + state.wordEmbedding.getMatrix().columnSize());
 
@@ -53,7 +58,7 @@ public class WordEmbeddingModifier {
     }
 
     private static void saveState() {
-        File stateFile = new File(MODEL_FOLDER + "modified_" + (new Date().getTime()) + ".json");
+        File stateFile = new File(MODEL_FOLDER + "stripped_" + (new Date().getTime()) + ".json");
         System.out.println("Saving parameter server state to " + stateFile + "...");
         FileWriterWithEncoding writer = null;
         try {

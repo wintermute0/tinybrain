@@ -31,6 +31,18 @@ public class AnnTrainer {
     }
 
     public double[][] run(AnnModel model, double[] input, double[][] sum) {
+        return run(model, input, sum, null);
+    }
+
+    public static interface OutputPostProcessor {
+        public int layer();
+
+        public void process(double[] output);
+
+        public double[] getCleanData();
+    }
+
+    public double[][] run(AnnModel model, double[] input, double[][] sum, OutputPostProcessor postProcessor) {
         double[][] output = new double[model.getLayerCount()][];
         for (int i = 0; i < model.getLayerCount(); i++) {
 
@@ -67,6 +79,11 @@ public class AnnTrainer {
                     output[i][j] = activation.compute(output[i][j]);
                 }
             }
+
+            // call post processor
+            if (postProcessor != null && postProcessor.layer() == i) {
+                postProcessor.process(output[i]);
+            }
         }
 
         return output;
@@ -80,6 +97,7 @@ public class AnnTrainer {
         for (int i = 0; i < delta.length; i++) {
             delta[i] = data.getOutput()[i] - delta[i];
         }
+
         for (int i = model.getLayerCount() - 1; i >= 0; i--) {
             SingleFunction<Double, Double> activation =
                     AnnActivationFunctions.activationFunction(model.getConfiguration().activationFunctionOfLayer(i));
@@ -105,6 +123,60 @@ public class AnnTrainer {
         return new AnnGradient(gradients);
     }
 
+    public AnnGradient backpropagateAutoEncoderLeastSqure(AnnModel model, AnnData data, double[][] output,
+            double[][] sum) {
+        List<Matrix> gradients = new ArrayList<Matrix>();
+
+        // calculate delta of the output layer
+        double[] delta = Arrays.copyOf(output[output.length - 1], output[output.length - 1].length);
+        for (int i = 0; i < delta.length; i++) {
+            delta[i] = data.getOutput()[i] - delta[i];
+        }
+
+        int propagatedLayer = 0;
+        for (int i = model.getLayerCount() - 1; i >= 0; i--) {
+            if (propagatedLayer >= 2) {
+                gradients.add(0, null);
+                continue;
+            }
+
+            SingleFunction<Double, Double> activation =
+                    AnnActivationFunctions.activationFunction(model.getConfiguration().activationFunctionOfLayer(i));
+
+            // calculate gradient of this layer
+            Matrix gradient = new Matrix(model.getLayer(i).rowSize(), model.getLayer(i).columnSize());
+            gradients.add(0, gradient);
+            for (int x = 0; x < gradient.columnSize(); x++) {
+                double derivative = activation.derivative(sum[i][x]);
+                for (int y = 0; y < gradient.rowSize(); y++) {
+                    double edgeOutput =
+                            y == gradient.rowSize() - 1 ? 1 : (i - 1 >= 0 ? output[i - 1][y] : data.getInput()[y]);
+                    gradient.getData()[y][x] = delta[x] * derivative * edgeOutput;
+                }
+            }
+
+            // calculate delta[x] for the next layer
+            delta = model.getLayer(i).transpose().multiplyBy(delta);
+            // remove the trailing delta if the layer is biased
+            delta = Arrays.copyOf(delta, delta.length - 1);
+
+            propagatedLayer++;
+        }
+
+        // tie the weights of the last two layer
+        Matrix lastLayer = gradients.get(gradients.size() - 1);
+        Matrix secondLastLayer = gradients.get(gradients.size() - 2);
+        for (int i = 0; i < lastLayer.rowSize() - 1; i++) {
+            for (int j = 0; j < lastLayer.columnSize(); j++) {
+                double value = lastLayer.getData()[i][j] + secondLastLayer.getData()[j][i];
+                lastLayer.getData()[i][j] = value;
+                secondLastLayer.getData()[j][i] = value;
+            }
+        }
+
+        return new AnnGradient(gradients);
+    }
+
     /**
      * <p>
      * The last layer must be a soft max layer, and optimization target is log-likelihood.
@@ -122,8 +194,7 @@ public class AnnTrainer {
     public AnnGradient backpropagateSoftmaxLogLikelyhood(AnnModel model, AnnData data, double[][] output,
             double[][] sum, double[] l2Lambdas, AnnGradient reuse) {
         if (l2Lambdas != null) {
-            Preconditions.checkArgument(l2Lambdas.length == model.getLayerCount()
-                    || l2Lambdas.length == model.getLayerCount() + 1);
+            Preconditions.checkArgument(l2Lambdas.length >= model.getLayerCount());
         }
 
         // calculate the last layer of particial derivative L/a

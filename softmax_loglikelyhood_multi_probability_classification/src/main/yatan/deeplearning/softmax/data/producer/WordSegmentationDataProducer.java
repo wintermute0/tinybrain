@@ -25,7 +25,6 @@ import yatan.distributedcomputer.contract.data.impl.DataProducerException;
 
 public class WordSegmentationDataProducer implements DataProducer {
     public static final int WINDOWS_SIZE = 5;
-    // public static final int WINDOWS_SIZE = 11;
 
     private static final Logger LOGGER = Logger.getLogger(WordSegmentationDataProducer.class);
     private static final Random RANDOM = new Random(new Date().getTime());

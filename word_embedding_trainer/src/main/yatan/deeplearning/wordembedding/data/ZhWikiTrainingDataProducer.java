@@ -96,7 +96,11 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
                                 for (int j = i - WINDOWS_SIZE / 2; j < i + WINDOWS_SIZE / 2 + 1; j++) {
                                     positiveInstance.getInput().add(wordIndecies.get(j));
                                     if (j == i) {
-                                        negativeInstance.getInput().add(this.random.nextInt(this.dictionary.size()));
+                                        int negativeWord = this.random.nextInt(this.dictionary.size());
+                                        while (negativeWord == wordIndecies.get(j)) {
+                                            negativeWord = this.random.nextInt(this.dictionary.size());
+                                        }
+                                        negativeInstance.getInput().add(negativeWord);
                                         // int negativeWord = this.dictionary.sampleWord();
                                         // while (negativeWord == wordIndecies.get(j)) {
                                         // negativeWord = this.dictionary.sampleWord();
@@ -107,7 +111,7 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
                                     }
                                 }
                                 positiveInstance.setOutput(1);
-                                negativeInstance.setOutput(0);
+                                negativeInstance.setOutput(-1);
 
                                 int noSuchWordCount = 0;
                                 for (int index : positiveInstance.getInput()) {

@@ -115,6 +115,16 @@ public class SoftmaxClassificationTrainingContractImpl extends AbstractComputeAc
             // }
         }
 
+        // average batch gradient
+        batchGradient.averageBy(MINIBATCH_SIZE);
+
+        // average word embedding gradient
+        for (Double[] gradient : batchWordEmbeddingDelta.values()) {
+            for (int i = 0; i < gradient.length; i++) {
+                gradient[i] /= MINIBATCH_SIZE;
+            }
+        }
+
         // return computation result
         ComputeResult result = new ComputeResult();
         result.setRepeat(true);

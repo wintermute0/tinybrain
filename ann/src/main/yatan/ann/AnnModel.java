@@ -22,4 +22,6 @@ public interface AnnModel {
             List<Matrix> lastDeltaW);
 
     public void postProcessAnnGradient(AnnGradient annGradient);
+
+    public void reuseLowerLayer(AnnModel annModel);
 }
