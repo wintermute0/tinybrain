@@ -26,7 +26,7 @@ import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnConfiguration;
 import yatan.commons.matrix.Matrix;
 import yatan.deeplearning.softmax.TrainerConfiguration;
-import yatan.deeplearning.wordembedding.data.Dictionary;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.utility.LogUtility;
 import yatan.distributed.akka.BaseActorContract;

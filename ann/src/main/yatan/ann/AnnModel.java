@@ -18,8 +18,7 @@ public interface AnnModel {
     public void update(AnnGradient gradient, double rho, double epsilon, List<Matrix> annGradientSqureSum,
             List<Matrix> deltaAnnSquareSum);
 
-    public void update(AnnGradient gradient, double lampda, List<Matrix> annDeltaSqureSum, double momentumWeight,
-            List<Matrix> lastDeltaW);
+    public void update(AnnGradient gradient, double lampda, List<Matrix> annDeltaSqureSum);
 
     public void postProcessAnnGradient(AnnGradient annGradient);
 

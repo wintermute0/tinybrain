@@ -9,10 +9,10 @@ import java.io.InputStreamReader;
 import yatan.ann.AnnData;
 import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
-import yatan.deeplearning.softmax.data.TaggedSentenceDataset;
-import yatan.deeplearning.softmax.data.parser.ICWB2Parser;
+import yatan.data.parser.bakeoff2005.ICWB2Parser;
+import yatan.data.sequence.TaggedSentenceDataset;
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer.WordSegmentationInstancePool;
-import yatan.deeplearning.wordembedding.data.Dictionary;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 

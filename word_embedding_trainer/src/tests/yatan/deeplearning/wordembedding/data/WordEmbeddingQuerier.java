@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,12 +31,13 @@ public class WordEmbeddingQuerier {
 
         wordEmbedding = scaleWordEmbedding(wordEmbedding, 0.1);
 
-        String query = "看";
+        String query = "吴";
         int rank = 0;
         for (String word : query(wordEmbedding, query)) {
             System.out.print(rank++ + ": " + word + ": " + distanceBetween(wordEmbedding, word, query) + ", ");
-            for (int i = 0; i < wordEmbedding.getWordVectorSize(); i++) {
-                // System.out.print((int) wordEmbedding.getMatrix().getData()[i][Dictionary.indexOf(word)] + ", ");
+            for (int i = 0; i < 10; i++) {
+                System.out.print(MessageFormat.format("{0,number,#.#####}, ",
+                        wordEmbedding.getMatrix().getData()[i][wordEmbedding.getDictionary().indexOf(word)]));
             }
             System.out.println();
         }
@@ -119,7 +121,8 @@ public class WordEmbeddingQuerier {
                     Gson gson = new Gson();
                     WordEmbedding wordEmbedding =
                             gson.fromJson(jsonElement.getAsJsonObject().get("wordEmbedding"), WordEmbedding.class);
-                    DefaultAnnModel annModel = gson.fromJson(jsonElement.getAsJsonObject().get("annModel"), DefaultAnnModel.class);
+                    DefaultAnnModel annModel =
+                            gson.fromJson(jsonElement.getAsJsonObject().get("annModel"), DefaultAnnModel.class);
 
                     return new Object[] {wordEmbedding, annModel};
                 } catch (IOException e) {

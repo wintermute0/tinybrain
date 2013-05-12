@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.output.FileWriterWithEncoding;
 
@@ -25,7 +26,7 @@ import yatan.ann.AnnGradient;
 import yatan.ann.DefaultAnnModel;
 import yatan.commons.matrix.Matrix;
 import yatan.deeplearning.autoencoder.TrainerConfiguration;
-import yatan.deeplearning.wordembedding.data.Dictionary;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.utility.LogUtility;
 import yatan.distributed.akka.BaseActorContract;
@@ -37,6 +38,7 @@ import yatan.distributedcomputer.contract.ParameterActorContract;
 public class AutoEncoderParameterActorContractImpl extends BaseActorContract implements ParameterActorContract {
     private static final double ADA_DELTA_RHO = 0.95;
     private static final double ADA_DELTA_EPSILON = 0.000001;
+    // private static final double ADA_DELTA_EPSILON = 0.01;
 
     private static final double STATE_SAVING_INTERVAL_MINUTES = 10;
 
@@ -58,6 +60,9 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
 
     private List<Matrix> annDeltaGradientSumSquare;
     private List<Matrix> deltaAnnWeightSumSquare;
+
+    private Matrix wordEmbeddingGradientSumSquare;
+    private Matrix deltaWordEmbeddingSumSquare;
 
     @Inject
     public AutoEncoderParameterActorContractImpl(Dictionary dictionary,
@@ -96,8 +101,32 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
 
         Serializable[] inputData = (Serializable[]) gradient.getSerializable();
         AnnGradient annGradient = (AnnGradient) inputData[0];
-        annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
-                this.deltaAnnWeightSumSquare);
+
+        // System.out.println(LogUtility.buildLogString(annDeltaGradientSumSquare.get(0)));
+        // System.out.println(LogUtility.buildLogString(deltaAnnWeightSumSquare.get(0)));
+
+        // // adadelta
+        // annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
+        // this.deltaAnnWeightSumSquare);
+
+        // adgrad
+        annModel.update(annGradient, 0.01, annDeltaGradientSumSquare);
+
+        // annModel.update(annGradient, 0.01);
+
+        // System.out.println(LogUtility.buildLogString(annGradient.getGradients().get(0)));
+
+        @SuppressWarnings("unchecked")
+        Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
+        // // adadelta
+        // wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON,
+        // this.wordEmbeddingGradientSumSquare,
+        // this.deltaWordEmbeddingSumSquare);
+
+        // adadelta
+        wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
+
+        // wordEmbedding.update(wordEmbeddingDelta, 0.1);
 
         // save state if necessary
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {
@@ -150,7 +179,7 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
                 }
             }
 
-            if (annDeltaGradientSumSquare == null || deltaAnnWeightSumSquare == null) {
+            if (annDeltaGradientSumSquare == null || this.wordEmbeddingGradientSumSquare == null) {
                 getLogger().info("Create new ANN gradient/delta sum squre.");
                 this.annDeltaGradientSumSquare = Lists.newArrayList();
                 this.deltaAnnWeightSumSquare = Lists.newArrayList();
@@ -159,6 +188,12 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
                     this.annDeltaGradientSumSquare.add(new Matrix(layer.rowSize(), layer.columnSize()));
                     this.deltaAnnWeightSumSquare.add(new Matrix(layer.rowSize(), layer.columnSize()));
                 }
+
+                getLogger().info("Create new word embedding gradient/delta sum squre.");
+                this.wordEmbeddingGradientSumSquare =
+                        new Matrix(wordEmbedding.getMatrix().rowSize(), wordEmbedding.getMatrix().columnSize());
+                this.deltaWordEmbeddingSumSquare =
+                        new Matrix(wordEmbedding.getMatrix().rowSize(), wordEmbedding.getMatrix().columnSize());
             }
         }
     }
@@ -171,7 +206,7 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
             writer = new FileWriterWithEncoding(stateFile, Charsets.UTF_8);
             String json =
                     new Gson().toJson(new PersistableState(wordEmbedding, annModel, annDeltaGradientSumSquare,
-                            this.deltaAnnWeightSumSquare));
+                            this.wordEmbeddingGradientSumSquare));
             writer.write(json);
         } catch (IOException e) {
             getLogger().error("Error occurred while trying to save parameter server state: " + e.getMessage(), e);
@@ -219,7 +254,6 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
                         this.annModel = state.annModel;
 
                         this.annDeltaGradientSumSquare = state.annDeltaWeightSumSquare;
-                        this.deltaAnnWeightSumSquare = state.deltaAnnSumSquare;
                     } else {
                         getLogger()
                                 .info("Ignore ANN and delta sum squre data because the ANN model configuration is differenct.");
@@ -286,15 +320,14 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
         public DefaultAnnModel annModel;
 
         public List<Matrix> annDeltaWeightSumSquare;
-        public List<Matrix> deltaAnnSumSquare;
+        public Matrix wordEmbeddingGradientSumSquare;
 
         public PersistableState(WordEmbedding wordEmbedding, DefaultAnnModel annModel, List<Matrix> annDeltaSumSquare,
-                List<Matrix> deltaAnnSumSquare) {
+                Matrix wordEmbeddingGradientSumSquare) {
             this.wordEmbedding = wordEmbedding;
             this.annModel = annModel;
             this.annDeltaWeightSumSquare = annDeltaSumSquare;
-            this.deltaAnnSumSquare = deltaAnnSumSquare;
+            this.wordEmbeddingGradientSumSquare = wordEmbeddingGradientSumSquare;
         }
     }
-
 }

@@ -26,7 +26,7 @@ import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnConfiguration;
 import yatan.commons.matrix.Matrix;
 import yatan.deeplearning.wordembedding.TrainerConfiguration;
-import yatan.deeplearning.wordembedding.data.Dictionary;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.distributed.akka.BaseActorContract;
 import yatan.distributedcomputer.Parameter;
@@ -93,12 +93,13 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
         if (annGradient != null) {
             annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
                     this.deltaAnnWeightSumSquare);
+            // this.annModel.update(annGradient, 0.01, this.annDeltaGradientSumSquare);
         }
 
         Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
-        // wordEmbedding.update(wordEmbeddingDelta, 0.001);
         wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON, this.wordEmbeddingGradientSumSquare,
                 this.deltaWordEmbeddingSumSquare);
+        // this.wordEmbedding.update(wordEmbeddingDelta, 0.1, this.wordEmbeddingGradientSumSquare);
 
         // save state if necessary
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {

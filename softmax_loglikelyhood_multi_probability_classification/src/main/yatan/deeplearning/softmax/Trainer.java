@@ -17,14 +17,14 @@ import com.google.inject.name.Names;
 
 import yatan.ann.AnnConfiguration;
 import yatan.ann.AnnConfiguration.ActivationFunction;
+import yatan.data.parser.bakeoff2005.ICWB2Parser;
+import yatan.data.sequence.TaggedSentenceDataset;
 import yatan.deeplearning.softmax.contract.SoftmaxClassificationEvaluatorContractImpl;
 import yatan.deeplearning.softmax.contract.WordEmbeddingAnnParameterActorContractImpl;
 import yatan.deeplearning.softmax.contract.SoftmaxClassificationTrainingContractImpl;
-import yatan.deeplearning.softmax.data.TaggedSentenceDataset;
-import yatan.deeplearning.softmax.data.parser.ICWB2Parser;
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer;
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer.WordSegmentationInstancePool;
-import yatan.deeplearning.wordembedding.data.Dictionary;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.distributedcomputer.actors.AuditActor;
 import yatan.distributedcomputer.actors.ComputeActor;
 import yatan.distributedcomputer.actors.ParameterActor;

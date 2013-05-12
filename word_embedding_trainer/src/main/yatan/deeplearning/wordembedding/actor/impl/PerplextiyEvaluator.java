@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 
 import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
-import yatan.deeplearning.wordembedding.data.Dictionary;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.distributedcomputer.Data;

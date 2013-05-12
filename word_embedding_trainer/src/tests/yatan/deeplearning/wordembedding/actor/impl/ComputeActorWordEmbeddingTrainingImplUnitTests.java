@@ -9,8 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import yatan.deeplearning.wordembedding.data.Dictionary;
 import yatan.deeplearning.wordembedding.data.EnWikiTrainingDataProducer;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.distributedcomputer.Data;

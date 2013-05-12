@@ -4,8 +4,8 @@ import java.io.File;
 
 import org.junit.Test;
 
-import yatan.deeplearning.wordembedding.data.Dictionary;
 import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 
 public class TestBed {
     @Test

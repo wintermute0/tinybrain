@@ -22,11 +22,25 @@ public class Helper {
         return new AnnData(corruptedData, data);
     }
 
-    public static void corrupt(double[] data) {
+    public static void corruptWithMask(double[] data) {
+        for (int i = 0; i < data.length; i++) {
+            if (RANDOM.nextDouble() < CORRUPTION_LEVEL) {
+                data[i] = 0;
+            }
+        }
+    }
+
+    public static void corruptWithSaltAndPepper(double[] data) {
         for (int i = 0; i < data.length; i++) {
             if (RANDOM.nextDouble() < CORRUPTION_LEVEL) {
                 data[i] = RANDOM.nextBoolean() ? 1 : -1;
             }
+        }
+    }
+
+    public static void corruptCenterWord(double[] data) {
+        for (int i = 2 * 50; i < 3 * 50; i++) {
+            data[i] = 0;
         }
     }
 }

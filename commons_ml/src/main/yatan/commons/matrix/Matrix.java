@@ -39,7 +39,7 @@ final public class Matrix implements Serializable {
     }
 
     public void randomInitialize() {
-        randomInitialize(-0.1, 0.1);
+        randomInitialize(-1, 1);
     }
 
     public Matrix transpose() {
@@ -139,20 +139,22 @@ final public class Matrix implements Serializable {
         }
     }
 
-    public void update(Matrix gradient, double lampda, Matrix annDeltaSqureSum, double momentumWeight, Matrix lastDelta) {
+    public void update(Matrix gradient, double lampda, Matrix annDeltaSqureSum) {
         if (rowSize() != gradient.rowSize() || columnSize() != gradient.columnSize()) {
             throw new IllegalArgumentException("The size of the gradient matrix does not match.");
         }
 
         for (int i = 0; i < rowSize(); i++) {
             for (int j = 0; j < columnSize(); j++) {
-                // annDeltaSqureSum.getData()[i][j] += Math.pow(gradient.getData()[i][j], 2);
+                annDeltaSqureSum.getData()[i][j] += Math.pow(gradient.getData()[i][j], 2);
                 double learningRate = lampda / Math.sqrt(annDeltaSqureSum.getData()[i][j]);
-                double deltaW = gradient.getData()[i][j] * learningRate + momentumWeight * lastDelta.getData()[i][j];
-                this.data[i][j] += deltaW;
+                // ignore very big learning rate
+                if (learningRate > 10) {
+                    continue;
+                }
 
-                // update last deltaW
-                lastDelta.getData()[i][j] = deltaW;
+                double deltaW = gradient.getData()[i][j] * learningRate;
+                this.data[i][j] += deltaW;
             }
         }
     }

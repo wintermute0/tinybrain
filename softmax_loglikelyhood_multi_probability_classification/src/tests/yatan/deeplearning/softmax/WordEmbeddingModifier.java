@@ -12,7 +12,7 @@ import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 
 import yatan.commons.matrix.Matrix;
 import yatan.deeplearning.softmax.contract.WordEmbeddingAnnParameterActorContractImpl.PersistableState;
-import yatan.deeplearning.wordembedding.data.Dictionary;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 
 import com.google.common.base.Charsets;

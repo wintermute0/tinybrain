@@ -40,7 +40,7 @@ public class AutoEncoderEvaluatorContractImpl extends AbstractComputeActorContra
             OutputPostProcessor postProcessor = null;
             if (annModel.getLayerCount() == 2) {
                 // corrupt input
-                Helper.corrupt(annData.getInput());
+                Helper.corruptWithMask(annData.getInput());
             } else {
                 postProcessor = new OutputPostProcessor() {
                     private double[] uncorruptedData;
@@ -49,7 +49,7 @@ public class AutoEncoderEvaluatorContractImpl extends AbstractComputeActorContra
                     public void process(double[] output) {
                         this.uncorruptedData = Arrays.copyOf(output, output.length);
 
-                        Helper.corrupt(output);
+                        Helper.corruptWithMask(output);
                     }
 
                     @Override
@@ -81,6 +81,10 @@ public class AutoEncoderEvaluatorContractImpl extends AbstractComputeActorContra
         getLogger().info(message);
         System.out.println(message);
 
+        evaluateWordDistanceRank(wordEmbedding, "看", "见", "视", "瞧", "瞄", "目", "相", "窥", "探", "扫", "瞪", "望");
+        evaluateWordDistanceRank(wordEmbedding, "吴", "赵", "钱", "孙", "李", "周", "郑", "王", "冯", "陈", "褚", "卫");
+        LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
+
         LogUtility.logAnnModel(getLogger(), annModel);
 
         // return computation result
@@ -91,5 +95,31 @@ public class AutoEncoderEvaluatorContractImpl extends AbstractComputeActorContra
         result.setAudit(false);
 
         return result;
+    }
+
+    private void evaluateWordDistanceRank(WordEmbedding wordEmbedding, String word, String... candidates) {
+        int[] rank = new int[candidates.length];
+        int wordIndex = wordEmbedding.getDictionary().indexOf(word);
+        double[] distances = new double[wordEmbedding.getDictionary().size()];
+        for (int i = 0; i < distances.length; i++) {
+            distances[i] = wordEmbedding.distanceBetween(wordIndex, i);
+        }
+
+        for (int i = 0; i < candidates.length; i++) {
+            double distance =
+                    wordEmbedding.distanceBetween(wordIndex, wordEmbedding.getDictionary().indexOf(candidates[i]));
+            for (double otherDistance : distances) {
+                if (otherDistance < distance) {
+                    rank[i]++;
+                }
+            }
+        }
+
+        StringBuilder sb = new StringBuilder("Distance ranking for '" + word + "': ");
+        for (int i = 0; i < candidates.length; i++) {
+            sb.append(candidates[i] + " = " + rank[i] + ", ");
+        }
+        getLogger().info(sb.toString());
+        System.out.println(sb.toString());
     }
 }

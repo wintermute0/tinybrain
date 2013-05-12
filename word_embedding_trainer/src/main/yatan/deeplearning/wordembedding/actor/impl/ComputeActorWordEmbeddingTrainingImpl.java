@@ -108,6 +108,8 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
 
     private AnnGradient wordEmbeddingBackpropagate(AnnModel model, AnnData data, double[][] output, double[][] sum,
             AnnGradient annGradient) {
+        double l2Lambda = 0;
+
         // this controls the direction of the gradient, it's either 1 or -1
         double factor = (int) data.getOutput()[0];
 
@@ -117,7 +119,7 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
                         : annGradient.getGradients().get(1);
         for (int i = 0; i < model.getLayer(1).rowSize() - 1; i++) {
             // the -2 * U is L2 regularazation - 2 *model.getLayer(1).getData()[i][0]
-            deltaU.getData()[i][0] = output[0][i] * factor - 0.0001 * model.getLayer(1).getData()[i][0];
+            deltaU.getData()[i][0] = output[0][i] * factor - l2Lambda * model.getLayer(1).getData()[i][0];
         }
 
         // compute delta W
@@ -132,11 +134,11 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
             for (int j = 0; j < deltaW.rowSize() - 1; j++) {
                 // the -2 * W is L2 regularazation: - 2 * model.getLayer(0).getData()[j][i] * factor
                 deltaW.getData()[j][i] =
-                        delta[i] * data.getInput()[j] - 0.0001 * model.getLayer(0).getData()[j][i] * factor;
+                        delta[i] * data.getInput()[j] - l2Lambda * model.getLayer(0).getData()[j][i] * factor;
             }
             // the -2 * b is L2 regularazation: - 2 * model.getLayer(0).getData()[deltaW.rowSize() - 1][i] * factor
             deltaW.getData()[deltaW.rowSize() - 1][i] =
-                    delta[i] - 0.0001 * model.getLayer(0).getData()[deltaW.rowSize() - 1][i] * factor;
+                    delta[i] - l2Lambda * model.getLayer(0).getData()[deltaW.rowSize() - 1][i] * factor;
         }
 
         // compute delta X
@@ -144,7 +146,7 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
 
         // regularize x
         for (int i = 0; i < deltaX.length - 1; i++) {
-            deltaX[i] -= 0.0001 * data.getInput()[i] * factor;
+            deltaX[i] -= l2Lambda * data.getInput()[i] * factor;
         }
 
         // output

@@ -1,20 +1,22 @@
 package yatan.deeplearning.autoencoder;
 
 import java.io.File;
+
 import java.io.FileNotFoundException;
 
 import yatan.ann.AnnConfiguration;
 import yatan.ann.AnnConfiguration.ActivationFunction;
 
+import yatan.data.parser.bakeoff2005.ICWB2Parser;
+import yatan.data.sequence.TaggedSentenceDataset;
 import yatan.deeplearning.autoencoder.contract.AutoEncoderEvaluatorContractImpl;
 import yatan.deeplearning.autoencoder.contract.AutoEncoderParameterActorContractImpl;
 import yatan.deeplearning.autoencoder.contract.AutoEncoderTrainingContractImpl;
+import yatan.deeplearning.autoencoder.contract.WordPredictionEvaluator;
 import yatan.deeplearning.autoencoder.data.chinesewordembedding.ChineseWordEmbeddingAutoEncoderDataProvider;
 
-import yatan.deeplearning.softmax.data.TaggedSentenceDataset;
-import yatan.deeplearning.softmax.data.parser.ICWB2Parser;
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer;
-import yatan.deeplearning.wordembedding.data.Dictionary;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 
 import yatan.distributedcomputer.actors.AuditActor;
 import yatan.distributedcomputer.actors.ComputeActor;
@@ -35,7 +37,7 @@ import com.google.inject.name.Names;
 
 public class AutoEncoderTrainer {
     private static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
-    private static final int TRAINING_ACTOR_COUNT = 4;
+    private static final int TRAINING_ACTOR_COUNT = 1;
 
     private static final Dictionary DICTIONARY = Dictionary.create(new File("test_files/zh_dict.txt"));
 
@@ -47,8 +49,10 @@ public class AutoEncoderTrainer {
         final Injector commonModuleInjector = Guice.createInjector(new CommonModule());
         final Injector trainingModuleInjector = commonModuleInjector.createChildInjector(new TrainingModule());
         final Injector evaluatingModuleInjector = commonModuleInjector.createChildInjector(new EvaluatingModule());
+        final Injector wordPredictEvaluatingModuleInjector =
+                commonModuleInjector.createChildInjector(new WordPredictEvaluatingModule());
 
-        ActorSystem system = ActorSystem.create();
+        final ActorSystem system = ActorSystem.create();
         system.actorOf(new Props(new UntypedActorFactory() {
             @Override
             public Actor create() throws Exception {
@@ -69,14 +73,26 @@ public class AutoEncoderTrainer {
             }
         }), "audit");
 
-        for (int i = 0; i < TRAINING_ACTOR_COUNT; i++) {
-            system.actorOf(new Props(new UntypedActorFactory() {
-                @Override
-                public Actor create() throws Exception {
-                    return trainingModuleInjector.getInstance(ComputeActor.class);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int newThreadInterval = 64;
+                for (int i = 0; i < TRAINING_ACTOR_COUNT; i++) {
+                    system.actorOf(new Props(new UntypedActorFactory() {
+                        @Override
+                        public Actor create() throws Exception {
+                            return trainingModuleInjector.getInstance(ComputeActor.class);
+                        }
+                    }), "compute" + i);
+                    try {
+                        Thread.sleep(newThreadInterval * 1000);
+                        newThreadInterval = Math.max(8, newThreadInterval / 2);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }), "compute" + i);
-        }
+            }
+        }).start();
 
         system.actorOf(new Props(new UntypedActorFactory() {
             @Override
@@ -84,6 +100,12 @@ public class AutoEncoderTrainer {
                 return evaluatingModuleInjector.getInstance(ComputeActor.class);
             }
         }), "evalutor1");
+        system.actorOf(new Props(new UntypedActorFactory() {
+            @Override
+            public Actor create() throws Exception {
+                return wordPredictEvaluatingModuleInjector.getInstance(ComputeActor.class);
+            }
+        }), "evalutor2");
     }
 
     public static class CommonModule extends AbstractModule {
@@ -145,6 +167,16 @@ public class AutoEncoderTrainer {
             bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
 
             bind(ComputeActorContract.class).to(AutoEncoderEvaluatorContractImpl.class);
+        }
+    }
+
+    public static class WordPredictEvaluatingModule extends AbstractModule {
+        @Override
+        protected void configure() {
+            // set data actor path of to evaluate data actor
+            bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
+
+            bind(ComputeActorContract.class).to(WordPredictionEvaluator.class);
         }
     }
 }

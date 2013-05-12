@@ -124,13 +124,15 @@ public class AnnTrainer {
     }
 
     public AnnGradient backpropagateAutoEncoderLeastSqure(AnnModel model, AnnData data, double[][] output,
-            double[][] sum) {
+            double[][] sum, boolean inverseGradient) {
+        int factor = inverseGradient ? -1 : 1;
+
         List<Matrix> gradients = new ArrayList<Matrix>();
 
         // calculate delta of the output layer
         double[] delta = Arrays.copyOf(output[output.length - 1], output[output.length - 1].length);
         for (int i = 0; i < delta.length; i++) {
-            delta[i] = data.getOutput()[i] - delta[i];
+            delta[i] = (data.getOutput()[i] - delta[i]) * factor;
         }
 
         int propagatedLayer = 0;
@@ -174,7 +176,13 @@ public class AnnTrainer {
             }
         }
 
-        return new AnnGradient(gradients);
+        if (model.getLayerCount() == 2) {
+            for (int i = 0; i < delta.length; i++) {
+                delta[i] *= -1;
+            }
+        }
+
+        return new AnnGradient(gradients, delta);
     }
 
     /**

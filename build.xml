@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="Word Embedding Trainer" basedir="." default="deploy_ssh">
-	<!-- <property name="ssh_server" value="ec2-user@ec2-107-22-92-135.compute-1.amazonaws.com"/> -->
-	<property name="ssh_server" value="eveningsun@10.3.7.40"/>
+	<property name="ssh_server" value="ec2-user@ec2-23-23-20-197.compute-1.amazonaws.com"/>
+	<!-- <property name="ssh_server" value="eveningsun@10.3.7.40"/> -->
 	
 	<property name="dist.dir" value="dist" />
 	<property name="compile.destdir" value="${dist.dir}/build" />
@@ -20,7 +20,12 @@
 			<src path="ann" />
 			<src path="commons_ml" />
 			<src path="distributed_computer" />
-			<src path="wiki_analyzer" />
+			
+			<src path="word_embedding" />
+
+			<src path="data_producer_bakeoff2005" />
+			<src path="data_producer_wiki" />
+
 			<src path="word_embedding_trainer" />
 			<src path="softmax_loglikelyhood_multi_probability_classification" />
 			<src path="auto_encoder" />
@@ -51,22 +56,22 @@
 	</target>
 
 	<target name="deploy_ssh_init">
-		<scp file="${dist.dir}/dist.zip" trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513" todir="${ssh_server}:/usr/master_dev/tinybrain" verbose="true" />
+		<scp file="${dist.dir}/dist.zip" trust="true" keyfile="C:\\Users\\eric\\Dropbox\\documents\\centermachinekey.pem" password="conan513" todir="${ssh_server}:/usr/master_dev/tinybrain" verbose="true" />
 	</target>
 
 	<target name="upload_model">
 		<scp file="softmax_loglikelyhood_multi_probability_classification/test_files/results/ae_model_1368161602367.json"
 			 todir="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/"
-			trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513" verbose="true" />
+			trust="true" keyfile="C:\\Users\\eric\\Dropbox\\documents\\centermachinekey.pem" password="conan513" verbose="true" />
 	</target>
 	
 	<target name="download_model">
-		<scp file="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/ae_model_1368161602367.json" trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513"
+		<scp file="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/ae_model_1368331614162.json" trust="true" keyfile="C:\\Users\\eric\\Dropbox\\documents\\centermachinekey.pem" password="conan513"
 			todir="softmax_loglikelyhood_multi_probability_classification/test_files/results/" verbose="true" />
 	</target>
 	
 	<target name="deploy_ssh" depends="dist">
-		<scp file="${dist.dir}/word_embedding_trainer.jar" trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513" todir="${ssh_server}:/usr/master_dev/tinybrain" verbose="true" />
+		<scp file="${dist.dir}/word_embedding_trainer.jar" trust="true" keyfile="C:\\Users\\eric\\Dropbox\\documents\\centermachinekey.pem" password="conan513" todir="${ssh_server}:/usr/master_dev/tinybrain" verbose="true" />
 	</target>
 	
 	<target name="clean">

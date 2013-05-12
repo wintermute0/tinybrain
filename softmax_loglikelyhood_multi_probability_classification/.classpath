@@ -68,5 +68,7 @@
 	<classpathentry kind="lib" path="/lib/google-gson-2.2.2/gson-2.2.2.jar"/>
 	<classpathentry kind="lib" path="/lib/guice-3.0/aopalliance.jar"/>
 	<classpathentry kind="lib" path="/lib/kryo/kryo-2.21-all.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/data_producer_bakeoff2005"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/word_embedding"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

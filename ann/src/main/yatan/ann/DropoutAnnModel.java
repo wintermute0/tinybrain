@@ -133,9 +133,8 @@ public class DropoutAnnModel implements AnnModel {
     }
 
     @Override
-    public void update(AnnGradient gradient, double lampda, List<Matrix> annDeltaSqureSum, double momentumWeight,
-            List<Matrix> lastDeltaW) {
-        this.annModel.update(gradient, lampda, annDeltaSqureSum, momentumWeight, lastDeltaW);
+    public void update(AnnGradient gradient, double lampda, List<Matrix> annDeltaSqureSum) {
+        this.annModel.update(gradient, lampda, annDeltaSqureSum);
     }
 
     @Override
