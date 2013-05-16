@@ -27,7 +27,7 @@ import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorContractImpl {
-    private static final int MINIBATCH_SIZE = 20;
+    private static final int MINIBATCH_SIZE = 100;
 
     @Inject(optional = false)
     private TrainerConfiguration trainerConfiguration;
@@ -64,30 +64,26 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
             }
 
             // first convert input data into word embedding
-            double[] annInput = wordEmbedding.lookup(instance.getInput());
-            double[] annOutput = new double[] {instance.getOutput()};
-            AnnData annData = new AnnData(annInput, annOutput);
+            AnnData annData = Helper.convertToSoftmaxAnnData(wordEmbedding, instance);
 
             // train with this ann data instance and update gradient
             double[][] output = trainer.run(annModel, annData.getInput(), sum);
-            // ignore training instance that has a good enough score
-            if ((instance.getOutput() > 0 && output[1][0] >= 1) || (instance.getOutput() < 0 && output[1][0] <= -1)) {
-                continue;
-            }
-            newGradient = wordEmbeddingBackpropagate(annModel, annData, output, sum, newGradient);
+
+            // bp
+            newGradient =
+                    trainer.backpropagateSoftmaxLogLikelyhood(annModel, annData, output, sum,
+                            this.trainerConfiguration.l2Lambdas, newGradient);
 
             // save gradient
             batchGradient = saveGradient(batchGradient, newGradient);
 
             // save wordEmbeddingDelta
-            saveWordEmbeddingDelta(newGradient, batchWordEmbeddingDelta, wordEmbedding.getWordVectorSize(), annInput,
-                    instance);
+            saveWordEmbeddingDelta(newGradient, batchWordEmbeddingDelta, wordEmbedding.getWordVectorSize(),
+                    annData.getInput(), instance);
         }
 
         // average batch gradient
-        if (batchGradient != null) {
-            batchGradient.averageBy(MINIBATCH_SIZE);
-        }
+        batchGradient.averageBy(MINIBATCH_SIZE);
 
         // average word embedding gradient
         for (Double[] gradient : batchWordEmbeddingDelta.values()) {

@@ -22,5 +22,5 @@ public interface AnnModel {
 
     public void postProcessAnnGradient(AnnGradient annGradient);
 
-    public void reuseLowerLayer(AnnModel annModel);
+    public void reuseLowerLayer(AnnModel annModel, int discardTopNLayer);
 }

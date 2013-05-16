@@ -39,29 +39,20 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
 
             // first convert input data into word embedding
-            // FIXME: could reuse an array, no need to allocate it every time
-            double[] input = new double[instance.getInput().size() * wordEmbedding.getWordVectorSize()];
-            for (int i = 0; i < instance.getInput().size(); i++) {
-                int index = instance.getInput().get(i);
-                for (int j = 0; j < wordEmbedding.getWordVectorSize(); j++) {
-                    input[i * wordEmbedding.getWordVectorSize() + j] = wordEmbedding.getMatrix().getData()[j][index];
-                }
-            }
-
-            AnnData annData = new AnnData(input, new double[] {instance.getOutput()});
+            AnnData annData = Helper.convertToSoftmaxAnnData(wordEmbedding, instance);
 
             // train with this ann data instance and update gradient
             double[][] output = trainer.run(annModel, annData.getInput(), new double[annModel.getLayerCount()][]);
             // System.out.println(output[annModel.getLayerCount() - 1][0]);
-            if (annData.getOutput()[0] >= 0) {
-                if (output[annModel.getLayerCount() - 1][0] > 0) {
+            if (instance.getOutput() > 0) {
+                if (output[annModel.getLayerCount() - 1][0] > 0.5) {
                     accurate++;
                 }
 
                 totalPositiveScore += output[annModel.getLayerCount() - 1][0];
                 positiveCount++;
             } else {
-                if (output[annModel.getLayerCount() - 1][0] < 0) {
+                if (output[annModel.getLayerCount() - 1][0] < 0.5) {
                     accurate++;
                 }
 

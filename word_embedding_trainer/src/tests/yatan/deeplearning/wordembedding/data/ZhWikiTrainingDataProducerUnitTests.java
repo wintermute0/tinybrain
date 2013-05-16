@@ -16,7 +16,7 @@ public class ZhWikiTrainingDataProducerUnitTests {
 
     @Before
     public void setUp() {
-        this.dictionary = Dictionary.create(new File("test_files/zh_dict.txt"), 250);
+        this.dictionary = Dictionary.create(new File("test_files/zh_dict_better.txt"));
         this.producer = new ZhWikiTrainingDataProducer(this.dictionary);
     }
 
@@ -27,7 +27,7 @@ public class ZhWikiTrainingDataProducerUnitTests {
 
     @Test
     public void testProduceInstances() throws Exception {
-        for (Data data : this.producer.produceData(1000)) {
+        for (Data data : this.producer.produceData(10000)) {
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
             System.out.print(instance.getOutput() + ": ");
             for (int index : instance.getInput()) {

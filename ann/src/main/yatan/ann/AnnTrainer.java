@@ -150,10 +150,11 @@ public class AnnTrainer {
             gradients.add(0, gradient);
             for (int x = 0; x < gradient.columnSize(); x++) {
                 double derivative = activation.derivative(sum[i][x]);
+                delta[x] *= derivative;
                 for (int y = 0; y < gradient.rowSize(); y++) {
                     double edgeOutput =
                             y == gradient.rowSize() - 1 ? 1 : (i - 1 >= 0 ? output[i - 1][y] : data.getInput()[y]);
-                    gradient.getData()[y][x] = delta[x] * derivative * edgeOutput;
+                    gradient.getData()[y][x] = delta[x] * edgeOutput;
                 }
             }
 
@@ -176,11 +177,11 @@ public class AnnTrainer {
             }
         }
 
-        if (model.getLayerCount() == 2) {
-            for (int i = 0; i < delta.length; i++) {
-                delta[i] *= -1;
-            }
-        }
+        // if (model.getLayerCount() == 2) {
+        // for (int i = 0; i < delta.length; i++) {
+        // delta[i] *= -1;
+        // }
+        // }
 
         return new AnnGradient(gradients, delta);
     }

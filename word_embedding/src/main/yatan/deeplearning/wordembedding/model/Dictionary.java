@@ -29,20 +29,39 @@ public final class Dictionary {
     private final List<String> words = Lists.newArrayList();
     private final Map<String, Integer> wordIndecies = Maps.newHashMap();
     private final Map<String, Double> wordLikelyhood = Maps.newHashMap();
+    private final List<String> sortedWords = Lists.newArrayList();
     private final Random random = new Random(new Date().getTime());
 
     private Dictionary(Collection<String> words, Map<String, Double> wordLikelyhood) {
         this.words.addAll(words);
         this.words.add(NO_SUCH_WORD_PLACE_HOLDER);
         this.words.add(PADDING_WORD);
-        this.words.add(NUMBER_WORD);
-        this.words.add(EN_WORD);
+        if (!this.words.contains(NUMBER_WORD)) {
+            this.words.add(NUMBER_WORD);
+        }
+        if (!this.words.contains(EN_WORD)) {
+            this.words.add(EN_WORD);
+        }
 
         for (int i = 0; i < this.words.size(); i++) {
             wordIndecies.put(this.words.get(i), i);
         }
 
         this.wordLikelyhood.putAll(wordLikelyhood);
+
+        this.sortedWords.addAll(this.words);
+        Collections.sort(this.sortedWords, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                double freq1 =
+                        Dictionary.this.wordLikelyhood.containsKey(o1) ? Dictionary.this.wordLikelyhood.get(o1)
+                                : Double.MIN_VALUE;
+                double freq2 =
+                        Dictionary.this.wordLikelyhood.containsKey(o2) ? Dictionary.this.wordLikelyhood.get(o2)
+                                : Double.MIN_VALUE;
+                return freq1 - freq2 > 0 ? -1 : 1;
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -92,20 +111,22 @@ public final class Dictionary {
     }
 
     public int frenquencyRank(int wordIndex) {
-        int result = 0;
+        // int result = 0;
+        //
+        // if (!this.wordLikelyhood.containsKey(this.words.get(wordIndex))) {
+        // return Integer.MAX_VALUE;
+        // }
+        //
+        // double frequency = this.wordLikelyhood.get(this.words.get(wordIndex));
+        // for (Entry<String, Double> entry : wordLikelyhood.entrySet()) {
+        // if (entry.getValue() > frequency) {
+        // result++;
+        // }
+        // }
+        //
+        // return result;
 
-        if (!this.wordLikelyhood.containsKey(this.words.get(wordIndex))) {
-            return Integer.MAX_VALUE;
-        }
-
-        double frequency = this.wordLikelyhood.get(this.words.get(wordIndex));
-        for (Entry<String, Double> entry : wordLikelyhood.entrySet()) {
-            if (entry.getValue() > frequency) {
-                result++;
-            }
-        }
-
-        return result;
+        return this.sortedWords.indexOf(this.words.get(wordIndex));
     }
 
     public List<String> words() {
@@ -133,12 +154,21 @@ public final class Dictionary {
         return this.wordIndecies.get(lastWord);
     }
 
+    public int sampleWordUniformlyAboveFrequenceRank(int rankBound) {
+        if (rankBound > 0) {
+            return this.words.indexOf(this.sortedWords.get(this.random.nextInt(rankBound)));
+        } else {
+            return this.random.nextInt(this.words.size());
+        }
+    }
+
     private static Object[] loadDictionary(File file) {
         List<String> words = Lists.newArrayList();
         Map<String, Double> wordLikelyhood = Maps.newHashMap();
         try {
             for (String line : Files.readLines(file, Charsets.UTF_8)) {
-                List<String> token = Lists.newArrayList(Splitter.on(":").trimResults().omitEmptyStrings().split(line));
+                List<String> token =
+                        Lists.newArrayList(Splitter.onPattern(":|\\,").trimResults().omitEmptyStrings().split(line));
                 if (token.size() != 2) {
                     System.out.println("Invalid line " + line);
                     continue;

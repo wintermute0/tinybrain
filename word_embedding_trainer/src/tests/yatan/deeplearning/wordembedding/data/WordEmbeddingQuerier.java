@@ -2,14 +2,16 @@ package yatan.deeplearning.wordembedding.data;
 
 import java.io.File;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import scala.actors.threadpool.Arrays;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
@@ -24,19 +26,21 @@ import com.google.gson.JsonParser;
 import yatan.ann.DefaultAnnModel;
 import yatan.commons.matrix.Matrix;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
+import yatan.deeplearning.wordembedding.utility.LogUtility;
 
 public class WordEmbeddingQuerier {
     public static void main(String[] args) throws Exception {
         WordEmbedding wordEmbedding = (WordEmbedding) loadWordEmbedding()[0];
 
-        wordEmbedding = scaleWordEmbedding(wordEmbedding, 0.1);
+        // scaleWordEmbedding(wordEmbedding);
+        LogUtility.logWordEmbedding(Logger.getLogger("a"), wordEmbedding);
 
-        String query = "吴";
+        String query = "看";
         int rank = 0;
         for (String word : query(wordEmbedding, query)) {
             System.out.print(rank++ + ": " + word + ": " + distanceBetween(wordEmbedding, word, query) + ", ");
             for (int i = 0; i < 10; i++) {
-                System.out.print(MessageFormat.format("{0,number,#.#####}, ",
+                System.out.print(MessageFormat.format("{0,number,#.#}, ",
                         wordEmbedding.getMatrix().getData()[i][wordEmbedding.getDictionary().indexOf(word)]));
             }
             System.out.println();
@@ -68,32 +72,58 @@ public class WordEmbeddingQuerier {
         return distance;
     }
 
-    private static WordEmbedding scaleWordEmbedding(WordEmbedding wordEmbedding, double sigma) {
-        double total = 0;
-        Matrix matrix = wordEmbedding.getMatrix();
-        double[][] data = matrix.getData();
-        for (int i = 0; i < matrix.rowSize(); i++) {
-            for (int j = 0; j < matrix.columnSize(); j++) {
-                total += data[i][j];
+    // private static WordEmbedding scaleWordEmbedding(WordEmbedding wordEmbedding, double sigma) {
+    // double total = 0;
+    // Matrix matrix = wordEmbedding.getMatrix();
+    // double[][] data = matrix.getData();
+    // for (int i = 0; i < matrix.rowSize(); i++) {
+    // for (int j = 0; j < matrix.columnSize(); j++) {
+    // total += data[i][j];
+    // }
+    // }
+    //
+    // double mean = total / (matrix.rowSize() * matrix.columnSize());
+    // double dv = 0;
+    // for (int i = 0; i < matrix.rowSize(); i++) {
+    // for (int j = 0; j < matrix.columnSize(); j++) {
+    // dv += Math.pow(data[i][j] - mean, 2);
+    // }
+    // }
+    //
+    // double sdv = Math.sqrt(dv);
+    // for (int i = 0; i < matrix.rowSize(); i++) {
+    // for (int j = 0; j < matrix.columnSize(); j++) {
+    // data[i][j] = sigma * data[i][j] / sdv;
+    // }
+    // }
+    //
+    // return wordEmbedding;
+    // }
+
+    private static void scaleWordEmbedding(WordEmbedding wordEmbedding) {
+        double[] max = new double[wordEmbedding.getWordVectorSize()];
+        Arrays.fill(max, Double.MIN_VALUE);
+        double[] min = new double[wordEmbedding.getWordVectorSize()];
+        Arrays.fill(min, Double.MAX_VALUE);
+
+        double[][] data = wordEmbedding.getMatrix().getData();
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                double value = data[i][j];
+                if (value > max[i]) {
+                    max[i] = value;
+                }
+                if (value < min[i]) {
+                    min[i] = value;
+                }
             }
         }
 
-        double mean = total / (matrix.rowSize() * matrix.columnSize());
-        double dv = 0;
-        for (int i = 0; i < matrix.rowSize(); i++) {
-            for (int j = 0; j < matrix.columnSize(); j++) {
-                dv += Math.pow(data[i][j] - mean, 2);
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                data[i][j] = (data[i][j] - (max[i] + min[i]) / 2) / (max[i] - min[i]) * 2;
             }
         }
-
-        double sdv = Math.sqrt(dv);
-        for (int i = 0; i < matrix.rowSize(); i++) {
-            for (int j = 0; j < matrix.columnSize(); j++) {
-                data[i][j] = sigma * data[i][j] / sdv;
-            }
-        }
-
-        return wordEmbedding;
     }
 
     private static Object[] loadWordEmbedding() {

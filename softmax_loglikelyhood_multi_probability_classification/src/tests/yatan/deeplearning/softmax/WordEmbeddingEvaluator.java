@@ -23,6 +23,7 @@ import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.data.parser.bakeoff2005.ICWB2Parser;
 import yatan.data.sequence.TaggedSentenceDataset;
+import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer;
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer.WordSegmentationInstancePool;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
@@ -34,8 +35,10 @@ public class WordEmbeddingEvaluator {
     public static void main(String[] args) throws Exception {
         Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict.txt"));
 
+        WordSegmentationDataProducer.WINDOWS_SIZE = 11;
+
         // 1365269964401(100 word embedding).json
-        String wordEmbeddingFile = "softmax_model_1367880455774.json";
+        String wordEmbeddingFile = "zmodified_1364361527411(best 50 word embedding).json";
 
         Object[] models = loadWordEmbeddingFromFile(new File("test_files/results/" + wordEmbeddingFile));
         if (models.length == 0) {

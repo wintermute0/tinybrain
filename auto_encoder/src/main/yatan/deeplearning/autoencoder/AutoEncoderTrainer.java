@@ -37,7 +37,7 @@ import com.google.inject.name.Names;
 
 public class AutoEncoderTrainer {
     private static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
-    private static final int TRAINING_ACTOR_COUNT = 1;
+    private static final int TRAINING_ACTOR_COUNT = 16;
 
     private static final Dictionary DICTIONARY = Dictionary.create(new File("test_files/zh_dict.txt"));
 
@@ -65,6 +65,12 @@ public class AutoEncoderTrainer {
                 return trainingModuleInjector.getInstance(DataActor.class);
             }
         }), "data");
+        system.actorOf(new Props(new UntypedActorFactory() {
+            @Override
+            public Actor create() throws Exception {
+                return evaluatingModuleInjector.getInstance(DataActor.class);
+            }
+        }), "evaluate_data");
 
         system.actorOf(new Props(new UntypedActorFactory() {
             @Override
@@ -100,12 +106,12 @@ public class AutoEncoderTrainer {
                 return evaluatingModuleInjector.getInstance(ComputeActor.class);
             }
         }), "evalutor1");
-        system.actorOf(new Props(new UntypedActorFactory() {
-            @Override
-            public Actor create() throws Exception {
-                return wordPredictEvaluatingModuleInjector.getInstance(ComputeActor.class);
-            }
-        }), "evalutor2");
+        // system.actorOf(new Props(new UntypedActorFactory() {
+        // @Override
+        // public Actor create() throws Exception {
+        // return wordPredictEvaluatingModuleInjector.getInstance(ComputeActor.class);
+        // }
+        // }), "evalutor2");
     }
 
     public static class CommonModule extends AbstractModule {
@@ -131,11 +137,11 @@ public class AutoEncoderTrainer {
                     new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize
                             * ChineseWordEmbeddingAutoEncoderDataProvider.WINDOWS_SIZE);
             annConfiguration.addLayer(300, ActivationFunction.TANH);
-            // annConfiguration.addLayer(300, ActivationFunction.TANH);
-            // annConfiguration.addLayer(300, ActivationFunction.TANH);
+            annConfiguration.addLayer(300, ActivationFunction.TANH);
+            annConfiguration.addLayer(300, ActivationFunction.TANH);
 
-            // annConfiguration.addLayer(300, ActivationFunction.TANH);
-            annConfiguration.addLayer(annConfiguration.inputDegree, ActivationFunction.TANH);
+            annConfiguration.addLayer(300, ActivationFunction.TANH);
+            // annConfiguration.addLayer(annConfiguration.inputDegree, ActivationFunction.TANH);
 
             bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(annConfiguration);
 
@@ -151,7 +157,7 @@ public class AutoEncoderTrainer {
             bind(boolean.class).annotatedWith(Names.named("training")).toInstance(true);
             try {
                 bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
-                        new ICWB2Parser().parse(new File("data/icwb2-data/training/pku_training.utf8")));
+                        new ICWB2Parser().parse(new File("data/icwb2-data/training/msr_training.utf8")));
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -163,8 +169,19 @@ public class AutoEncoderTrainer {
     public static class EvaluatingModule extends AbstractModule {
         @Override
         protected void configure() {
+            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(200000);
+            bind(boolean.class).annotatedWith(Names.named("training")).toInstance(false);
+            try {
+                bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
+                        new ICWB2Parser().parse(new File("data/icwb2-data/gold/msr_test_gold.utf8")));
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            bind(DataProducer.class).to(WordSegmentationDataProducer.class);
+
             // set data actor path of to evaluate data actor
-            bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
+            bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/evaluate_data");
 
             bind(ComputeActorContract.class).to(AutoEncoderEvaluatorContractImpl.class);
         }

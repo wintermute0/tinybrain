@@ -1,7 +1,6 @@
 package yatan.deeplearning.wordembedding;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -10,13 +9,10 @@ import com.google.inject.name.Names;
 
 import yatan.ann.AnnConfiguration;
 import yatan.ann.AnnConfiguration.ActivationFunction;
-import yatan.data.parser.bakeoff2005.ICWB2Parser;
-import yatan.data.sequence.TaggedSentenceDataset;
 import yatan.deeplearning.wordembedding.actor.impl.ComputeActorWordEmbeddingEvaluatorImpl;
 import yatan.deeplearning.wordembedding.actor.impl.ComputeActorWordEmbeddingTrainingImpl;
 import yatan.deeplearning.wordembedding.actor.impl.ParameterActorWordEmbeddingImpl;
 import yatan.deeplearning.wordembedding.actor.impl.PerplextiyEvaluator;
-import yatan.deeplearning.wordembedding.data.BakeOffDataProducer;
 import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.distributedcomputer.actors.AuditActor;
@@ -33,7 +29,7 @@ import akka.actor.UntypedActorFactory;
 
 public class WordEmbeddingTrainer {
     private static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
-    private static final int TRAINING_ACTOR_COUNT = 3;
+    private static final int TRAINING_ACTOR_COUNT = 1;
 
     static {
         TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0};
@@ -66,12 +62,12 @@ public class WordEmbeddingTrainer {
             }
         }), "data");
 
-        system.actorOf(new Props(new UntypedActorFactory() {
-            @Override
-            public Actor create() throws Exception {
-                return evaluatingModuleInjector.getInstance(DataActor.class);
-            }
-        }), "evaluate_data");
+        // system.actorOf(new Props(new UntypedActorFactory() {
+        // @Override
+        // public Actor create() throws Exception {
+        // return evaluatingModuleInjector.getInstance(DataActor.class);
+        // }
+        // }), "evaluate_data");
 
         system.actorOf(new Props(new UntypedActorFactory() {
             @Override
@@ -122,7 +118,7 @@ public class WordEmbeddingTrainer {
             // bind trainer configuration
             bind(TrainerConfiguration.class).toInstance(TRAINER_CONFIGURATION);
             // load dictionary
-            bind(Dictionary.class).toInstance(Dictionary.create(new File("test_files/zh_dict.txt")));
+            bind(Dictionary.class).toInstance(Dictionary.create(new File("test_files/zh_dict_better.txt")));
             // set word vector size
             bind(Integer.class).annotatedWith(Names.named("word_vector_size")).toInstance(
                     TRAINER_CONFIGURATION.wordVectorSize);
@@ -132,7 +128,7 @@ public class WordEmbeddingTrainer {
     public static class TrainingModule extends AbstractModule {
         @Override
         protected void configure() {
-            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(500000);
+            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(100000);
 
             // bind ann configuration
             AnnConfiguration annConfiguration =
@@ -144,19 +140,20 @@ public class WordEmbeddingTrainer {
             bind(ParameterActorContract.class).to(ParameterActorWordEmbeddingImpl.class);
             bind(ComputeActorContract.class).to(ComputeActorWordEmbeddingTrainingImpl.class);
 
-            // wiki data
             bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
-            // bind(DataProducer.class).to(ZhWikiTrainingDataProducer.class);
 
-            // bakeoff data
-            bind(boolean.class).annotatedWith(Names.named("training")).toInstance(true);
-            try {
-                bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
-                        new ICWB2Parser().parse(new File("data/icwb2-data/training/pku_training.utf8")));
-                bind(DataProducer.class).to(BakeOffDataProducer.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // wiki data
+            bind(DataProducer.class).to(ZhWikiTrainingDataProducer.class);
+
+            // // bakeoff data
+            // bind(boolean.class).annotatedWith(Names.named("training")).toInstance(true);
+            // try {
+            // bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
+            // new ICWB2Parser().parse(new File("data/icwb2-data/training/pku_training.utf8")));
+            // bind(DataProducer.class).to(BakeOffDataProducer.class);
+            // } catch (IOException e) {
+            // e.printStackTrace();
+            // }
         }
     }
 
@@ -166,20 +163,20 @@ public class WordEmbeddingTrainer {
             bind(ComputeActorContract.class).to(ComputeActorWordEmbeddingEvaluatorImpl.class);
 
             // wiki data
-            // bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
+            bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
 
-            // bakeoff data
-            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(500000);
-            bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/evaluate_data");
-
-            bind(boolean.class).annotatedWith(Names.named("training")).toInstance(false);
-            try {
-                bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
-                        new ICWB2Parser().parse(new File("data/icwb2-data/gold/pku_test_gold.utf8")));
-                bind(DataProducer.class).to(BakeOffDataProducer.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // // bakeoff data
+            // bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(500000);
+            // bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/evaluate_data");
+            //
+            // bind(boolean.class).annotatedWith(Names.named("training")).toInstance(false);
+            // try {
+            // bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
+            // new ICWB2Parser().parse(new File("data/icwb2-data/gold/pku_test_gold.utf8")));
+            // bind(DataProducer.class).to(BakeOffDataProducer.class);
+            // } catch (IOException e) {
+            // e.printStackTrace();
+            // }
         }
     }
 
@@ -189,10 +186,10 @@ public class WordEmbeddingTrainer {
             bind(ComputeActorContract.class).to(PerplextiyEvaluator.class);
 
             // wiki data
-            // bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
+            bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
 
             // bakeoff data
-            bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/evaluate_data");
+            // bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/evaluate_data");
         }
     }
 }

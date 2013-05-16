@@ -40,7 +40,7 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
     private static final double ADA_DELTA_EPSILON = 0.000001;
     // private static final double ADA_DELTA_EPSILON = 0.01;
 
-    private static final double STATE_SAVING_INTERVAL_MINUTES = 10;
+    private static final double STATE_SAVING_INTERVAL_MINUTES = 5;
 
     private static final String MODEL_FOLDER = "test_files/results/";
 
@@ -105,7 +105,7 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
         // System.out.println(LogUtility.buildLogString(annDeltaGradientSumSquare.get(0)));
         // System.out.println(LogUtility.buildLogString(deltaAnnWeightSumSquare.get(0)));
 
-        // // adadelta
+        // adadelta
         // annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
         // this.deltaAnnWeightSumSquare);
 
@@ -116,15 +116,14 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
 
         // System.out.println(LogUtility.buildLogString(annGradient.getGradients().get(0)));
 
-        @SuppressWarnings("unchecked")
-        Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
+        // Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
         // // adadelta
         // wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON,
         // this.wordEmbeddingGradientSumSquare,
         // this.deltaWordEmbeddingSumSquare);
 
-        // adadelta
-        wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
+        // adagrad
+        // wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
 
         // wordEmbedding.update(wordEmbeddingDelta, 0.1);
 
@@ -164,7 +163,7 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
                 // reuse the same lower layer o the persistable state
                 if (persistableState != null && persistableState.annModel != null) {
                     getLogger().info("Reuse the lower layer of the persisted ann model...");
-                    this.annModel.reuseLowerLayer(persistableState.annModel);
+                    this.annModel.reuseLowerLayer(persistableState.annModel, 1);
                     getLogger().info("Ann model statistics after reuseing:");
                     LogUtility.logAnnModel(getLogger(), annModel);
                 }
@@ -174,7 +173,7 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
                 Matrix secondLastLayer = this.annModel.getLayer(this.annModel.getLayerCount() - 2);
                 for (int i = 0; i < lastLayer.rowSize() - 1; i++) {
                     for (int j = 0; j < lastLayer.columnSize(); j++) {
-                        lastLayer.getData()[i][j] = secondLastLayer.getData()[j][i];
+                        secondLastLayer.getData()[j][i] = lastLayer.getData()[i][j];
                     }
                 }
             }
@@ -298,7 +297,7 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
 
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
-                data[i][j] = (data[i][j] - (max + min) / 2) / (max - min);
+                data[i][j] = (data[i][j] - (max + min) / 2) / (max - min) * 2;
             }
         }
     }

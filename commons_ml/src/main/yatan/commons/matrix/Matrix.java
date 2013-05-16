@@ -140,6 +140,9 @@ final public class Matrix implements Serializable {
     }
 
     public void update(Matrix gradient, double lampda, Matrix annDeltaSqureSum) {
+        Preconditions.checkArgument(gradient != null);
+        Preconditions.checkArgument(annDeltaSqureSum != null);
+
         if (rowSize() != gradient.rowSize() || columnSize() != gradient.columnSize()) {
             throw new IllegalArgumentException("The size of the gradient matrix does not match.");
         }

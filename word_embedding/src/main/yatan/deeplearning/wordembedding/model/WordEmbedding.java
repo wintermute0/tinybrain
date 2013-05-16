@@ -114,6 +114,10 @@ public class WordEmbedding implements Serializable {
         for (int i = 0; i < this.getWordVectorSize(); i++) {
             wordEmbeddingGradientSqureSum.getData()[i][wordIndex] += Math.pow(grident[i], 2);
             double learningRate = lambda / Math.sqrt(wordEmbeddingGradientSqureSum.getData()[i][wordIndex]);
+            if (learningRate > 10) {
+                continue;
+            }
+
             double delta = grident[i] * learningRate;
             this.matrix.getData()[i][wordIndex] += delta;
         }

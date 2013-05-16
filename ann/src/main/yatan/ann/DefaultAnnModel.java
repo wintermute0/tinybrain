@@ -108,7 +108,9 @@ public class DefaultAnnModel implements Serializable, AnnModel {
         }
 
         for (int i = 0; i < this.matrices.size(); i++) {
-            this.matrices.get(i).update(gradient.getGradients().get(i), lampda, annDeltaSqureSum.get(i));
+            if (gradient.getGradients().get(i) != null) {
+                this.matrices.get(i).update(gradient.getGradients().get(i), lampda, annDeltaSqureSum.get(i));
+            }
         }
     }
 
@@ -118,8 +120,8 @@ public class DefaultAnnModel implements Serializable, AnnModel {
     }
 
     @Override
-    public void reuseLowerLayer(AnnModel annModel) {
-        for (int layer = 0; layer < Math.min(annModel.getLayerCount(), getLayerCount()); layer++) {
+    public void reuseLowerLayer(AnnModel annModel, int discardTopNLayer) {
+        for (int layer = 0; layer < Math.min(annModel.getLayerCount(), getLayerCount()) - discardTopNLayer; layer++) {
             if (annModel.getConfiguration().activationFunctionOfLayer(layer) == this.configuration
                     .activationFunctionOfLayer(layer)) {
                 Matrix reuse = annModel.getLayer(layer);

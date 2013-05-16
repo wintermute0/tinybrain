@@ -40,7 +40,7 @@ public class AutoEncoderEvaluatorContractImpl extends AbstractComputeActorContra
             OutputPostProcessor postProcessor = null;
             if (annModel.getLayerCount() == 2) {
                 // corrupt input
-                Helper.corruptWithMask(annData.getInput());
+                Helper.corruptRandomWord(annData.getInput());
             } else {
                 postProcessor = new OutputPostProcessor() {
                     private double[] uncorruptedData;
@@ -81,8 +81,8 @@ public class AutoEncoderEvaluatorContractImpl extends AbstractComputeActorContra
         getLogger().info(message);
         System.out.println(message);
 
-        evaluateWordDistanceRank(wordEmbedding, "看", "见", "视", "瞧", "瞄", "目", "相", "窥", "探", "扫", "瞪", "望");
-        evaluateWordDistanceRank(wordEmbedding, "吴", "赵", "钱", "孙", "李", "周", "郑", "王", "冯", "陈", "褚", "卫");
+        // evaluateWordDistanceRank(wordEmbedding, "看", "见", "视", "瞧", "瞄", "目", "相", "窥", "探", "扫", "瞪", "望");
+        // evaluateWordDistanceRank(wordEmbedding, "吴", "赵", "钱", "孙", "李", "周", "郑", "王", "冯", "陈", "褚", "卫");
         LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
 
         LogUtility.logAnnModel(getLogger(), annModel);

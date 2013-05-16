@@ -44,7 +44,7 @@ public class ArticlesDumpFileLoader {
 
             ArticlesDumpFileLoader loader = new ArticlesDumpFileLoader();
             loader.setArticleDao(articleDaoImpl);
-            loader.loadArticlesDumpFile("e:/zhwiki-latest-pages-articles.xml");
+            loader.loadArticlesDumpFile("C:/Users/eric/Desktop/zhwiki-latest-pages-articles.xml");
         } finally {
             connection.close();
         }

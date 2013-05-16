@@ -2,12 +2,8 @@ package yatan.deeplearning.autoencoder.contract;
 
 import java.io.Serializable;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
-
-import com.google.common.collect.Lists;
 
 import scala.actors.threadpool.Arrays;
 
@@ -24,8 +20,6 @@ import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class AutoEncoderTrainingContractImpl extends AbstractComputeActorContractImpl {
     private static final int BATCH_SIZE = 100;
-
-    private Random random = new Random(new Date().getTime());
 
     @Override
     protected int requestDataSize() {
@@ -49,7 +43,7 @@ public class AutoEncoderTrainingContractImpl extends AbstractComputeActorContrac
             OutputPostProcessor postProcessor = null;
             if (annModel.getLayerCount() == 2) {
                 // corrupt input
-                Helper.corruptWithSaltAndPepper(annData.getInput());
+                Helper.corruptRandomWord(annData.getInput());
             } else {
                 postProcessor = new OutputPostProcessor() {
                     private double[] uncorruptedData;
@@ -83,9 +77,17 @@ public class AutoEncoderTrainingContractImpl extends AbstractComputeActorContrac
 
             // save wordEmbeddingDelta if necessary
             if (annModel.getLayerCount() == 2) {
-                // first save word embedding delta
-                saveWordEmbeddingDelta(newGradient, batchWordEmbeddingDelta, wordEmbedding.getWordVectorSize(),
-                        instance);
+                // // remove masked input
+                // double[] wordEmbeddingDelta = newGradient.getDeltaForInputLayer();
+                // for (int i = 0; i < wordEmbeddingDelta.length; i++) {
+                // if (mask[i]) {
+                // wordEmbeddingDelta[i] = 0;
+                // }
+                // }
+                //
+                // // first save word embedding delta
+                // saveWordEmbeddingDelta(newGradient, batchWordEmbeddingDelta, wordEmbedding.getWordVectorSize(),
+                // instance);
 
                 // // construct a negative example
                 // java.util.Arrays.fill(annData.getOutput(), 0);
@@ -102,11 +104,11 @@ public class AutoEncoderTrainingContractImpl extends AbstractComputeActorContrac
         batchGradient.averageBy(BATCH_SIZE);
 
         // average word embedding gradient
-        for (Double[] gradient : batchWordEmbeddingDelta.values()) {
-            for (int i = 0; i < gradient.length; i++) {
-                gradient[i] /= BATCH_SIZE;
-            }
-        }
+        // for (Double[] gradient : batchWordEmbeddingDelta.values()) {
+        // for (int i = 0; i < gradient.length; i++) {
+        // gradient[i] /= BATCH_SIZE;
+        // }
+        // }
 
         // return computation result
         ComputeResult result = new ComputeResult();

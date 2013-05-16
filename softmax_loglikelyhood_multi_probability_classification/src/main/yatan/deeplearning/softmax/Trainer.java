@@ -37,7 +37,8 @@ public class Trainer {
     public static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
 
     static {
-        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001, 0.0001, 0.0001};
+        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001, 0.0001, 0.0001};
+        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0, 0, 0};
         // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0};
 
         TRAINER_CONFIGURATION.hiddenLayerSize = 300;
@@ -54,7 +55,7 @@ public class Trainer {
         final Injector trainingDataEvaluatingModuleInjector =
                 commonModuleInjector.createChildInjector(new TrainingDataEvaluatingModule());
 
-        ActorSystem system = ActorSystem.create();
+        final ActorSystem system = ActorSystem.create();
 
         system.actorOf(new Props(new UntypedActorFactory() {
             @Override
@@ -75,14 +76,26 @@ public class Trainer {
             }
         }), "audit");
 
-        for (int i = 0; i < 16; i++) {
-            system.actorOf(new Props(new UntypedActorFactory() {
-                @Override
-                public Actor create() throws Exception {
-                    return trainingModuleInjector.getInstance(ComputeActor.class);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int newThreadInterval = 64;
+                for (int i = 0; i < 16; i++) {
+                    system.actorOf(new Props(new UntypedActorFactory() {
+                        @Override
+                        public Actor create() throws Exception {
+                            return trainingModuleInjector.getInstance(ComputeActor.class);
+                        }
+                    }), "compute" + i);
+                    try {
+                        Thread.sleep(newThreadInterval * 1000);
+                        newThreadInterval = Math.max(8, newThreadInterval / 2);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }), "compute" + i);
-        }
+            }
+        }).start();
 
         system.actorOf(new Props(new UntypedActorFactory() {
             @Override
@@ -126,7 +139,7 @@ public class Trainer {
 
                 // bind training data set
                 bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
-                        new ICWB2Parser().parse(new File("data/icwb2-data/training/pku_training.utf8")));
+                        new ICWB2Parser().parse(new File("data/icwb2-data/training/msr_training.utf8")));
 
                 // bind data producer
                 bind(DataProducer.class).to(WordSegmentationDataProducer.class);
@@ -136,8 +149,8 @@ public class Trainer {
                         new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize
                                 * WordSegmentationDataProducer.WINDOWS_SIZE);
                 annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-                // annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-                // annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+                annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+                annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
                 annConfiguration.addLayer(WordSegmentationInstancePool.TAGS.size(), ActivationFunction.SOFTMAX);
                 bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(
                         annConfiguration);
@@ -166,7 +179,7 @@ public class Trainer {
 
                 // bind evaluating data set
                 bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
-                        new ICWB2Parser().parse(new File("data/icwb2-data/gold/pku_test_gold.utf8")));
+                        new ICWB2Parser().parse(new File("data/icwb2-data/gold/msr_test_gold.utf8")));
 
                 // bind data producer
                 bind(DataProducer.class).to(WordSegmentationDataProducer.class);

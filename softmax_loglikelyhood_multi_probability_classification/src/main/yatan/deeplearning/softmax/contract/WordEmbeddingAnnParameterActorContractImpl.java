@@ -91,13 +91,16 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
 
         Serializable[] inputData = (Serializable[]) gradient.getSerializable();
         AnnGradient annGradient = (AnnGradient) inputData[0];
-        annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
-                this.deltaAnnWeightSumSquare);
+        // annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
+        // this.deltaAnnWeightSumSquare);
+        annModel.update(annGradient, 0.01, this.annDeltaGradientSumSquare);
 
         Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
         // wordEmbedding.update(wordEmbeddingDelta, 0.001);
-        wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON, this.wordEmbeddingGradientSumSquare,
-                this.deltaWordEmbeddingSumSquare);
+        // wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON,
+        // this.wordEmbeddingGradientSumSquare,
+        // this.deltaWordEmbeddingSumSquare);
+        wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
 
         // save state if necessary
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {
@@ -135,7 +138,7 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
                 // reuse the same lower layer o the persistable state
                 if (persistableState != null && persistableState.annModel != null) {
                     getLogger().info("Reuse the lower layer of the persisted ann model...");
-                    this.annModel.reuseLowerLayer(persistableState.annModel);
+                    this.annModel.reuseLowerLayer(persistableState.annModel, 0);
                     getLogger().info("Ann model statistics after reuseing:");
                     LogUtility.logAnnModel(getLogger(), annModel);
                 }

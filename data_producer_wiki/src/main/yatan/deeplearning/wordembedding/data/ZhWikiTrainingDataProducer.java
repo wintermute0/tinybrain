@@ -35,8 +35,10 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
 
     public static final int WINDOWS_SIZE = 11;
     private static final int LOAD_ARTICLE_BATCH_SIZE = 500;
-    private static final int MAX_ARTICLE_ID = 30000000;
+    private static final int MAX_ARTICLE_ID = 3449448;
     private Random random = new Random(new Date().getTime());
+
+    private int frequencyRankBound = 1000;
 
     @Inject
     public ZhWikiTrainingDataProducer(Dictionary dictionary) {
@@ -95,11 +97,17 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
                                 positiveInstance.setInput(new ArrayList<Integer>());
                                 negativeInstance.setInput(new ArrayList<Integer>());
                                 for (int j = i - WINDOWS_SIZE / 2; j < i + WINDOWS_SIZE / 2 + 1; j++) {
+                                    // check if this word meet the frequency lower bound
+
                                     positiveInstance.getInput().add(wordIndecies.get(j));
                                     if (j == i) {
-                                        int negativeWord = this.random.nextInt(this.dictionary.size());
+                                        int negativeWord =
+                                                this.dictionary
+                                                        .sampleWordUniformlyAboveFrequenceRank(this.frequencyRankBound);
                                         while (negativeWord == wordIndecies.get(j)) {
-                                            negativeWord = this.random.nextInt(this.dictionary.size());
+                                            negativeWord =
+                                                    this.dictionary
+                                                            .sampleWordUniformlyAboveFrequenceRank(this.frequencyRankBound);
                                         }
                                         negativeInstance.getInput().add(negativeWord);
                                         // int negativeWord = this.dictionary.sampleWord();
@@ -114,13 +122,15 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
                                 positiveInstance.setOutput(1);
                                 negativeInstance.setOutput(-1);
 
-                                int noSuchWordCount = 0;
+                                boolean invalidWindow = false;
                                 for (int index : positiveInstance.getInput()) {
-                                    if (index == this.dictionary.indexOf(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)) {
-                                        noSuchWordCount++;
+                                    invalidWindow = isWordInvalid(index);
+                                    if (invalidWindow) {
+                                        break;
                                     }
                                 }
-                                if (noSuchWordCount > 0) {
+
+                                if (invalidWindow) {
                                     continue;
                                 }
 
@@ -146,11 +156,16 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
         return data;
     }
 
+    private boolean isWordInvalid(int wordIndex) {
+        return wordIndex == this.dictionary.indexOf(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)
+                || (this.frequencyRankBound > 0 && this.dictionary.frenquencyRank(wordIndex) > this.frequencyRankBound);
+    }
+
     private void prepareArticleDao() throws SQLException {
         if (this.articleDao == null) {
             this.articleDao = new ArticleDaoImpl();
             ((ArticleDaoImpl) this.articleDao).setConnection(DriverManager.getConnection(
-                    "jdbc:mysql://10.3.8.212/wiki_zh", "root", "topcoder"));
+                    "jdbc:mysql://localhost/wiki_zh", "root", "topcoder"));
         }
     }
 }

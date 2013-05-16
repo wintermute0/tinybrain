@@ -138,7 +138,7 @@ public class DropoutAnnModel implements AnnModel {
     }
 
     @Override
-    public void reuseLowerLayer(AnnModel annModel) {
-        this.annModel.reuseLowerLayer(annModel);
+    public void reuseLowerLayer(AnnModel annModel, int discardTopNLayer) {
+        this.annModel.reuseLowerLayer(annModel, discardTopNLayer);
     }
 }
