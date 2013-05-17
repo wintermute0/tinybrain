@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 
 import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
+import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
@@ -17,8 +18,8 @@ import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
-    private static final int REQUEST_DATA_SIZE = 1000;
-    private static final int REPEAT_DELAY_IN_SECONDS = 10 * 60;
+    private static final int REQUEST_DATA_SIZE = 500;
+    private static final int REPEAT_DELAY_IN_SECONDS = 5 * 60;
 
     private final Dictionary dictionary;
 
@@ -88,6 +89,10 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
             // outputSum = 0;
             int actualWordIndex = instance.getInput().get(instance.getInput().size() / 2);
             for (int i = 0; i < wordEmbedding.getDictionary().size(); i++) {
+                if (dictionary.frenquencyRank(i) > ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND) {
+                    continue;
+                }
+
                 instance.getInput().set(instance.getInput().size() / 2, i);
                 double output = runWordEmbeddingInstance(wordEmbedding, annModel, trainer, instance);
 

@@ -12,7 +12,7 @@ import java.util.Scanner;
 import org.apache.log4j.Logger;
 
 import yatan.ann.SparseAnnData;
-import yatan.deeplearning.wordembedding.data.Dictionary;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.distributedcomputer.Data;
 import yatan.distributedcomputer.contract.data.impl.DataProducer;
 import yatan.distributedcomputer.contract.data.impl.DataProducerException;

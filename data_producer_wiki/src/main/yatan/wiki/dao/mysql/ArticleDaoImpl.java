@@ -78,7 +78,7 @@ public class ArticleDaoImpl extends BaseDaoImpl<Article> implements ArticleDao {
             ps =
                     getConnection()
                             .prepareStatement(
-                                    "SELECT ID, TITLE, REVISIONID, TEXT FROM ARTICLE WHERE ID >= ? AND ID < ? ORDER BY ID LIMIT ?");
+                                    "SELECT ID, TITLE, REVISIONID, TEXT FROM article WHERE ID >= ? AND ID < ? ORDER BY ID LIMIT ?");
             ps.setLong(1, start);
             ps.setLong(2, end);
             ps.setLong(3, limit);

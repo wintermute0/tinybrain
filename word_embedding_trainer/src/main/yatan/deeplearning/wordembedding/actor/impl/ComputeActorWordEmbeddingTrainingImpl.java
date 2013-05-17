@@ -27,7 +27,7 @@ import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorContractImpl {
-    private static final int MINIBATCH_SIZE = 100;
+    private static final int MINIBATCH_SIZE = 200;
 
     @Inject(optional = false)
     private TrainerConfiguration trainerConfiguration;

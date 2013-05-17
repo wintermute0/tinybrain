@@ -38,7 +38,7 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
     private static final int MAX_ARTICLE_ID = 3449448;
     private Random random = new Random(new Date().getTime());
 
-    private int frequencyRankBound = 1000;
+    public static int FREQUENCEY_RANK_BOUND = 2000;
 
     @Inject
     public ZhWikiTrainingDataProducer(Dictionary dictionary) {
@@ -103,11 +103,11 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
                                     if (j == i) {
                                         int negativeWord =
                                                 this.dictionary
-                                                        .sampleWordUniformlyAboveFrequenceRank(this.frequencyRankBound);
+                                                        .sampleWordUniformlyAboveFrequenceRank(this.FREQUENCEY_RANK_BOUND);
                                         while (negativeWord == wordIndecies.get(j)) {
                                             negativeWord =
                                                     this.dictionary
-                                                            .sampleWordUniformlyAboveFrequenceRank(this.frequencyRankBound);
+                                                            .sampleWordUniformlyAboveFrequenceRank(this.FREQUENCEY_RANK_BOUND);
                                         }
                                         negativeInstance.getInput().add(negativeWord);
                                         // int negativeWord = this.dictionary.sampleWord();
@@ -158,14 +158,14 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
 
     private boolean isWordInvalid(int wordIndex) {
         return wordIndex == this.dictionary.indexOf(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)
-                || (this.frequencyRankBound > 0 && this.dictionary.frenquencyRank(wordIndex) > this.frequencyRankBound);
+                || (this.FREQUENCEY_RANK_BOUND > 0 && this.dictionary.frenquencyRank(wordIndex) > this.FREQUENCEY_RANK_BOUND);
     }
 
     private void prepareArticleDao() throws SQLException {
         if (this.articleDao == null) {
             this.articleDao = new ArticleDaoImpl();
             ((ArticleDaoImpl) this.articleDao).setConnection(DriverManager.getConnection(
-                    "jdbc:mysql://localhost/wiki_zh", "root", "topcoder"));
+                    "jdbc:mysql://10.3.7.40:3306/wiki_zh", "topcoder", "topcoder"));
         }
     }
 }

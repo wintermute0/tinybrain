@@ -1,6 +1,7 @@
 package yatan.deeplearning.wordembedding.data;
 
 import java.io.File;
+import java.io.FileWriter;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -31,6 +32,11 @@ import yatan.deeplearning.wordembedding.utility.LogUtility;
 public class WordEmbeddingQuerier {
     public static void main(String[] args) throws Exception {
         WordEmbedding wordEmbedding = (WordEmbedding) loadWordEmbedding()[0];
+
+        FileWriter writer = new FileWriter("dict.txt");
+        for (int i = 0; i < wordEmbedding.getMatrix().columnSize(); i++) {
+            writer.write(wordEmbedding.getDictionary().get(i) + "\n");
+        }
 
         // scaleWordEmbedding(wordEmbedding);
         LogUtility.logWordEmbedding(Logger.getLogger("a"), wordEmbedding);

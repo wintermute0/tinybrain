@@ -4,7 +4,7 @@ import java.io.File;
 
 import yatan.ann.AnnConfiguration;
 import yatan.ann.AnnConfiguration.ActivationFunction;
-import yatan.deeplearning.wordembedding.data.Dictionary;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.distributed.ml.ann.AnnTrainerConfiguration.LossFunction;
 import yatan.distributed.ml.ann.contract.AnnParameterActorContract;
 import yatan.distributed.ml.ann.contract.AnnTrainContract;

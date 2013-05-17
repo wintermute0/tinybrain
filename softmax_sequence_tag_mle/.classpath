@@ -7,7 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/commons_ml"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/distributed_computer"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/softmax_loglikelyhood_multi_probability_classification"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/wiki_analyzer"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/word_embedding_trainer"/>
 	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-actor-2.0.4.jar"/>
 	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-actor-migration-2.0.4.jar"/>
@@ -78,5 +77,6 @@
 	<classpathentry kind="lib" path="/lib/guice-3.0/guice-throwingproviders-3.0.jar"/>
 	<classpathentry kind="lib" path="/lib/guice-3.0/javax.inject.jar"/>
 	<classpathentry kind="lib" path="/lib/log4j/log4j.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/data_producer_wiki"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

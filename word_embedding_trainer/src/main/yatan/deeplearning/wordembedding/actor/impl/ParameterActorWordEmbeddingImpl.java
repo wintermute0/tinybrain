@@ -99,7 +99,7 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
         Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
         wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON, this.wordEmbeddingGradientSumSquare,
                 this.deltaWordEmbeddingSumSquare);
-        // this.wordEmbedding.update(wordEmbeddingDelta, 0.1, this.wordEmbeddingGradientSumSquare);
+        // this.wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
 
         // save state if necessary
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {

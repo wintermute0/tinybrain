@@ -29,7 +29,7 @@ import akka.actor.UntypedActorFactory;
 
 public class WordEmbeddingTrainer {
     private static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
-    private static final int TRAINING_ACTOR_COUNT = 1;
+    private static final int TRAINING_ACTOR_COUNT = 4;
 
     static {
         TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0};
@@ -128,13 +128,13 @@ public class WordEmbeddingTrainer {
     public static class TrainingModule extends AbstractModule {
         @Override
         protected void configure() {
-            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(100000);
+            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(500000);
 
             // bind ann configuration
             AnnConfiguration annConfiguration =
                     new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize * ZhWikiTrainingDataProducer.WINDOWS_SIZE);
             annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-            annConfiguration.addLayer(1, ActivationFunction.Y_EQUALS_X, false);
+            annConfiguration.addLayer(2, ActivationFunction.SOFTMAX);
             bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(annConfiguration);
 
             bind(ParameterActorContract.class).to(ParameterActorWordEmbeddingImpl.class);
