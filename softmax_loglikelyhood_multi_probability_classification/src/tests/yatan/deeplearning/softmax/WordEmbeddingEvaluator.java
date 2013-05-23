@@ -33,12 +33,12 @@ public class WordEmbeddingEvaluator {
     private static final Logger LOGGER = Logger.getLogger(WordEmbeddingEvaluator.class);
 
     public static void main(String[] args) throws Exception {
-        Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict.txt"));
+        Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict_better.txt"));
 
         WordSegmentationDataProducer.WINDOWS_SIZE = 11;
 
         // 1365269964401(100 word embedding).json
-        String wordEmbeddingFile = "zmodified_1364361527411(best 50 word embedding).json";
+        String wordEmbeddingFile = "best_pku_closed_50we.json";
 
         Object[] models = loadWordEmbeddingFromFile(new File("test_files/results/" + wordEmbeddingFile));
         if (models.length == 0) {
@@ -69,10 +69,14 @@ public class WordEmbeddingEvaluator {
         int instanceCount = 0;
         TaggedSentenceDataset dataset = new ICWB2Parser().parse(new File("data/icwb2-data/gold/pku_test_gold.utf8"));
 
+        int totalRank = 0;
+        double totalLogRank = 0;
         int excessiveSmallRankCount = 0;
 
-        for (WordEmbeddingTrainingInstance instance : new WordSegmentationInstancePool(dictionary, dataset, false)
-                .getInstances().subList(0, 1000)) {
+        List<WordEmbeddingTrainingInstance> instances =
+                Lists.newArrayList(new WordSegmentationInstancePool(dictionary, dataset, false).getInstances());
+        Collections.shuffle(instances);
+        for (WordEmbeddingTrainingInstance instance : instances.subList(0, instances.size())) {
             List<Integer> outputRank = Lists.newArrayList();
             if (instance.getOutput() < 0) {
                 // ignore negative case
@@ -108,14 +112,20 @@ public class WordEmbeddingEvaluator {
             }
 
             int rank = outputRank.indexOf(actualWordIndex);
-            System.out.print(dictionary.words().get(actualWordIndex) + ", Possible words: " + possibleWordCount
-                    + ". Actual work rank = " + rank + ". " + "Actual word output = " + actualWordOutput);
 
-            if (rank > 4000 || "$NUM$".equals(dictionary.words().get(actualWordIndex))) {
+            System.out.print(instanceCount + ": " + dictionary.words().get(actualWordIndex) + ", Possible words: "
+                    + possibleWordCount + ". Actual word rank = " + rank + ". " + "Actual word output = "
+                    + actualWordOutput + ". Average rank = " + 1.0 * totalRank / instanceCount
+                    + ". Average log rank = " + totalLogRank / instanceCount);
+
+            if (rank > 10000) {
                 excessiveSmallRankCount++;
                 System.out.println(dictionary.words().get(actualWordIndex) + ": Ignore excessive small rank, total "
                         + excessiveSmallRankCount);
             } else {
+                totalRank += rank;
+                totalLogRank += Math.log(rank + 1);
+
                 double pw = outputs[actualWordIndex] / outputSum;
                 System.out.print(instanceCount + ": P(w) = " + pw + ". ");
                 hT += Math.log(pw) / Math.log(2);
@@ -141,7 +151,7 @@ public class WordEmbeddingEvaluator {
 
         double[][] output = trainer.run(annModel, input, new double[annModel.getLayerCount()][]);
 
-        return output[annModel.getLayerCount() - 1][0];
+        return Math.exp(output[annModel.getLayerCount() - 1][0]) - 1;
     }
 
     private static Object[] loadWordEmbedding() {

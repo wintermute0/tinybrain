@@ -26,6 +26,7 @@ import com.google.gson.JsonParser;
 
 import yatan.ann.DefaultAnnModel;
 import yatan.commons.matrix.Matrix;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.utility.LogUtility;
 
@@ -33,17 +34,29 @@ public class WordEmbeddingQuerier {
     public static void main(String[] args) throws Exception {
         WordEmbedding wordEmbedding = (WordEmbedding) loadWordEmbedding()[0];
 
-        FileWriter writer = new FileWriter("dict.txt");
-        for (int i = 0; i < wordEmbedding.getMatrix().columnSize(); i++) {
-            writer.write(wordEmbedding.getDictionary().get(i) + "\n");
-        }
+        // FileWriter writer = new FileWriter("dict.txt");
+        // for (int i = 0; i < wordEmbedding.getMatrix().columnSize(); i++) {
+        // writer.write(wordEmbedding.getDictionary().get(i) + "\n");
+        // }
 
         // scaleWordEmbedding(wordEmbedding);
         LogUtility.logWordEmbedding(Logger.getLogger("a"), wordEmbedding);
 
-        String query = "看";
+        String query = "东";
+        int index = wordEmbedding.indexOf(query);
+        for (int j = 0; j < wordEmbedding.getWordVectorSize(); j++) {
+            System.out.print(wordEmbedding.getMatrix().getData()[j][index] + ", ");
+        }
+        System.out.println();
+
+        Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict_better.txt"));
+
         int rank = 0;
         for (String word : query(wordEmbedding, query)) {
+            if (dictionary.frenquencyRank(dictionary.indexOf(word)) > 500) {
+                continue;
+            }
+
             System.out.print(rank++ + ": " + word + ": " + distanceBetween(wordEmbedding, word, query) + ", ");
             for (int i = 0; i < 10; i++) {
                 System.out.print(MessageFormat.format("{0,number,#.#}, ",

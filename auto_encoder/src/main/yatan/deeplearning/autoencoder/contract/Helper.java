@@ -1,7 +1,10 @@
 package yatan.deeplearning.autoencoder.contract;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
+
+import com.google.common.collect.Lists;
 
 import scala.actors.threadpool.Arrays;
 import yatan.ann.AnnData;
@@ -20,6 +23,14 @@ public class Helper {
         double[] corruptedData = Arrays.copyOf(data, data.length);
 
         return new AnnData(corruptedData, data);
+    }
+
+    public static AnnData convertToContextOnlyAnnData(WordEmbedding wordEmbedding,
+            WordEmbeddingTrainingInstance instance) {
+        List<Integer> inputs = Lists.newArrayList(instance.getInput());
+        List<Integer> outputs = Lists.newArrayList(inputs.remove(inputs.size() / 2));
+
+        return new AnnData(wordEmbedding.lookup(inputs), wordEmbedding.lookup(outputs));
     }
 
     public static boolean[] corruptWithMask(double[] data) {

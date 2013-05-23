@@ -30,6 +30,7 @@ public final class Dictionary {
     private final Map<String, Integer> wordIndecies = Maps.newHashMap();
     private final Map<String, Double> wordLikelyhood = Maps.newHashMap();
     private final List<String> sortedWords = Lists.newArrayList();
+    private final Map<String, Integer> wordRank = Maps.newHashMap();
     private final Random random = new Random(new Date().getTime());
 
     private Dictionary(Collection<String> words, Map<String, Double> wordLikelyhood) {
@@ -62,6 +63,10 @@ public final class Dictionary {
                 return freq1 - freq2 > 0 ? -1 : 1;
             }
         });
+
+        for (int i = 0; i < this.sortedWords.size(); i++) {
+            this.wordRank.put(this.sortedWords.get(i), i);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -126,7 +131,8 @@ public final class Dictionary {
         //
         // return result;
 
-        return this.sortedWords.indexOf(this.words.get(wordIndex));
+        // return this.sortedWords.indexOf(this.words.get(wordIndex));
+        return this.wordRank.get(this.words.get(wordIndex));
     }
 
     public List<String> words() {

@@ -1,4 +1,4 @@
-package yatan.deeplearning.wordembedding.data;
+package yatan.deeplearning.autoencoder.data.chinesewordembedding;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer;
+import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.distributedcomputer.Data;
@@ -21,7 +22,7 @@ public class BakeOffDataProducer extends WordSegmentationDataProducer {
     public BakeOffDataProducer(@Named("training") boolean training, WordSegmentationInstancePool instancePool) {
         super(training, instancePool);
 
-        WINDOWS_SIZE = 11;
+        WINDOWS_SIZE = 5;
     }
 
     @Override
@@ -47,21 +48,22 @@ public class BakeOffDataProducer extends WordSegmentationDataProducer {
                 positiveInstance.setOutput(1);
                 dataset.add(data);
 
-                WordEmbeddingTrainingInstance negativeInstance = new WordEmbeddingTrainingInstance();
-                negativeInstance.setInput(Lists.newArrayList(positiveInstance.getInput()));
-                negativeInstance.setOutput(-1);
-                // generate negative word
-                int negativeWord =
-                        this.dictionary
-                                .sampleWordUniformlyAboveFrequenceRank(ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND);
-                while (negativeWord == negativeInstance.getInput().get(negativeInstance.getInput().size() / 2)) {
-                    negativeWord =
-                            this.dictionary
-                                    .sampleWordUniformlyAboveFrequenceRank(ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND);
-                }
-                // set negative word
-                negativeInstance.getInput().set(negativeInstance.getInput().size() / 2, negativeWord);
-                dataset.add(new Data(negativeInstance));
+                // generate negative instance
+                // WordEmbeddingTrainingInstance negativeInstance = new WordEmbeddingTrainingInstance();
+                // negativeInstance.setInput(Lists.newArrayList(positiveInstance.getInput()));
+                // negativeInstance.setOutput(-1);
+                // // generate negative word
+                // int negativeWord =
+                // this.dictionary
+                // .sampleWordUniformlyAboveFrequenceRank(ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND);
+                // while (negativeWord == negativeInstance.getInput().get(negativeInstance.getInput().size() / 2)) {
+                // negativeWord =
+                // this.dictionary
+                // .sampleWordUniformlyAboveFrequenceRank(ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND);
+                // }
+                // // set negative word
+                // negativeInstance.getInput().set(negativeInstance.getInput().size() / 2, negativeWord);
+                // dataset.add(new Data(negativeInstance));
             }
         }
 

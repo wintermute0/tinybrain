@@ -91,16 +91,18 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
 
         Serializable[] inputData = (Serializable[]) gradient.getSerializable();
         AnnGradient annGradient = (AnnGradient) inputData[0];
-        // annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
-        // this.deltaAnnWeightSumSquare);
-        annModel.update(annGradient, 0.01, this.annDeltaGradientSumSquare);
+        annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
+                this.deltaAnnWeightSumSquare);
+        // annModel.update(annGradient, 0.01, this.annDeltaGradientSumSquare);
+
+        // System.out.println("RMS[g] = " + LogUtility.buildLogString(this.annDeltaGradientSumSquare.get(0)));
+        // System.out.println("RMS[x] = " + LogUtility.buildLogString(this.deltaAnnWeightSumSquare.get(0)));
 
         Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
         // wordEmbedding.update(wordEmbeddingDelta, 0.001);
-        // wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON,
-        // this.wordEmbeddingGradientSumSquare,
-        // this.deltaWordEmbeddingSumSquare);
-        wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
+        wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON, this.wordEmbeddingGradientSumSquare,
+                this.deltaWordEmbeddingSumSquare);
+        // wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
 
         // save state if necessary
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {
@@ -208,6 +210,11 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
                     wordEmbedding = state.wordEmbedding;
                     getLogger().info("Word embedding " + wordEmbedding + " has been loaded.");
 
+                    // scale word embedding
+                    getLogger().info("Scale word embedding to [-1, 1]");
+                    scaleWordEmbedding(wordEmbedding);
+                    LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
+
                     // only reuse other saved states if the ANN model configuration is identical
                     if (state.annModel != null && this.annConfiguration.equals(state.annModel.getConfiguration())) {
                         getLogger()
@@ -257,31 +264,28 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
         }
     }
 
-    // private static void scaleWordEmbedding(WordEmbedding wordEmbedding, double sigma) {
-    // double total = 0;
-    // Matrix matrix = wordEmbedding.getMatrix();
-    // double[][] data = matrix.getData();
-    // for (int i = 0; i < matrix.rowSize(); i++) {
-    // for (int j = 0; j < matrix.columnSize(); j++) {
-    // total += data[i][j];
-    // }
-    // }
-    //
-    // double mean = total / (matrix.rowSize() * matrix.columnSize());
-    // double dv = 0;
-    // for (int i = 0; i < matrix.rowSize(); i++) {
-    // for (int j = 0; j < matrix.columnSize(); j++) {
-    // dv += Math.pow(data[i][j] - mean, 2);
-    // }
-    // }
-    //
-    // double sdv = Math.sqrt(dv);
-    // for (int i = 0; i < matrix.rowSize(); i++) {
-    // for (int j = 0; j < matrix.columnSize(); j++) {
-    // data[i][j] = sigma * data[i][j] / sdv;
-    // }
-    // }
-    // }
+    private static void scaleWordEmbedding(WordEmbedding wordEmbedding) {
+        double max = Double.MIN_VALUE;
+        double min = Double.MAX_VALUE;
+        double[][] data = wordEmbedding.getMatrix().getData();
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                double value = data[i][j];
+                if (value > max) {
+                    max = value;
+                }
+                if (value < min) {
+                    min = value;
+                }
+            }
+        }
+
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                data[i][j] = (data[i][j] - (max + min) / 2) / (max - min) * 2;
+            }
+        }
+    }
 
     public static class PersistableState {
         public WordEmbedding wordEmbedding;

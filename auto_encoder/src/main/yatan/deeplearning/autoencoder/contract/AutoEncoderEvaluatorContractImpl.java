@@ -2,8 +2,6 @@ package yatan.deeplearning.autoencoder.contract;
 
 import java.util.List;
 
-import scala.actors.threadpool.Arrays;
-
 import yatan.ann.AnnData;
 import yatan.ann.AnnModel;
 import yatan.ann.AnnTrainer;
@@ -29,55 +27,67 @@ public class AutoEncoderEvaluatorContractImpl extends AbstractComputeActorContra
         final AnnModel annModel = (AnnModel) ((Object[]) parameter.getSerializable())[1];
 
         double totalError = 0;
+        double totalRelativeError = 0;
 
         AnnTrainer trainer = new AnnTrainer();
         double[][] sum = new double[annModel.getLayerCount()][];
         for (Data data : dataset) {
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
+            if (instance.getOutput() < 0) {
+                continue;
+            }
+
             AnnData annData = (AnnData) Helper.convertToAnnData(wordEmbedding, instance);
 
-            // setup corruption post processor to corrupt the input
+            // // setup corruption post processor to corrupt the input
             OutputPostProcessor postProcessor = null;
-            if (annModel.getLayerCount() == 2) {
-                // corrupt input
-                Helper.corruptRandomWord(annData.getInput());
-            } else {
-                postProcessor = new OutputPostProcessor() {
-                    private double[] uncorruptedData;
-
-                    @Override
-                    public void process(double[] output) {
-                        this.uncorruptedData = Arrays.copyOf(output, output.length);
-
-                        Helper.corruptWithMask(output);
-                    }
-
-                    @Override
-                    public int layer() {
-                        return annModel.getLayerCount() - 3;
-                    }
-
-                    @Override
-                    public double[] getCleanData() {
-                        return uncorruptedData;
-                    }
-                };
-            }
+            // if (annModel.getLayerCount() == 2) {
+            // // corrupt input
+            // // Helper.corruptRandomWord(annData.getInput());
+            // } else {
+            // postProcessor = new OutputPostProcessor() {
+            // private double[] uncorruptedData;
+            //
+            // @Override
+            // public void process(double[] output) {
+            // this.uncorruptedData = Arrays.copyOf(output, output.length);
+            //
+            // Helper.corruptWithMask(output);
+            // }
+            //
+            // @Override
+            // public int layer() {
+            // return annModel.getLayerCount() - 3;
+            // }
+            //
+            // @Override
+            // public double[] getCleanData() {
+            // return uncorruptedData;
+            // }
+            // };
+            // }
             // calculate ANN output
             double[][] output = trainer.run(annModel, annData.getInput(), sum, postProcessor);
-            // set up ann data output to the clean input
-            if (postProcessor != null) {
-                annData = new AnnData(annData.getInput(), postProcessor.getCleanData());
-            }
+            // // set up ann data output to the clean input
+            // if (postProcessor != null) {
+            // annData = new AnnData(annData.getInput(), postProcessor.getCleanData());
+            // }
 
             double squreError = 0;
+            double squre = 0;
             for (int i = 0; i < output[output.length - 1].length; i++) {
                 squreError += Math.pow(output[output.length - 1][i] - annData.getOutput()[i], 2);
+                squre += Math.pow(annData.getOutput()[i], 2);
             }
             totalError += Math.sqrt(squreError / output[output.length - 1].length);
+            totalRelativeError +=
+                    Math.sqrt(squreError / output[output.length - 1].length)
+                            / Math.sqrt(squre / output[output.length - 1].length);
         }
 
-        String message = "Average error: " + totalError / dataset.size();
+        String message =
+                "Average error: " + totalError / dataset.size() + ". Relative error: " + totalRelativeError
+                        / dataset.size();
         getLogger().info(message);
         System.out.println(message);
 

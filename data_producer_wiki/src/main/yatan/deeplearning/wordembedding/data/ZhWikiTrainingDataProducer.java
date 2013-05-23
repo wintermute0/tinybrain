@@ -38,7 +38,7 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
     private static final int MAX_ARTICLE_ID = 3449448;
     private Random random = new Random(new Date().getTime());
 
-    public static int FREQUENCEY_RANK_BOUND = 2000;
+    public static int FREQUENCEY_RANK_BOUND = -1;
 
     @Inject
     public ZhWikiTrainingDataProducer(Dictionary dictionary) {
@@ -158,7 +158,7 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
 
     private boolean isWordInvalid(int wordIndex) {
         return wordIndex == this.dictionary.indexOf(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)
-                || (this.FREQUENCEY_RANK_BOUND > 0 && this.dictionary.frenquencyRank(wordIndex) > this.FREQUENCEY_RANK_BOUND);
+                || (FREQUENCEY_RANK_BOUND > 0 && this.dictionary.frenquencyRank(wordIndex) > FREQUENCEY_RANK_BOUND);
     }
 
     private void prepareArticleDao() throws SQLException {

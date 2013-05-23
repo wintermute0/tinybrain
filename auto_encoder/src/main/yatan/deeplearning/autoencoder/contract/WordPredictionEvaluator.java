@@ -3,9 +3,14 @@ package yatan.deeplearning.autoencoder.contract;
 import java.util.List;
 
 import scala.actors.threadpool.Arrays;
+
+import com.google.inject.Inject;
+
 import yatan.ann.AnnData;
 import yatan.ann.AnnModel;
 import yatan.ann.AnnTrainer;
+import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
+import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.distributedcomputer.Data;
@@ -14,6 +19,9 @@ import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class WordPredictionEvaluator extends AbstractComputeActorContractImpl {
     private static final int EVALUATION_INTERVAL_IN_SECONDS = 60;
+
+    @Inject
+    private Dictionary dictionary;
 
     @Override
     protected int requestDataSize() {
@@ -26,32 +34,37 @@ public class WordPredictionEvaluator extends AbstractComputeActorContractImpl {
         final AnnModel annModel = (AnnModel) ((Object[]) parameter.getSerializable())[1];
 
         int totalWordRank = 0;
+        double totalLogRank = 0;
+
+        int instanceCount = 0;
 
         AnnTrainer trainer = new AnnTrainer();
         double[][] sum = new double[annModel.getLayerCount()][];
         for (Data data : dataset) {
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
-            AnnData annData = (AnnData) Helper.convertToAnnData(wordEmbedding, instance);
-
-            double[] actualWord = Arrays.copyOfRange(annData.getInput(), 2 * 50, 3 * 50);
-
-            // setup corruption post processor to corrupt the input
-            if (annModel.getLayerCount() == 2) {
-                // corrupt input
-                for (int i = 2 * 50; i < 3 * 50; i++) {
-                    annData.getInput()[i] = 0;
-                }
+            if (instance.getOutput() < 0) {
+                continue;
             }
+
+            instanceCount++;
+
+            AnnData annData = (AnnData) Helper.convertToAnnData(wordEmbedding, instance);
 
             // calculate ANN output
             double[][] output = trainer.run(annModel, annData.getInput(), sum);
 
             double[] predictedWord = Arrays.copyOfRange(output[output.length - 1], 2 * 50, 3 * 50);
-            double predictedWordDistance = distance(actualWord, predictedWord);
+            double predictedWordDistance =
+                    distance(Arrays.copyOfRange(annData.getOutput(), 2 * 50, 3 * 50), predictedWord);
 
-            int wordRank = 0;
+            int wordRank = 1;
             double[] wordData = new double[wordEmbedding.getWordVectorSize()];
             for (int column = 0; column < wordEmbedding.getMatrix().columnSize(); column++) {
+                if (ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND > 0
+                        && this.dictionary.frenquencyRank(column) > ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND) {
+                    continue;
+                }
+
                 for (int row = 0; row < wordEmbedding.getMatrix().rowSize(); row++) {
                     wordData[row] = wordEmbedding.getMatrix().getData()[row][column];
                 }
@@ -63,9 +76,12 @@ public class WordPredictionEvaluator extends AbstractComputeActorContractImpl {
             }
 
             totalWordRank += wordRank;
+            totalLogRank += Math.log(wordRank);
         }
 
-        String message = "Average word rank: " + 1.0 * totalWordRank / dataset.size();
+        String message =
+                "Average word rank: " + 1.0 * totalWordRank / instanceCount + ". Log rank: " + totalLogRank
+                        / instanceCount;
         getLogger().info(message);
         System.out.println(message);
 

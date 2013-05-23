@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
-import scala.actors.threadpool.Arrays;
+import com.google.common.collect.Lists;
 
 import yatan.ann.AnnData;
 import yatan.ann.AnnGradient;
@@ -19,7 +19,9 @@ import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class AutoEncoderTrainingContractImpl extends AbstractComputeActorContractImpl {
-    private static final int BATCH_SIZE = 100;
+    private static final int BATCH_SIZE = 10;
+
+    private double[] rollingActivation;
 
     @Override
     protected int requestDataSize() {
@@ -36,42 +38,50 @@ public class AutoEncoderTrainingContractImpl extends AbstractComputeActorContrac
         double[][] sum = new double[annModel.getLayerCount()][];
         HashMap<Integer, Double[]> batchWordEmbeddingDelta = new HashMap<Integer, Double[]>();
 
+        if (this.rollingActivation == null) {
+            this.rollingActivation = new double[annModel.getLayer(0).columnSize()];
+        }
+
         for (Data data : dataset) {
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
+            boolean inverseGradient = instance.getOutput() < 0;
+
             AnnData annData = (AnnData) Helper.convertToAnnData(wordEmbedding, instance);
 
             OutputPostProcessor postProcessor = null;
-            if (annModel.getLayerCount() == 2) {
-                // corrupt input
-                Helper.corruptRandomWord(annData.getInput());
-            } else {
-                postProcessor = new OutputPostProcessor() {
-                    private double[] uncorruptedData;
-
-                    @Override
-                    public void process(double[] output) {
-                        this.uncorruptedData = Arrays.copyOf(output, output.length);
-
-                        Helper.corruptWithMask(output);
-                    }
-
-                    @Override
-                    public int layer() {
-                        return annModel.getLayerCount() - 3;
-                    }
-
-                    @Override
-                    public double[] getCleanData() {
-                        return uncorruptedData;
-                    }
-                };
-            }
+            // if (annModel.getLayerCount() == 2) {
+            // // corrupt input
+            // Helper.corruptRandomWord(annData.getInput());
+            // } else {
+            // postProcessor = new OutputPostProcessor() {
+            // private double[] uncorruptedData;
+            //
+            // @Override
+            // public void process(double[] output) {
+            // this.uncorruptedData = Arrays.copyOf(output, output.length);
+            //
+            // Helper.corruptWithMask(output);
+            // }
+            //
+            // @Override
+            // public int layer() {
+            // return annModel.getLayerCount() - 3;
+            // }
+            //
+            // @Override
+            // public double[] getCleanData() {
+            // return uncorruptedData;
+            // }
+            // };
+            // }
             double[][] output = trainer.run(annModel, annData.getInput(), sum, postProcessor);
 
-            if (postProcessor != null) {
-                annData = new AnnData(annData.getInput(), postProcessor.getCleanData());
-            }
-            AnnGradient newGradient = trainer.backpropagateAutoEncoderLeastSqure(annModel, annData, output, sum, false);
+            // if (postProcessor != null) {
+            // annData = new AnnData(annData.getInput(), postProcessor.getCleanData());
+            // }
+            AnnGradient newGradient =
+                    trainer.backpropagateAutoEncoderLeastSqure(annModel, annData, output, sum, inverseGradient,
+                            inverseGradient ? 0.1 : 1, this.rollingActivation, 1, 0.1);
 
             batchGradient = saveGradient(batchGradient, newGradient);
 
@@ -85,9 +95,10 @@ public class AutoEncoderTrainingContractImpl extends AbstractComputeActorContrac
                 // }
                 // }
                 //
-                // // first save word embedding delta
-                // saveWordEmbeddingDelta(newGradient, batchWordEmbeddingDelta, wordEmbedding.getWordVectorSize(),
-                // instance);
+                // first save word embedding delta
+                List<Integer> input = Lists.newArrayList(instance.getInput());
+                // input.remove(input.size() / 2);
+                saveWordEmbeddingDelta(newGradient, batchWordEmbeddingDelta, wordEmbedding.getWordVectorSize(), input);
 
                 // // construct a negative example
                 // java.util.Arrays.fill(annData.getOutput(), 0);
@@ -104,11 +115,11 @@ public class AutoEncoderTrainingContractImpl extends AbstractComputeActorContrac
         batchGradient.averageBy(BATCH_SIZE);
 
         // average word embedding gradient
-        // for (Double[] gradient : batchWordEmbeddingDelta.values()) {
-        // for (int i = 0; i < gradient.length; i++) {
-        // gradient[i] /= BATCH_SIZE;
-        // }
-        // }
+        for (Double[] gradient : batchWordEmbeddingDelta.values()) {
+            for (int i = 0; i < gradient.length; i++) {
+                gradient[i] /= BATCH_SIZE;
+            }
+        }
 
         // return computation result
         ComputeResult result = new ComputeResult();
@@ -130,9 +141,9 @@ public class AutoEncoderTrainingContractImpl extends AbstractComputeActorContrac
     }
 
     private static void saveWordEmbeddingDelta(AnnGradient newGradient, HashMap<Integer, Double[]> wordEmbeddingDelta,
-            int wordVectorSize, WordEmbeddingTrainingInstance instance) {
-        for (int i = 0; i < instance.getInput().size(); i++) {
-            int index = instance.getInput().get(i);
+            int wordVectorSize, List<Integer> inputWordIndices) {
+        for (int i = 0; i < inputWordIndices.size(); i++) {
+            int index = inputWordIndices.get(i);
             Double[] delta = wordEmbeddingDelta.get(index);
             if (delta == null) {
                 delta = new Double[wordVectorSize];

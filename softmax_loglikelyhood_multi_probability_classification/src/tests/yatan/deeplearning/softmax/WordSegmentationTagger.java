@@ -34,7 +34,7 @@ public class WordSegmentationTagger {
     private static Set<String> ALL_WORDS = Sets.newHashSet();
 
     public static void main(String[] args) throws Exception {
-        Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict.txt"));
+        Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict_better.txt"));
         TaggedSentenceDataset dataset = new ICWB2Parser().parse(new File("data/icwb2-data/gold/pku_test_gold.utf8"));
         Object[] model = WordSegmentationEvaluator.loadState();
         WordEmbedding wordEmbedding = (WordEmbedding) model[0];

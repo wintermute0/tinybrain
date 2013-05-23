@@ -89,7 +89,8 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
             // outputSum = 0;
             int actualWordIndex = instance.getInput().get(instance.getInput().size() / 2);
             for (int i = 0; i < wordEmbedding.getDictionary().size(); i++) {
-                if (dictionary.frenquencyRank(i) > ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND) {
+                if (ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND > 0
+                        && dictionary.frenquencyRank(i) > ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND) {
                     continue;
                 }
 

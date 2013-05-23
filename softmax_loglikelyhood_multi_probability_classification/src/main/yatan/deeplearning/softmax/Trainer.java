@@ -80,7 +80,7 @@ public class Trainer {
             @Override
             public void run() {
                 int newThreadInterval = 64;
-                for (int i = 0; i < 16; i++) {
+                for (int i = 0; i < 1; i++) {
                     system.actorOf(new Props(new UntypedActorFactory() {
                         @Override
                         public Actor create() throws Exception {
@@ -123,7 +123,7 @@ public class Trainer {
             // bind trainer configuration
             bind(TrainerConfiguration.class).toInstance(TRAINER_CONFIGURATION);
             // load dictionary
-            bind(Dictionary.class).toInstance(Dictionary.create(new File("test_files/zh_dict.txt")));
+            bind(Dictionary.class).toInstance(Dictionary.create(new File("test_files/zh_dict_better.txt")));
             // set word vector size
             bind(Integer.class).annotatedWith(Names.named("word_vector_size")).toInstance(
                     TRAINER_CONFIGURATION.wordVectorSize);
@@ -139,7 +139,7 @@ public class Trainer {
 
                 // bind training data set
                 bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
-                        new ICWB2Parser().parse(new File("data/icwb2-data/training/msr_training.utf8")));
+                        new ICWB2Parser().parse(new File("data/icwb2-data/training/pku_training.utf8")));
 
                 // bind data producer
                 bind(DataProducer.class).to(WordSegmentationDataProducer.class);
@@ -149,8 +149,8 @@ public class Trainer {
                         new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize
                                 * WordSegmentationDataProducer.WINDOWS_SIZE);
                 annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-                annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-                annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+                // annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+                // annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
                 annConfiguration.addLayer(WordSegmentationInstancePool.TAGS.size(), ActivationFunction.SOFTMAX);
                 bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(
                         annConfiguration);
@@ -179,7 +179,7 @@ public class Trainer {
 
                 // bind evaluating data set
                 bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
-                        new ICWB2Parser().parse(new File("data/icwb2-data/gold/msr_test_gold.utf8")));
+                        new ICWB2Parser().parse(new File("data/icwb2-data/gold/pku_test_gold.utf8")));
 
                 // bind data producer
                 bind(DataProducer.class).to(WordSegmentationDataProducer.class);

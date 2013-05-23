@@ -28,6 +28,7 @@ import yatan.commons.matrix.Matrix;
 import yatan.deeplearning.wordembedding.TrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
+import yatan.deeplearning.wordembedding.utility.LogUtility;
 import yatan.distributed.akka.BaseActorContract;
 import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.Parameter.ParameterIndexPath;
@@ -38,7 +39,7 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
     private static final double ADA_DELTA_RHO = 0.95;
     private static final double ADA_DELTA_EPSILON = 0.000001;
 
-    private static final double STATE_SAVING_INTERVAL_MINUTES = 10;
+    private static final double STATE_SAVING_INTERVAL_MINUTES = 5;
 
     private static final String MODEL_FOLDER = "test_files/results/";
 
@@ -93,7 +94,7 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
         if (annGradient != null) {
             annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
                     this.deltaAnnWeightSumSquare);
-            // this.annModel.update(annGradient, 0.01, this.annDeltaGradientSumSquare);
+            // this.annModel.update(annGradient, 0.02, this.annDeltaGradientSumSquare);
         }
 
         Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];

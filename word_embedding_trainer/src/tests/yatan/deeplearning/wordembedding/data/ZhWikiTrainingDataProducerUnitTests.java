@@ -27,7 +27,7 @@ public class ZhWikiTrainingDataProducerUnitTests {
 
     @Test
     public void testProduceInstances() throws Exception {
-        for (Data data : this.producer.produceData(10000)) {
+        for (Data data : this.producer.produceData(1000)) {
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
             System.out.print(instance.getOutput() + ": ");
             for (int index : instance.getInput()) {

@@ -69,16 +69,16 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
             @Named("ann_configuration") AnnConfiguration annConfiguration, @Named("word_vector_size") int wordVectorSize) {
         Preconditions.checkArgument(dictionary != null, "The parameter 'dictionary' cannot be null.");
         Preconditions.checkArgument(annConfiguration != null);
-        if (annConfiguration.layers.size() == 2) {
-            Preconditions.checkArgument(annConfiguration.inputDegree == Lists.reverse(annConfiguration.layers).get(0),
-                    "The decoder should match the last encoder.");
-        } else {
-            Preconditions
-                    .checkArgument(
-                            Lists.reverse(annConfiguration.layers).get(2)
-                                    .equals(Lists.reverse(annConfiguration.layers).get(0)),
-                            "The decoder should match the last encoder.");
-        }
+        // if (annConfiguration.layers.size() == 2) {
+        // Preconditions.checkArgument(annConfiguration.inputDegree == Lists.reverse(annConfiguration.layers).get(0),
+        // "The decoder should match the last encoder.");
+        // } else {
+        // Preconditions
+        // .checkArgument(
+        // Lists.reverse(annConfiguration.layers).get(2)
+        // .equals(Lists.reverse(annConfiguration.layers).get(0)),
+        // "The decoder should match the last encoder.");
+        // }
 
         this.dictionary = dictionary;
         this.annConfiguration = annConfiguration;
@@ -116,14 +116,15 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
 
         // System.out.println(LogUtility.buildLogString(annGradient.getGradients().get(0)));
 
-        // Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
+        @SuppressWarnings("unchecked")
+        Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
         // // adadelta
         // wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON,
         // this.wordEmbeddingGradientSumSquare,
         // this.deltaWordEmbeddingSumSquare);
 
         // adagrad
-        // wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
+        wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
 
         // wordEmbedding.update(wordEmbeddingDelta, 0.1);
 
@@ -242,9 +243,9 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
                     getLogger().info("Word embedding " + wordEmbedding + " has been loaded.");
 
                     // scale word embedding
-                    getLogger().info("Scale word embedding to [-1, 1]");
-                    scaleWordEmbedding(wordEmbedding);
-                    LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
+                    // getLogger().info("Scale word embedding to [-1, 1]");
+                    // scaleWordEmbedding(wordEmbedding);
+                    // LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
 
                     // only reuse other saved states if the ANN model configuration is identical
                     if (this.annConfiguration.equals(state.annModel.getConfiguration())) {
