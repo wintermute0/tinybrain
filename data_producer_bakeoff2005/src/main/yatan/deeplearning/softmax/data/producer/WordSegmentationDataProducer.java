@@ -44,6 +44,10 @@ public class WordSegmentationDataProducer implements DataProducer {
         this.instancePool = instancePool;
     }
 
+    protected WordSegmentationInstancePool getInstancePool() {
+        return this.instancePool;
+    }
+
     @Override
     public List<Data> produceData(int size) throws DataProducerException {
         List<WordEmbeddingTrainingInstance> instances = this.instancePool.getInstances();
@@ -94,6 +98,7 @@ public class WordSegmentationDataProducer implements DataProducer {
         private final TaggedSentenceDataset taggedSentenceDataset;
 
         private List<WordEmbeddingTrainingInstance> instances;
+        private List<List<WordEmbeddingTrainingInstance>> sentences = Lists.newArrayList();
 
         @Inject
         public WordSegmentationInstancePool(Dictionary dictionary,
@@ -122,6 +127,12 @@ public class WordSegmentationDataProducer implements DataProducer {
             loadDataIfNecessary();
 
             return ImmutableList.copyOf(instances);
+        }
+
+        public List<List<WordEmbeddingTrainingInstance>> getSentences() throws DataProducerException {
+            loadDataIfNecessary();
+
+            return ImmutableList.copyOf(this.sentences);
         }
 
         private static List<String> breakWord(String word, List<String> originalWordContainer) {
@@ -239,8 +250,10 @@ public class WordSegmentationDataProducer implements DataProducer {
 
                 LOGGER.info("Coverting data to training instance...");
                 for (TaggedSentence sentence : this.taggedSentenceDataset.getSentences()) {
-                    instances.addAll(convertTaggedSentenceToWordEmbeddingTrainingInstance(this.dictionary, sentence,
-                            null));
+                    List<WordEmbeddingTrainingInstance> list =
+                            convertTaggedSentenceToWordEmbeddingTrainingInstance(this.dictionary, sentence, null);
+                    instances.addAll(list);
+                    sentences.add(list);
                 }
 
                 if (this.shuffle) {

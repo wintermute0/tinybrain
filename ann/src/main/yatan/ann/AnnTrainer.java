@@ -217,15 +217,22 @@ public class AnnTrainer {
      */
     public AnnGradient backpropagateSoftmaxLogLikelyhood(AnnModel model, AnnData data, double[][] output,
             double[][] sum, double[] l2Lambdas, AnnGradient reuse) {
-        if (l2Lambdas != null) {
-            Preconditions.checkArgument(l2Lambdas.length >= model.getLayerCount());
-        }
-
         // calculate the last layer of particial derivative L/a
         double[] lOverA = Arrays.copyOf(output[output.length - 1], output[output.length - 1].length);
         for (int i = 0; i < lOverA.length; i++) {
             lOverA[i] = data.getOutput()[i] - lOverA[i];
         }
+
+        return backpropagateWithGradient(lOverA, model, data.getInput(), output, sum, l2Lambdas, reuse);
+    }
+
+    public AnnGradient backpropagateWithGradient(double[] annOutputGradient, AnnModel model, double[] annInput,
+            double[][] output, double[][] sum, double[] l2Lambdas, AnnGradient reuse) {
+        if (l2Lambdas != null) {
+            Preconditions.checkArgument(l2Lambdas.length >= model.getLayerCount());
+        }
+
+        double[] lOverA = annOutputGradient;
 
         // compute gradient
         List<Matrix> gradients = new ArrayList<Matrix>();
@@ -240,7 +247,7 @@ public class AnnTrainer {
             gradients.add(0, gradient);
 
             double l2Lambda = l2Lambdas == null ? 0 : l2Lambdas[k];
-            double[] h = k > 0 ? output[k - 1] : data.getInput();
+            double[] h = k > 0 ? output[k - 1] : annInput;
             for (int j = 0; j < gradient.rowSize() - 1; j++) {
                 for (int i = 0; i < gradient.columnSize(); i++) {
                     // L2 regularization
@@ -280,7 +287,7 @@ public class AnnTrainer {
             // we have a l2lambda for input
             double l2Lambda = l2Lambdas[model.getLayerCount()];
             for (int i = 0; i < lOverX.length - 1; i++) {
-                lOverX[i] -= l2Lambda * data.getInput()[i];
+                lOverX[i] -= l2Lambda * annInput[i];
             }
         }
 

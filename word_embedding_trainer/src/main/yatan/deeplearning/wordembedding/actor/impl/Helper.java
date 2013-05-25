@@ -10,7 +10,7 @@ public class Helper {
 
     public static AnnData convertToSoftmaxAnnData(WordEmbedding wordEmbedding, WordEmbeddingTrainingInstance instance) {
         double[] annInput = wordEmbedding.lookup(instance.getInput());
-        double[] annOutput = instance.getOutput() > 0 ? new double[] {1, 0} : new double[] {0, 1};
+        double[] annOutput = instance.getOutput() > 0 ? new double[] {1} : new double[] {0};
         return new AnnData(annInput, annOutput);
     }
 }

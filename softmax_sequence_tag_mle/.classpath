@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main"/>
-	<classpathentry kind="src" path="src/tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ann"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/commons_ml"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/distributed_computer"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/softmax_loglikelyhood_multi_probability_classification"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/word_embedding_trainer"/>
 	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-actor-2.0.4.jar"/>
 	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-actor-migration-2.0.4.jar"/>
 	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-agent-2.0.4.jar"/>
@@ -77,6 +74,7 @@
 	<classpathentry kind="lib" path="/lib/guice-3.0/guice-throwingproviders-3.0.jar"/>
 	<classpathentry kind="lib" path="/lib/guice-3.0/javax.inject.jar"/>
 	<classpathentry kind="lib" path="/lib/log4j/log4j.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/data_producer_wiki"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/data_producer_bakeoff2005"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/word_embedding"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

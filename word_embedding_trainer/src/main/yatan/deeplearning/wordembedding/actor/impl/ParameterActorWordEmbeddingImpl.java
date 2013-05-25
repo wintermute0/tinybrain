@@ -92,15 +92,18 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
         Serializable[] inputData = (Serializable[]) gradient.getSerializable();
         AnnGradient annGradient = (AnnGradient) inputData[0];
         if (annGradient != null) {
-            annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
-                    this.deltaAnnWeightSumSquare);
-            // this.annModel.update(annGradient, 0.02, this.annDeltaGradientSumSquare);
+            // annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
+            // this.deltaAnnWeightSumSquare);
+            this.annModel.update(annGradient, 0.1, this.annDeltaGradientSumSquare);
+            // this.annModel.update(annGradient, 0.1);
         }
 
         Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
-        wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON, this.wordEmbeddingGradientSumSquare,
-                this.deltaWordEmbeddingSumSquare);
-        // this.wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
+        // wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON,
+        // this.wordEmbeddingGradientSumSquare,
+        // this.deltaWordEmbeddingSumSquare);
+        this.wordEmbedding.update(wordEmbeddingDelta, 0.1, this.wordEmbeddingGradientSumSquare);
+        // this.wordEmbedding.update(wordEmbeddingDelta, 0.1);
 
         // save state if necessary
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {

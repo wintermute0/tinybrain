@@ -76,6 +76,7 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
         // double hT = 0;
         int positiveInstanceCount = 0;
         int totalRank = 0;
+        double totalLogRank = 0;
         for (Data data : dataset) {
             List<Integer> outputRank = Lists.newArrayList();
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
@@ -107,13 +108,10 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
                 outputRank.add(rank, i);
             }
 
-            int rank = outputRank.indexOf(actualWordIndex);
-            if (rank > 4000) {
-                // ignore this because it's probably &NUM& or something like it
-                continue;
-            }
+            int rank = outputRank.indexOf(actualWordIndex) + 1;
 
             totalRank += rank;
+            totalLogRank += Math.log(rank);
 
             // double pw = outputs[actualWordIndex] / outputSum;
             // System.out.print(positiveInstanceCount + ": P(w) = " + pw + ". ");
@@ -126,8 +124,11 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
             // System.out.println("Cross entropy = " + ce + ". Perperlexity = " + Math.pow(2, ce));
         }
 
-        System.out.println("Average actual word rank is: " + (1.0 * totalRank / positiveInstanceCount));
-        getLogger().info("Average actual word rank is: " + (1.0 * totalRank / positiveInstanceCount));
+        String message =
+                "Average actual word rank = " + (1.0 * totalRank / positiveInstanceCount) + ". Log rank = "
+                        + totalLogRank / positiveInstanceCount;
+        System.out.println(message);
+        getLogger().info(message);
 
         // return -1.0 / positiveInstanceCount * hT;
         return 0;

@@ -38,7 +38,7 @@ public class WordEmbeddingEvaluator {
         WordSegmentationDataProducer.WINDOWS_SIZE = 11;
 
         // 1365269964401(100 word embedding).json
-        String wordEmbeddingFile = "best_pku_closed_50we.json";
+        String wordEmbeddingFile = "softmax_model_1369397925262.json";
 
         Object[] models = loadWordEmbeddingFromFile(new File("test_files/results/" + wordEmbeddingFile));
         if (models.length == 0) {

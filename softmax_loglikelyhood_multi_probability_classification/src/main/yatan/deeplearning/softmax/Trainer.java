@@ -41,7 +41,7 @@ public class Trainer {
         TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0, 0, 0};
         // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0};
 
-        TRAINER_CONFIGURATION.hiddenLayerSize = 300;
+        TRAINER_CONFIGURATION.hiddenLayerSize = 100;
         TRAINER_CONFIGURATION.wordVectorSize = 50;
 
         TRAINER_CONFIGURATION.dropout = false;
@@ -80,7 +80,7 @@ public class Trainer {
             @Override
             public void run() {
                 int newThreadInterval = 64;
-                for (int i = 0; i < 1; i++) {
+                for (int i = 0; i < 2; i++) {
                     system.actorOf(new Props(new UntypedActorFactory() {
                         @Override
                         public Actor create() throws Exception {

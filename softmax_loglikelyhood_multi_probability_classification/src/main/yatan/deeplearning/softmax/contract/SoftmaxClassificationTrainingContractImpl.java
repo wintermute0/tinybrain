@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import com.google.inject.Inject;
 
 import yatan.ann.AnnData;
@@ -25,7 +28,7 @@ public class SoftmaxClassificationTrainingContractImpl extends AbstractComputeAc
     // WordEmbeddingAnnParameterActorContractImpl.ADAGRAD_NETWORK_LEARNING_RATE_LAMPDA / 10;
     // public static final double WORD_EMBEDDING_LEARNING_RATE =
     // WordEmbeddingAnnParameterActorContractImpl.ADAGRAD_WORD_EMBEDDING_LEARNING_RATE_LAMPDA / 10;
-    private static final int MINIBATCH_SIZE = 100;
+    private static final int MINIBATCH_SIZE = 10;
 
     @Inject(optional = false)
     private TrainerConfiguration trainerConfiguration;
@@ -45,6 +48,7 @@ public class SoftmaxClassificationTrainingContractImpl extends AbstractComputeAc
         AnnGradient batchGradient = null;
         // HashMap<Integer, Double[]> totalWordEmbeddingDelta = new HashMap<Integer, Double[]>();
         HashMap<Integer, Double[]> batchWordEmbeddingDelta = new HashMap<Integer, Double[]>();
+        Multiset<Integer> wordAppearCount = HashMultiset.create();
 
         AnnTrainer trainer = new AnnTrainer();
         double[][] sum = new double[originalAnnModel.getLayerCount()][];
@@ -81,47 +85,20 @@ public class SoftmaxClassificationTrainingContractImpl extends AbstractComputeAc
             // save wordEmbeddingDelta
             saveWordEmbeddingDelta(newGradient, batchWordEmbeddingDelta, wordEmbedding.getWordVectorSize(), annInput,
                     instance);
-
-            // if we get to batch size, update model
-            // // FIXME: potential bug: what if requestDataSize % MINIBATCH_SIZE != 0?
-            // if (batchCount == MINIBATCH_SIZE) {
-            // // update ann model
-            // originalAnnModel.update(batchGradient, NETWORK_LEARNING_RATE);
-            // // update word embedding
-            // wordEmbedding.update(batchWordEmbeddingDelta, WORD_EMBEDDING_LEARNING_RATE);
-            //
-            // // save total gradient and wordEmbeddingDelta
-            // totalGradient = saveGradient(totalGradient, batchGradient);
-            // for (Entry<Integer, Double[]> batchEmbeddingDelta : batchWordEmbeddingDelta.entrySet()) {
-            // Double[] delta = totalWordEmbeddingDelta.get(batchEmbeddingDelta.getKey());
-            // if (delta == null) {
-            // delta = new Double[wordEmbedding.getWordVectorSize()];
-            // totalWordEmbeddingDelta.put(batchEmbeddingDelta.getKey(), delta);
-            // for (int i = 0; i < wordEmbedding.getWordVectorSize(); i++) {
-            // delta[i] = batchEmbeddingDelta.getValue()[i];
-            // }
-            // } else {
-            // for (int i = 0; i < wordEmbedding.getWordVectorSize(); i++) {
-            // delta[i] += batchEmbeddingDelta.getValue()[i];
-            // }
-            // }
-            // }
-            //
-            // // clear batch data
-            // batchCount = 0;
-            //
-            // batchGradient = null;
-            // batchWordEmbeddingDelta.clear();
-            // }
+            // update word appear count
+            for (Integer word : instance.getInput()) {
+                wordAppearCount.add(word);
+            }
         }
 
         // average batch gradient
         batchGradient.averageBy(MINIBATCH_SIZE);
 
         // average word embedding gradient
-        for (Double[] gradient : batchWordEmbeddingDelta.values()) {
+        for (Entry<Integer, Double[]> entry : batchWordEmbeddingDelta.entrySet()) {
+            Double[] gradient = entry.getValue();
             for (int i = 0; i < gradient.length; i++) {
-                gradient[i] /= MINIBATCH_SIZE;
+                gradient[i] /= wordAppearCount.count(entry.getKey());
             }
         }
 

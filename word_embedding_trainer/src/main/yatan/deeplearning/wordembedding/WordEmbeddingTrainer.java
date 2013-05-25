@@ -36,8 +36,8 @@ public class WordEmbeddingTrainer {
     private static final int TRAINING_ACTOR_COUNT = 2;
 
     static {
-        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0.0001};
-        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0};
+        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.00001, 0.00001, 0.00001};
+        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0};
 
         TRAINER_CONFIGURATION.hiddenLayerSize = 100;
         TRAINER_CONFIGURATION.wordVectorSize = 50;
@@ -148,7 +148,8 @@ public class WordEmbeddingTrainer {
             AnnConfiguration annConfiguration =
                     new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize * ZhWikiTrainingDataProducer.WINDOWS_SIZE);
             annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-            annConfiguration.addLayer(2, ActivationFunction.SOFTMAX);
+            // annConfiguration.addLayer(2, ActivationFunction.SOFTMAX);
+            annConfiguration.addLayer(1, ActivationFunction.SIGMOID);
             bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(annConfiguration);
 
             bind(ParameterActorContract.class).to(ParameterActorWordEmbeddingImpl.class);
