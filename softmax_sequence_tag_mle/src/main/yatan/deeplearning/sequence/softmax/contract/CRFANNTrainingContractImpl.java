@@ -1,20 +1,23 @@
 package yatan.deeplearning.sequence.softmax.contract;
 
+import java.io.Serializable;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.Map.Entry;
 
 import scala.actors.threadpool.Arrays;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import yatan.ann.AnnGradient;
 import yatan.ann.AnnModel;
 import yatan.ann.AnnTrainer;
+import yatan.deeplearning.sequence.softmax.TrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
@@ -26,9 +29,10 @@ public class CRFANNTrainingContractImpl extends AbstractComputeActorContractImpl
     @Inject
     private Dictionary dictionary;
     @Inject
-    private WordEmbedding wordEmbedding;
-    @Inject
+    @Named("tag_count")
     private int tagCount;
+    @Inject
+    private TrainerConfiguration trainerConfiguration;
 
     private Random random = new Random(new Date().getTime());
 
@@ -40,14 +44,15 @@ public class CRFANNTrainingContractImpl extends AbstractComputeActorContractImpl
     @Override
     protected ComputeResult doCompute(List<Data> dataset, Parameter parameter) {
         Object[] serializables = (Object[]) parameter.getSerializable();
-        AnnModel annModel = (AnnModel) serializables[0];
-        double[][] tagTransitionWeights = (double[][]) serializables[1];
+        WordEmbedding wordEmbedding = (WordEmbedding) serializables[0];
+        AnnModel annModel = (AnnModel) serializables[1];
+        double[][] tagTransitionWeights = (double[][]) serializables[2];
 
         @SuppressWarnings("unchecked")
         List<WordEmbeddingTrainingInstance> instances =
                 (List<WordEmbeddingTrainingInstance>) dataset.get(0).getSerializable();
 
-        Object[] gradients = backpropagate(annModel, tagTransitionWeights, instances, tagCount);
+        Object[] gradients = backpropagate(wordEmbedding, annModel, tagTransitionWeights, instances, tagCount);
 
         // return computation result
         ComputeResult result = new ComputeResult();
@@ -59,18 +64,19 @@ public class CRFANNTrainingContractImpl extends AbstractComputeActorContractImpl
         return result;
     }
 
-    private Object[] backpropagate(AnnModel annModel, double[][] tagTransitionWeights,
+    private Object[] backpropagate(WordEmbedding wordEmbedding, AnnModel annModel, double[][] tagTransitionWeights,
             List<WordEmbeddingTrainingInstance> instances, int tagCount) {
         double[][][] sums = new double[instances.size()][][];
         double[][][] outputs = new double[instances.size()][][];
         double[][] annInputs = new double[instances.size()][];
 
         // first compute all f
-        double[][] f = computeF(this.wordEmbedding, annModel, instances, annInputs, sums, outputs);
+        double[][] f = computeF(wordEmbedding, annModel, instances, annInputs, sums, outputs);
 
         // generate a cd sample
         int[] tags = getTags(instances);
-        int[] sample = gibbsSample(f, tagTransitionWeights, tags, tagCount);
+        // int[] sample = singleGibbsSample(f, tagTransitionWeights, tags, tagCount);
+        int[] sample = gibbsSample(f, tagTransitionWeights, tagCount, 100);
 
         // compute transition score gradient
         double[][] transitaionGradient = new double[tagTransitionWeights.length][tagTransitionWeights[0].length];
@@ -83,6 +89,13 @@ public class CRFANNTrainingContractImpl extends AbstractComputeActorContractImpl
             transitaionGradient[sample[i - 1]][sample[i]]--;
         }
 
+        // // average transition gradient
+        // for (int i = 0; i < tagCount; i++) {
+        // for (int j = 0; j < tagCount; j++) {
+        // transitaionGradient[i][j] /= instances.size();
+        // }
+        // }
+
         // ann bp
         AnnTrainer trainer = new AnnTrainer();
         AnnGradient batchGradient = null;
@@ -91,13 +104,17 @@ public class CRFANNTrainingContractImpl extends AbstractComputeActorContractImpl
 
         AnnGradient newGradient = null;
         for (int i = 0; i < sample.length; i++) {
+            if (tags[i] == sample[i]) {
+                continue;
+            }
+
             double[] gradient = new double[tagCount];
             gradient[tags[i]] = 1;
             gradient[sample[i]] -= 1;
 
             newGradient =
-                    trainer.backpropagateWithGradient(gradient, annModel, annInputs[i], outputs[i], sums[i], null,
-                            newGradient);
+                    trainer.backpropagateWithGradient(gradient, annModel, annInputs[i], outputs[i], sums[i],
+                            this.trainerConfiguration.l2Lambdas, newGradient);
             batchGradient = saveGradient(batchGradient, newGradient);
 
             saveWordEmbeddingDelta(newGradient, batchWordEmbeddingDelta, wordEmbedding.getWordVectorSize(),
@@ -108,20 +125,20 @@ public class CRFANNTrainingContractImpl extends AbstractComputeActorContractImpl
             }
         }
 
-        // average batch gradient
-        if (batchGradient != null) {
-            batchGradient.averageBy(instances.size());
-        }
+        // // average batch gradient
+        // if (batchGradient != null) {
+        // batchGradient.averageBy(instances.size());
+        // }
+        //
+        // // average word embedding gradient
+        // for (Entry<Integer, Double[]> entry : batchWordEmbeddingDelta.entrySet()) {
+        // Double[] gradient = entry.getValue();
+        // for (int i = 0; i < gradient.length; i++) {
+        // gradient[i] /= wordAppearCount.count(entry.getKey());
+        // }
+        // }
 
-        // average word embedding gradient
-        for (Entry<Integer, Double[]> entry : batchWordEmbeddingDelta.entrySet()) {
-            Double[] gradient = entry.getValue();
-            for (int i = 0; i < gradient.length; i++) {
-                gradient[i] /= wordAppearCount.count(entry.getKey());
-            }
-        }
-
-        return new Object[] {batchGradient, batchGradient, transitaionGradient};
+        return new Serializable[] {batchGradient, batchWordEmbeddingDelta, transitaionGradient};
     }
 
     private int[] getTags(List<WordEmbeddingTrainingInstance> instances) {
@@ -143,6 +160,7 @@ public class CRFANNTrainingContractImpl extends AbstractComputeActorContractImpl
 
             annInputs[i] = wordEmbedding.lookup(instance.getInput());
 
+            sums[i] = new double[annModel.getLayerCount()][];
             outputs[i] = trainer.run(annModel, annInputs[i], sums[i]);
             results[i] = outputs[i][outputs[i].length - 1];
         }
@@ -150,16 +168,30 @@ public class CRFANNTrainingContractImpl extends AbstractComputeActorContractImpl
         return results;
     }
 
-    private int[] gibbsSample(double[][] f, double[][] tagTransitionWeight, int[] tags, int tagCount) {
+    private int[] gibbsSample(double[][] f, double[][] tagTransitionWeight, int tagCount, int step) {
+        int[] tags = new int[f.length];
+        for (int i = 0; i < tags.length; i++) {
+            tags[i] = this.random.nextInt(tagCount);
+        }
+
+        for (int i = 0; i < step; i++) {
+            tags = singleGibbsSample(f, tagTransitionWeight, tags, tagCount);
+        }
+
+        return tags;
+    }
+
+    private int[] singleGibbsSample(double[][] f, double[][] tagTransitionWeight, int[] tags, int tagCount) {
         int[] sample = Arrays.copyOf(tags, tags.length);
         double[] factorValues = new double[tagCount];
         for (int i = 0; i < sample.length; i++) {
             double totalFactorValue = 0;
             // sample new yi
             for (int j = 0; j < factorValues.length; j++) {
-                double potential1 = i == 0 ? tagTransitionWeight[tagCount][j] : tagTransitionWeight[i - 1][j];
+                double potential1 = i == 0 ? tagTransitionWeight[tagCount][j] : tagTransitionWeight[sample[i - 1]][j];
                 double potential2 =
-                        i == sample.length - 1 ? tagTransitionWeight[tagCount + 1][j] : tagTransitionWeight[i + 1][j];
+                        i == sample.length - 1 ? tagTransitionWeight[tagCount + 1][j]
+                                : tagTransitionWeight[sample[i + 1]][j];
                 factorValues[j] = Math.exp(f[i][j] + potential1 + potential2);
                 totalFactorValue += factorValues[j];
             }
