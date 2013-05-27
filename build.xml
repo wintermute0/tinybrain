@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="Word Embedding Trainer" basedir="." default="deploy_ssh">
-	<property name="ssh_server" value="ec2-user@ec2-107-21-88-19.compute-1.amazonaws.com"/>
+	<property name="ssh_server" value="ec2-user@ec2-54-226-4-67.compute-1.amazonaws.com"/>
 	<!-- <property name="ssh_server" value="eveningsun@10.3.7.40"/> -->
 	
 	<property name="key_file" value="C:\\Users\\eric\\Dropbox\\documents\\centermachinekey.pem"/>
@@ -61,7 +61,7 @@
 	</target>
 
 	<target name="upload_model">
-		<scp file="softmax_loglikelyhood_multi_probability_classification/test_files/results/best_pku_closed_50we.json"
+		<scp file="softmax_loglikelyhood_multi_probability_classification/test_files/results/best_pku_closed_50we2.json"
 			 todir="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/"
 			trust="true" keyfile="${key_file}" password="conan513" verbose="true" />
 	</target>

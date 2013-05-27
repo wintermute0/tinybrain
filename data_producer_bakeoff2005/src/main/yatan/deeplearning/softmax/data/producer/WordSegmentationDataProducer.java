@@ -48,6 +48,10 @@ public class WordSegmentationDataProducer implements DataProducer {
         return this.instancePool;
     }
 
+    protected Logger getLogger() {
+        return LOGGER;
+    }
+
     @Override
     public List<Data> produceData(int size) throws DataProducerException {
         List<WordEmbeddingTrainingInstance> instances = this.instancePool.getInstances();
@@ -244,6 +248,29 @@ public class WordSegmentationDataProducer implements DataProducer {
             return results;
         }
 
+        public static List<List<WordEmbeddingTrainingInstance>> breakSentences(Dictionary dictionary,
+                List<WordEmbeddingTrainingInstance> list) {
+            List<List<WordEmbeddingTrainingInstance>> sentences = Lists.newArrayList();
+
+            sentences.add(list);
+            // List<WordEmbeddingTrainingInstance> shortSentence = Lists.newArrayList();
+            // for (WordEmbeddingTrainingInstance instance : list) {
+            // shortSentence.add(instance);
+            // String centerWord = dictionary.words().get(instance.getInput().get(instance.getInput().size() / 2));
+            // if (centerWord.equals("。") || centerWord.equals("？") || centerWord.equals("！")
+            // || centerWord.equals("：") || centerWord.equals("；") || centerWord.equals("，")) {
+            // sentences.add(shortSentence);
+            // shortSentence = Lists.newArrayList();
+            // }
+            // }
+            //
+            // if (!shortSentence.isEmpty()) {
+            // sentences.add(shortSentence);
+            // }
+
+            return sentences;
+        }
+
         private void loadDataIfNecessary() throws DataProducerException {
             if (instances == null) {
                 instances = Lists.newArrayList();
@@ -253,7 +280,7 @@ public class WordSegmentationDataProducer implements DataProducer {
                     List<WordEmbeddingTrainingInstance> list =
                             convertTaggedSentenceToWordEmbeddingTrainingInstance(this.dictionary, sentence, null);
                     instances.addAll(list);
-                    sentences.add(list);
+                    sentences.addAll(breakSentences(this.dictionary, list));
                 }
 
                 if (this.shuffle) {

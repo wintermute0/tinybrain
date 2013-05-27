@@ -99,11 +99,10 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
         // System.out.println("RMS[x] = " + LogUtility.buildLogString(this.deltaAnnWeightSumSquare.get(0)));
 
         Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
-        // wordEmbedding.update(wordEmbeddingDelta, 0.001);
         // wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON,
         // this.wordEmbeddingGradientSumSquare,
         // this.deltaWordEmbeddingSumSquare);
-        wordEmbedding.update(wordEmbeddingDelta, 0.1, this.wordEmbeddingGradientSumSquare);
+        wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
 
         // save state if necessary
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {
@@ -212,9 +211,9 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
                     getLogger().info("Word embedding " + wordEmbedding + " has been loaded.");
 
                     // scale word embedding
-                    // getLogger().info("Scale word embedding to [-1, 1]");
-                    // scaleWordEmbedding(wordEmbedding);
-                    // LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
+                    getLogger().info("Scale word embedding to [-1, 1]");
+                    scaleWordEmbedding(wordEmbedding);
+                    LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
 
                     // only reuse other saved states if the ANN model configuration is identical
                     if (state.annModel != null && this.annConfiguration.equals(state.annModel.getConfiguration())) {

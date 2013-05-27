@@ -37,8 +37,9 @@ public class Trainer {
     public static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
 
     static {
-        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001, 0.0001, 0.0001};
-        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0, 0, 0};
+        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001, 0.0001, 0.0001};
+        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.001, 0.001, 0.001, 0.0001, 0.0001};
+        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0, 0, 0};
         // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0};
 
         TRAINER_CONFIGURATION.hiddenLayerSize = 100;
@@ -80,7 +81,7 @@ public class Trainer {
             @Override
             public void run() {
                 int newThreadInterval = 64;
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 16; i++) {
                     system.actorOf(new Props(new UntypedActorFactory() {
                         @Override
                         public Actor create() throws Exception {

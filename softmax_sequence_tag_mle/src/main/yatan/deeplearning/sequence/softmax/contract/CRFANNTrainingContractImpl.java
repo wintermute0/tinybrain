@@ -76,17 +76,22 @@ public class CRFANNTrainingContractImpl extends AbstractComputeActorContractImpl
         // generate a cd sample
         int[] tags = getTags(instances);
         // int[] sample = singleGibbsSample(f, tagTransitionWeights, tags, tagCount);
-        int[] sample = gibbsSample(f, tagTransitionWeights, tagCount, 100);
+        Object[] sampleResults = gibbsSample(f, tagTransitionWeights, tagCount, 500);
+        double[][] tagExpectation = (double[][]) sampleResults[0];
+        double[][] transitionExpectation = (double[][]) sampleResults[1];
 
         // compute transition score gradient
         double[][] transitaionGradient = new double[tagTransitionWeights.length][tagTransitionWeights[0].length];
         transitaionGradient[tagCount][tags[0]] = 1;
         transitaionGradient[tags[tags.length - 1]][tagCount + 1] = 1;
-        transitaionGradient[tagCount][sample[0]] -= 1;
-        transitaionGradient[sample[sample.length - 1]][tagCount + 1] -= 1;
         for (int i = 1; i < tags.length - 1; i++) {
             transitaionGradient[tags[i - 1]][tags[i]]++;
-            transitaionGradient[sample[i - 1]][sample[i]]--;
+        }
+
+        for (int i = 0; i < transitaionGradient.length; i++) {
+            for (int j = 0; j < transitaionGradient[i].length; j++) {
+                transitaionGradient[i][j] -= transitionExpectation[i][j];
+            }
         }
 
         // // average transition gradient
@@ -103,14 +108,19 @@ public class CRFANNTrainingContractImpl extends AbstractComputeActorContractImpl
         Multiset<Integer> wordAppearCount = HashMultiset.create();
 
         AnnGradient newGradient = null;
-        for (int i = 0; i < sample.length; i++) {
-            if (tags[i] == sample[i]) {
-                continue;
-            }
+        for (int i = 0; i < tags.length; i++) {
+            // if (tags[i] == sample[i]) {
+            // continue;
+            // }
 
             double[] gradient = new double[tagCount];
             gradient[tags[i]] = 1;
-            gradient[sample[i]] -= 1;
+            for (int j = 0; j < gradient.length; j++) {
+                gradient[j] -= tagExpectation[i][j];
+
+                // double y = outputs[i][annModel.getLayerCount() - 1][j];
+                // gradient[j] *= y * (1 - y);
+            }
 
             newGradient =
                     trainer.backpropagateWithGradient(gradient, annModel, annInputs[i], outputs[i], sums[i],
@@ -168,21 +178,50 @@ public class CRFANNTrainingContractImpl extends AbstractComputeActorContractImpl
         return results;
     }
 
-    private int[] gibbsSample(double[][] f, double[][] tagTransitionWeight, int tagCount, int step) {
+    private Object[] gibbsSample(double[][] f, double[][] tagTransitionWeight, int tagCount, int step) {
         int[] tags = new int[f.length];
         for (int i = 0; i < tags.length; i++) {
             tags[i] = this.random.nextInt(tagCount);
         }
 
+        double[][] cumulativeTransition = new double[tagTransitionWeight.length][tagTransitionWeight[0].length];
+        double[][] cumulativeSamples = new double[f.length][tagCount];
+        int cumulatedCount = 0;
         for (int i = 0; i < step; i++) {
-            tags = singleGibbsSample(f, tagTransitionWeight, tags, tagCount);
+            tags = singleGibbsSample(f, tagTransitionWeight, tags, tagCount, true);
+            if (i > step * 0.5) {
+                cumulatedCount++;
+                for (int j = 0; j < tags.length; j++) {
+                    cumulativeSamples[j][tags[j]]++;
+                    if (j == 0) {
+                        cumulativeTransition[tagCount][tags[j]]++;
+                    } else if (j == tags.length - 1) {
+                        cumulativeTransition[tags[j]][tagCount + 1]++;
+                    } else {
+                        cumulativeTransition[tags[j - 1]][tags[j]]++;
+                    }
+                }
+            }
         }
 
-        return tags;
+        for (int i = 0; i < tags.length; i++) {
+            for (int j = 0; j < tagCount; j++) {
+                cumulativeSamples[i][j] /= cumulatedCount;
+            }
+        }
+
+        for (int i = 0; i < cumulativeTransition.length; i++) {
+            for (int j = 0; j < cumulativeTransition[i].length; j++) {
+                cumulativeTransition[i][j] /= cumulatedCount;
+            }
+        }
+
+        return new Object[] {cumulativeSamples, cumulativeTransition};
     }
 
-    private int[] singleGibbsSample(double[][] f, double[][] tagTransitionWeight, int[] tags, int tagCount) {
-        int[] sample = Arrays.copyOf(tags, tags.length);
+    private int[] singleGibbsSample(double[][] f, double[][] tagTransitionWeight, int[] tags, int tagCount,
+            boolean reuseTags) {
+        int[] sample = reuseTags ? tags : Arrays.copyOf(tags, tags.length);
         double[] factorValues = new double[tagCount];
         for (int i = 0; i < sample.length; i++) {
             double totalFactorValue = 0;

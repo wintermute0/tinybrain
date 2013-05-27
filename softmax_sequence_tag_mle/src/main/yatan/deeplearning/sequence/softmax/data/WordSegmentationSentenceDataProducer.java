@@ -15,7 +15,13 @@ import yatan.distributedcomputer.Data;
 import yatan.distributedcomputer.contract.data.impl.DataProducerException;
 
 public class WordSegmentationSentenceDataProducer extends WordSegmentationDataProducer {
-    private Random random = new Random(new Date().getTime());
+    private final Random random = new Random(new Date().getTime());
+    @Inject
+    @Named("training")
+    private boolean training;
+
+    private int offset;
+    private int epoch = 1;
 
     @Inject
     public WordSegmentationSentenceDataProducer(@Named("training") boolean training,
@@ -30,11 +36,20 @@ public class WordSegmentationSentenceDataProducer extends WordSegmentationDataPr
         // add negative instances
         List<List<WordEmbeddingTrainingInstance>> sentences = getInstancePool().getSentences();
 
+        getLogger().info("Epoch " + this.epoch + " " + 100.0 * this.offset / sentences.size() + "%");
+
         List<Data> dataset = Lists.newArrayList();
         while (dataset.size() < size) {
             Data data = new Data();
             data.setSerializable((Serializable) sentences.get(this.random.nextInt(sentences.size())));
             dataset.add(data);
+
+            if (this.training) {
+                if (this.offset++ >= sentences.size()) {
+                    this.offset = 0;
+                    this.epoch++;
+                }
+            }
         }
 
         return dataset;

@@ -30,16 +30,15 @@ import akka.actor.UntypedActorFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 
 public class Trainer {
     public static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
 
     static {
-        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0005, 0.0005, 0.0005, 0.0001, 0.0001};
+        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001};
 
-        TRAINER_CONFIGURATION.hiddenLayerSize = 100;
+        TRAINER_CONFIGURATION.hiddenLayerSize = 150;
         TRAINER_CONFIGURATION.wordVectorSize = 50;
     }
 
@@ -106,12 +105,12 @@ public class Trainer {
                 return evaluatingModuleInjector.getInstance(ComputeActor.class);
             }
         }), "evalutor1");
-        // system.actorOf(new Props(new UntypedActorFactory() {
-        // @Override
-        // public Actor create() throws Exception {
-        // return trainingDataEvaluatingModuleInjector.getInstance(ComputeActor.class);
-        // }
-        // }), "evaluator2");
+        system.actorOf(new Props(new UntypedActorFactory() {
+            @Override
+            public Actor create() throws Exception {
+                return trainingDataEvaluatingModuleInjector.getInstance(ComputeActor.class);
+            }
+        }), "evaluator2");
     }
 
     public static class CommonModule extends AbstractModule {
@@ -134,7 +133,7 @@ public class Trainer {
         protected void configure() {
             try {
                 bind(boolean.class).annotatedWith(Names.named("training")).toInstance(true);
-                bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(100000);
+                bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(5000);
 
                 // bind training data set
                 bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
@@ -147,7 +146,7 @@ public class Trainer {
                 AnnConfiguration annConfiguration =
                         new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize
                                 * WordSegmentationDataProducer.WINDOWS_SIZE);
-                annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.SIGMOID);
+                annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
                 // annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
                 // annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
                 annConfiguration.addLayer(WordSegmentationInstancePool.TAGS.size(), ActivationFunction.Y_EQUALS_X);
