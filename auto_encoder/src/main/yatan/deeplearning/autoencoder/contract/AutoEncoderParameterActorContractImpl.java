@@ -110,7 +110,7 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
         // this.deltaAnnWeightSumSquare);
 
         // adgrad
-        annModel.update(annGradient, 0.01, annDeltaGradientSumSquare);
+        annModel.update(annGradient, 0.1, annDeltaGradientSumSquare);
 
         // annModel.update(annGradient, 0.01);
 
@@ -124,7 +124,7 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
         // this.deltaWordEmbeddingSumSquare);
 
         // adagrad
-        wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
+        wordEmbedding.update(wordEmbeddingDelta, 0.1, this.wordEmbeddingGradientSumSquare);
 
         // wordEmbedding.update(wordEmbeddingDelta, 0.1);
 
@@ -243,9 +243,9 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
                     getLogger().info("Word embedding " + wordEmbedding + " has been loaded.");
 
                     // scale word embedding
-                    // getLogger().info("Scale word embedding to [-1, 1]");
-                    // scaleWordEmbedding(wordEmbedding);
-                    // LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
+                    getLogger().info("Scale word embedding...");
+                    scaleWordEmbeddingUniformly(wordEmbedding);
+                    LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
 
                     // only reuse other saved states if the ANN model configuration is identical
                     if (this.annConfiguration.equals(state.annModel.getConfiguration())) {
@@ -280,7 +280,33 @@ public class AutoEncoderParameterActorContractImpl extends BaseActorContract imp
         }
     }
 
-    private static void scaleWordEmbedding(WordEmbedding wordEmbedding) {
+    private static void scaleWordEmbeddingByStddev(WordEmbedding wordEmbedding, double sigma) {
+        double total = 0;
+        Matrix matrix = wordEmbedding.getMatrix();
+        double[][] data = matrix.getData();
+        for (int i = 0; i < matrix.rowSize(); i++) {
+            for (int j = 0; j < matrix.columnSize(); j++) {
+                total += data[i][j];
+            }
+        }
+
+        double mean = total / (matrix.rowSize() * matrix.columnSize());
+        double dv = 0;
+        for (int i = 0; i < matrix.rowSize(); i++) {
+            for (int j = 0; j < matrix.columnSize(); j++) {
+                dv += Math.pow(data[i][j] - mean, 2);
+            }
+        }
+
+        double sdv = Math.sqrt(dv);
+        for (int i = 0; i < matrix.rowSize(); i++) {
+            for (int j = 0; j < matrix.columnSize(); j++) {
+                data[i][j] = sigma * data[i][j] / sdv;
+            }
+        }
+    }
+
+    private static void scaleWordEmbeddingUniformly(WordEmbedding wordEmbedding) {
         double max = Double.MIN_VALUE;
         double min = Double.MAX_VALUE;
         double[][] data = wordEmbedding.getMatrix().getData();

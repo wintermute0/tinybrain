@@ -50,6 +50,12 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
         int accurateCount = 0;
 
         AnnTrainer trainer = new AnnTrainer();
+        // use dropout ann model if necessary
+        AnnModel annModel = originalAnnModel;
+        if (this.trainerConfiguration.dropout) {
+            annModel = new DropoutAnnModel(originalAnnModel, false);
+        }
+
         for (Data data : dataset) {
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
 
@@ -64,12 +70,6 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
             }
 
             AnnData annData = new AnnData(input, new double[] {instance.getOutput()});
-
-            // use dropout ann model if necessary
-            AnnModel annModel = originalAnnModel;
-            if (this.trainerConfiguration.dropout) {
-                annModel = new DropoutAnnModel(originalAnnModel, false);
-            }
 
             // train with this ann data instance and update gradient
             double[][] output = trainer.run(annModel, annData.getInput(), new double[annModel.getLayerCount()][]);

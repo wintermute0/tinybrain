@@ -102,7 +102,7 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
         // wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON,
         // this.wordEmbeddingGradientSumSquare,
         // this.deltaWordEmbeddingSumSquare);
-        wordEmbedding.update(wordEmbeddingDelta, 0.01, this.wordEmbeddingGradientSumSquare);
+        wordEmbedding.update(wordEmbeddingDelta, 0.1, this.wordEmbeddingGradientSumSquare);
 
         // save state if necessary
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {
@@ -143,6 +143,11 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
                     this.annModel.reuseLowerLayer(persistableState.annModel, 0);
                     getLogger().info("Ann model statistics after reuseing:");
                     LogUtility.logAnnModel(getLogger(), annModel);
+                }
+
+                if (this.trainerConfiguration.dropout) {
+                    getLogger().info("Scale ANN for dropout learning.");
+                    scaleANN(annModel, 2);
                 }
             }
 
@@ -211,9 +216,9 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
                     getLogger().info("Word embedding " + wordEmbedding + " has been loaded.");
 
                     // scale word embedding
-                    getLogger().info("Scale word embedding to [-1, 1]");
-                    scaleWordEmbedding(wordEmbedding);
-                    LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
+                    // getLogger().info("Scale word embedding to [-1, 1]");
+                    // scaleWordEmbedding(wordEmbedding);
+                    // LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
 
                     // only reuse other saved states if the ANN model configuration is identical
                     if (state.annModel != null && this.annConfiguration.equals(state.annModel.getConfiguration())) {
@@ -283,6 +288,17 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
                 data[i][j] = (data[i][j] - (max + min) / 2) / (max - min) * 2;
+            }
+        }
+    }
+
+    private static void scaleANN(DefaultAnnModel annModel, double factor) {
+        for (int i = 0; i < annModel.getLayerCount(); i++) {
+            Matrix matrix = annModel.getLayer(i);
+            for (int row = 0; row < matrix.rowSize() - 1; row++) {
+                for (int column = 0; column < matrix.columnSize(); column++) {
+                    matrix.getData()[row][column] *= factor;
+                }
             }
         }
     }

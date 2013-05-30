@@ -124,16 +124,16 @@ public class AnnTrainer {
     }
 
     public AnnGradient backpropagateAutoEncoderLeastSqure(AnnModel model, AnnData data, double[][] output,
-            double[][] sum, boolean inverseGradient, double weight, double[] rollingActivation, double beta, double rho) {
-        int factor = inverseGradient ? -1 : 1;
-        factor *= weight;
+            double[][] sum) {
+        int factor = 1;
 
-        // // calculate l2 of the expected output
-        // double expectedOutputL2 = 0;
-        // for (int i = 0; i < data.getOutput().length; i++) {
-        // expectedOutputL2 += data.getOutput()[i];
-        // }
-        // expectedOutputL2 = Math.sqrt(expectedOutputL2);
+        // calculate l2 of the expected output
+        double expectedOutputL2 = 0;
+        for (int i = 0; i < data.getOutput().length; i++) {
+            expectedOutputL2 += Math.pow(data.getOutput()[i], 2);
+        }
+        expectedOutputL2 = Math.sqrt(expectedOutputL2 / data.getOutput().length);
+        factor *= 1 / expectedOutputL2;
 
         List<Matrix> gradients = new ArrayList<Matrix>();
 
@@ -141,6 +141,8 @@ public class AnnTrainer {
         double[] delta = Arrays.copyOf(output[output.length - 1], output[output.length - 1].length);
         for (int i = 0; i < delta.length; i++) {
             delta[i] = (data.getOutput()[i] - delta[i]) * factor;
+            // weight delta according to the output
+            // delta[i] /= Math.abs(data.getOutput()[i]);
         }
 
         int propagatedLayer = 0;
@@ -161,10 +163,10 @@ public class AnnTrainer {
                 delta[x] *= derivative;
 
                 // sparsity constraint
-                if (i == 0) {
-                    rollingActivation[x] = 0.95 * rollingActivation[x] + 0.05 * output[i][x];
-                    delta[x] -= beta * (-rho / rollingActivation[x] + (1 - rho) / (1 - rollingActivation[x])) * weight;
-                }
+                // if (i == 0) {
+                // rollingActivation[x] = 0.95 * rollingActivation[x] + 0.05 * output[i][x];
+                // delta[x] -= beta * (-rho / rollingActivation[x] + (1 - rho) / (1 - rollingActivation[x])) * weight;
+                // }
 
                 for (int y = 0; y < gradient.rowSize(); y++) {
                     double edgeOutput =

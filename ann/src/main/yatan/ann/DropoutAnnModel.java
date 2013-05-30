@@ -49,14 +49,14 @@ public class DropoutAnnModel implements AnnModel {
                 for (int column = 0; column < dropoutMatrix.columnSize(); column++) {
                     // drop neurons if we're in training
                     if (i < this.annModel.getLayerCount() - 1 && this.dropoutMasks[i][column]) {
-                        for (int row = 0; row < dropoutMatrix.rowSize(); row++) {
-                            dropoutMatrix.getData()[row][column] = 0;
-                        }
+                        // for (int row = 0; row < dropoutMatrix.rowSize(); row++) {
+                        // dropoutMatrix.getData()[row][column] = 0;
+                        // }
                     } else {
                         for (int row = 0; row < dropoutMatrix.rowSize(); row++) {
                             if (i > 0 && row < dropoutMatrix.rowSize() - 1 && this.dropoutMasks[i - 1][row]) {
                                 // dropout the output weights according to the dropout mask for the last layer
-                                dropoutMatrix.getData()[row][column] = 0;
+                                // dropoutMatrix.getData()[row][column] = 0;
                             } else {
                                 dropoutMatrix.getData()[row][column] = matrix.getData()[row][column];
                             }
@@ -66,21 +66,16 @@ public class DropoutAnnModel implements AnnModel {
 
                 this.layers[i] = dropoutMatrix;
             } else {
-                // if we're running, don't modify the first layer
-                if (i == 0) {
-                    this.layers[i] = this.annModel.getLayer(i);
-                } else {
-                    // half the output weights if we're not in training
-                    Matrix matrix = this.annModel.getLayer(i);
-                    Matrix dropoutMatrix = new Matrix(matrix.rowSize(), matrix.columnSize());
+                // half the output weights if we're not in training
+                Matrix matrix = this.annModel.getLayer(i);
+                Matrix dropoutMatrix = new Matrix(matrix.rowSize(), matrix.columnSize());
+                for (int row = 0; row < matrix.rowSize() - 1; row++) {
                     for (int column = 0; column < matrix.columnSize(); column++) {
-                        for (int row = 0; row < matrix.rowSize() - 1; row++) {
-                            dropoutMatrix.getData()[row][column] = matrix.getData()[row][column] / 2;
-                        }
+                        dropoutMatrix.getData()[row][column] = matrix.getData()[row][column] / 2;
                     }
-
-                    this.layers[i] = dropoutMatrix;
                 }
+
+                this.layers[i] = dropoutMatrix;
             }
         }
 

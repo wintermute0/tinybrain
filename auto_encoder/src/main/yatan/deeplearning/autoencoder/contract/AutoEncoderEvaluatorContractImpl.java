@@ -1,5 +1,6 @@
 package yatan.deeplearning.autoencoder.contract;
 
+import java.util.Arrays;
 import java.util.List;
 
 import yatan.ann.AnnData;
@@ -41,37 +42,37 @@ public class AutoEncoderEvaluatorContractImpl extends AbstractComputeActorContra
 
             // // setup corruption post processor to corrupt the input
             OutputPostProcessor postProcessor = null;
-            // if (annModel.getLayerCount() == 2) {
-            // // corrupt input
-            // // Helper.corruptRandomWord(annData.getInput());
-            // } else {
-            // postProcessor = new OutputPostProcessor() {
-            // private double[] uncorruptedData;
-            //
-            // @Override
-            // public void process(double[] output) {
-            // this.uncorruptedData = Arrays.copyOf(output, output.length);
-            //
-            // Helper.corruptWithMask(output);
-            // }
-            //
-            // @Override
-            // public int layer() {
-            // return annModel.getLayerCount() - 3;
-            // }
-            //
-            // @Override
-            // public double[] getCleanData() {
-            // return uncorruptedData;
-            // }
-            // };
-            // }
+            if (annModel.getLayerCount() == 2) {
+                // corrupt input
+                Helper.corruptWithMask(annData.getInput());
+            } else {
+                postProcessor = new OutputPostProcessor() {
+                    private double[] uncorruptedData;
+
+                    @Override
+                    public void process(double[] output) {
+                        this.uncorruptedData = Arrays.copyOf(output, output.length);
+
+                        Helper.corruptWithMask(output);
+                    }
+
+                    @Override
+                    public int layer() {
+                        return annModel.getLayerCount() - 3;
+                    }
+
+                    @Override
+                    public double[] getCleanData() {
+                        return uncorruptedData;
+                    }
+                };
+            }
             // calculate ANN output
             double[][] output = trainer.run(annModel, annData.getInput(), sum, postProcessor);
-            // // set up ann data output to the clean input
-            // if (postProcessor != null) {
-            // annData = new AnnData(annData.getInput(), postProcessor.getCleanData());
-            // }
+            // set up ann data output to the clean input
+            if (postProcessor != null) {
+                annData = new AnnData(annData.getInput(), postProcessor.getCleanData());
+            }
 
             double squreError = 0;
             double squre = 0;
@@ -93,7 +94,7 @@ public class AutoEncoderEvaluatorContractImpl extends AbstractComputeActorContra
 
         // evaluateWordDistanceRank(wordEmbedding, "看", "见", "视", "瞧", "瞄", "目", "相", "窥", "探", "扫", "瞪", "望");
         // evaluateWordDistanceRank(wordEmbedding, "吴", "赵", "钱", "孙", "李", "周", "郑", "王", "冯", "陈", "褚", "卫");
-        LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
+        // LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
 
         LogUtility.logAnnModel(getLogger(), annModel);
 
@@ -107,29 +108,29 @@ public class AutoEncoderEvaluatorContractImpl extends AbstractComputeActorContra
         return result;
     }
 
-    private void evaluateWordDistanceRank(WordEmbedding wordEmbedding, String word, String... candidates) {
-        int[] rank = new int[candidates.length];
-        int wordIndex = wordEmbedding.getDictionary().indexOf(word);
-        double[] distances = new double[wordEmbedding.getDictionary().size()];
-        for (int i = 0; i < distances.length; i++) {
-            distances[i] = wordEmbedding.distanceBetween(wordIndex, i);
-        }
-
-        for (int i = 0; i < candidates.length; i++) {
-            double distance =
-                    wordEmbedding.distanceBetween(wordIndex, wordEmbedding.getDictionary().indexOf(candidates[i]));
-            for (double otherDistance : distances) {
-                if (otherDistance < distance) {
-                    rank[i]++;
-                }
-            }
-        }
-
-        StringBuilder sb = new StringBuilder("Distance ranking for '" + word + "': ");
-        for (int i = 0; i < candidates.length; i++) {
-            sb.append(candidates[i] + " = " + rank[i] + ", ");
-        }
-        getLogger().info(sb.toString());
-        System.out.println(sb.toString());
-    }
+    // private void evaluateWordDistanceRank(WordEmbedding wordEmbedding, String word, String... candidates) {
+    // int[] rank = new int[candidates.length];
+    // int wordIndex = wordEmbedding.getDictionary().indexOf(word);
+    // double[] distances = new double[wordEmbedding.getDictionary().size()];
+    // for (int i = 0; i < distances.length; i++) {
+    // distances[i] = wordEmbedding.distanceBetween(wordIndex, i);
+    // }
+    //
+    // for (int i = 0; i < candidates.length; i++) {
+    // double distance =
+    // wordEmbedding.distanceBetween(wordIndex, wordEmbedding.getDictionary().indexOf(candidates[i]));
+    // for (double otherDistance : distances) {
+    // if (otherDistance < distance) {
+    // rank[i]++;
+    // }
+    // }
+    // }
+    //
+    // StringBuilder sb = new StringBuilder("Distance ranking for '" + word + "': ");
+    // for (int i = 0; i < candidates.length; i++) {
+    // sb.append(candidates[i] + " = " + rank[i] + ", ");
+    // }
+    // getLogger().info(sb.toString());
+    // System.out.println(sb.toString());
+    // }
 }

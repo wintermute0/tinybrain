@@ -35,10 +35,10 @@ public class WordEmbeddingEvaluator {
     public static void main(String[] args) throws Exception {
         Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict_better.txt"));
 
-        WordSegmentationDataProducer.WINDOWS_SIZE = 11;
+        WordSegmentationDataProducer.WINDOWS_SIZE = 5;
 
         // 1365269964401(100 word embedding).json
-        String wordEmbeddingFile = "softmax_model_1369397925262.json";
+        String wordEmbeddingFile = "pku_we2_3_300layer_pretraining.json";
 
         Object[] models = loadWordEmbeddingFromFile(new File("test_files/results/" + wordEmbeddingFile));
         if (models.length == 0) {

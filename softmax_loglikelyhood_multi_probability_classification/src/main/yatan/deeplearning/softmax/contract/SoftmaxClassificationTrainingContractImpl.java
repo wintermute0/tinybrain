@@ -28,7 +28,7 @@ public class SoftmaxClassificationTrainingContractImpl extends AbstractComputeAc
     // WordEmbeddingAnnParameterActorContractImpl.ADAGRAD_NETWORK_LEARNING_RATE_LAMPDA / 10;
     // public static final double WORD_EMBEDDING_LEARNING_RATE =
     // WordEmbeddingAnnParameterActorContractImpl.ADAGRAD_WORD_EMBEDDING_LEARNING_RATE_LAMPDA / 10;
-    private static final int MINIBATCH_SIZE = 10;
+    private static final int MINIBATCH_SIZE = 50;
 
     @Inject(optional = false)
     private TrainerConfiguration trainerConfiguration;

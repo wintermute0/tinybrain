@@ -36,7 +36,7 @@ import com.google.inject.name.Names;
 
 public class AutoEncoderTrainer {
     private static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
-    private static final int TRAINING_ACTOR_COUNT = 0;
+    private static final int TRAINING_ACTOR_COUNT = 4;
 
     private static final Dictionary DICTIONARY = Dictionary.create(new File("test_files/zh_dict_better.txt"));
 
@@ -105,12 +105,12 @@ public class AutoEncoderTrainer {
                 return evaluatingModuleInjector.getInstance(ComputeActor.class);
             }
         }), "evalutor1");
-        system.actorOf(new Props(new UntypedActorFactory() {
-            @Override
-            public Actor create() throws Exception {
-                return wordPredictEvaluatingModuleInjector.getInstance(ComputeActor.class);
-            }
-        }), "evalutor2");
+        // system.actorOf(new Props(new UntypedActorFactory() {
+        // @Override
+        // public Actor create() throws Exception {
+        // return wordPredictEvaluatingModuleInjector.getInstance(ComputeActor.class);
+        // }
+        // }), "evalutor2");
     }
 
     public static class CommonModule extends AbstractModule {
@@ -133,7 +133,7 @@ public class AutoEncoderTrainer {
 
             // bind ann configuration
             AnnConfiguration annConfiguration = new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize * 5);
-            annConfiguration.addLayer(500, ActivationFunction.SIGMOID);
+            annConfiguration.addLayer(500, ActivationFunction.TANH);
             annConfiguration.addLayer(annConfiguration.inputDegree, ActivationFunction.TANH);
 
             bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(annConfiguration);

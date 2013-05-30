@@ -34,10 +34,16 @@ public class WordEmbeddingQuerier {
     public static void main(String[] args) throws Exception {
         WordEmbedding wordEmbedding = (WordEmbedding) loadWordEmbedding()[0];
 
-        // FileWriter writer = new FileWriter("dict.txt");
-        // for (int i = 0; i < wordEmbedding.getMatrix().columnSize(); i++) {
-        // writer.write(wordEmbedding.getDictionary().get(i) + "\n");
-        // }
+        FileWriter writer = new FileWriter("dict.txt");
+        for (int i = 0; i < wordEmbedding.getMatrix().columnSize(); i++) {
+            writer.write(wordEmbedding.getDictionary().get(i) + ", ");
+            for (int j = 0; j < wordEmbedding.getMatrix().rowSize(); j++) {
+                writer.write(String.valueOf(wordEmbedding.getMatrix().getData()[j][i]) + ", ");
+            }
+            writer.write("\n");
+        }
+        writer.close();
+        System.exit(0);
 
         // scaleWordEmbedding(wordEmbedding);
         LogUtility.logWordEmbedding(Logger.getLogger("a"), wordEmbedding);
