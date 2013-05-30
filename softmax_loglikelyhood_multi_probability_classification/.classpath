@@ -6,7 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/ann"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/commons_ml"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/distributed_computer"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/word_embedding_trainer"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-actor-2.0.4.jar"/>
 	<classpathentry kind="lib" path="/lib/akka-2.0.4/lib/akka/akka-actor-migration-2.0.4.jar"/>

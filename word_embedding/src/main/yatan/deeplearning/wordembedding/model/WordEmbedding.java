@@ -95,11 +95,23 @@ public class WordEmbedding implements Serializable {
     }
 
     public void update(Map<Integer, Double[]> wordEmbeddingDelta, double lambda, Matrix wordEmbeddingGradientSqureSum) {
+        update(wordEmbeddingDelta, lambda, wordEmbeddingGradientSqureSum, 0, 1);
+    }
+
+    public void update(Map<Integer, Double[]> wordEmbeddingDelta, double lambda, Matrix wordEmbeddingGradientSqureSum,
+            int sliceId, int totalSlice) {
         Preconditions.checkArgument(wordEmbeddingGradientSqureSum != null,
                 "Word embedding gradient square sum matrix cannot be null.");
+        Preconditions.checkArgument(sliceId < totalSlice && sliceId >= 0);
 
+        int columnStart = sliceId * (this.matrix.columnSize() / totalSlice);
+        int columnEnd =
+                sliceId == totalSlice - 1 ? this.matrix.columnSize() : (sliceId + 1)
+                        * (this.matrix.columnSize() / totalSlice);
         for (Entry<Integer, Double[]> entry : wordEmbeddingDelta.entrySet()) {
-            update(entry.getKey(), entry.getValue(), lambda, wordEmbeddingGradientSqureSum);
+            if (entry.getKey() >= columnStart && entry.getKey() < columnEnd) {
+                update(entry.getKey(), entry.getValue(), lambda, wordEmbeddingGradientSqureSum);
+            }
         }
     }
 

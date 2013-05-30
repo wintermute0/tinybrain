@@ -1,4 +1,4 @@
-package yatan.deeplearning.softmax.contract;
+package yatan.deeplearning.softmax.contract.compute;
 
 import java.io.Serializable;
 

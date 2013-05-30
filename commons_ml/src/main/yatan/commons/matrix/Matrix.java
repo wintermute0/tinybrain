@@ -140,15 +140,22 @@ final public class Matrix implements Serializable {
     }
 
     public void update(Matrix gradient, double lambda, Matrix annDeltaSqureSum) {
+        update(gradient, lambda, annDeltaSqureSum, 0, 1);
+    }
+
+    public void update(Matrix gradient, double lambda, Matrix annDeltaSqureSum, int sliceId, int totalSlice) {
         Preconditions.checkArgument(gradient != null);
         Preconditions.checkArgument(annDeltaSqureSum != null);
+        Preconditions.checkArgument(sliceId < totalSlice && sliceId >= 0);
 
         if (rowSize() != gradient.rowSize() || columnSize() != gradient.columnSize()) {
             throw new IllegalArgumentException("The size of the gradient matrix does not match.");
         }
 
+        int columnStart = sliceId * (columnSize() / totalSlice);
+        int columnEnd = sliceId == totalSlice - 1 ? columnSize() : (sliceId + 1) * (columnSize() / totalSlice);
         for (int i = 0; i < rowSize(); i++) {
-            for (int j = 0; j < columnSize(); j++) {
+            for (int j = columnStart; j < columnEnd; j++) {
                 annDeltaSqureSum.getData()[i][j] += Math.pow(gradient.getData()[i][j], 2);
                 double learningRate = lambda / Math.sqrt(annDeltaSqureSum.getData()[i][j]);
 

@@ -69,5 +69,6 @@
 	<classpathentry kind="lib" path="/lib/guice-3.0/aopalliance.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/word_embedding"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/data_producer_bakeoff2005"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/softmax_loglikelyhood_multi_probability_classification"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

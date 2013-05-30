@@ -1,4 +1,4 @@
-package yatan.deeplearning.softmax.contract;
+package yatan.deeplearning.softmax.contract.parameter;
 
 import java.io.File;
 
@@ -10,8 +10,21 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.output.FileWriterWithEncoding;
+
+import akka.actor.Actor;
+import akka.actor.ActorRef;
+import akka.actor.Props;
+import akka.actor.UntypedActor;
+import akka.actor.UntypedActorFactory;
+import akka.dispatch.Future;
+import akka.dispatch.Futures;
+import akka.dispatch.OnComplete;
+import akka.pattern.Patterns;
+import akka.util.Duration;
+import akka.util.Timeout;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
@@ -36,6 +49,8 @@ import yatan.distributedcomputer.actors.ParameterActor;
 import yatan.distributedcomputer.contract.ParameterActorContract;
 
 public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContract implements ParameterActorContract {
+    private static final Timeout SLICE_UPDATE_TIMEOUT = new Timeout(Duration.create(5, TimeUnit.SECONDS));
+
     private static final double ADA_DELTA_RHO = 0.95;
     private static final double ADA_DELTA_EPSILON = 0.000001;
 
@@ -47,12 +62,18 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
 
     private static final String MODEL_FILE_PREFIX = "softmax_model_";
 
+    private final List<ActorRef> sliceUpdateActors = Lists.newArrayList();
+
     private final Dictionary dictionary;
     private final AnnConfiguration annConfiguration;
     private final int wordVectorSize;
 
     @Inject(optional = false)
     private TrainerConfiguration trainerConfiguration;
+
+    @Inject
+    @Named("parameter_actor_update_slice")
+    private int updateSlice;
 
     private WordEmbedding wordEmbedding;
     private DefaultAnnModel annModel;
@@ -75,6 +96,65 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
     }
 
     @Override
+    public void preStart() {
+        for (int i = 0; i < updateSlice; i++) {
+            this.sliceUpdateActors.add(getActor().context().actorOf(
+                    new Props(new SliceUpdateActorFactory(i, updateSlice)), "slice_updator_" + i));
+        }
+    }
+
+    private class SliceUpdateActorFactory implements UntypedActorFactory {
+        private static final long serialVersionUID = 5348017784800584586L;
+        private final int sliceId;
+        private final int totalSlice;
+
+        public SliceUpdateActorFactory(int sliceId, int totalSlice) {
+            Preconditions.checkArgument(sliceId < totalSlice && sliceId >= 0);
+
+            this.sliceId = sliceId;
+            this.totalSlice = totalSlice;
+        }
+
+        @Override
+        public Actor create() throws Exception {
+            return new SliceUpdateActor(sliceId, totalSlice);
+        }
+    }
+
+    private class SliceUpdateActor extends UntypedActor {
+        private final int sliceId;
+        private final int totalSlice;
+
+        public SliceUpdateActor(int sliceId, int totalSlice) {
+            Preconditions.checkArgument(sliceId < totalSlice && sliceId >= 0);
+
+            this.sliceId = sliceId;
+            this.totalSlice = totalSlice;
+        }
+
+        @Override
+        public void onReceive(Object message) throws Exception {
+            Parameter gradient = (Parameter) message;
+
+            Serializable[] inputData = (Serializable[]) gradient.getSerializable();
+            AnnGradient annGradient = (AnnGradient) inputData[0];
+            // annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
+            // this.deltaAnnWeightSumSquare);
+            annModel.update(annGradient, 0.1, annDeltaGradientSumSquare, this.sliceId, this.totalSlice);
+
+            @SuppressWarnings("unchecked")
+            Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
+            // wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON,
+            // this.wordEmbeddingGradientSumSquare,
+            // this.deltaWordEmbeddingSumSquare);
+            wordEmbedding
+                    .update(wordEmbeddingDelta, 0.1, wordEmbeddingGradientSumSquare, this.sliceId, this.totalSlice);
+
+            getSender().tell("done.");
+        }
+    }
+
+    @Override
     public void requestParameters(ParameterIndexPath start, ParameterIndexPath end) {
         initIfNecessary();
 
@@ -84,35 +164,42 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
         tellSender(new ParameterActor.ReceiveParameterMessage(getActor().getMessage(), parameter));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void updateGradient(Parameter gradient) {
         Preconditions.checkArgument(gradient != null, "Gradient cannot be null.");
 
-        Serializable[] inputData = (Serializable[]) gradient.getSerializable();
-        AnnGradient annGradient = (AnnGradient) inputData[0];
-        // annModel.update(annGradient, ADA_DELTA_RHO, ADA_DELTA_EPSILON, annDeltaGradientSumSquare,
-        // this.deltaAnnWeightSumSquare);
-        annModel.update(annGradient, 0.1, this.annDeltaGradientSumSquare);
+        final List<Future<Object>> futures = Lists.newArrayList();
+        for (int i = 0; i < this.sliceUpdateActors.size(); i++) {
+            futures.add(Patterns.ask(this.sliceUpdateActors.get(i), gradient, SLICE_UPDATE_TIMEOUT));
+        }
 
-        // System.out.println("RMS[g] = " + LogUtility.buildLogString(this.annDeltaGradientSumSquare.get(0)));
-        // System.out.println("RMS[x] = " + LogUtility.buildLogString(this.deltaAnnWeightSumSquare.get(0)));
+        // wait till all update slice is done
+        final Future<Iterable<Object>> aggregatedSliceUpdateFutures =
+                Futures.sequence(futures, getActor().getContext().dispatcher());
+        aggregatedSliceUpdateFutures.onComplete(new OnComplete<Iterable<Object>>() {
+            @Override
+            public void onComplete(Throwable arg0, Iterable<Object> arg1) throws Throwable {
+                synchronized (aggregatedSliceUpdateFutures) {
+                    aggregatedSliceUpdateFutures.notify();
+                }
+            }
+        });
 
-        Map<Integer, Double[]> wordEmbeddingDelta = (Map<Integer, Double[]>) inputData[1];
-        // wordEmbedding.update(wordEmbeddingDelta, ADA_DELTA_RHO, ADA_DELTA_EPSILON,
-        // this.wordEmbeddingGradientSumSquare,
-        // this.deltaWordEmbeddingSumSquare);
-        wordEmbedding.update(wordEmbeddingDelta, 0.1, this.wordEmbeddingGradientSumSquare);
+        try {
+            while (!aggregatedSliceUpdateFutures.isCompleted()) {
+                synchronized (aggregatedSliceUpdateFutures) {
+                    aggregatedSliceUpdateFutures.wait();
+                }
+            }
+        } catch (InterruptedException e) {
+            getLogger().error("Interrupted while waiting for the slice update actors.", e);
+        }
 
         // save state if necessary
         if (new Date().getTime() - lastSaveTime.getTime() > STATE_SAVING_INTERVAL_MINUTES * 60 * 1000) {
             lastSaveTime = new Date();
             saveState();
         }
-
-        // report update to metrics
-        // GradientUpdateMetrics.report(getLogger(), annGradient, wordEmbeddingDelta, wordEmbeddingGradientSumSquare,
-        // annDeltaGradientSumSquare);
     }
 
     private void initIfNecessary() {
@@ -269,28 +356,28 @@ public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContrac
         }
     }
 
-    private static void scaleWordEmbedding(WordEmbedding wordEmbedding) {
-        double max = Double.MIN_VALUE;
-        double min = Double.MAX_VALUE;
-        double[][] data = wordEmbedding.getMatrix().getData();
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[0].length; j++) {
-                double value = data[i][j];
-                if (value > max) {
-                    max = value;
-                }
-                if (value < min) {
-                    min = value;
-                }
-            }
-        }
-
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[0].length; j++) {
-                data[i][j] = (data[i][j] - (max + min) / 2) / (max - min) * 2;
-            }
-        }
-    }
+    // private static void scaleWordEmbedding(WordEmbedding wordEmbedding) {
+    // double max = Double.MIN_VALUE;
+    // double min = Double.MAX_VALUE;
+    // double[][] data = wordEmbedding.getMatrix().getData();
+    // for (int i = 0; i < data.length; i++) {
+    // for (int j = 0; j < data[0].length; j++) {
+    // double value = data[i][j];
+    // if (value > max) {
+    // max = value;
+    // }
+    // if (value < min) {
+    // min = value;
+    // }
+    // }
+    // }
+    //
+    // for (int i = 0; i < data.length; i++) {
+    // for (int j = 0; j < data[0].length; j++) {
+    // data[i][j] = (data[i][j] - (max + min) / 2) / (max - min) * 2;
+    // }
+    // }
+    // }
 
     private static void scaleANN(DefaultAnnModel annModel, double factor) {
         for (int i = 0; i < annModel.getLayerCount(); i++) {

@@ -19,9 +19,9 @@ import yatan.ann.AnnConfiguration;
 import yatan.ann.AnnConfiguration.ActivationFunction;
 import yatan.data.parser.bakeoff2005.ICWB2Parser;
 import yatan.data.sequence.TaggedSentenceDataset;
-import yatan.deeplearning.softmax.contract.SoftmaxClassificationEvaluatorContractImpl;
-import yatan.deeplearning.softmax.contract.WordEmbeddingAnnParameterActorContractImpl;
-import yatan.deeplearning.softmax.contract.SoftmaxClassificationTrainingContractImpl;
+import yatan.deeplearning.softmax.contract.compute.SoftmaxClassificationEvaluatorContractImpl;
+import yatan.deeplearning.softmax.contract.compute.SoftmaxClassificationTrainingContractImpl;
+import yatan.deeplearning.softmax.contract.parameter.WordEmbeddingAnnParameterActorContractImpl;
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer;
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer.WordSegmentationInstancePool;
 import yatan.deeplearning.wordembedding.model.Dictionary;
@@ -35,6 +35,10 @@ import yatan.distributedcomputer.contract.data.impl.DataProducer;
 
 public class Trainer {
     public static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
+    public static final AnnConfiguration ANN_CONFIGURATION;
+
+    private static final int TRAINING_ACTOR_COUNT = 16;
+    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 8;
 
     static {
         // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001, 0.0001, 0.0001};
@@ -42,10 +46,17 @@ public class Trainer {
         // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0, 0, 0};
         // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0};
 
-        TRAINER_CONFIGURATION.hiddenLayerSize = 300;
-        TRAINER_CONFIGURATION.wordVectorSize = 50;
+        TRAINER_CONFIGURATION.dropout = false;
 
-        TRAINER_CONFIGURATION.dropout = true;
+        TRAINER_CONFIGURATION.wordVectorSize = 50;
+        TRAINER_CONFIGURATION.hiddenLayerSize = 300;
+
+        ANN_CONFIGURATION =
+                new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize * WordSegmentationDataProducer.WINDOWS_SIZE);
+        ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+        ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+        ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+        ANN_CONFIGURATION.addLayer(WordSegmentationInstancePool.TAGS.size(), ActivationFunction.SOFTMAX);
     }
 
     @SuppressWarnings("serial")
@@ -81,7 +92,7 @@ public class Trainer {
             @Override
             public void run() {
                 int newThreadInterval = 64;
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < TRAINING_ACTOR_COUNT; i++) {
                     system.actorOf(new Props(new UntypedActorFactory() {
                         @Override
                         public Actor create() throws Exception {
@@ -146,17 +157,12 @@ public class Trainer {
                 bind(DataProducer.class).to(WordSegmentationDataProducer.class);
 
                 // bind ann configuration
-                AnnConfiguration annConfiguration =
-                        new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize
-                                * WordSegmentationDataProducer.WINDOWS_SIZE);
-                annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-                annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-                annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-                annConfiguration.addLayer(WordSegmentationInstancePool.TAGS.size(), ActivationFunction.SOFTMAX);
                 bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(
-                        annConfiguration);
+                        ANN_CONFIGURATION);
 
                 // bind parameter actor impl
+                bind(Integer.class).annotatedWith(Names.named("parameter_actor_update_slice")).toInstance(
+                        PARAMETER_ACTOR_UPDATE_SLICE);
                 bind(ParameterActorContract.class).to(WordEmbeddingAnnParameterActorContractImpl.class);
 
                 // set data actor path of to evaluate data actor

@@ -132,6 +132,10 @@ public class DropoutAnnModel implements AnnModel {
         this.annModel.update(gradient, lampda, annDeltaSqureSum);
     }
 
+    public void update(AnnGradient gradient, double lampda, List<Matrix> annDeltaSqureSum, int sliceId, int totalSlice) {
+        this.annModel.update(gradient, lampda, annDeltaSqureSum, sliceId, totalSlice);
+    }
+
     @Override
     public void reuseLowerLayer(AnnModel annModel, int discardTopNLayer) {
         this.annModel.reuseLowerLayer(annModel, discardTopNLayer);

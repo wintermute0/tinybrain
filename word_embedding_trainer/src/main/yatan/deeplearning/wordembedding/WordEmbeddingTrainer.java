@@ -36,10 +36,10 @@ public class WordEmbeddingTrainer {
     private static final int TRAINING_ACTOR_COUNT = 2;
 
     static {
-        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.00001, 0.00001, 0.00001};
+        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.00001, 0.00001, 0.00001};
         // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0};
 
-        TRAINER_CONFIGURATION.hiddenLayerSize = 100;
+        TRAINER_CONFIGURATION.hiddenLayerSize = 150;
         TRAINER_CONFIGURATION.wordVectorSize = 50;
 
         TRAINER_CONFIGURATION.dropout = false;
@@ -148,6 +148,7 @@ public class WordEmbeddingTrainer {
             AnnConfiguration annConfiguration =
                     new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize * ZhWikiTrainingDataProducer.WINDOWS_SIZE);
             annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+            annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
             // annConfiguration.addLayer(2, ActivationFunction.SOFTMAX);
             annConfiguration.addLayer(1, ActivationFunction.SIGMOID);
             bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(annConfiguration);
@@ -158,17 +159,17 @@ public class WordEmbeddingTrainer {
             bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
 
             // wiki data
-            // bind(DataProducer.class).to(ZhWikiTrainingDataProducer.class);
+            bind(DataProducer.class).to(ZhWikiTrainingDataProducer.class);
 
             // bakeoff data
-            bind(boolean.class).annotatedWith(Names.named("training")).toInstance(true);
-            try {
-                bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
-                        new ICWB2Parser().parse(new File("data/icwb2-data/training/pku_training.utf8")));
-                bind(DataProducer.class).to(BakeOffDataProducer.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // bind(boolean.class).annotatedWith(Names.named("training")).toInstance(true);
+            // try {
+            // bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
+            // new ICWB2Parser().parse(new File("data/icwb2-data/training/pku_training.utf8")));
+            // bind(DataProducer.class).to(BakeOffDataProducer.class);
+            // } catch (IOException e) {
+            // e.printStackTrace();
+            // }
         }
     }
 

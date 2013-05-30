@@ -103,13 +103,20 @@ public class DefaultAnnModel implements Serializable, AnnModel {
 
     @Override
     public void update(AnnGradient gradient, double lampda, List<Matrix> annDeltaSqureSum) {
-        if (gradient.getGradients().size() != this.matrices.size()) {
-            throw new IllegalArgumentException("Gradient layer count does not match.");
-        }
+        update(gradient, lampda, annDeltaSqureSum, 0, 1);
+    }
+
+    @Override
+    public void update(AnnGradient gradient, double lampda, List<Matrix> annDeltaSqureSum, int sliceId, int totalSlice) {
+        Preconditions.checkArgument(gradient != null);
+        Preconditions.checkArgument(sliceId < totalSlice && sliceId >= 0);
+        Preconditions.checkArgument(gradient.getGradients().size() == this.matrices.size(),
+                "Gradient layer count does not match.");
 
         for (int i = 0; i < this.matrices.size(); i++) {
             if (gradient.getGradients().get(i) != null) {
-                this.matrices.get(i).update(gradient.getGradients().get(i), lampda, annDeltaSqureSum.get(i));
+                this.matrices.get(i).update(gradient.getGradients().get(i), lampda, annDeltaSqureSum.get(i), sliceId,
+                        totalSlice);
             }
         }
     }

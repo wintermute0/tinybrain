@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="Word Embedding Trainer" basedir="." default="deploy_ssh">
-	<!-- <property name="ssh_server" value="ec2-user@ec2-54-226-4-67.compute-1.amazonaws.com"/> -->
-	<property name="ssh_server" value="eveningsun@10.3.7.40"/>
+	<property name="ssh_server" value="ec2-user@ec2-54-226-41-104.compute-1.amazonaws.com"/>
+	<!-- <property name="ssh_server" value="eveningsun@10.3.7.40"/> -->
 	
 	<property name="dist.dir" value="dist" />
 	<property name="compile.destdir" value="${dist.dir}/build" />
@@ -65,7 +65,7 @@
 	</target>
 	
 	<target name="download_model">
-		<scp file="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/ae_model_1369292168302.json" trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513"
+		<scp file="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/softmax_model_1369864783644.json" trust="true" keyfile="E:\\Dropbox\\documents\\centermachinekey.pem" password="conan513"
 			todir="softmax_loglikelyhood_multi_probability_classification/test_files/results/" verbose="true" />
 	</target>
 	

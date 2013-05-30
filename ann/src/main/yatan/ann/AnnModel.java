@@ -20,6 +20,8 @@ public interface AnnModel {
 
     public void update(AnnGradient gradient, double lampda, List<Matrix> annDeltaSqureSum);
 
+    public void update(AnnGradient gradient, double lampda, List<Matrix> annDeltaSqureSum, int sliceId, int totalSlice);
+
     public void postProcessAnnGradient(AnnGradient annGradient);
 
     public void reuseLowerLayer(AnnModel annModel, int discardTopNLayer);
