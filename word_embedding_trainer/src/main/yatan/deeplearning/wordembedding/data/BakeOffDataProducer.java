@@ -21,7 +21,7 @@ public class BakeOffDataProducer extends WordSegmentationDataProducer {
     public BakeOffDataProducer(@Named("training") boolean training, WordSegmentationInstancePool instancePool) {
         super(training, instancePool);
 
-        WINDOWS_SIZE = 11;
+        WINDOWS_SIZE = ZhWikiTrainingDataProducer.WINDOWS_SIZE;
     }
 
     @Override

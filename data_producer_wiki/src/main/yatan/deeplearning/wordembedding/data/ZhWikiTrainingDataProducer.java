@@ -33,7 +33,7 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
 
     private ArticleDao articleDao;
 
-    public static final int WINDOWS_SIZE = 11;
+    public static final int WINDOWS_SIZE = 7;
     private static final int LOAD_ARTICLE_BATCH_SIZE = 500;
     private static final int MAX_ARTICLE_ID = 3449448;
     private Random random = new Random(new Date().getTime());
@@ -103,11 +103,11 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
                                     if (j == i) {
                                         int negativeWord =
                                                 this.dictionary
-                                                        .sampleWordUniformlyAboveFrequenceRank(this.FREQUENCEY_RANK_BOUND);
+                                                        .sampleWordUniformlyAboveFrequenceRank(FREQUENCEY_RANK_BOUND);
                                         while (negativeWord == wordIndecies.get(j)) {
                                             negativeWord =
                                                     this.dictionary
-                                                            .sampleWordUniformlyAboveFrequenceRank(this.FREQUENCEY_RANK_BOUND);
+                                                            .sampleWordUniformlyAboveFrequenceRank(FREQUENCEY_RANK_BOUND);
                                         }
                                         negativeInstance.getInput().add(negativeWord);
                                         // int negativeWord = this.dictionary.sampleWord();

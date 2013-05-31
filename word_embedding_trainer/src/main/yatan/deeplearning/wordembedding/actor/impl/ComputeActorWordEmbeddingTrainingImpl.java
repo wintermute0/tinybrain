@@ -2,13 +2,14 @@ package yatan.deeplearning.wordembedding.actor.impl;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Map.Entry;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import com.google.common.collect.Multisets;
 import com.google.inject.Inject;
 
 import yatan.ann.AnnData;
@@ -16,7 +17,7 @@ import yatan.ann.AnnGradient;
 import yatan.ann.AnnModel;
 import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
-import yatan.ann.DropoutAnnModel;
+import yatan.ann.AnnTrainer.LayerPostProcessor;
 import yatan.deeplearning.wordembedding.TrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
@@ -25,9 +26,10 @@ import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorContractImpl {
-    private static final int MINIBATCH_SIZE = 10;
+    private static final int MINIBATCH_SIZE = 20;
+    private final Random random = new Random(new Date().getTime());
 
-    @Inject(optional = false)
+    @Inject
     private TrainerConfiguration trainerConfiguration;
 
     @Override
@@ -39,7 +41,7 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
     protected ComputeResult doCompute(List<Data> dataset, Parameter parameter) {
         Serializable[] parameters = (Serializable[]) parameter.getSerializable();
         WordEmbedding wordEmbedding = (WordEmbedding) parameters[0];
-        AnnModel originalAnnModel = (DefaultAnnModel) parameters[1];
+        AnnModel annModel = (DefaultAnnModel) parameters[1];
 
         // AnnGradient totalGradient = null;
         AnnGradient batchGradient = null;
@@ -48,30 +50,50 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
         Multiset<Integer> wordAppearCount = HashMultiset.create();
 
         AnnTrainer trainer = new AnnTrainer();
-        double[][] sum = new double[originalAnnModel.getLayerCount()][];
+        double[][] sum = new double[annModel.getLayerCount()][];
         // int batchCount = 0;
         // reuse the matrices in the gradient
         AnnGradient newGradient = null;
+        LayerPostProcessor dropoutPostProcessor = null;
+
         for (Data data : dataset) {
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
             // batchCount++;
 
             // use dropout ann model
-            AnnModel annModel = originalAnnModel;
             if (this.trainerConfiguration.dropout) {
-                annModel = new DropoutAnnModel(originalAnnModel, true);
+                dropoutPostProcessor = new DropoutPostProcessor(annModel);
             }
 
             // first convert input data into word embedding
             AnnData annData = Helper.convertToSoftmaxAnnData(wordEmbedding, instance);
 
+            // dropout word embedding
+            boolean dropMasks[] = null;
+            if (this.trainerConfiguration.wordEmbeddingDropout) {
+                dropMasks = new boolean[annData.getInput().length];
+                for (int i = 0; i < dropMasks.length; i++) {
+                    dropMasks[i] = this.random.nextDouble() < this.trainerConfiguration.wordEmbeddingDropoutRate;
+                    annData.getInput()[i] = 0;
+                }
+            }
+
             // train with this ann data instance and update gradient
-            double[][] output = trainer.run(annModel, annData.getInput(), sum);
+            double[][] output = trainer.run(annModel, annData.getInput(), sum, dropoutPostProcessor);
 
             // bp
             newGradient =
                     trainer.backpropagateSoftmaxLogLikelyhood(annModel, annData, output, sum,
-                            this.trainerConfiguration.l2Lambdas, newGradient);
+                            this.trainerConfiguration.l2Lambdas, newGradient, dropoutPostProcessor);
+
+            // drop some gradient
+            if (this.trainerConfiguration.wordEmbeddingDropout) {
+                for (int i = 0; i < dropMasks.length; i++) {
+                    if (dropMasks[i]) {
+                        newGradient.getDeltaForInputLayer()[i] = 0;
+                    }
+                }
+            }
 
             // save gradient
             batchGradient = saveGradient(batchGradient, newGradient);
@@ -186,6 +208,31 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
             } else {
                 for (int j = 0; j < wordVectorSize; j++) {
                     delta[j] += newGradient.getDeltaForInputLayer()[i * wordVectorSize + j];
+                }
+            }
+        }
+    }
+
+    private class DropoutPostProcessor implements LayerPostProcessor {
+        private final boolean[][] dropoutMasks;
+
+        public DropoutPostProcessor(AnnModel annModel) {
+            this.dropoutMasks = new boolean[annModel.getLayerCount() - 1][];
+            for (int i = 0; i < dropoutMasks.length; i++) {
+                dropoutMasks[i] = new boolean[annModel.getLayer(i).columnSize()];
+                for (int j = 0; j < dropoutMasks[i].length; j++) {
+                    dropoutMasks[i][j] = random.nextDouble() < 0.5;
+                }
+            }
+        }
+
+        @Override
+        public void process(int layer, double[] output) {
+            if (layer < this.dropoutMasks.length) {
+                for (int i = 0; i < output.length; i++) {
+                    if (this.dropoutMasks[layer][i]) {
+                        output[i] = 0;
+                    }
                 }
             }
         }

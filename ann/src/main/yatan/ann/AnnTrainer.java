@@ -34,15 +34,11 @@ public class AnnTrainer {
         return run(model, input, sum, null);
     }
 
-    public static interface OutputPostProcessor {
-        public int layer();
-
-        public void process(double[] output);
-
-        public double[] getCleanData();
+    public static interface LayerPostProcessor {
+        public void process(int layer, double[] output);
     }
 
-    public double[][] run(AnnModel model, double[] input, double[][] sum, OutputPostProcessor postProcessor) {
+    public double[][] run(AnnModel model, double[] input, double[][] sum, LayerPostProcessor postProcessor) {
         double[][] output = new double[model.getLayerCount()][];
         for (int i = 0; i < model.getLayerCount(); i++) {
 
@@ -81,8 +77,8 @@ public class AnnTrainer {
             }
 
             // call post processor
-            if (postProcessor != null && postProcessor.layer() == i) {
-                postProcessor.process(output[i]);
+            if (postProcessor != null) {
+                postProcessor.process(i, output[i]);
             }
         }
 
@@ -219,17 +215,28 @@ public class AnnTrainer {
      */
     public AnnGradient backpropagateSoftmaxLogLikelyhood(AnnModel model, AnnData data, double[][] output,
             double[][] sum, double[] l2Lambdas, AnnGradient reuse) {
+        return backpropagateSoftmaxLogLikelyhood(model, data, output, sum, l2Lambdas, reuse, null);
+    }
+
+    public AnnGradient backpropagateSoftmaxLogLikelyhood(AnnModel model, AnnData data, double[][] output,
+            double[][] sum, double[] l2Lambdas, AnnGradient reuse, LayerPostProcessor layerPostProcessor) {
         // calculate the last layer of particial derivative L/a
         double[] lOverA = Arrays.copyOf(output[output.length - 1], output[output.length - 1].length);
         for (int i = 0; i < lOverA.length; i++) {
             lOverA[i] = data.getOutput()[i] - lOverA[i];
         }
 
-        return backpropagateWithGradient(lOverA, model, data.getInput(), output, sum, l2Lambdas, reuse);
+        if (layerPostProcessor != null) {
+            layerPostProcessor.process(model.getLayerCount() - 1, lOverA);
+        }
+
+        return backpropagateWithGradient(lOverA, model, data.getInput(), output, sum, l2Lambdas, reuse,
+                layerPostProcessor);
     }
 
     public AnnGradient backpropagateWithGradient(double[] annOutputGradient, AnnModel model, double[] annInput,
-            double[][] output, double[][] sum, double[] l2Lambdas, AnnGradient reuse) {
+            double[][] output, double[][] sum, double[] l2Lambdas, AnnGradient reuse,
+            LayerPostProcessor layerPostProcessor) {
         if (l2Lambdas != null) {
             Preconditions.checkArgument(l2Lambdas.length >= model.getLayerCount());
         }
@@ -277,6 +284,10 @@ public class AnnTrainer {
                                 k - 1));
                 for (int j = 0; j < lOverA.length; j++) {
                     lOverA[j] = lOverA[j] * activation.derivative(sum[k - 1][j]);
+                }
+
+                if (layerPostProcessor != null) {
+                    layerPostProcessor.process(k - 1, lOverA);
                 }
             }
         }

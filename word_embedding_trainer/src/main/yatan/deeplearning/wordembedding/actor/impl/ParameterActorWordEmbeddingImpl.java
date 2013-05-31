@@ -35,6 +35,7 @@ import yatan.distributedcomputer.Parameter.ParameterIndexPath;
 import yatan.distributedcomputer.actors.ParameterActor;
 import yatan.distributedcomputer.contract.ParameterActorContract;
 
+@Deprecated
 public class ParameterActorWordEmbeddingImpl extends BaseActorContract implements ParameterActorContract {
     private static final double ADA_DELTA_RHO = 0.95;
     private static final double ADA_DELTA_EPSILON = 0.000001;

@@ -5,3 +5,5 @@ dist
 .metadata
 auto_encoder/data
 word_embedding_trainer/data
+score.txt
+tag_result.txt

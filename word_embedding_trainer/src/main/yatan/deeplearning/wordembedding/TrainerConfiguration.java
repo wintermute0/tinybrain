@@ -11,4 +11,6 @@ public class TrainerConfiguration {
     public int wordVectorSize = 50;
 
     public boolean dropout = false;
+    public boolean wordEmbeddingDropout = false;
+    public double wordEmbeddingDropoutRate = 0.2;
 }

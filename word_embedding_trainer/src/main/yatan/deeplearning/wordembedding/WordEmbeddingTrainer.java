@@ -12,9 +12,13 @@ import yatan.ann.AnnConfiguration;
 import yatan.ann.AnnConfiguration.ActivationFunction;
 import yatan.data.parser.bakeoff2005.ICWB2Parser;
 import yatan.data.sequence.TaggedSentenceDataset;
+import yatan.deeplearning.softmax.contract.parameter.ParameterFactory;
+import yatan.deeplearning.softmax.contract.parameter.ParameterUpdator;
+import yatan.deeplearning.softmax.contract.parameter.WordEmbeddingAnnParameterActorContractImpl2;
+import yatan.deeplearning.softmax.contract.parameter.factory.WordEmbeddingANNParameterFactory;
+import yatan.deeplearning.softmax.contract.parameter.updator.AdaGradParameterUpdator;
 import yatan.deeplearning.wordembedding.actor.impl.ComputeActorWordEmbeddingEvaluatorImpl;
 import yatan.deeplearning.wordembedding.actor.impl.ComputeActorWordEmbeddingTrainingImpl;
-import yatan.deeplearning.wordembedding.actor.impl.ParameterActorWordEmbeddingImpl;
 import yatan.deeplearning.wordembedding.actor.impl.PerplextiyEvaluator;
 import yatan.deeplearning.wordembedding.data.BakeOffDataProducer;
 import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
@@ -33,16 +37,31 @@ import akka.actor.UntypedActorFactory;
 
 public class WordEmbeddingTrainer {
     private static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
-    private static final int TRAINING_ACTOR_COUNT = 2;
+    private static final String MODEL_FILE_PREFIX = "word_embedding_";
+
+    public static final AnnConfiguration ANN_CONFIGURATION;
+
+    private static final int TRAINING_ACTOR_COUNT = 16;
+    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 8;
+
+    private static final double WORD_EMBEDDING_LAMBDA = 0.1;
+    private static final double ANN_LAMBDA = 0.1;
 
     static {
         // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.00001, 0.00001, 0.00001};
-        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0};
-
-        TRAINER_CONFIGURATION.hiddenLayerSize = 150;
-        TRAINER_CONFIGURATION.wordVectorSize = 50;
 
         TRAINER_CONFIGURATION.dropout = false;
+        TRAINER_CONFIGURATION.wordEmbeddingDropout = false;
+
+        TRAINER_CONFIGURATION.hiddenLayerSize = 300;
+        TRAINER_CONFIGURATION.wordVectorSize = 50;
+
+        ANN_CONFIGURATION =
+                new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize * ZhWikiTrainingDataProducer.WINDOWS_SIZE);
+        ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+        ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+        ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+        ANN_CONFIGURATION.addLayer(1, ActivationFunction.SIGMOID);
     }
 
     @SuppressWarnings("serial")
@@ -96,7 +115,7 @@ public class WordEmbeddingTrainer {
                     }), "compute" + i);
                     try {
                         Thread.sleep(newThreadInterval * 1000);
-                        newThreadInterval = Math.max(8, newThreadInterval / 2);
+                        newThreadInterval = Math.max(16, newThreadInterval / 2);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -145,31 +164,34 @@ public class WordEmbeddingTrainer {
             bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(500000);
 
             // bind ann configuration
-            AnnConfiguration annConfiguration =
-                    new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize * ZhWikiTrainingDataProducer.WINDOWS_SIZE);
-            annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-            annConfiguration.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-            // annConfiguration.addLayer(2, ActivationFunction.SOFTMAX);
-            annConfiguration.addLayer(1, ActivationFunction.SIGMOID);
-            bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(annConfiguration);
+            bind(AnnConfiguration.class).toInstance(ANN_CONFIGURATION);
 
-            bind(ParameterActorContract.class).to(ParameterActorWordEmbeddingImpl.class);
-            bind(ComputeActorContract.class).to(ComputeActorWordEmbeddingTrainingImpl.class);
+            bind(Integer.class).annotatedWith(Names.named("parameter_actor_update_slice")).toInstance(
+                    PARAMETER_ACTOR_UPDATE_SLICE);
+
+            bind(Double.class).annotatedWith(Names.named("word_embedding_lambda")).toInstance(WORD_EMBEDDING_LAMBDA);
+            bind(Double.class).annotatedWith(Names.named("ann_lambda")).toInstance(ANN_LAMBDA);
+            bind(ParameterFactory.class).to(WordEmbeddingANNParameterFactory.class);
+            bind(ParameterUpdator.class).to(AdaGradParameterUpdator.class);
+            bind(String.class).annotatedWith(Names.named("model_file_prefix")).toInstance(MODEL_FILE_PREFIX);
+            bind(ParameterActorContract.class).to(WordEmbeddingAnnParameterActorContractImpl2.class);
 
             bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
 
+            bind(ComputeActorContract.class).to(ComputeActorWordEmbeddingTrainingImpl.class);
+
             // wiki data
-            bind(DataProducer.class).to(ZhWikiTrainingDataProducer.class);
+            // bind(DataProducer.class).to(ZhWikiTrainingDataProducer.class);
 
             // bakeoff data
-            // bind(boolean.class).annotatedWith(Names.named("training")).toInstance(true);
-            // try {
-            // bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
-            // new ICWB2Parser().parse(new File("data/icwb2-data/training/pku_training.utf8")));
-            // bind(DataProducer.class).to(BakeOffDataProducer.class);
-            // } catch (IOException e) {
-            // e.printStackTrace();
-            // }
+            bind(boolean.class).annotatedWith(Names.named("training")).toInstance(true);
+            try {
+                bind(TaggedSentenceDataset.class).annotatedWith(Names.named("tagged_sentence_dataset")).toInstance(
+                        new ICWB2Parser().parse(new File("data/icwb2-data/training/pku_training.utf8")));
+                bind(DataProducer.class).to(BakeOffDataProducer.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

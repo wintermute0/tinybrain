@@ -10,7 +10,7 @@ import yatan.ann.AnnData;
 import yatan.ann.AnnGradient;
 import yatan.ann.AnnModel;
 import yatan.ann.AnnTrainer;
-import yatan.ann.AnnTrainer.OutputPostProcessor;
+import yatan.ann.AnnTrainer.LayerPostProcessor;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.distributedcomputer.Data;
@@ -39,31 +39,12 @@ public class AutoEncoderTrainingContractImpl extends AbstractComputeActorContrac
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
             AnnData annData = (AnnData) Helper.convertToAnnData(wordEmbedding, instance);
 
-            OutputPostProcessor postProcessor = null;
+            NoisingLayerPostProcessor postProcessor = null;
             if (annModel.getLayerCount() == 2) {
                 // corrupt input
                 Helper.corruptWithMask(annData.getInput());
             } else {
-                postProcessor = new OutputPostProcessor() {
-                    private double[] uncorruptedData;
-
-                    @Override
-                    public void process(double[] output) {
-                        this.uncorruptedData = Arrays.copyOf(output, output.length);
-
-                        Helper.corruptWithMask(output);
-                    }
-
-                    @Override
-                    public int layer() {
-                        return annModel.getLayerCount() - 3;
-                    }
-
-                    @Override
-                    public double[] getCleanData() {
-                        return uncorruptedData;
-                    }
-                };
+                postProcessor = new NoisingLayerPostProcessor(annModel.getLayerCount() - 3);
             }
             double[][] output = trainer.run(annModel, annData.getInput(), sum, postProcessor);
 
@@ -127,6 +108,27 @@ public class AutoEncoderTrainingContractImpl extends AbstractComputeActorContrac
         } else {
             gradient.updateByPlus(newGradient);
             return gradient;
+        }
+    }
+
+    public static class NoisingLayerPostProcessor implements LayerPostProcessor {
+        private final int targetLayer;
+        private double[] uncorruptedData;
+
+        public NoisingLayerPostProcessor(int targetLayer) {
+            this.targetLayer = targetLayer;
+        }
+
+        @Override
+        public void process(int layer, double[] output) {
+            if (this.targetLayer == layer) {
+                this.uncorruptedData = Arrays.copyOf(output, output.length);
+                Helper.corruptWithMask(output);
+            }
+        }
+
+        public double[] getCleanData() {
+            return uncorruptedData;
         }
     }
 

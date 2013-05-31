@@ -4,9 +4,13 @@ import java.io.Serializable;
 
 import java.util.List;
 
+import com.google.inject.Inject;
+
 import yatan.ann.AnnData;
-import yatan.ann.DefaultAnnModel;
+import yatan.ann.AnnModel;
 import yatan.ann.AnnTrainer;
+import yatan.ann.DropoutAnnModel;
+import yatan.deeplearning.wordembedding.TrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.deeplearning.wordembedding.utility.LogUtility;
@@ -17,6 +21,9 @@ import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActorContractImpl {
     private static final int EVALUATION_INTERVAL_IN_SECONDS = 60;
 
+    @Inject
+    private TrainerConfiguration trainerConfiguration;
+
     @Override
     protected int requestDataSize() {
         return 50000;
@@ -26,7 +33,11 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
     protected ComputeResult doCompute(List<Data> dataset, Parameter parameter) {
         Serializable[] parameters = (Serializable[]) parameter.getSerializable();
         WordEmbedding wordEmbedding = (WordEmbedding) parameters[0];
-        DefaultAnnModel annModel = (DefaultAnnModel) parameters[1];
+        AnnModel annModel = (AnnModel) parameters[1];
+
+        if (this.trainerConfiguration.dropout) {
+            annModel = new DropoutAnnModel(annModel, false);
+        }
 
         double totalPositiveScore = 0;
         int positiveCount = 0;

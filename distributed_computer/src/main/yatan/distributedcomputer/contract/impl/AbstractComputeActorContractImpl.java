@@ -59,20 +59,22 @@ public abstract class AbstractComputeActorContractImpl extends BaseActorContract
 
     @Override
     public void preStart() {
-        Random random = new Random(new Date().getTime());
-        int bootstrapDelay = 1 + random.nextInt(5);
-        getLogger().info(
-                "Bootstrap message for compute actor " + this + " is scheduled to be sent in " + bootstrapDelay
-                        + " seconds.");
-        getActor().getContext().system().scheduler()
-                .scheduleOnce(Duration.create(bootstrapDelay, TimeUnit.SECONDS), new Runnable() {
-                    @Override
-                    public void run() {
-                        getActor().getSelf().tell(new ComputeActor.ComputeMessage(new ComputeInstruction()));
-                        getLogger().info("Bootstrap message for compute actor " + this + " has been sent.");
-                        getLogger().info("The data actor path of this compute actor is " + dataActorPath);
-                    }
-                });
+        getActor().getSelf().tell(new ComputeActor.ComputeMessage(new ComputeInstruction()));
+        getLogger().info("Bootstrap message for compute actor " + this + " has been sent.");
+        getLogger().info("The data actor path of this compute actor is " + dataActorPath);
+
+        // Random random = new Random(new Date().getTime());
+        // int bootstrapDelay = 1 + random.nextInt(5);
+        // getLogger().info(
+        // "Bootstrap message for compute actor " + this + " is scheduled to be sent in " + bootstrapDelay
+        // + " seconds.");
+        // getActor().getContext().system().scheduler()
+        // .scheduleOnce(Duration.create(bootstrapDelay, TimeUnit.SECONDS), new Runnable() {
+        // @Override
+        // public void run() {
+        //
+        // }
+        // });
     }
 
     @Override

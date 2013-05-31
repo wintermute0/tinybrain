@@ -6,7 +6,8 @@ import java.util.List;
 import yatan.ann.AnnData;
 import yatan.ann.AnnModel;
 import yatan.ann.AnnTrainer;
-import yatan.ann.AnnTrainer.OutputPostProcessor;
+import yatan.ann.AnnTrainer.LayerPostProcessor;
+import yatan.deeplearning.autoencoder.contract.AutoEncoderTrainingContractImpl.NoisingLayerPostProcessor;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.deeplearning.wordembedding.utility.LogUtility;
@@ -41,31 +42,12 @@ public class AutoEncoderEvaluatorContractImpl extends AbstractComputeActorContra
             AnnData annData = (AnnData) Helper.convertToAnnData(wordEmbedding, instance);
 
             // // setup corruption post processor to corrupt the input
-            OutputPostProcessor postProcessor = null;
+            NoisingLayerPostProcessor postProcessor = null;
             if (annModel.getLayerCount() == 2) {
                 // corrupt input
                 Helper.corruptWithMask(annData.getInput());
             } else {
-                postProcessor = new OutputPostProcessor() {
-                    private double[] uncorruptedData;
-
-                    @Override
-                    public void process(double[] output) {
-                        this.uncorruptedData = Arrays.copyOf(output, output.length);
-
-                        Helper.corruptWithMask(output);
-                    }
-
-                    @Override
-                    public int layer() {
-                        return annModel.getLayerCount() - 3;
-                    }
-
-                    @Override
-                    public double[] getCleanData() {
-                        return uncorruptedData;
-                    }
-                };
+                postProcessor = new NoisingLayerPostProcessor(annModel.getLayerCount() - 3);
             }
             // calculate ANN output
             double[][] output = trainer.run(annModel, annData.getInput(), sum, postProcessor);

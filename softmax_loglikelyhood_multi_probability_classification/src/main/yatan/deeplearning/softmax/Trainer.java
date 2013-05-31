@@ -21,7 +21,11 @@ import yatan.data.parser.bakeoff2005.ICWB2Parser;
 import yatan.data.sequence.TaggedSentenceDataset;
 import yatan.deeplearning.softmax.contract.compute.SoftmaxClassificationEvaluatorContractImpl;
 import yatan.deeplearning.softmax.contract.compute.SoftmaxClassificationTrainingContractImpl;
-import yatan.deeplearning.softmax.contract.parameter.WordEmbeddingAnnParameterActorContractImpl;
+import yatan.deeplearning.softmax.contract.parameter.ParameterFactory;
+import yatan.deeplearning.softmax.contract.parameter.ParameterUpdator;
+import yatan.deeplearning.softmax.contract.parameter.WordEmbeddingAnnParameterActorContractImpl2;
+import yatan.deeplearning.softmax.contract.parameter.factory.WordEmbeddingANNParameterFactory;
+import yatan.deeplearning.softmax.contract.parameter.updator.AdaGradParameterUpdator;
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer;
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer.WordSegmentationInstancePool;
 import yatan.deeplearning.wordembedding.model.Dictionary;
@@ -37,14 +41,14 @@ public class Trainer {
     public static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
     public static final AnnConfiguration ANN_CONFIGURATION;
 
-    private static final int TRAINING_ACTOR_COUNT = 16;
-    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 8;
+    private static final int TRAINING_ACTOR_COUNT = 2;
+    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 2;
+
+    private static final double WORD_EMBEDDING_LAMBDA = 0.1;
+    private static final double ANN_LAMBDA = 0.1;
 
     static {
-        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001, 0.0001, 0.0001};
-        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.001, 0.001, 0.001, 0.0001, 0.0001};
-        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0, 0, 0};
-        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0, 0, 0};
+        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001};
 
         TRAINER_CONFIGURATION.dropout = false;
 
@@ -157,13 +161,18 @@ public class Trainer {
                 bind(DataProducer.class).to(WordSegmentationDataProducer.class);
 
                 // bind ann configuration
-                bind(AnnConfiguration.class).annotatedWith(Names.named("ann_configuration")).toInstance(
-                        ANN_CONFIGURATION);
+                bind(AnnConfiguration.class).toInstance(ANN_CONFIGURATION);
 
                 // bind parameter actor impl
                 bind(Integer.class).annotatedWith(Names.named("parameter_actor_update_slice")).toInstance(
                         PARAMETER_ACTOR_UPDATE_SLICE);
-                bind(ParameterActorContract.class).to(WordEmbeddingAnnParameterActorContractImpl.class);
+
+                bind(Double.class).annotatedWith(Names.named("word_embedding_lambda"))
+                        .toInstance(WORD_EMBEDDING_LAMBDA);
+                bind(Double.class).annotatedWith(Names.named("ann_lambda")).toInstance(ANN_LAMBDA);
+                bind(ParameterFactory.class).to(WordEmbeddingANNParameterFactory.class);
+                bind(ParameterUpdator.class).to(AdaGradParameterUpdator.class);
+                bind(ParameterActorContract.class).to(WordEmbeddingAnnParameterActorContractImpl2.class);
 
                 // set data actor path of to evaluate data actor
                 bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");

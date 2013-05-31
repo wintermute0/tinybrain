@@ -48,6 +48,7 @@ import yatan.distributedcomputer.Parameter.ParameterIndexPath;
 import yatan.distributedcomputer.actors.ParameterActor;
 import yatan.distributedcomputer.contract.ParameterActorContract;
 
+@Deprecated
 public class WordEmbeddingAnnParameterActorContractImpl extends BaseActorContract implements ParameterActorContract {
     private static final Timeout SLICE_UPDATE_TIMEOUT = new Timeout(Duration.create(5, TimeUnit.SECONDS));
 

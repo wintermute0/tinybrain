@@ -3,12 +3,13 @@ package yatan.deeplearning.wordembedding.actor.impl;
 import java.io.Serializable;
 import java.util.List;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-import yatan.ann.DefaultAnnModel;
+import yatan.ann.AnnModel;
 import yatan.ann.AnnTrainer;
+import yatan.ann.DropoutAnnModel;
+import yatan.deeplearning.wordembedding.TrainerConfiguration;
 import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
@@ -19,16 +20,13 @@ import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
     private static final int REQUEST_DATA_SIZE = 500;
-    private static final int REPEAT_DELAY_IN_SECONDS = 5 * 60;
-
-    private final Dictionary dictionary;
+    private static final int REPEAT_DELAY_IN_SECONDS = 10 * 60;
 
     @Inject
-    public PerplextiyEvaluator(Dictionary dictionary) {
-        Preconditions.checkArgument(dictionary != null);
+    private TrainerConfiguration trainerConfiguration;
 
-        this.dictionary = dictionary;
-    }
+    @Inject
+    private Dictionary dictionary;
 
     @Override
     protected int requestDataSize() {
@@ -42,7 +40,7 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
 
         Serializable[] parameters = (Serializable[]) parameter.getSerializable();
         WordEmbedding wordEmbedding = (WordEmbedding) parameters[0];
-        DefaultAnnModel annModel = (DefaultAnnModel) parameters[1];
+        AnnModel annModel = (AnnModel) parameters[1];
 
         // double crossEntropy = calculateCrossEntropy(this.dictionary, wordEmbedding, annModel, dataset);
         // double perplexity = Math.pow(2, crossEntropy);
@@ -50,6 +48,10 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
         // "Perplexity = " + perplexity + ", cross entropy = " + crossEntropy + ", calculation cost "
         // + (new Date().getTime() - start) / 1000.0f + "s.");
         // System.out.println("Perplexity = " + perplexity + ", cross entropy = " + crossEntropy);
+
+        if (this.trainerConfiguration.dropout) {
+            annModel = new DropoutAnnModel(annModel, false);
+        }
 
         calculateCrossEntropy(this.dictionary, wordEmbedding, annModel, dataset);
 
@@ -68,7 +70,7 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
      * @return
      * @throws Exception
      */
-    private double calculateCrossEntropy(Dictionary dictionary, WordEmbedding wordEmbedding, DefaultAnnModel annModel,
+    private double calculateCrossEntropy(Dictionary dictionary, WordEmbedding wordEmbedding, AnnModel annModel,
             List<Data> dataset) {
         AnnTrainer trainer = new AnnTrainer();
         double[] outputs = new double[wordEmbedding.getDictionary().size()];
@@ -134,8 +136,8 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
         return 0;
     }
 
-    private static double runWordEmbeddingInstance(WordEmbedding wordEmbedding, DefaultAnnModel annModel,
-            AnnTrainer trainer, WordEmbeddingTrainingInstance instance) {
+    private static double runWordEmbeddingInstance(WordEmbedding wordEmbedding, AnnModel annModel, AnnTrainer trainer,
+            WordEmbeddingTrainingInstance instance) {
         // first convert input data into word embedding
         // FIXME: could reuse an array, no need to allocate it every time
         double[] input = new double[instance.getInput().size() * wordEmbedding.getWordVectorSize()];
