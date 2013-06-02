@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 import yatan.commons.matrix.Matrix;
 
 @SuppressWarnings("serial")
-public class DefaultAnnModel implements Serializable, AnnModel {
+public class DefaultAnnModel implements Serializable, AnnModel, Cloneable {
     // private final Logger logger = Logger.getLogger(AnnModel.class);
     private final AnnConfiguration configuration;
     private final List<Matrix> matrices = new ArrayList<Matrix>();
-    private final int maxOutputDegree;
 
     public DefaultAnnModel(AnnConfiguration configuration) {
         Preconditions.checkArgument(configuration != null);
@@ -22,16 +22,6 @@ public class DefaultAnnModel implements Serializable, AnnModel {
         // this.logger.info("Creating ANN with " + configuration);
 
         this.configuration = configuration;
-
-        // calculate the maximum output degree
-        int maxOutputDegree = 0;
-        for (Integer degree : this.configuration.layers) {
-            if (degree > maxOutputDegree) {
-                maxOutputDegree = degree;
-            }
-        }
-
-        this.maxOutputDegree = maxOutputDegree;
 
         // allocate matrices
         int lastDegree = this.configuration.inputDegree;
@@ -54,6 +44,21 @@ public class DefaultAnnModel implements Serializable, AnnModel {
         }
     }
 
+    private DefaultAnnModel(AnnConfiguration annConfiguration, List<Matrix> matrices) {
+        this.configuration = annConfiguration;
+        this.matrices.addAll(matrices);
+    }
+
+    @Override
+    public DefaultAnnModel clone() {
+        List<Matrix> clonedMatrices = Lists.newArrayList();
+        for (Matrix matrix : this.matrices) {
+            clonedMatrices.add(matrix.clone());
+        }
+
+        return new DefaultAnnModel(this.configuration, clonedMatrices);
+    }
+
     @Override
     public int getLayerCount() {
         return this.configuration.layers.size();
@@ -62,11 +67,6 @@ public class DefaultAnnModel implements Serializable, AnnModel {
     @Override
     public Matrix getLayer(int i) {
         return this.matrices.get(i);
-    }
-
-    @Override
-    public int getMaxOutputDegree() {
-        return this.maxOutputDegree;
     }
 
     @Override

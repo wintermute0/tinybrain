@@ -41,11 +41,11 @@ public class Trainer {
     public static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
     public static final AnnConfiguration ANN_CONFIGURATION;
 
-    private static final int TRAINING_ACTOR_COUNT = 2;
-    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 2;
+    private static final int TRAINING_ACTOR_COUNT = 16;
+    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 8;
 
-    private static final double WORD_EMBEDDING_LAMBDA = 0.1;
-    private static final double ANN_LAMBDA = 0.1;
+    private static final double WORD_EMBEDDING_LAMBDA = 0.01;
+    private static final double ANN_LAMBDA = 0.01;
 
     static {
         // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001};

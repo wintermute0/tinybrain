@@ -2,12 +2,13 @@ package yatan.commons.matrix;
 
 import java.io.Serializable;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
 import com.google.common.base.Preconditions;
 
 @SuppressWarnings("serial")
-final public class Matrix implements Serializable {
+final public class Matrix implements Serializable, Cloneable {
     private final double[][] data;
 
     public Matrix(int row, int column) {
@@ -27,6 +28,16 @@ final public class Matrix implements Serializable {
         }
 
         this.data = data;
+    }
+
+    @Override
+    public Matrix clone() {
+        double[][] clonedData = new double[this.data.length][];
+        for (int i = 0; i < this.data.length; i++) {
+            clonedData[i] = Arrays.copyOf(this.data[i], this.data[i].length);
+        }
+
+        return new Matrix(clonedData);
     }
 
     public void randomInitialize(double low, double high) {

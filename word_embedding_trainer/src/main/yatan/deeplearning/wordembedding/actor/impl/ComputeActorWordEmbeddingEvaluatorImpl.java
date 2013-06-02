@@ -26,11 +26,13 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
 
     @Override
     protected int requestDataSize() {
-        return 50000;
+        return 90000;
     }
 
     @Override
     protected ComputeResult doCompute(List<Data> dataset, Parameter parameter) {
+        long start = System.currentTimeMillis();
+
         Serializable[] parameters = (Serializable[]) parameter.getSerializable();
         WordEmbedding wordEmbedding = (WordEmbedding) parameters[0];
         AnnModel annModel = (AnnModel) parameters[1];
@@ -45,26 +47,32 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
         int negativeCount = 0;
 
         AnnTrainer trainer = new AnnTrainer();
-        int accurate = 0;
+        int positiveAccurate = 0;
+        int negativeAccurate = 0;
         for (Data data : dataset) {
             WordEmbeddingTrainingInstance instance = (WordEmbeddingTrainingInstance) data.getSerializable();
 
             // first convert input data into word embedding
             AnnData annData = Helper.convertToSoftmaxAnnData(wordEmbedding, instance);
+            if (this.trainerConfiguration.wordEmbeddingDropout) {
+                for (int i = 0; i < annData.getInput().length; i++) {
+                    annData.getInput()[i] *= 1 - this.trainerConfiguration.wordEmbeddingDropoutRate;
+                }
+            }
 
             // train with this ann data instance and update gradient
             double[][] output = trainer.run(annModel, annData.getInput(), new double[annModel.getLayerCount()][]);
             // System.out.println(output[annModel.getLayerCount() - 1][0]);
             if (instance.getOutput() > 0) {
                 if (output[annModel.getLayerCount() - 1][0] > 0.5) {
-                    accurate++;
+                    positiveAccurate++;
                 }
 
                 totalPositiveScore += output[annModel.getLayerCount() - 1][0];
                 positiveCount++;
             } else {
                 if (output[annModel.getLayerCount() - 1][0] < 0.5) {
-                    accurate++;
+                    negativeAccurate++;
                 }
 
                 totalNegativeScore += output[annModel.getLayerCount() - 1][0];
@@ -72,20 +80,28 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
             }
         }
 
+        String message =
+                "Precision = " + 100.0 * (positiveAccurate + negativeAccurate) / requestDataSize()
+                        + "%, positive precision = " + 100.0 * positiveAccurate / positiveCount
+                        + "%, negative precision = " + 100.0 * negativeAccurate / negativeCount;
+
         getLogger().info("Average positive score: " + totalPositiveScore / positiveCount);
         getLogger().info("Average negative score: " + totalNegativeScore / negativeCount);
-        getLogger().info("Precision: " + 100.0 * accurate / requestDataSize() + "%");
-        LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "的");
-        LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "吴");
-        LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "煮");
+        getLogger().info(message);
+        getLogger().info("Evaluation cost " + (System.currentTimeMillis() - start) / 1000 + "s.");
+        // LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "的");
+        // LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "吴");
+        // LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "煮");
         LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
         LogUtility.logAnnModel(getLogger(), annModel);
+
+        System.out.println(message);
 
         // evaluate some word distance rank
         // evaluateWordDistanceRank(wordEmbedding, "france", "germany", "greece", "spain", "america", "canada", "china",
         // "denmark", "egypt", "australia", "brazil");
-        evaluateWordDistanceRank(wordEmbedding, "看", "见", "视", "瞧", "瞄", "目", "相", "窥", "探", "扫", "瞪", "望");
-        evaluateWordDistanceRank(wordEmbedding, "吴", "赵", "钱", "孙", "李", "周", "郑", "王", "冯", "陈", "褚", "卫");
+        // evaluateWordDistanceRank(wordEmbedding, "看", "见", "视", "瞧", "瞄", "目", "相", "窥", "探", "扫", "瞪", "望");
+        // evaluateWordDistanceRank(wordEmbedding, "吴", "赵", "钱", "孙", "李", "周", "郑", "王", "冯", "陈", "褚", "卫");
 
         // return computation result
         ComputeResult result = new ComputeResult();

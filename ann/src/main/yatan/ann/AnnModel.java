@@ -9,8 +9,6 @@ public interface AnnModel {
 
     public Matrix getLayer(int i);
 
-    public int getMaxOutputDegree();
-
     public AnnConfiguration getConfiguration();
 
     public void update(AnnGradient gradient, double learningRate);

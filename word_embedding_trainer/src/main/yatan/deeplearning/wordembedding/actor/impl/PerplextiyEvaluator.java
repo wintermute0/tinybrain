@@ -35,7 +35,6 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
 
     @Override
     protected ComputeResult doCompute(List<Data> dataset, Parameter parameter) {
-        // long start = new Date().getTime();
         getLogger().info("Start calculating perplexity...");
 
         Serializable[] parameters = (Serializable[]) parameter.getSerializable();
@@ -72,6 +71,8 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
      */
     private double calculateCrossEntropy(Dictionary dictionary, WordEmbedding wordEmbedding, AnnModel annModel,
             List<Data> dataset) {
+        long start = System.currentTimeMillis();
+
         AnnTrainer trainer = new AnnTrainer();
         double[] outputs = new double[wordEmbedding.getDictionary().size()];
         // double outputSum = 0;
@@ -128,7 +129,8 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
 
         String message =
                 "Average actual word rank = " + (1.0 * totalRank / positiveInstanceCount) + ". Log rank = "
-                        + totalLogRank / positiveInstanceCount;
+                        + totalLogRank / positiveInstanceCount + ", calculation cost "
+                        + (System.currentTimeMillis() - start) / 1000.0f + "s.";
         System.out.println(message);
         getLogger().info(message);
 
@@ -136,7 +138,7 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
         return 0;
     }
 
-    private static double runWordEmbeddingInstance(WordEmbedding wordEmbedding, AnnModel annModel, AnnTrainer trainer,
+    private double runWordEmbeddingInstance(WordEmbedding wordEmbedding, AnnModel annModel, AnnTrainer trainer,
             WordEmbeddingTrainingInstance instance) {
         // first convert input data into word embedding
         // FIXME: could reuse an array, no need to allocate it every time
@@ -145,6 +147,12 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
             int index = instance.getInput().get(i);
             for (int j = 0; j < wordEmbedding.getWordVectorSize(); j++) {
                 input[i * wordEmbedding.getWordVectorSize() + j] = wordEmbedding.getMatrix().getData()[j][index];
+            }
+        }
+
+        if (this.trainerConfiguration.wordEmbeddingDropout) {
+            for (int i = 0; i < input.length; i++) {
+                input[i] *= 1 - this.trainerConfiguration.wordEmbeddingDropoutRate;
             }
         }
 

@@ -10,7 +10,7 @@ import com.google.common.base.Preconditions;
 
 import yatan.commons.matrix.Matrix;
 
-public class WordEmbedding implements Serializable {
+public class WordEmbedding implements Serializable, Cloneable {
     private static final long serialVersionUID = -4191565458443082675L;
     // private final Logger logger = Logger.getLogger(WordEmbedding.class);
     private final List<String> dictionary;
@@ -28,6 +28,17 @@ public class WordEmbedding implements Serializable {
         this.matrix = new Matrix(wordVectorSize, dictionary.size());
         this.matrix.randomInitialize(-0.01, 0.01);
         this.wordVectorSize = wordVectorSize;
+    }
+
+    private WordEmbedding(List<String> dictionary, int wordVectorSize, Matrix matrix) {
+        this.dictionary = dictionary;
+        this.wordVectorSize = wordVectorSize;
+        this.matrix = matrix;
+    }
+
+    @Override
+    public WordEmbedding clone() {
+        return new WordEmbedding(this.dictionary, this.wordVectorSize, this.matrix.clone());
     }
 
     public double[] lookup(List<Integer> wordIndecis) {

@@ -22,7 +22,7 @@ import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeActorContractImpl {
-    public static final int REQUEST_DATA_SIZE = 50000;
+    public static final int REQUEST_DATA_SIZE = 90000;
     // public static final int REQUEST_DATA_SIZE = 5000;
 
     private static final int EVALUATION_INTERVAL_IN_SECONDS = 60;

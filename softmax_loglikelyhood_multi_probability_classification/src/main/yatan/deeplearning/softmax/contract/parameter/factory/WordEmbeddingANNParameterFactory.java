@@ -76,6 +76,13 @@ public class WordEmbeddingANNParameterFactory implements ParameterFactory {
         return parameter;
     }
 
+    public Parameter cloneParameter() {
+        Parameter parameter = new Parameter();
+        parameter.setSerializable(new Serializable[] {this.wordEmbedding.clone(), this.annModel.clone()});
+
+        return parameter;
+    }
+
     @Override
     public void save(Map<String, Serializable> state) {
         state.put(WORD_EMBEDDING_KEY, this.wordEmbedding);

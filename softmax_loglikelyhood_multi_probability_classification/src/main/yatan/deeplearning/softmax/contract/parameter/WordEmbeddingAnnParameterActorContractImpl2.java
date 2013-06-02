@@ -136,6 +136,8 @@ public class WordEmbeddingAnnParameterActorContractImpl2 extends BaseActorContra
     @Override
     public void requestParameters(ParameterIndexPath start, ParameterIndexPath end) {
         tellSender(new ParameterActor.ReceiveParameterMessage(getActor().getMessage(), this.parameter));
+        // tellSender(new ParameterActor.ReceiveParameterMessage(getActor().getMessage(),
+        // this.parameterFactory.cloneParameter()));
     }
 
     @Override

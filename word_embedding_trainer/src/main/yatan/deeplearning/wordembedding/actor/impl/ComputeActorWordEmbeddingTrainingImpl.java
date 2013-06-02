@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.Map.Entry;
 
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multiset;
 import com.google.inject.Inject;
 
@@ -18,6 +19,7 @@ import yatan.ann.AnnModel;
 import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.ann.AnnTrainer.LayerPostProcessor;
+import yatan.commons.matrix.Matrix;
 import yatan.deeplearning.wordembedding.TrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
@@ -28,6 +30,8 @@ import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorContractImpl {
     private static final int MINIBATCH_SIZE = 20;
     private final Random random = new Random(new Date().getTime());
+
+    private int[][] activeCounts;
 
     @Inject
     private TrainerConfiguration trainerConfiguration;
@@ -47,6 +51,8 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
         AnnGradient batchGradient = null;
         // HashMap<Integer, Double[]> totalWordEmbeddingDelta = new HashMap<Integer, Double[]>();
         HashMap<Integer, Double[]> batchWordEmbeddingDelta = new HashMap<Integer, Double[]>();
+        int[] wordEmbeddingPositionActivationCount = new int[annModel.getConfiguration().inputDegree];
+        HashMap<Integer, Integer[]> wordEmbeddingActivationCount = Maps.newHashMap();
         Multiset<Integer> wordAppearCount = HashMultiset.create();
 
         AnnTrainer trainer = new AnnTrainer();
@@ -73,8 +79,25 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
             if (this.trainerConfiguration.wordEmbeddingDropout) {
                 dropMasks = new boolean[annData.getInput().length];
                 for (int i = 0; i < dropMasks.length; i++) {
-                    dropMasks[i] = this.random.nextDouble() < this.trainerConfiguration.wordEmbeddingDropoutRate;
-                    annData.getInput()[i] = 0;
+                    if (this.random.nextDouble() < this.trainerConfiguration.wordEmbeddingDropoutRate) {
+                        dropMasks[i] = true;
+                        annData.getInput()[i] = 0;
+                    } else {
+                        wordEmbeddingPositionActivationCount[i]++;
+
+                        int wordIndex = instance.getInput().get(i / wordEmbedding.getWordVectorSize());
+                        Integer[] wordActivationCount = wordEmbeddingActivationCount.get(wordIndex);
+                        if (wordActivationCount == null) {
+                            wordActivationCount = new Integer[wordEmbedding.getWordVectorSize()];
+                            wordEmbeddingActivationCount.put(wordIndex, wordActivationCount);
+                        }
+
+                        if (wordActivationCount[i % wordEmbedding.getWordVectorSize()] == null) {
+                            wordActivationCount[i % wordEmbedding.getWordVectorSize()] = 1;
+                        } else {
+                            wordActivationCount[i % wordEmbedding.getWordVectorSize()]++;
+                        }
+                    }
                 }
             }
 
@@ -110,13 +133,49 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
         // System.out.println(LogUtility.buildLogString(new double[][] {this.rollingActivation}));
 
         // average batch gradient
-        batchGradient.averageBy(MINIBATCH_SIZE);
+        if (this.trainerConfiguration.dropout) {
+            for (int layer = 0; layer < batchGradient.getGradients().size(); layer++) {
+                Matrix matrix = batchGradient.getGradients().get(layer);
+                double[][] data = matrix.getData();
+                for (int i = 0; i < matrix.rowSize(); i++) {
+                    int inputActivationCount;
+                    if (i == matrix.rowSize() - 1) {
+                        inputActivationCount = MINIBATCH_SIZE;
+                    } else {
+                        inputActivationCount =
+                                layer == 0 ? wordEmbeddingPositionActivationCount[i] : this.activeCounts[layer - 1][i];
+                    }
+
+                    for (int j = 0; j < matrix.columnSize(); j++) {
+                        int neuralActivationCount =
+                                layer < annModel.getLayerCount() - 1 ? this.activeCounts[layer][j] : MINIBATCH_SIZE;
+                        int actualCount = Math.min(neuralActivationCount, inputActivationCount);
+                        if (actualCount > 0) {
+                            data[i][j] /= actualCount;
+                        }
+                    }
+                }
+            }
+        } else {
+            batchGradient.averageBy(MINIBATCH_SIZE);
+        }
 
         // average word embedding gradient
         for (Entry<Integer, Double[]> entry : batchWordEmbeddingDelta.entrySet()) {
             Double[] gradient = entry.getValue();
-            for (int i = 0; i < gradient.length; i++) {
-                gradient[i] /= wordAppearCount.count(entry.getKey());
+            if (this.trainerConfiguration.wordEmbeddingDropout) {
+                Integer[] wordActivationCount = wordEmbeddingActivationCount.get(entry.getKey());
+                if (wordActivationCount != null) {
+                    for (int i = 0; i < gradient.length; i++) {
+                        if (wordActivationCount[i] != null) {
+                            gradient[i] /= wordActivationCount[i];
+                        }
+                    }
+                }
+            } else {
+                for (int i = 0; i < gradient.length; i++) {
+                    gradient[i] /= wordAppearCount.count(entry.getKey());
+                }
             }
         }
 
@@ -217,11 +276,22 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
         private final boolean[][] dropoutMasks;
 
         public DropoutPostProcessor(AnnModel annModel) {
+            if (activeCounts == null) {
+                activeCounts = new int[annModel.getLayerCount() - 1][];
+            }
+
             this.dropoutMasks = new boolean[annModel.getLayerCount() - 1][];
             for (int i = 0; i < dropoutMasks.length; i++) {
+                if (activeCounts[i] == null) {
+                    activeCounts[i] = new int[annModel.getLayer(i).columnSize()];
+                }
                 dropoutMasks[i] = new boolean[annModel.getLayer(i).columnSize()];
                 for (int j = 0; j < dropoutMasks[i].length; j++) {
-                    dropoutMasks[i][j] = random.nextDouble() < 0.5;
+                    if (random.nextDouble() < 0.5) {
+                        dropoutMasks[i][j] = true;
+                    } else {
+                        activeCounts[i][j]++;
+                    }
                 }
             }
         }

@@ -17,6 +17,7 @@ import com.google.inject.name.Named;
 
 import yatan.data.sequence.TaggedSentence;
 import yatan.data.sequence.TaggedSentenceDataset;
+import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.distributedcomputer.Data;
@@ -24,7 +25,7 @@ import yatan.distributedcomputer.contract.data.impl.DataProducer;
 import yatan.distributedcomputer.contract.data.impl.DataProducerException;
 
 public class WordSegmentationDataProducer implements DataProducer {
-    public static int WINDOWS_SIZE = 5;
+    public static int WINDOWS_SIZE = ZhWikiTrainingDataProducer.WINDOWS_SIZE;
 
     private static final Logger LOGGER = Logger.getLogger(WordSegmentationDataProducer.class);
     private static final Random RANDOM = new Random(new Date().getTime());

@@ -138,11 +138,6 @@ public class DropoutAnnModel implements AnnModel {
     }
 
     @Override
-    public int getMaxOutputDegree() {
-        return this.annModel.getMaxOutputDegree();
-    }
-
-    @Override
     public AnnConfiguration getConfiguration() {
         return this.annModel.getConfiguration();
     }

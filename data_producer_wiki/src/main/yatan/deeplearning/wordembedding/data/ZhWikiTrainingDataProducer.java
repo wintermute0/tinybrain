@@ -33,7 +33,7 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
 
     private ArticleDao articleDao;
 
-    public static final int WINDOWS_SIZE = 7;
+    public static final int WINDOWS_SIZE = 5;
     private static final int LOAD_ARTICLE_BATCH_SIZE = 500;
     private static final int MAX_ARTICLE_ID = 3449448;
     private Random random = new Random(new Date().getTime());
