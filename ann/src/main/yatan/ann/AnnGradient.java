@@ -63,7 +63,7 @@ public class AnnGradient implements Serializable {
 
         // update gradients for all layer
         for (int i = 0; i < this.gradients.size(); i++) {
-            if (gradient.getGradients().get(i) != null) {
+            if (this.gradients.get(i) != null && gradient.getGradients().get(i) != null) {
                 this.gradients.get(i).updateByPlus(gradient.getGradients().get(i));
             }
         }

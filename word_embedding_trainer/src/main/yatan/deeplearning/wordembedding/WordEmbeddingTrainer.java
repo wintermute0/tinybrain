@@ -41,28 +41,32 @@ public class WordEmbeddingTrainer {
 
     public static final AnnConfiguration ANN_CONFIGURATION;
 
-    private static final int TRAINING_ACTOR_COUNT = 16;
-    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 8;
+    private static final int TRAINING_ACTOR_COUNT = 4;
+    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 4;
 
-    private static final double WORD_EMBEDDING_LAMBDA = 0.01;
+    private static final double WORD_EMBEDDING_LAMBDA = 0.1;
     private static final double ANN_LAMBDA = 0.1;
 
+    private static final int FIX_BOTTOM_LAYERS;
+
     static {
-        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.00001, 0.00001, 0.00001, 0.00001, 0.00001};
+        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.00001, 0.00001, 0.00001, 0.00001, 0.00001};
 
         TRAINER_CONFIGURATION.dropout = false;
         TRAINER_CONFIGURATION.wordEmbeddingDropout = false;
         TRAINER_CONFIGURATION.wordEmbeddingDropoutRate = 0.5;
 
-        TRAINER_CONFIGURATION.hiddenLayerSize = 300;
-        TRAINER_CONFIGURATION.wordVectorSize = 50;
+        TRAINER_CONFIGURATION.hiddenLayerSize = 200;
+        TRAINER_CONFIGURATION.wordVectorSize = 100;
 
         ANN_CONFIGURATION =
                 new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize * ZhWikiTrainingDataProducer.WINDOWS_SIZE);
         ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-        ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-        ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+        // ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
+        // ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
         ANN_CONFIGURATION.addLayer(1, ActivationFunction.SIGMOID);
+
+        FIX_BOTTOM_LAYERS = ANN_CONFIGURATION.layers.size() - 2;
     }
 
     @SuppressWarnings("serial")
@@ -162,7 +166,8 @@ public class WordEmbeddingTrainer {
     public static class TrainingModule extends AbstractModule {
         @Override
         protected void configure() {
-            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(500000);
+            bind(Integer.class).annotatedWith(Names.named("fix_bottom_layers")).toInstance(FIX_BOTTOM_LAYERS);
+            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(200000);
 
             // bind ann configuration
             bind(AnnConfiguration.class).toInstance(ANN_CONFIGURATION);
@@ -205,7 +210,7 @@ public class WordEmbeddingTrainer {
             // bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");
 
             // bakeoff data
-            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(500000);
+            bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(200000);
             bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/evaluate_data");
 
             bind(boolean.class).annotatedWith(Names.named("training")).toInstance(false);

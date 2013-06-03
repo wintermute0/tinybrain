@@ -40,6 +40,16 @@ final public class Matrix implements Serializable, Cloneable {
         return new Matrix(clonedData);
     }
 
+    public void clone(Matrix matrix, int sliceId, int totalSlice) {
+        int columnStart = sliceId * (columnSize() / totalSlice);
+        int columnEnd = sliceId == totalSlice - 1 ? columnSize() : (sliceId + 1) * (columnSize() / totalSlice);
+        for (int i = 0; i < rowSize(); i++) {
+            for (int j = columnStart; j < columnEnd; j++) {
+                matrix.getData()[i][j] = this.data[i][j];
+            }
+        }
+    }
+
     public void randomInitialize(double low, double high) {
         Random random = new Random(new Date().getTime());
         for (int i = 0; i < rowSize(); i++) {

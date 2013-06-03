@@ -26,7 +26,7 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
 
     @Override
     protected int requestDataSize() {
-        return 90000;
+        return 30000;
     }
 
     @Override

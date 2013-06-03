@@ -44,7 +44,7 @@ public class DefaultAnnModel implements Serializable, AnnModel, Cloneable {
         }
     }
 
-    private DefaultAnnModel(AnnConfiguration annConfiguration, List<Matrix> matrices) {
+    public DefaultAnnModel(AnnConfiguration annConfiguration, List<Matrix> matrices) {
         this.configuration = annConfiguration;
         this.matrices.addAll(matrices);
     }
@@ -57,6 +57,12 @@ public class DefaultAnnModel implements Serializable, AnnModel, Cloneable {
         }
 
         return new DefaultAnnModel(this.configuration, clonedMatrices);
+    }
+
+    public void clone(DefaultAnnModel defaultAnnModel, int sliceId, int totalSlice) {
+        for (int i = 0; i < this.matrices.size(); i++) {
+            this.matrices.get(i).clone(defaultAnnModel.matrices.get(i), sliceId, totalSlice);
+        }
     }
 
     @Override

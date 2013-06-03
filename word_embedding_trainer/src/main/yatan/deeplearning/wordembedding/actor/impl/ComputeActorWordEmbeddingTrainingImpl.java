@@ -12,6 +12,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multiset;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import yatan.ann.AnnData;
 import yatan.ann.AnnGradient;
@@ -32,6 +33,10 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
     private final Random random = new Random(new Date().getTime());
 
     private int[][] activeCounts;
+
+    @Inject(optional = true)
+    @Named("fix_bottom_layers")
+    private int fixBottomLayers;
 
     @Inject
     private TrainerConfiguration trainerConfiguration;
@@ -108,6 +113,9 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
             newGradient =
                     trainer.backpropagateSoftmaxLogLikelyhood(annModel, annData, output, sum,
                             this.trainerConfiguration.l2Lambdas, newGradient, dropoutPostProcessor);
+            if (this.fixBottomLayers > 0) {
+                newGradient.setDeltaForInputLayer(null);
+            }
 
             // drop some gradient
             if (this.trainerConfiguration.wordEmbeddingDropout) {
@@ -122,11 +130,14 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
             batchGradient = saveGradient(batchGradient, newGradient);
 
             // save wordEmbeddingDelta
-            saveWordEmbeddingDelta(newGradient, batchWordEmbeddingDelta, wordEmbedding.getWordVectorSize(),
-                    annData.getInput(), instance);
-            // update word appear count
-            for (Integer word : instance.getInput()) {
-                wordAppearCount.add(word);
+            if (newGradient.getDeltaForInputLayer() != null) {
+                saveWordEmbeddingDelta(newGradient, batchWordEmbeddingDelta, wordEmbedding.getWordVectorSize(),
+                        annData.getInput(), instance);
+
+                // update word appear count
+                for (Integer word : instance.getInput()) {
+                    wordAppearCount.add(word);
+                }
             }
         }
 
@@ -244,13 +255,20 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
     // }
     // }
 
-    private static AnnGradient saveGradient(AnnGradient gradient, AnnGradient newGradient) {
+    private AnnGradient saveGradient(AnnGradient gradient, AnnGradient newGradient) {
+        AnnGradient batchGradient;
         if (gradient == null) {
-            return newGradient.clone();
+            batchGradient = newGradient.clone();
         } else {
             gradient.updateByPlus(newGradient);
-            return gradient;
+            batchGradient = gradient;
         }
+
+        for (int i = 0; i < this.fixBottomLayers; i++) {
+            batchGradient.getGradients().set(i, null);
+        }
+
+        return batchGradient;
     }
 
     private static void saveWordEmbeddingDelta(AnnGradient newGradient, HashMap<Integer, Double[]> wordEmbeddingDelta,

@@ -5,5 +5,7 @@ import yatan.distributedcomputer.Parameter;
 public interface ParameterFactory extends StatefulProcessor {
     public Parameter initializeParameter();
 
-    public Parameter cloneParameter();
+    public Parameter newEmptyParameter();
+
+    public void cloneParameter(Parameter snapshot, int sliceId, int totalSlice);
 }

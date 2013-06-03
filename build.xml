@@ -2,8 +2,8 @@
 <project name="Word Embedding Trainer" basedir="." default="deploy_ssh">
     <property file="build.properties"/>
     
-	<property name="ssh_server" value="ec2-user@ec2-54-235-3-251.compute-1.amazonaws.com"/>
-	<!-- <property name="ssh_server" value="eveningsun@10.3.7.40"/> -->
+	<!-- <property name="ssh_server" value="ec2-user@ec2-54-235-3-251.compute-1.amazonaws.com"/> -->
+	<property name="ssh_server" value="eveningsun@10.3.7.40"/>
 
 	<property name="dist.dir" value="dist" />
 	<property name="compile.destdir" value="${dist.dir}/build" />
@@ -61,13 +61,13 @@
 	</target>
 
 	<target name="upload_model">
-		<scp file="softmax_loglikelyhood_multi_probability_classification/models/best_pku_closed_50we2.json"
+		<scp file="softmax_loglikelyhood_multi_probability_classification/test_files/results/zbest_pku_closed_50we2.json"
 			 todir="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/"
 			trust="true" keyfile="${key_file}" password="conan513" verbose="true" />
 	</target>
 	
 	<target name="download_model">
-		<scp file="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/word_embedding_1370154441675.json" trust="true" keyfile="${key_file}" password="conan513"
+		<scp file="${ssh_server}:/usr/master_dev/tinybrain/test_files/results/softmax_model_1370228731032.json" trust="true" keyfile="${key_file}" password="conan513"
 			todir="softmax_loglikelyhood_multi_probability_classification/test_files/results/" verbose="true" />
 	</target>
 	

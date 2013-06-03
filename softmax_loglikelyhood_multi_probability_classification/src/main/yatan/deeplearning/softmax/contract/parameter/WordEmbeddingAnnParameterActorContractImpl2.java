@@ -69,6 +69,7 @@ public class WordEmbeddingAnnParameterActorContractImpl2 extends BaseActorContra
     private ParameterUpdator parameterUpdator;
 
     private Parameter parameter;
+    private Parameter parameterSnapshot;
 
     @Override
     public void preStart() {
@@ -82,6 +83,8 @@ public class WordEmbeddingAnnParameterActorContractImpl2 extends BaseActorContra
         // init parameter factory and create parameters
         this.parameterFactory.load(jsonObject);
         this.parameter = this.parameterFactory.initializeParameter();
+        this.parameterSnapshot = this.parameterFactory.newEmptyParameter();
+        this.parameterFactory.cloneParameter(this.parameterSnapshot, 0, 1);
 
         // init parameter updateor
         this.parameterUpdator.load(jsonObject);
@@ -126,8 +129,9 @@ public class WordEmbeddingAnnParameterActorContractImpl2 extends BaseActorContra
         public void onReceive(Object message) throws Exception {
             Parameter gradient = (Parameter) message;
 
-            parameterUpdator.update(WordEmbeddingAnnParameterActorContractImpl2.this.parameter, gradient, sliceId,
-                    totalSlice);
+            parameterUpdator.update(WordEmbeddingAnnParameterActorContractImpl2.this.parameter, gradient, this.sliceId,
+                    this.totalSlice);
+            parameterFactory.cloneParameter(parameterSnapshot, this.sliceId, this.totalSlice);
 
             getSender().tell("done.");
         }
@@ -135,7 +139,7 @@ public class WordEmbeddingAnnParameterActorContractImpl2 extends BaseActorContra
 
     @Override
     public void requestParameters(ParameterIndexPath start, ParameterIndexPath end) {
-        tellSender(new ParameterActor.ReceiveParameterMessage(getActor().getMessage(), this.parameter));
+        tellSender(new ParameterActor.ReceiveParameterMessage(getActor().getMessage(), this.parameterSnapshot));
         // tellSender(new ParameterActor.ReceiveParameterMessage(getActor().getMessage(),
         // this.parameterFactory.cloneParameter()));
     }
@@ -143,6 +147,9 @@ public class WordEmbeddingAnnParameterActorContractImpl2 extends BaseActorContra
     @Override
     public void updateGradient(Parameter gradient) {
         Preconditions.checkArgument(gradient != null, "Gradient cannot be null.");
+
+        // create a new parameter snapshot for this update
+        this.parameterSnapshot = this.parameterFactory.newEmptyParameter();
 
         final List<Future<Object>> futures = Lists.newArrayList();
         for (int i = 0; i < this.sliceUpdateActors.size(); i++) {
@@ -162,8 +169,8 @@ public class WordEmbeddingAnnParameterActorContractImpl2 extends BaseActorContra
         });
 
         try {
-            while (!aggregatedSliceUpdateFutures.isCompleted()) {
-                synchronized (aggregatedSliceUpdateFutures) {
+            synchronized (aggregatedSliceUpdateFutures) {
+                while (!aggregatedSliceUpdateFutures.isCompleted()) {
                     aggregatedSliceUpdateFutures.wait();
                 }
             }

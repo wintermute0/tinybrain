@@ -1,10 +1,12 @@
 package yatan.deeplearning.softmax.contract.parameter.factory;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 import com.google.gson.JsonObject;
@@ -76,11 +78,41 @@ public class WordEmbeddingANNParameterFactory implements ParameterFactory {
         return parameter;
     }
 
-    public Parameter cloneParameter() {
+    @Override
+    public Parameter newEmptyParameter() {
+        WordEmbedding wordEmbedding =
+                new WordEmbedding(this.wordEmbedding.getDictionary(), this.wordEmbedding.getWordVectorSize(),
+                        new Matrix(this.wordEmbedding.getMatrix().rowSize(), this.wordEmbedding.getMatrix()
+                                .columnSize()));
+
+        List<Matrix> matrices = Lists.newArrayList();
+        for (int i = 0; i < this.annModel.getLayerCount(); i++) {
+            Matrix layer = this.annModel.getLayer(i);
+            matrices.add(new Matrix(layer.rowSize(), layer.columnSize()));
+        }
+        DefaultAnnModel annModel = new DefaultAnnModel(this.annModel.getConfiguration(), matrices);
+
         Parameter parameter = new Parameter();
-        parameter.setSerializable(new Serializable[] {this.wordEmbedding.clone(), this.annModel.clone()});
+        parameter.setSerializable(new Serializable[] {wordEmbedding, annModel});
 
         return parameter;
+    }
+
+    // public Parameter cloneParameter() {
+    // Parameter parameter = new Parameter();
+    // parameter.setSerializable(new Serializable[] {this.wordEmbedding.clone(), this.annModel.clone()});
+    //
+    // return parameter;
+    // }
+
+    @Override
+    public void cloneParameter(Parameter snapshot, int sliceId, int totalSlice) {
+        Serializable[] snapshots = (Serializable[]) snapshot.getSerializable();
+        WordEmbedding wordEmbeddingSnapshot = (WordEmbedding) snapshots[0];
+        DefaultAnnModel annModelSnapshot = (DefaultAnnModel) snapshots[1];
+
+        this.wordEmbedding.clone(wordEmbeddingSnapshot, sliceId, totalSlice);
+        this.annModel.clone(annModelSnapshot, sliceId, totalSlice);
     }
 
     @Override

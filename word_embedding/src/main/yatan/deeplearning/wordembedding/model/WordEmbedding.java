@@ -30,7 +30,7 @@ public class WordEmbedding implements Serializable, Cloneable {
         this.wordVectorSize = wordVectorSize;
     }
 
-    private WordEmbedding(List<String> dictionary, int wordVectorSize, Matrix matrix) {
+    public WordEmbedding(List<String> dictionary, int wordVectorSize, Matrix matrix) {
         this.dictionary = dictionary;
         this.wordVectorSize = wordVectorSize;
         this.matrix = matrix;
@@ -39,6 +39,10 @@ public class WordEmbedding implements Serializable, Cloneable {
     @Override
     public WordEmbedding clone() {
         return new WordEmbedding(this.dictionary, this.wordVectorSize, this.matrix.clone());
+    }
+
+    public void clone(WordEmbedding wordEmbedding, int sliceId, int totalSlice) {
+        this.matrix.clone(wordEmbedding.matrix, sliceId, totalSlice);
     }
 
     public double[] lookup(List<Integer> wordIndecis) {

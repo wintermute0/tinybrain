@@ -24,7 +24,7 @@ import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class SoftmaxClassificationTrainingContractImpl extends AbstractComputeActorContractImpl {
-    private static final int MINIBATCH_SIZE = 50;
+    private static final int MINIBATCH_SIZE = 20;
 
     @Inject(optional = false)
     private TrainerConfiguration trainerConfiguration;
