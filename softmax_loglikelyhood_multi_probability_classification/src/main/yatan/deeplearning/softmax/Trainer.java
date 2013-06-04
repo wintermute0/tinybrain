@@ -41,19 +41,19 @@ public class Trainer {
     public static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
     public static final AnnConfiguration ANN_CONFIGURATION;
 
-    private static final int TRAINING_ACTOR_COUNT = 4;
-    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 4;
+    private static final int TRAINING_ACTOR_COUNT = 16;
+    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 8;
 
     private static final double WORD_EMBEDDING_LAMBDA = 0.1;
     private static final double ANN_LAMBDA = 0.1;
 
     static {
-        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.00001, 0.00001, 0.00001};
+        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001};
 
         TRAINER_CONFIGURATION.dropout = false;
 
-        TRAINER_CONFIGURATION.wordVectorSize = 50;
-        TRAINER_CONFIGURATION.hiddenLayerSize = 100;
+        TRAINER_CONFIGURATION.wordVectorSize = 100;
+        TRAINER_CONFIGURATION.hiddenLayerSize = 600;
 
         ANN_CONFIGURATION =
                 new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize * WordSegmentationDataProducer.WINDOWS_SIZE);

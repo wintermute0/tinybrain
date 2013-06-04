@@ -38,7 +38,7 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
     private static final int MAX_ARTICLE_ID = 3449448;
     private Random random = new Random(new Date().getTime());
 
-    public static int FREQUENCEY_RANK_BOUND = -1;
+    public static int FREQUENCEY_RANK_BOUND = 500;
 
     @Inject
     public ZhWikiTrainingDataProducer(Dictionary dictionary) {

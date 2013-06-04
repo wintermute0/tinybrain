@@ -21,12 +21,14 @@ import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActorContractImpl {
     private static final int EVALUATION_INTERVAL_IN_SECONDS = 60;
 
+    private int dataSize = 10000;
+
     @Inject
     private TrainerConfiguration trainerConfiguration;
 
     @Override
     protected int requestDataSize() {
-        return 30000;
+        return this.dataSize;
     }
 
     @Override
@@ -80,6 +82,8 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
             }
         }
 
+        double timeCost = (System.currentTimeMillis() - start) / 1000.0;
+
         String message =
                 "Precision = " + 100.0 * (positiveAccurate + negativeAccurate) / requestDataSize()
                         + "%, positive precision = " + 100.0 * positiveAccurate / positiveCount
@@ -88,7 +92,7 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
         getLogger().info("Average positive score: " + totalPositiveScore / positiveCount);
         getLogger().info("Average negative score: " + totalNegativeScore / negativeCount);
         getLogger().info(message);
-        getLogger().info("Evaluation cost " + (System.currentTimeMillis() - start) / 1000 + "s.");
+        getLogger().info("Evaluation cost " + timeCost + "s, data size = " + this.dataSize);
         // LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "的");
         // LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "吴");
         // LogUtility.logWordEmbedding(getLogger(), wordEmbedding, "煮");
@@ -96,6 +100,9 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
         LogUtility.logAnnModel(getLogger(), annModel);
 
         System.out.println(message);
+
+        // update request data size
+        this.dataSize = (int) (this.dataSize / timeCost * EVALUATION_INTERVAL_IN_SECONDS * 0.8);
 
         // evaluate some word distance rank
         // evaluateWordDistanceRank(wordEmbedding, "france", "germany", "greece", "spain", "america", "canada", "china",

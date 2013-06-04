@@ -41,8 +41,8 @@ public class WordEmbeddingTrainer {
 
     public static final AnnConfiguration ANN_CONFIGURATION;
 
-    private static final int TRAINING_ACTOR_COUNT = 4;
-    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 4;
+    private static final int TRAINING_ACTOR_COUNT = 16;
+    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 8;
 
     private static final double WORD_EMBEDDING_LAMBDA = 0.1;
     private static final double ANN_LAMBDA = 0.1;
@@ -50,7 +50,7 @@ public class WordEmbeddingTrainer {
     private static final int FIX_BOTTOM_LAYERS;
 
     static {
-        // TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.00001, 0.00001, 0.00001, 0.00001, 0.00001};
+        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001, 0.0001, 0.0001};
 
         TRAINER_CONFIGURATION.dropout = false;
         TRAINER_CONFIGURATION.wordEmbeddingDropout = false;
@@ -66,7 +66,7 @@ public class WordEmbeddingTrainer {
         // ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
         ANN_CONFIGURATION.addLayer(1, ActivationFunction.SIGMOID);
 
-        FIX_BOTTOM_LAYERS = ANN_CONFIGURATION.layers.size() - 2;
+        FIX_BOTTOM_LAYERS = 0; // ANN_CONFIGURATION.layers.size() - 2;
     }
 
     @SuppressWarnings("serial")

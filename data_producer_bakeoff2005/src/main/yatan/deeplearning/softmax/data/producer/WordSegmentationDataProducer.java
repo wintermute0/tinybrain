@@ -276,6 +276,7 @@ public class WordSegmentationDataProducer implements DataProducer {
             if (instances == null) {
                 instances = Lists.newArrayList();
 
+                LOGGER.info("Text data window size = " + WINDOWS_SIZE);
                 LOGGER.info("Coverting data to training instance...");
                 for (TaggedSentence sentence : this.taggedSentenceDataset.getSentences()) {
                     List<WordEmbeddingTrainingInstance> list =

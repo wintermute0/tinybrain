@@ -22,11 +22,9 @@ import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeActorContractImpl {
-    public static final int REQUEST_DATA_SIZE = 90000;
-    // public static final int REQUEST_DATA_SIZE = 5000;
-
     private static final int EVALUATION_INTERVAL_IN_SECONDS = 60;
     private int count;
+    private int dataSize = 10000;
 
     @Inject
     @Named("training_data_evaluator")
@@ -37,7 +35,7 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
 
     @Override
     protected int requestDataSize() {
-        return REQUEST_DATA_SIZE;
+        return this.dataSize;
     }
 
     @Override
@@ -99,14 +97,25 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
             LogUtility.logWordEmbedding(getLogger(), wordEmbedding);
             LogUtility.logAnnModel(getLogger(), (DefaultAnnModel) parameters[1]);
             // logAnnModel(annModel);
-            getLogger().info("Precision: " + 100.0 * accurateCount / dataset.size() + "%");
-            getLogger().info("Evaluating cost " + (new Date().getTime() - startTime) / 1000.0 + "s");
-            System.out.println(++count + ": " + 100.0 * accurateCount / dataset.size() + "%");
+
+            count++;
+            getLogger().info("Precision#" + count + " = " + 100.0 * accurateCount / dataset.size() + "%");
+            getLogger().info(
+                    "Evaluating cost " + (new Date().getTime() - startTime) / 1000.0 + "s, data size = "
+                            + this.dataSize);
+            System.out.println(count + ": " + 100.0 * accurateCount / dataset.size() + "%");
         } else {
-            getLogger().info("Training Precision: " + 100.0 * accurateCount / dataset.size() + "%");
-            getLogger().info("Training evaluating cost " + (new Date().getTime() - startTime) / 1000.0 + "s");
-            System.out.println(++count + " training: " + 100.0 * accurateCount / dataset.size() + "%");
+            count++;
+            getLogger().info("Training Precision#" + count + " = " + 100.0 * accurateCount / dataset.size() + "%");
+            getLogger().info(
+                    "Training evaluating cost " + (new Date().getTime() - startTime) / 1000.0 + "s, data size = "
+                            + this.dataSize);
+            System.out.println(count + " training: " + 100.0 * accurateCount / dataset.size() + "%");
         }
+
+        // update request data size
+        double timeCost = (System.currentTimeMillis() - startTime) / 1000.0;
+        this.dataSize = (int) (this.dataSize / timeCost * EVALUATION_INTERVAL_IN_SECONDS * 0.8);
 
         // return computation result
         ComputeResult result = new ComputeResult();

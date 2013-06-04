@@ -19,8 +19,9 @@ import yatan.distributedcomputer.Parameter;
 import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
-    private static final int REQUEST_DATA_SIZE = 500;
     private static final int REPEAT_DELAY_IN_SECONDS = 10 * 60;
+
+    private int dataSize = 500;
 
     @Inject
     private TrainerConfiguration trainerConfiguration;
@@ -30,7 +31,7 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
 
     @Override
     protected int requestDataSize() {
-        return REQUEST_DATA_SIZE;
+        return this.dataSize;
     }
 
     @Override
@@ -127,12 +128,16 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
             // System.out.println("Cross entropy = " + ce + ". Perperlexity = " + Math.pow(2, ce));
         }
 
+        double timeCost = (System.currentTimeMillis() - start) / 1000.0;
         String message =
                 "Average actual word rank = " + (1.0 * totalRank / positiveInstanceCount) + ". Log rank = "
-                        + totalLogRank / positiveInstanceCount + ", calculation cost "
-                        + (System.currentTimeMillis() - start) / 1000.0f + "s.";
+                        + totalLogRank / positiveInstanceCount + ", calculation cost " + timeCost + "s, data size = "
+                        + this.dataSize;
         System.out.println(message);
         getLogger().info(message);
+
+        // update request data size
+        this.dataSize = (int) (this.dataSize / timeCost * REPEAT_DELAY_IN_SECONDS * 0.8);
 
         // return -1.0 / positiveInstanceCount * hT;
         return 0;
