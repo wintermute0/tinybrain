@@ -13,7 +13,7 @@ import yatan.ann.AnnModel;
 import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.ann.DropoutAnnModel;
-import yatan.deeplearning.softmax.TrainerConfiguration;
+import yatan.deeplearning.softmax.WordEmbeddingTrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.deeplearning.wordembedding.utility.LogUtility;
@@ -31,7 +31,7 @@ public class SoftmaxClassificationEvaluatorContractImpl extends AbstractComputeA
     private boolean trainingDataEvaluator;
 
     @Inject(optional = false)
-    private TrainerConfiguration trainerConfiguration;
+    private WordEmbeddingTrainerConfiguration trainerConfiguration;
 
     @Override
     protected int requestDataSize() {

@@ -16,7 +16,7 @@ import com.google.inject.name.Named;
 import yatan.ann.AnnConfiguration;
 import yatan.ann.DefaultAnnModel;
 import yatan.commons.matrix.Matrix;
-import yatan.deeplearning.softmax.TrainerConfiguration;
+import yatan.deeplearning.softmax.WordEmbeddingTrainerConfiguration;
 import yatan.deeplearning.softmax.contract.parameter.ParameterFactory;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
@@ -37,7 +37,7 @@ public class WordEmbeddingANNParameterFactory implements ParameterFactory {
     @Named("word_vector_size")
     private int wordVectorSize;
     @Inject
-    private TrainerConfiguration trainerConfiguration;
+    private WordEmbeddingTrainerConfiguration trainerConfiguration;
 
     private WordEmbedding wordEmbedding;
     private DefaultAnnModel annModel;

@@ -2,7 +2,7 @@
 <project name="Word Embedding Trainer" basedir="." default="deploy_ssh">
     <property file="build.properties"/>
     
-	<property name="ssh_server" value="ec2-user@ec2-54-234-200-118.compute-1.amazonaws.com"/>
+	<property name="ssh_server" value="ec2-user@ec2-54-226-103-139.compute-1.amazonaws.com"/>
 	<!-- <property name="ssh_server" value="eveningsun@10.3.7.40"/> -->
 
 	<property name="dist.dir" value="dist" />
@@ -22,6 +22,8 @@
 			<src path="ann" />
 			<src path="commons_ml" />
 			<src path="distributed_computer" />
+			<src path="trainer" />
+			<src path="training_sequence_executor"/>
 
 			<src path="word_embedding" />
 			<src path="data_producer_bakeoff2005" />
@@ -67,7 +69,7 @@
 	</target>
 	
 	<target name="download_model">
-		<scp file="${ssh_server}:/mnt/master_dev/tinybrain/test_files/results/softmax_model_1370228731032.json" trust="true" keyfile="${key_file}" password="conan513"
+		<scp file="${ssh_server}:/mnt/master_dev/tinybrain/test_files/results/softmax_model_1370404623933.json" trust="true" keyfile="${key_file}" password="conan513"
 			todir="softmax_loglikelyhood_multi_probability_classification/test_files/results/" verbose="true" />
 	</target>
 	

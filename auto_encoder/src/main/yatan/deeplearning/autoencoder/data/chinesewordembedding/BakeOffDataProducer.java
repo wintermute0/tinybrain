@@ -8,7 +8,6 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer;
-import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.distributedcomputer.Data;
@@ -16,13 +15,15 @@ import yatan.distributedcomputer.contract.data.impl.DataProducerException;
 
 public class BakeOffDataProducer extends WordSegmentationDataProducer {
     @Inject
+    @Named("frequency_rank_bound")
+    private int frequencyRankBound = -1;
+
+    @Inject
     private Dictionary dictionary;
 
     @Inject
     public BakeOffDataProducer(@Named("training") boolean training, WordSegmentationInstancePool instancePool) {
         super(training, instancePool);
-
-        WINDOWS_SIZE = 5;
     }
 
     @Override
@@ -74,6 +75,6 @@ public class BakeOffDataProducer extends WordSegmentationDataProducer {
 
     private boolean isWordInvalid(int wordIndex) {
         return wordIndex == this.dictionary.indexOf(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)
-                || (ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND > 0 && this.dictionary.frenquencyRank(wordIndex) > ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND);
+                || (this.frequencyRankBound > 0 && this.dictionary.frenquencyRank(wordIndex) > this.frequencyRankBound);
     }
 }

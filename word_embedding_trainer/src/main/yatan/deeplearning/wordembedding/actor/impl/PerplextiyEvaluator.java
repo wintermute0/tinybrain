@@ -5,12 +5,12 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import yatan.ann.AnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.ann.DropoutAnnModel;
-import yatan.deeplearning.wordembedding.TrainerConfiguration;
-import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
+import yatan.deeplearning.softmax.WordEmbeddingTrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
@@ -24,7 +24,11 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
     private int dataSize = 500;
 
     @Inject
-    private TrainerConfiguration trainerConfiguration;
+    @Named("frequency_rank_bound")
+    private int frequencyRankBound = -1;
+
+    @Inject
+    private WordEmbeddingTrainerConfiguration trainerConfiguration;
 
     @Inject
     private Dictionary dictionary;
@@ -94,8 +98,7 @@ public class PerplextiyEvaluator extends AbstractComputeActorContractImpl {
             // outputSum = 0;
             int actualWordIndex = instance.getInput().get(instance.getInput().size() / 2);
             for (int i = 0; i < wordEmbedding.getDictionary().size(); i++) {
-                if (ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND > 0
-                        && dictionary.frenquencyRank(i) > ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND) {
+                if (this.frequencyRankBound > 0 && dictionary.frenquencyRank(i) > this.frequencyRankBound) {
                     continue;
                 }
 

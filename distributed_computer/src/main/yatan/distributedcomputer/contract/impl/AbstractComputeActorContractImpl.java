@@ -2,8 +2,6 @@ package yatan.distributedcomputer.contract.impl;
 
 import java.util.Date;
 
-import java.util.Random;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -96,17 +94,29 @@ public abstract class AbstractComputeActorContractImpl extends BaseActorContract
             public void onFailure(Throwable e) throws Throwable {
                 // if parameter request failed, wait 10 seconds and try again
                 reset();
-                getLogger().warn(
-                        "Failed to retrieve parameters. Try to execute compute message " + computeInstruction
-                                + " later.", e);
-                getActor().getContext().system().scheduler()
-                        .scheduleOnce(Duration.create(RETRY_COMPUTE_DELAY_SECONDS, TimeUnit.SECONDS), new Runnable() {
-                            @Override
-                            public void run() {
-                                getLogger().info("Try to execute compute message " + computeInstruction + " again.");
-                                getActor().getSelf().tell(new ComputeActor.ComputeMessage(computeInstruction));
-                            }
-                        });
+
+                if (getActor() == null || getActor().getContext() == null || getActor().getContext().system() == null
+                        || getActor().getContext().system().isTerminated()) {
+                    getLogger().debug("System is already terminated. Ignore ask pattern error.");
+                } else {
+                    getLogger().warn(
+                            "Failed to retrieve parameters. Try to execute compute message " + computeInstruction
+                                    + " later.", e);
+                    getActor()
+                            .getContext()
+                            .system()
+                            .scheduler()
+                            .scheduleOnce(Duration.create(RETRY_COMPUTE_DELAY_SECONDS, TimeUnit.SECONDS),
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            getLogger().info(
+                                                    "Try to execute compute message " + computeInstruction + " again.");
+                                            getActor().getSelf().tell(
+                                                    new ComputeActor.ComputeMessage(computeInstruction));
+                                        }
+                                    });
+                }
             }
         });
         Patterns.pipe(future).to(getActor().getSelf());
@@ -120,16 +130,29 @@ public abstract class AbstractComputeActorContractImpl extends BaseActorContract
             public void onFailure(Throwable e) throws Throwable {
                 // if data request failed, wait 10 seconds and try again
                 reset();
-                getLogger().warn(
-                        "Failed to retrieve data. Try to execute compute message " + computeInstruction + " later.", e);
-                getActor().getContext().system().scheduler()
-                        .scheduleOnce(Duration.create(RETRY_COMPUTE_DELAY_SECONDS, TimeUnit.SECONDS), new Runnable() {
-                            @Override
-                            public void run() {
-                                getLogger().info("Try to execute compute message " + computeInstruction + " again.");
-                                getActor().getSelf().tell(new ComputeActor.ComputeMessage(computeInstruction));
-                            }
-                        });
+
+                if (getActor() == null || getActor().getContext() == null || getActor().getContext().system() == null
+                        || getActor().getContext().system().isTerminated()) {
+                    getLogger().debug("System is already terminated. Ignore ask pattern error.");
+                } else {
+                    getLogger()
+                            .warn("Failed to retrieve data. Try to execute compute message " + computeInstruction
+                                    + " later.", e);
+                    getActor()
+                            .getContext()
+                            .system()
+                            .scheduler()
+                            .scheduleOnce(Duration.create(RETRY_COMPUTE_DELAY_SECONDS, TimeUnit.SECONDS),
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            getLogger().info(
+                                                    "Try to execute compute message " + computeInstruction + " again.");
+                                            getActor().getSelf().tell(
+                                                    new ComputeActor.ComputeMessage(computeInstruction));
+                                        }
+                                    });
+                }
             }
         });
         Patterns.pipe(future).to(getActor().getSelf());

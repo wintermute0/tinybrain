@@ -69,5 +69,6 @@
 	<classpathentry kind="lib" path="/lib/kryo/kryo-2.21-all.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/data_producer_bakeoff2005"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/word_embedding"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/trainer"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -16,7 +16,7 @@ import yatan.ann.AnnModel;
 import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.ann.DropoutAnnModel;
-import yatan.deeplearning.softmax.TrainerConfiguration;
+import yatan.deeplearning.softmax.WordEmbeddingTrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.distributedcomputer.Data;
@@ -27,7 +27,7 @@ public class SoftmaxClassificationTrainingContractImpl extends AbstractComputeAc
     private static final int MINIBATCH_SIZE = 20;
 
     @Inject(optional = false)
-    private TrainerConfiguration trainerConfiguration;
+    private WordEmbeddingTrainerConfiguration trainerConfiguration;
 
     @Override
     protected int requestDataSize() {

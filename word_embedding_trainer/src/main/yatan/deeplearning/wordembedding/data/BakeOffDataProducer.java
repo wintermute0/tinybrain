@@ -15,13 +15,14 @@ import yatan.distributedcomputer.contract.data.impl.DataProducerException;
 
 public class BakeOffDataProducer extends WordSegmentationDataProducer {
     @Inject
+    @Named("frequency_rank_bound")
+    private int frequencyRankBound = -1;
+    @Inject
     private Dictionary dictionary;
 
     @Inject
     public BakeOffDataProducer(@Named("training") boolean training, WordSegmentationInstancePool instancePool) {
         super(training, instancePool);
-
-        WINDOWS_SIZE = ZhWikiTrainingDataProducer.WINDOWS_SIZE;
     }
 
     @Override
@@ -51,13 +52,9 @@ public class BakeOffDataProducer extends WordSegmentationDataProducer {
                 negativeInstance.setInput(Lists.newArrayList(positiveInstance.getInput()));
                 negativeInstance.setOutput(-1);
                 // generate negative word
-                int negativeWord =
-                        this.dictionary
-                                .sampleWordUniformlyAboveFrequenceRank(ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND);
+                int negativeWord = this.dictionary.sampleWordUniformlyAboveFrequenceRank(this.frequencyRankBound);
                 while (negativeWord == negativeInstance.getInput().get(negativeInstance.getInput().size() / 2)) {
-                    negativeWord =
-                            this.dictionary
-                                    .sampleWordUniformlyAboveFrequenceRank(ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND);
+                    negativeWord = this.dictionary.sampleWordUniformlyAboveFrequenceRank(this.frequencyRankBound);
                 }
                 // set negative word
                 negativeInstance.getInput().set(negativeInstance.getInput().size() / 2, negativeWord);
@@ -72,6 +69,6 @@ public class BakeOffDataProducer extends WordSegmentationDataProducer {
 
     private boolean isWordInvalid(int wordIndex) {
         return wordIndex == this.dictionary.indexOf(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)
-                || (ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND > 0 && this.dictionary.frenquencyRank(wordIndex) > ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND);
+                || (this.frequencyRankBound > 0 && this.dictionary.frenquencyRank(wordIndex) > this.frequencyRankBound);
     }
 }

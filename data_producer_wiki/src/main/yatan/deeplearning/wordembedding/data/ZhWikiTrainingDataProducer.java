@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
@@ -33,12 +34,17 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
 
     private ArticleDao articleDao;
 
-    public static final int WINDOWS_SIZE = 11;
     private static final int LOAD_ARTICLE_BATCH_SIZE = 500;
     private static final int MAX_ARTICLE_ID = 3449448;
     private Random random = new Random(new Date().getTime());
 
-    public static int FREQUENCEY_RANK_BOUND = 500;
+    @Inject
+    @Named("frequency_rank_bound")
+    private int frequencyRankBound = -1;
+
+    @Inject
+    @Named("window_size")
+    private int windowsSize = 5;
 
     @Inject
     public ZhWikiTrainingDataProducer(Dictionary dictionary) {
@@ -72,7 +78,7 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
 
                         // tokenize line
                         String sentence = line;
-                        if (sentence.length() < WINDOWS_SIZE / 2) {
+                        if (sentence.length() < this.windowsSize / 2) {
                             continue;
                         }
 
@@ -81,7 +87,7 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
                             words.add(String.valueOf(sentence.charAt(i)));
                         }
                         List<Integer> wordIndecies = new ArrayList<Integer>();
-                        for (int i = 0; i < WINDOWS_SIZE / 2; i++) {
+                        for (int i = 0; i < this.windowsSize / 2; i++) {
                             words.add(0, Dictionary.PADDING_WORD);
                             words.add(Dictionary.PADDING_WORD);
                         }
@@ -89,7 +95,7 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
                             wordIndecies.add(this.dictionary.indexOf(word));
                         }
 
-                        for (int i = WINDOWS_SIZE / 2; i < sentence.length() + WINDOWS_SIZE / 2; i++) {
+                        for (int i = this.windowsSize / 2; i < sentence.length() + this.windowsSize / 2; i++) {
                             if (wordIndecies.get(i) == this.dictionary.indexOf(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)) {
                                 continue;
                             }
@@ -98,18 +104,18 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
                             WordEmbeddingTrainingInstance negativeInstance = new WordEmbeddingTrainingInstance();
                             positiveInstance.setInput(new ArrayList<Integer>());
                             negativeInstance.setInput(new ArrayList<Integer>());
-                            for (int j = i - WINDOWS_SIZE / 2; j < i + WINDOWS_SIZE / 2 + 1; j++) {
+                            for (int j = i - this.windowsSize / 2; j < i + this.windowsSize / 2 + 1; j++) {
                                 // check if this word meet the frequency lower bound
 
                                 positiveInstance.getInput().add(wordIndecies.get(j));
                                 if (j == i) {
                                     int negativeWord =
                                             this.dictionary
-                                                    .sampleWordUniformlyAboveFrequenceRank(FREQUENCEY_RANK_BOUND);
+                                                    .sampleWordUniformlyAboveFrequenceRank(this.frequencyRankBound);
                                     while (negativeWord == wordIndecies.get(j)) {
                                         negativeWord =
                                                 this.dictionary
-                                                        .sampleWordUniformlyAboveFrequenceRank(FREQUENCEY_RANK_BOUND);
+                                                        .sampleWordUniformlyAboveFrequenceRank(this.frequencyRankBound);
                                     }
                                     negativeInstance.getInput().add(negativeWord);
                                     // int negativeWord = this.dictionary.sampleWord();
@@ -160,7 +166,7 @@ public class ZhWikiTrainingDataProducer implements DataProducer {
 
     private boolean isWordInvalid(int wordIndex) {
         return wordIndex == this.dictionary.indexOf(Dictionary.NO_SUCH_WORD_PLACE_HOLDER)
-                || (FREQUENCEY_RANK_BOUND > 0 && this.dictionary.frenquencyRank(wordIndex) > FREQUENCEY_RANK_BOUND);
+                || (this.frequencyRankBound > 0 && this.dictionary.frenquencyRank(wordIndex) > this.frequencyRankBound);
     }
 
     private void prepareArticleDao() throws SQLException {

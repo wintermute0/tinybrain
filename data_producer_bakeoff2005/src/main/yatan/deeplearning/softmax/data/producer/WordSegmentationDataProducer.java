@@ -17,7 +17,7 @@ import com.google.inject.name.Named;
 
 import yatan.data.sequence.TaggedSentence;
 import yatan.data.sequence.TaggedSentenceDataset;
-import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
+
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.distributedcomputer.Data;
@@ -25,8 +25,6 @@ import yatan.distributedcomputer.contract.data.impl.DataProducer;
 import yatan.distributedcomputer.contract.data.impl.DataProducerException;
 
 public class WordSegmentationDataProducer implements DataProducer {
-    public static int WINDOWS_SIZE = ZhWikiTrainingDataProducer.WINDOWS_SIZE;
-
     private static final Logger LOGGER = Logger.getLogger(WordSegmentationDataProducer.class);
     private static final Random RANDOM = new Random(new Date().getTime());
 
@@ -36,6 +34,8 @@ public class WordSegmentationDataProducer implements DataProducer {
     private int offset;
     private int epoch = 1;
 
+    private double percentage = -1;
+
     @Inject
     public WordSegmentationDataProducer(@Named("training") boolean training, WordSegmentationInstancePool instancePool) {
         Preconditions.checkArgument(instancePool != null);
@@ -43,6 +43,12 @@ public class WordSegmentationDataProducer implements DataProducer {
 
         this.training = training;
         this.instancePool = instancePool;
+
+        if (this.training) {
+            this.epoch = ProgressReporter.instance().getEpoch();
+            this.percentage = ProgressReporter.instance().getPercentage();
+            LOGGER.info("Starting from progress [epoch = " + this.epoch + ", " + 100 * this.percentage + "%].");
+        }
     }
 
     protected WordSegmentationInstancePool getInstancePool() {
@@ -56,6 +62,10 @@ public class WordSegmentationDataProducer implements DataProducer {
     @Override
     public List<Data> produceData(int size) throws DataProducerException {
         List<WordEmbeddingTrainingInstance> instances = this.instancePool.getInstances();
+        if (this.percentage >= 0) {
+            this.offset = (int) (this.percentage * instances.size());
+            this.percentage = -1;
+        }
 
         // FIXME: does randomize help??
         instances = new ArrayList<WordEmbeddingTrainingInstance>(instances);
@@ -63,6 +73,7 @@ public class WordSegmentationDataProducer implements DataProducer {
 
         if (this.training) {
             LOGGER.info("Epoch: " + this.epoch + ", " + 100.0 * this.offset / instances.size() + "%");
+            ProgressReporter.instance().report(this.epoch, 1.0 * this.offset / instances.size());
         } else {
             LOGGER.info("Producing evaluating data...");
         }
@@ -104,6 +115,10 @@ public class WordSegmentationDataProducer implements DataProducer {
 
         private List<WordEmbeddingTrainingInstance> instances;
         private List<List<WordEmbeddingTrainingInstance>> sentences = Lists.newArrayList();
+
+        @Inject
+        @Named("window_size")
+        private int windowsSize = 5;
 
         @Inject
         public WordSegmentationInstancePool(Dictionary dictionary,
@@ -202,7 +217,7 @@ public class WordSegmentationDataProducer implements DataProducer {
         }
 
         public static List<WordEmbeddingTrainingInstance> convertTaggedSentenceToWordEmbeddingTrainingInstance(
-                Dictionary dictionary, TaggedSentence sentence, List<String> originalWordContainer) {
+                int windowSize, Dictionary dictionary, TaggedSentence sentence, List<String> originalWordContainer) {
             List<WordEmbeddingTrainingInstance> results = Lists.newArrayList();
 
             // covert words sentence to character sentence
@@ -226,7 +241,7 @@ public class WordSegmentationDataProducer implements DataProducer {
             // debug(characters, tags);
 
             // put padding words before and after the sentence
-            for (int i = 0; i < WINDOWS_SIZE / 2; i++) {
+            for (int i = 0; i < windowSize / 2; i++) {
                 characters.add(0, Dictionary.PADDING_WORD);
                 characters.add(Dictionary.PADDING_WORD);
             }
@@ -236,13 +251,13 @@ public class WordSegmentationDataProducer implements DataProducer {
                 characterIndecies.add(dictionary.indexOf(character));
             }
 
-            for (int i = WINDOWS_SIZE / 2; i < tags.size() + WINDOWS_SIZE / 2; i++) {
+            for (int i = windowSize / 2; i < tags.size() + windowSize / 2; i++) {
                 WordEmbeddingTrainingInstance instance = new WordEmbeddingTrainingInstance();
                 instance.setInput(new ArrayList<Integer>());
-                for (int j = i - WINDOWS_SIZE / 2; j < i + WINDOWS_SIZE / 2 + 1; j++) {
+                for (int j = i - windowSize / 2; j < i + windowSize / 2 + 1; j++) {
                     instance.getInput().add(characterIndecies.get(j));
                 }
-                instance.setOutput(TAGS.indexOf(tags.get(i - WINDOWS_SIZE / 2)));
+                instance.setOutput(TAGS.indexOf(tags.get(i - windowSize / 2)));
                 results.add(instance);
             }
 
@@ -276,11 +291,12 @@ public class WordSegmentationDataProducer implements DataProducer {
             if (instances == null) {
                 instances = Lists.newArrayList();
 
-                LOGGER.info("Text data window size = " + WINDOWS_SIZE);
+                LOGGER.info("Text data window size = " + this.windowsSize);
                 LOGGER.info("Coverting data to training instance...");
                 for (TaggedSentence sentence : this.taggedSentenceDataset.getSentences()) {
                     List<WordEmbeddingTrainingInstance> list =
-                            convertTaggedSentenceToWordEmbeddingTrainingInstance(this.dictionary, sentence, null);
+                            convertTaggedSentenceToWordEmbeddingTrainingInstance(this.windowsSize, this.dictionary,
+                                    sentence, null);
                     instances.addAll(list);
                     sentences.addAll(breakSentences(this.dictionary, list));
                 }
@@ -292,6 +308,14 @@ public class WordSegmentationDataProducer implements DataProducer {
 
                 LOGGER.info("Total instances: " + instances.size());
             }
+        }
+
+        public int getWindowsSize() {
+            return windowsSize;
+        }
+
+        public void setWindowsSize(int windowsSize) {
+            this.windowsSize = windowsSize;
         }
     }
 }

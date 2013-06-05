@@ -25,7 +25,7 @@ import yatan.ann.AnnGradient;
 import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnConfiguration;
 import yatan.commons.matrix.Matrix;
-import yatan.deeplearning.wordembedding.TrainerConfiguration;
+import yatan.deeplearning.softmax.WordEmbeddingTrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.utility.LogUtility;
@@ -53,7 +53,7 @@ public class ParameterActorWordEmbeddingImpl extends BaseActorContract implement
     private final int wordVectorSize;
 
     @Inject(optional = false)
-    private TrainerConfiguration trainerConfiguration;
+    private WordEmbeddingTrainerConfiguration trainerConfiguration;
 
     private WordEmbedding wordEmbedding;
     private DefaultAnnModel annModel;

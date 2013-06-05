@@ -23,7 +23,6 @@ import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.data.parser.bakeoff2005.ICWB2Parser;
 import yatan.data.sequence.TaggedSentenceDataset;
-import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer;
 import yatan.deeplearning.softmax.data.producer.WordSegmentationDataProducer.WordSegmentationInstancePool;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
@@ -34,8 +33,6 @@ public class WordEmbeddingEvaluator {
 
     public static void main(String[] args) throws Exception {
         Dictionary dictionary = Dictionary.create(new File("test_files/zh_dict_better.txt"));
-
-        WordSegmentationDataProducer.WINDOWS_SIZE = 5;
 
         // 1365269964401(100 word embedding).json
         String wordEmbeddingFile = "pku_we2_3_300layer_pretraining.json";
@@ -73,8 +70,9 @@ public class WordEmbeddingEvaluator {
         double totalLogRank = 0;
         int excessiveSmallRankCount = 0;
 
-        List<WordEmbeddingTrainingInstance> instances =
-                Lists.newArrayList(new WordSegmentationInstancePool(dictionary, dataset, false).getInstances());
+        WordSegmentationInstancePool instancePool = new WordSegmentationInstancePool(dictionary, dataset, false);
+        instancePool.setWindowsSize(11);
+        List<WordEmbeddingTrainingInstance> instances = Lists.newArrayList(instancePool.getInstances());
         Collections.shuffle(instances);
         for (WordEmbeddingTrainingInstance instance : instances.subList(0, instances.size())) {
             List<Integer> outputRank = Lists.newArrayList();

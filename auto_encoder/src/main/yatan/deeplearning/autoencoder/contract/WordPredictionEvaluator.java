@@ -5,6 +5,7 @@ import java.util.List;
 import scala.actors.threadpool.Arrays;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import yatan.ann.AnnData;
 import yatan.ann.AnnModel;
@@ -19,6 +20,10 @@ import yatan.distributedcomputer.contract.impl.AbstractComputeActorContractImpl;
 
 public class WordPredictionEvaluator extends AbstractComputeActorContractImpl {
     private static final int EVALUATION_INTERVAL_IN_SECONDS = 60;
+
+    @Inject
+    @Named("frequency_rank_bound")
+    private int frequencyRankBound = -1;
 
     @Inject
     private Dictionary dictionary;
@@ -60,8 +65,7 @@ public class WordPredictionEvaluator extends AbstractComputeActorContractImpl {
             int wordRank = 1;
             double[] wordData = new double[wordEmbedding.getWordVectorSize()];
             for (int column = 0; column < wordEmbedding.getMatrix().columnSize(); column++) {
-                if (ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND > 0
-                        && this.dictionary.frenquencyRank(column) > ZhWikiTrainingDataProducer.FREQUENCEY_RANK_BOUND) {
+                if (this.frequencyRankBound > 0 && this.dictionary.frenquencyRank(column) > this.frequencyRankBound) {
                     continue;
                 }
 

@@ -21,7 +21,7 @@ import yatan.ann.DefaultAnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.ann.AnnTrainer.LayerPostProcessor;
 import yatan.commons.matrix.Matrix;
-import yatan.deeplearning.wordembedding.TrainerConfiguration;
+import yatan.deeplearning.softmax.WordEmbeddingTrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.distributedcomputer.Data;
@@ -39,7 +39,7 @@ public class ComputeActorWordEmbeddingTrainingImpl extends AbstractComputeActorC
     private int fixBottomLayers;
 
     @Inject
-    private TrainerConfiguration trainerConfiguration;
+    private WordEmbeddingTrainerConfiguration trainerConfiguration;
 
     @Override
     protected int requestDataSize() {

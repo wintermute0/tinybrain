@@ -1,27 +1,30 @@
 package yatan.deeplearning.wordembedding;
 
 import java.io.File;
+
 import java.io.IOException;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 
 import yatan.ann.AnnConfiguration;
-import yatan.ann.AnnConfiguration.ActivationFunction;
 import yatan.data.parser.bakeoff2005.ICWB2Parser;
 import yatan.data.sequence.TaggedSentenceDataset;
+import yatan.deeplearning.softmax.WordEmbeddingTrainerConfiguration;
 import yatan.deeplearning.softmax.contract.parameter.ParameterFactory;
 import yatan.deeplearning.softmax.contract.parameter.ParameterUpdator;
 import yatan.deeplearning.softmax.contract.parameter.WordEmbeddingAnnParameterActorContractImpl2;
 import yatan.deeplearning.softmax.contract.parameter.factory.WordEmbeddingANNParameterFactory;
 import yatan.deeplearning.softmax.contract.parameter.updator.AdaGradParameterUpdator;
+import yatan.deeplearning.softmax.data.producer.ProgressReporter;
+import yatan.deeplearning.trainer.Trainer;
 import yatan.deeplearning.wordembedding.actor.impl.ComputeActorWordEmbeddingEvaluatorImpl;
 import yatan.deeplearning.wordembedding.actor.impl.ComputeActorWordEmbeddingTrainingImpl;
 import yatan.deeplearning.wordembedding.actor.impl.PerplextiyEvaluator;
 import yatan.deeplearning.wordembedding.data.BakeOffDataProducer;
-import yatan.deeplearning.wordembedding.data.ZhWikiTrainingDataProducer;
 import yatan.deeplearning.wordembedding.model.Dictionary;
 import yatan.distributedcomputer.actors.AuditActor;
 import yatan.distributedcomputer.actors.ComputeActor;
@@ -35,51 +38,33 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.actor.UntypedActorFactory;
 
-public class WordEmbeddingTrainer {
-    private static final TrainerConfiguration TRAINER_CONFIGURATION = new TrainerConfiguration();
-    private static final String MODEL_FILE_PREFIX = "word_embedding_";
+public class WordEmbeddingTrainer implements Trainer {
+    private final WordEmbeddingTrainerConfiguration trainerConfiguration;
+    private final TrainerProgress completeCondition;
+    private ActorSystem system;
 
-    public static final AnnConfiguration ANN_CONFIGURATION;
+    public WordEmbeddingTrainer(WordEmbeddingTrainerConfiguration configuration, TrainerProgress completeCondition) {
+        Preconditions.checkArgument(configuration != null);
+        Preconditions.checkArgument(completeCondition != null);
 
-    private static final int TRAINING_ACTOR_COUNT = 16;
-    private static final int PARAMETER_ACTOR_UPDATE_SLICE = 8;
-
-    private static final double WORD_EMBEDDING_LAMBDA = 0.1;
-    private static final double ANN_LAMBDA = 0.1;
-
-    private static final int FIX_BOTTOM_LAYERS;
-
-    static {
-        TRAINER_CONFIGURATION.l2Lambdas = new double[] {0.0001, 0.0001, 0.0001, 0.0001, 0.0001};
-
-        TRAINER_CONFIGURATION.dropout = false;
-        TRAINER_CONFIGURATION.wordEmbeddingDropout = false;
-        TRAINER_CONFIGURATION.wordEmbeddingDropoutRate = 0.5;
-
-        TRAINER_CONFIGURATION.hiddenLayerSize = 200;
-        TRAINER_CONFIGURATION.wordVectorSize = 100;
-
-        ANN_CONFIGURATION =
-                new AnnConfiguration(TRAINER_CONFIGURATION.wordVectorSize * ZhWikiTrainingDataProducer.WINDOWS_SIZE);
-        ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-        // ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-        // ANN_CONFIGURATION.addLayer(TRAINER_CONFIGURATION.hiddenLayerSize, ActivationFunction.TANH);
-        ANN_CONFIGURATION.addLayer(1, ActivationFunction.SIGMOID);
-
-        FIX_BOTTOM_LAYERS = 0; // ANN_CONFIGURATION.layers.size() - 2;
+        this.trainerConfiguration = configuration;
+        this.completeCondition = completeCondition;
     }
 
     @SuppressWarnings("serial")
-    public static void main(String[] args) {
+    @Override
+    public void start() {
+        Preconditions.checkState(this.system == null);
+
         final Injector commonModuleInjector = Guice.createInjector(new CommonModule());
         final Injector trainingModuleInjector = commonModuleInjector.createChildInjector(new TrainingModule());
         final Injector evaluatingModuleInjector = commonModuleInjector.createChildInjector(new EvaluatingModule());
-        final Injector trainingEvaluatingModuleInjector =
-                commonModuleInjector.createChildInjector(new TrainingEvaluatingModule());
+        // final Injector trainingEvaluatingModuleInjector =
+        // commonModuleInjector.createChildInjector(new TrainingEvaluatingModule());
         final Injector perplexityEvaluatingModuleInjector =
                 commonModuleInjector.createChildInjector(new PerplexityEvaluatingModule());
 
-        final ActorSystem system = ActorSystem.create();
+        system = ActorSystem.create();
         system.actorOf(new Props(new UntypedActorFactory() {
             @Override
             public Actor create() throws Exception {
@@ -111,13 +96,20 @@ public class WordEmbeddingTrainer {
             @Override
             public void run() {
                 int newThreadInterval = 64;
-                for (int i = 0; i < TRAINING_ACTOR_COUNT; i++) {
-                    system.actorOf(new Props(new UntypedActorFactory() {
-                        @Override
-                        public Actor create() throws Exception {
-                            return trainingModuleInjector.getInstance(ComputeActor.class);
+                for (int i = 0; i < trainerConfiguration.trainingActorCount; i++) {
+                    synchronized (WordEmbeddingTrainer.this) {
+                        if (system == null) {
+                            break;
                         }
-                    }), "compute" + i);
+
+                        system.actorOf(new Props(new UntypedActorFactory() {
+                            @Override
+                            public Actor create() throws Exception {
+                                return trainingModuleInjector.getInstance(ComputeActor.class);
+                            }
+                        }), "compute" + i);
+                    }
+
                     try {
                         Thread.sleep(newThreadInterval * 1000);
                         newThreadInterval = Math.max(16, newThreadInterval / 2);
@@ -150,36 +142,83 @@ public class WordEmbeddingTrainer {
         }), "evalutor2");
     }
 
-    public static class CommonModule extends AbstractModule {
+    @Override
+    public void start(TrainerProgress progress) {
+        ProgressReporter.instance().report(progress.getEpoch(), progress.getPercentage());
+
+        start();
+    }
+
+    @Override
+    public synchronized void stop() {
+        if (this.system != null) {
+            this.system.shutdown();
+            this.system = null;
+        }
+    }
+
+    @Override
+    public TrainerProgress progress() {
+        TrainerProgress progress = new TrainerProgress();
+
+        progress.setEpoch(ProgressReporter.instance().getEpoch());
+        progress.setPercentage(ProgressReporter.instance().getPercentage());
+
+        return progress;
+    }
+
+    @Override
+    public boolean isCompleted() {
+        TrainerProgress progress = progress();
+
+        return progress.compareTo(this.completeCondition) > 0;
+    }
+
+    public WordEmbeddingTrainerConfiguration getTrainerConfiguration() {
+        return trainerConfiguration;
+    }
+
+    public TrainerProgress getCompleteCondition() {
+        return completeCondition;
+    }
+
+    public class CommonModule extends AbstractModule {
         @Override
         protected void configure() {
+            // bind window size and frequence bound
+            bind(Integer.class).annotatedWith(Names.named("window_size")).toInstance(trainerConfiguration.windowSize);
+            bind(Integer.class).annotatedWith(Names.named("frequency_rank_bound")).toInstance(
+                    trainerConfiguration.wordFrequencyRankLowerBound);
             // bind trainer configuration
-            bind(TrainerConfiguration.class).toInstance(TRAINER_CONFIGURATION);
+            bind(WordEmbeddingTrainerConfiguration.class).toInstance(trainerConfiguration);
             // load dictionary
             bind(Dictionary.class).toInstance(Dictionary.create(new File("test_files/zh_dict_better.txt")));
             // set word vector size
             bind(Integer.class).annotatedWith(Names.named("word_vector_size")).toInstance(
-                    TRAINER_CONFIGURATION.wordVectorSize);
+                    trainerConfiguration.wordVectorSize);
         }
     }
 
-    public static class TrainingModule extends AbstractModule {
+    public class TrainingModule extends AbstractModule {
         @Override
         protected void configure() {
-            bind(Integer.class).annotatedWith(Names.named("fix_bottom_layers")).toInstance(FIX_BOTTOM_LAYERS);
+            bind(Integer.class).annotatedWith(Names.named("fix_bottom_layers")).toInstance(
+                    trainerConfiguration.fixBottomLayers);
             bind(Integer.class).annotatedWith(Names.named("data_produce_batch_size")).toInstance(200000);
 
             // bind ann configuration
-            bind(AnnConfiguration.class).toInstance(ANN_CONFIGURATION);
+            bind(AnnConfiguration.class).toInstance(trainerConfiguration.annConfiguration);
 
             bind(Integer.class).annotatedWith(Names.named("parameter_actor_update_slice")).toInstance(
-                    PARAMETER_ACTOR_UPDATE_SLICE);
+                    trainerConfiguration.parameterActorUpdateSlice);
 
-            bind(Double.class).annotatedWith(Names.named("word_embedding_lambda")).toInstance(WORD_EMBEDDING_LAMBDA);
-            bind(Double.class).annotatedWith(Names.named("ann_lambda")).toInstance(ANN_LAMBDA);
+            bind(Double.class).annotatedWith(Names.named("word_embedding_lambda")).toInstance(
+                    trainerConfiguration.wordEmbeddingLambda);
+            bind(Double.class).annotatedWith(Names.named("ann_lambda")).toInstance(trainerConfiguration.annLambda);
             bind(ParameterFactory.class).to(WordEmbeddingANNParameterFactory.class);
             bind(ParameterUpdator.class).to(AdaGradParameterUpdator.class);
-            bind(String.class).annotatedWith(Names.named("model_file_prefix")).toInstance(MODEL_FILE_PREFIX);
+            bind(String.class).annotatedWith(Names.named("model_file_prefix")).toInstance(
+                    trainerConfiguration.modelFilePrefix);
             bind(ParameterActorContract.class).to(WordEmbeddingAnnParameterActorContractImpl2.class);
 
             bind(String.class).annotatedWith(Names.named("data_actor_path")).toInstance("/user/data");

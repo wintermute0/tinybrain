@@ -69,8 +69,8 @@ public class WordSegmentationTagger {
             DefaultAnnModel annModel, AnnTrainer trainer, Writer writer) throws Exception {
         List<String> originalWords = Lists.newArrayList();
         List<WordEmbeddingTrainingInstance> instances =
-                WordSegmentationInstancePool.convertTaggedSentenceToWordEmbeddingTrainingInstance(dictionary, sentence,
-                        originalWords);
+                WordSegmentationInstancePool.convertTaggedSentenceToWordEmbeddingTrainingInstance(5, dictionary,
+                        sentence, originalWords);
         List<String> tags = Lists.newArrayList();
 
         int characterIndex = 0;
@@ -134,8 +134,8 @@ public class WordSegmentationTagger {
             DefaultAnnModel annModel, AnnTrainer trainer) throws Exception {
         List<String> originalWords = Lists.newArrayList();
         List<WordEmbeddingTrainingInstance> instances =
-                WordSegmentationInstancePool.convertTaggedSentenceToWordEmbeddingTrainingInstance(dictionary, sentence,
-                        originalWords);
+                WordSegmentationInstancePool.convertTaggedSentenceToWordEmbeddingTrainingInstance(5, dictionary,
+                        sentence, originalWords);
         double[][] sequenceProbability = new double[instances.size()][WordSegmentationInstancePool.TAGS.size()];
         for (int i = 0; i < sequenceProbability.length; i++) {
             Arrays.fill(sequenceProbability[i], -Double.MAX_VALUE);

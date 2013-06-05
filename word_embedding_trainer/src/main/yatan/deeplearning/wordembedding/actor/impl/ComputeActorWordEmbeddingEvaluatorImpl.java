@@ -10,7 +10,7 @@ import yatan.ann.AnnData;
 import yatan.ann.AnnModel;
 import yatan.ann.AnnTrainer;
 import yatan.ann.DropoutAnnModel;
-import yatan.deeplearning.wordembedding.TrainerConfiguration;
+import yatan.deeplearning.softmax.WordEmbeddingTrainerConfiguration;
 import yatan.deeplearning.wordembedding.model.WordEmbedding;
 import yatan.deeplearning.wordembedding.model.WordEmbeddingTrainingInstance;
 import yatan.deeplearning.wordembedding.utility.LogUtility;
@@ -24,7 +24,7 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
     private int dataSize = 10000;
 
     @Inject
-    private TrainerConfiguration trainerConfiguration;
+    private WordEmbeddingTrainerConfiguration trainerConfiguration;
 
     @Override
     protected int requestDataSize() {
@@ -102,7 +102,7 @@ public class ComputeActorWordEmbeddingEvaluatorImpl extends AbstractComputeActor
         System.out.println(message);
 
         // update request data size
-        this.dataSize = (int) (this.dataSize / timeCost * EVALUATION_INTERVAL_IN_SECONDS * 0.8);
+        this.dataSize = Math.min(200000, (int) (this.dataSize / timeCost * EVALUATION_INTERVAL_IN_SECONDS * 0.8));
 
         // evaluate some word distance rank
         // evaluateWordDistanceRank(wordEmbedding, "france", "germany", "greece", "spain", "america", "canada", "china",
